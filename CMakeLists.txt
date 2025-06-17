@@ -31,7 +31,13 @@ message(STATUS "Fortran compiler: ${CMAKE_Fortran_COMPILER}")
 message(STATUS "PIC_ENABLE_INT8: ${PIC_ENABLE_INT8}")
 
 add_subdirectory(src)
+find_package(OpenMP REQUIRED)
+find_package(MPI REQUIRED)
+find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
 
+target_link_libraries(${core_lib} OpenMP::OpenMP_Fortran LAPACK::LAPACK
+                      BLAS::BLAS MPI::MPI_Fortran)
 # Install targets
 install(
   TARGETS ${core_lib}
@@ -40,13 +46,15 @@ install(
   RUNTIME DESTINATION bin)
 
 # Install Fortran module files (assuming they are in the build directory)
-install(
-  DIRECTORY ${CMAKE_BINARY_DIR}/
-  DESTINATION include
-  FILES_MATCHING
-  PATTERN "*.mod")
+
 set(exe_name app)
 add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.f90)
 target_include_directories(${exe_name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
 
 target_link_libraries(${exe_name} PRIVATE ${core_lib})
+
+install(
+  DIRECTORY ${CMAKE_BINARY_DIR}/
+  DESTINATION include
+  FILES_MATCHING
+  PATTERN "*.mod")
