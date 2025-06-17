@@ -13,7 +13,7 @@ program main
    call MPI_Comm_size(MPI_COMM_WORLD, size, ierr)
    call MPI_Comm_rank(MPI_COMM_WORLD, rank, ierr)
    if (rank == 0) then
-      print *, "This is the root process, rank: ", rank
+      print *, "This is the root process, rank: ", rank, " with ", omp_get_max_threads(), " threads"
       n = 4
       m = 4
       k = 4
