@@ -22,7 +22,6 @@ mkdir build
 cd build
 cmake ../
 make -j
-ctest
 ```
 
 ### FPM
