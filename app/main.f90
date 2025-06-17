@@ -5,31 +5,42 @@ program main
    use mpi_f08
    use pic_matrix_printer
    implicit none
-
+   integer(default_int) :: ierr, rank, size
    real(dp), dimension(:, :), allocatable :: A, B, C
    integer(default_int) :: n, m, k
 
-   n = 4
-   m = 4
-   k = 4
-   allocate (A(n, k), B(k, m), C(n, m))
-   A = 1.0d0
-   B = 1.0d0
+   call MPI_Init(ierr)
+   call MPI_Comm_size(MPI_COMM_WORLD, size, ierr)
+   call MPI_Comm_rank(MPI_COMM_WORLD, rank, ierr)
+   if (rank == 0) then
+      print *, "This is the root process, rank: ", rank
+      n = 4
+      m = 4
+      k = 4
+      allocate (A(n, k), B(k, m), C(n, m))
+      A = 1.0d0
+      B = 1.0d0
 
-   call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
+      call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
 
-   call print_matrix(C, "PLAIN")
+      call print_matrix(C, "PLAIN")
 
-   call global%configure(warning_level)
+      call global%configure(warning_level)
 
-   call global%debug("This is a debug message")
-   call global%verbose("This is a verbose message")
-   call global%info("This is an info message")
-   call global%performance("This is a performance message")
-   call global%warning("This is a warning message")
-   call global%error("This is an error message")
+      call global%debug("This is a debug message")
+      call global%verbose("This is a verbose message")
+      call global%info("This is an info message")
+      call global%performance("This is a performance message")
+      call global%warning("This is a warning message")
+      call global%error("This is an error message")
 
-   call debug
+      call debug
+      deallocate (A, B, C)
+   else
+      print *, "This is not the root process, rank: ", rank
+   end if
+
+   call mpi_finalize(ierr)
 contains
 
    subroutine debug
