@@ -59,7 +59,9 @@ install(
 
 set(exe_name app)
 add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.F90)
-target_compile_definitions(${exe_name} PRIVATE USE_MPI)
+if(ENABLE_MPI)
+  target_compile_definitions(${exe_name} PRIVATE USE_MPI)
+endif()
 target_include_directories(${exe_name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
 
 target_link_libraries(${exe_name} PRIVATE ${core_lib} BLAS::BLAS)

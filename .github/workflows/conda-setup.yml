@@ -1,6 +1,6 @@
 name: Conda setup
 
-on: [pull_request, push]
+on: [pull_request]
 
 jobs:
   test_conda:
@@ -31,10 +31,11 @@ jobs:
         run: |
           conda activate pic
           export FC=gfortran
+          #cmake -DCMAKE_AR=gcc-ar -G "Ninja" -B build
           cmake -G "Ninja" -B build
           cmake --build build
 
-      - name: Execute cmake and build on Windows
+      - name: Execute cmake and build
         shell: bash -el {0}
         run: |
           conda activate pic
