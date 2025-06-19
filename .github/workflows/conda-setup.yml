@@ -9,7 +9,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+        #os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+        os: ["ubuntu-latest"]
     steps:
       - uses: actions/checkout@v4
       - uses: conda-incubator/setup-miniconda@v3
@@ -22,6 +23,11 @@ jobs:
         shell: bash -el {0}
         run: |
           conda env create --name pic --file environment.yml
+
+      - name: Execute cmake
+        shell: bash -el {0}
+        run: |
+          cmake -B build
 
 #      - name: Install gcc compilers on Windows
 #        if: runner.os == 'Windows'
