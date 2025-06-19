@@ -24,11 +24,13 @@ jobs:
         run: |
           conda env create --name pic --file environment.yml
 
-      - name: Execute cmake
+      - name: Execute cmake and build
         shell: bash -el {0}
         run: |
           conda activate pic
           FC=gfortran cmake -B build
+          cmake --build build
+
 
 #      - name: Install gcc compilers on Windows
 #        if: runner.os == 'Windows'
