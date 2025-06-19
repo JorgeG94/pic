@@ -1,4 +1,4 @@
-name: Conda setup
+name: Test fpm build
 
 on: [pull_request, push]
 
@@ -40,21 +40,9 @@ jobs:
         run: |
           conda install -c conda-forge -n pic ${{matrix.compiler}}
 
-      - name: Execute cmake and build on Windows
-        if: runner.os == 'Windows'
+      - name: FPM build
         shell: bash -el {0}
         run: |
           conda activate pic
           export FC=${{matrix.compiler}}
-          #cmake -DCMAKE_AR=gcc-ar -G "Ninja" -B build
-          cmake -G "Ninja" -B build
-          cmake --build build
-
-      - name: Execute cmake and build
-        if: runner.os != 'Windows'
-        shell: bash -el {0}
-        run: |
-          conda activate pic
-          export FC=${{matrix.compiler}}
-          cmake -G "Ninja" -DENABLE_MPI=ON -B build
-          cmake --build build
+          fpm build
