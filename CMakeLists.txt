@@ -35,15 +35,19 @@ find_package(
   OpenMP
   COMPONENTS Fortran
   REQUIRED)
-find_package(
-  MPI
-  COMPONENTS Fortran
-  REQUIRED)
+if(ENABLE_MPI)
+  find_package(
+    MPI
+    COMPONENTS Fortran
+    REQUIRED)
+endif()
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
-
-target_link_libraries(${core_lib} OpenMP::OpenMP_Fortran LAPACK::LAPACK
-                      BLAS::BLAS MPI::MPI_Fortran)
+set(libraries_to_link OpenMP::OpenMP_Fortran LAPACK::LAPACK BLAS::BLAS)
+if(ENABLE_MPI)
+  list(APPEND libraries_to_link MPI::MPI_Fortran)
+endif()
+target_link_libraries(${core_lib} ${libraries_to_link})
 # Install targets
 install(
   TARGETS ${core_lib}
@@ -54,10 +58,11 @@ install(
 # Install Fortran module files (assuming they are in the build directory)
 
 set(exe_name app)
-add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.f90)
+add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.F90)
+target_compile_definitions(${exe_name} PRIVATE USE_MPI)
 target_include_directories(${exe_name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
 
-target_link_libraries(${exe_name} PRIVATE ${core_lib})
+target_link_libraries(${exe_name} PRIVATE ${core_lib} BLAS::BLAS)
 
 install(
   DIRECTORY ${CMAKE_BINARY_DIR}/
