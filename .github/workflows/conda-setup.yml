@@ -1,0 +1,44 @@
+name: Conda setup
+
+on: [pull_request]
+
+jobs:
+  test_conda:
+    name: Example (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # mpi on windows is a nightmare
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+          miniforge-version: latest
+
+      - name: Install Our own environment
+        shell: bash -el {0}
+        run: |
+          conda env create --name pic --file environment.yml
+
+      - name: Execute cmake and build on Windows
+        if: runner.os == 'Windows'
+        shell: bash -el {0}
+        run: |
+          conda activate pic
+          export FC=gfortran
+          #cmake -DCMAKE_AR=gcc-ar -G "Ninja" -B build
+          cmake -G "Ninja" -B build
+          cmake --build build
+
+      - name: Execute cmake and build
+        if: runner.os != 'Windows'
+        shell: bash -el {0}
+        run: |
+          conda activate pic
+          export FC=gfortran
+          cmake -G "Ninja" -DENABLE_MPI=ON -B build
+          cmake --build build
