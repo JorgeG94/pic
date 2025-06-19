@@ -31,8 +31,14 @@ message(STATUS "Fortran compiler: ${CMAKE_Fortran_COMPILER}")
 message(STATUS "PIC_ENABLE_INT8: ${PIC_ENABLE_INT8}")
 
 add_subdirectory(src)
-find_package(OpenMP REQUIRED)
-find_package(MPI REQUIRED)
+find_package(
+  OpenMP
+  COMPONENTS Fortran
+  REQUIRED)
+find_package(
+  MPI
+  COMPONENTS Fortran
+  REQUIRED)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
