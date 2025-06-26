@@ -1,5 +1,5 @@
 program main
-   use pic_logger, only: global => global_logger, warning_level
+   use pic_logger, only: global => global_logger, warning_level, verbose_level
    use pic_types
    use omp_lib
 #ifdef USE_MPI
@@ -31,7 +31,8 @@ program main
 
       call print_matrix(C, "PLAIN")
 
-      call global%configure(warning_level)
+      call global%configure(verbose_level)
+      call global%configure_file_output('run.log', level=warning_level)
 
       call global%debug("This is a debug message")
       call global%verbose("This is a verbose message")
@@ -42,6 +43,7 @@ program main
 
       call debug
       deallocate (A, B, C)
+      call global%close_log_file()
    else
       print *, "This is not the root process, rank: ", rank
    end if

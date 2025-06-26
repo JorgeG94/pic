@@ -11,7 +11,7 @@ module pic_types
    integer, parameter :: qp = SELECTED_REAL_KIND(33, 4931)
 
    ! Define default types
-#ifdef SUBNORMAL
+#ifdef USE_INT8
    integer, parameter :: default_int = int64
 #else
    integer, parameter :: default_int = int32

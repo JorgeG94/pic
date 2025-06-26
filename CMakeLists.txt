@@ -7,6 +7,8 @@ project(
   DESCRIPTION "Jorge's cool stuff")
 
 # Add the source directory where the actual Fortran sources are
+option(PIC_DEFAULT_INT8 "Use 8-byte integers as default" OFF)
+
 set(core_lib pic)
 add_library(${core_lib} STATIC)
 
@@ -21,14 +23,16 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Make sure Fortran modules are handled properly
 set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/modules)
 
-# Check if -DPIC_ENABLE_INT8 is passed and add compile definition SUBNORMAL
-if(PIC_ENABLE_INT8)
-  target_compile_definitions(${core_lib} PRIVATE SUBNORMAL)
+if(PIC_DEFAULT_INT8)
+  target_compile_definitions(${core_lib} PRIVATE USE_INT8)
+  set(BLA_SIZEOF_INTEGER 8)
+else()
+  set(BLA_SIZEOF_INTEGER 4)
 endif()
 
 # Print summary info
 message(STATUS "Fortran compiler: ${CMAKE_Fortran_COMPILER}")
-message(STATUS "PIC_ENABLE_INT8: ${PIC_ENABLE_INT8}")
+message(STATUS "Using 8-byte integers: ${PIC_DEFAULT_INT8}")
 
 add_subdirectory(src)
 find_package(
@@ -41,6 +45,7 @@ if(ENABLE_MPI)
     COMPONENTS Fortran
     REQUIRED)
 endif()
+
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 set(libraries_to_link OpenMP::OpenMP_Fortran LAPACK::LAPACK BLAS::BLAS)
