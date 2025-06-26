@@ -177,15 +177,6 @@ contains
          call write_log_line(self%log_file_unit, level, message, module, procedure)
       end if
 
-!      if (self%log_level >= log_level_value) then
-!         if (present(module) .and. present(procedure)) then
-!            write (*, *) trim(level), ': ', module, procedure, ': ', message
-!         else if (present(module)) then
-!            write (*, *) trim(level), ': ', module, ': ', message
-!         else
-!            write (*, *) trim(level), ': ', message
-!         end if
-!      end if
    end subroutine log
 
 end module pic_logger

@@ -48,10 +48,13 @@ endif()
 
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
+
 set(libraries_to_link OpenMP::OpenMP_Fortran LAPACK::LAPACK BLAS::BLAS)
+
 if(ENABLE_MPI)
   list(APPEND libraries_to_link MPI::MPI_Fortran)
 endif()
+
 target_link_libraries(${core_lib} ${libraries_to_link})
 # Install targets
 install(
