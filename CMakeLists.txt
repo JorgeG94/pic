@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 
 project(
   PIC
-  LANGUAGES Fortran
+  LANGUAGES Fortran C
   VERSION 1.0
   DESCRIPTION "Jorge's cool stuff")
 
