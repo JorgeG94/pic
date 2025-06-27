@@ -22,11 +22,6 @@ endif()
 set(core_lib pic)
 add_library(${core_lib} STATIC)
 
-# Set a default build type if not specified
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
-endif()
-
 # Enable position-independent code for shared-library linking support
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 

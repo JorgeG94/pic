@@ -18,22 +18,24 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/modules/"
 
 # Compiler-specific configurations
 if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
-  set(dialects
-      "-fdefault-real-8 -fdefault-double-8 -ffree-line-length-none -fbacktrace")
-  set(bounds "-fbounds-check -ffpe-trap=invalid,zero,overflow")
+  set(standard_compile_flags "-ffree-line-length-none -fbacktrace")
+  set(fpe "-ffpe-check -ffpe-trap=invalid,zero,overflow")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
-  set(dialects "-axAVX2 -r8 -traceback")
-  set(bounds "-check all -fpe0")
-elseif(CMAKE_Fortran_COMPILER_ID MATCHES "PGI")
-  set(dialects "-Mbackslash -Mallocatable=03 -r8 -traceback")
+  set(standard_compile_flags "-traceback")
+  set(fpe "-check all -fpe0")
+elseif(CMAKE_Fortran_COMPILER_ID MATCHES "IntelLLVM")
+  set(standard_compile_flags "-axAVX2 -traceback")
+  set(fpe "-check all -fpe0")
+elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "NVHPC")
+  set(standard_compile_flags "-traceback")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "LLVMFlang")
-  set(dialects "-fdefault-real-8 -fdefault-double-8")
+  set(standard_compile_flags "")
 endif()
 
 # Customize compiler flags
 set(CMAKE_Fortran_FLAGS_DEBUG
-    "${CMAKE_Fortran_FLAGS_DEBUG} ${bounds}"
+    "${CMAKE_Fortran_FLAGS_DEBUG} ${fpe}"
     PARENT_SCOPE)
 set(CMAKE_Fortran_FLAGS
-    "${CMAKE_Fortran_FLAGS} ${dialects}"
+    "${CMAKE_Fortran_FLAGS} ${standard_compile_flags}"
     PARENT_SCOPE)
