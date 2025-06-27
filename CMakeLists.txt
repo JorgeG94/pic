@@ -54,6 +54,7 @@ if(ENABLE_MPI)
     MPI
     COMPONENTS Fortran
     REQUIRED)
+  target_compile_definitions(${core_lib} PRIVATE USE_MPI)
 else()
   message(STATUS "Builing ${PROJECT_NAME} without MPI support")
 endif()
@@ -79,9 +80,6 @@ install(
 
 set(exe_name app)
 add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.F90)
-if(ENABLE_MPI)
-  target_compile_definitions(${exe_name} PRIVATE USE_MPI)
-endif()
 target_include_directories(${exe_name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
 
 target_link_libraries(
