@@ -3,6 +3,7 @@ program main
                       set_value, add_array, json_serialize, json_value, json_loads, &
                       cast_to_object, get_value
    use pic_logger, only: global => global_logger, warning_level, verbose_level
+   use testdrive, only: run_testsuite
    use pic_types
    use omp_lib
 #ifdef USE_MPI
