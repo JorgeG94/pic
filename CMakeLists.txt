@@ -6,8 +6,18 @@ project(
   VERSION 1.0
   DESCRIPTION "Jorge's cool stuff")
 
-# Add the source directory where the actual Fortran sources are
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+include(GNUInstallDirs)
+
 option(PIC_DEFAULT_INT8 "Use 8-byte integers as default" OFF)
+add_subdirectory(cmake)
+
+if(NOT TARGET "test-drive::test-drive")
+  find_package("test-drive" REQUIRED)
+endif()
+if(NOT TARGET "jonquil::jonquil")
+  find_package("jonquil" REQUIRED)
+endif()
 
 set(core_lib pic)
 add_library(${core_lib} STATIC)
@@ -44,6 +54,8 @@ if(ENABLE_MPI)
     MPI
     COMPONENTS Fortran
     REQUIRED)
+else()
+  message(STATUS "Builing ${PROJECT_NAME} without MPI support")
 endif()
 
 find_package(BLAS REQUIRED)
@@ -72,7 +84,9 @@ if(ENABLE_MPI)
 endif()
 target_include_directories(${exe_name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
 
-target_link_libraries(${exe_name} PRIVATE ${core_lib} BLAS::BLAS)
+target_link_libraries(
+  ${exe_name} PRIVATE ${core_lib} BLAS::BLAS jonquil::jonquil
+                      test-drive::test-drive)
 
 install(
   DIRECTORY ${CMAKE_BINARY_DIR}/
