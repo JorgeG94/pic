@@ -1,25 +1,30 @@
 module pic_matrix_printer
+   !! Matrix printing module
    use pic_types, only: dp, default_int
    use pic_string_utils, only: to_string
    implicit none(type, external)
-   !private  ! Make all procedures private by default
    public
    interface print_array
+     !! general interface for printing a one or two dimensional array
       module procedure print_vector
       module procedure print_matrix
    end interface print_array
 
    interface print_array_with_bounds
+    !! general interface to print an array within certain bounds
       module procedure print_vector_n
       module procedure print_matrix_m_n
    end interface print_array_with_bounds
 
    character(len=*), parameter :: fmt_edge = '(F14.10)'
+    !! no comma format
    character(len=*), parameter :: fmt_in = '(F14.10, ", ")'
+    !! comma format for between arrays
 
 contains
 
    subroutine print_vector_n(vec, n_elements, format_type)
+    !! print a vector from start up to n_elements
       implicit none(type, external)
       double precision, intent(in) :: vec(:)
       character(len=*), intent(in), optional :: format_type
@@ -38,8 +43,9 @@ contains
          call print_vector_in_format(vec, format_selected, n_elements)
       end if
    end subroutine print_vector_n
-   ! Subroutine to print a vector (1D array)
+
    subroutine print_vector(vec, format_type)
+    !! print a vector
       implicit none(type, external)
       real(kind=dp), intent(in) :: vec(:)  ! 1D array
       character(len=*), intent(in), optional :: format_type
@@ -59,8 +65,8 @@ contains
       end if
    end subroutine print_vector
 
-   ! Subroutine to print a matrix (2D array)
    subroutine print_matrix_m_n(mat, n_cols, n_rows, format_type)
+    !! Print a matrix of n_cols by n_rows
       implicit none(type, external)
       real(kind=dp), intent(in) :: mat(:, :)  ! 2D array
       integer(kind=default_int), intent(in) :: n_cols, n_rows
@@ -80,8 +86,8 @@ contains
       end if
    end subroutine print_matrix_m_n
 
-   ! Subroutine to print a matrix (2D array)
    subroutine print_matrix(mat, format_type)
+    !! print a matrix in a given format
       implicit none(type, external)
       real(kind=dp), intent(in) :: mat(:, :)  ! 2D array
       character(len=*), intent(in), optional :: format_type
@@ -100,8 +106,8 @@ contains
       end if
    end subroutine print_matrix
 
-   ! Private subroutine to print plain format for vectors
    subroutine print_plain_vector(vec, n_elements)
+    !! private subroutine that prints a vector of n_elements
       implicit none(type, external)
       real(kind=dp), intent(in) :: vec(:)
       integer(kind=default_int), intent(in), optional :: n_elements
@@ -117,8 +123,8 @@ contains
       end do
    end subroutine print_plain_vector
 
-   ! Private subroutine to print plain format for matrices
    subroutine print_plain_matrix(mat, n_cols, n_rows)
+    !! private subroutine that prints a plain matrix of n_cols by n_rows
       implicit none(type, external)
       real(kind=dp), intent(in) :: mat(:, :)
       integer(kind=default_int), intent(in), optional :: n_cols, n_rows
@@ -142,11 +148,12 @@ contains
       end do
    end subroutine print_plain_matrix
 
-   ! Subroutine to print vector in a specific format (NumPy/Mathematica)
    subroutine print_vector_in_format(vec, format_type, n_elements)
+    !! private subroutine that prints a vector in a format
       implicit none(type, external)
       real(kind=dp), intent(in) :: vec(:)
       character(len=*), intent(in) :: format_type
+        !! format can be mathematica or numpy
       integer(kind=default_int), intent(in), optional :: n_elements
       character(len=1) :: open_bracket, close_bracket
       integer(kind=default_int) :: i, loop_bound_i
@@ -181,11 +188,12 @@ contains
       print *, close_bracket
    end subroutine print_vector_in_format
 
-   ! Subroutine to print matrix in a specific format (NumPy/Mathematica)
    subroutine print_matrix_in_format(mat, format_type, n_cols, n_rows)
+    !! private subroutine to print a matrix in format
       implicit none(type, external)
       real(kind=dp), intent(in) :: mat(:, :)
       character(len=*), intent(in) :: format_type
+        !! format can be mathematica or numpy
       character(len=1) :: open_bracket, close_bracket
       integer(kind=default_int), intent(in), optional :: n_cols, n_rows
       integer(kind=default_int) :: i, j, loop_bound_i, loop_bound_j

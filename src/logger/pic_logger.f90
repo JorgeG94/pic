@@ -1,4 +1,5 @@
 module pic_logger
+!! this is the logger module
    use pic_types, only: default_int
    use pic_global_definitions, only: stdout, logfile_unit
 
@@ -16,11 +17,14 @@ module pic_logger
       error_level = 5
 
    type :: logger_type
+    !! custom logger data type
 
       private
 
       integer(default_int), public :: log_level = info_level
+        !! set default log level to info
       integer(default_int), public :: log_file_level = verbose_level
+        !! set default log file log level to verbose
       integer(default_int), private :: log_file_unit = -1
       logical, private :: log_file_open = .false.
 

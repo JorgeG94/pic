@@ -10,6 +10,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(GNUInstallDirs)
 
 option(PIC_DEFAULT_INT8 "Use 8-byte integers as default" OFF)
+option(PIC_ENABLE_MPI "Enable the use of MPI in PIC" OFF)
 add_subdirectory(cmake)
 
 if(NOT TARGET "test-drive::test-drive")
@@ -44,7 +45,7 @@ find_package(
   OpenMP
   COMPONENTS Fortran
   REQUIRED)
-if(ENABLE_MPI)
+if(PIC_ENABLE_MPI)
   find_package(
     MPI
     COMPONENTS Fortran
@@ -59,7 +60,7 @@ find_package(LAPACK REQUIRED)
 
 set(libraries_to_link OpenMP::OpenMP_Fortran LAPACK::LAPACK BLAS::BLAS)
 
-if(ENABLE_MPI)
+if(PIC_ENABLE_MPI)
   list(APPEND libraries_to_link MPI::MPI_Fortran)
 endif()
 

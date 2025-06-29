@@ -1,4 +1,5 @@
 module pic_comms
+  !! General MPI interface module
    use pic_types, only: default_int
 #ifdef USE_MPI
    use mpi_f08
@@ -6,22 +7,28 @@ module pic_comms
    implicit none
 
    type :: pic_comm
+    !! custom data type that holds the MPI communicators
 
       private
 
 #ifdef USE_MPI
       type(MPI_COMM), public :: comm
+        !! use the MPI_COMM from the mpi_f08 module interface
 #else
       integer(default_int), public :: dummy_comm
+        !! if we don't use MPI use an integer for a comm
 #endif
       integer(default_int), public :: m_rank
+        !! MPI rank
       integer(default_int), public :: m_size
+        !! MPI size
    contains
       procedure :: init => pic_comm_init
       procedure :: finalize => pic_comm_finalize
    end type pic_comm
 
    type(pic_comm), public :: world_comm
+    !! our world comm
 
 contains
 
