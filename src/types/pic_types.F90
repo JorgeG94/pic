@@ -7,8 +7,11 @@ module pic_types
    ! Define kinds for different data types
    ! int32 and int64 are defined in the iso_fortran_env, if you need to change things please do so here
    integer, parameter :: sp = SELECTED_REAL_KIND(6, 37)
+      !! single precision variable
    integer, parameter :: dp = SELECTED_REAL_KIND(15, 307)
+      !! double precision variable
    integer, parameter :: qp = SELECTED_REAL_KIND(33, 4931)
+      !! quadruple precision variable
 
    ! Define default types
 #ifdef USE_INT8
@@ -18,8 +21,8 @@ module pic_types
 #endif
     !! default integer kind, be careful if you are using fdefault-size=8
    integer, parameter :: default_real = dp
-     !! naturally, our default real is double precision
+    !! naturally, our default real is double precision
    integer, parameter :: default_complex = dp
-     !! default complex is double precision
+    !! default complex is double precision
 
 end module pic_types

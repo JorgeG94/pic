@@ -1,4 +1,4 @@
-# pic-beta
+# pic
 
 ---
 project: PIC

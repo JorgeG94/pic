@@ -1,4 +1,5 @@
 module pic_logger
+!! this is the logger module
    use pic_types, only: default_int
    use pic_global_definitions, only: stdout, logfile_unit
 
@@ -7,7 +8,7 @@ module pic_logger
    public :: global_logger, logger_type
 
    character(*), parameter :: name = 'pic_logger'
-   integer, parameter, public :: &
+   integer(default_int), parameter, public :: &
       debug_level = 10, &
       verbose_level = 9, &
       info_level = 8, &
@@ -16,11 +17,14 @@ module pic_logger
       error_level = 5
 
    type :: logger_type
+    !! custom logger data type
 
       private
 
       integer(default_int), public :: log_level = info_level
+        !! set default log level to info
       integer(default_int), public :: log_file_level = verbose_level
+        !! set default log file log level to verbose
       integer(default_int), private :: log_file_unit = -1
       logical, private :: log_file_open = .false.
 
@@ -61,7 +65,7 @@ contains
       character(*), intent(in) :: filename
       integer(default_int), intent(in), optional :: level
 
-      integer :: ios
+      integer(default_int) :: ios
 
       if (self%log_file_open) call self%close_log_file()
 
@@ -128,7 +132,7 @@ contains
    end subroutine error
 
    subroutine write_log_line(unit, level, message, module, procedure)
-      integer, intent(in) :: unit
+      integer(default_int), intent(in) :: unit
       character(*), intent(in) :: level, message
       character(*), intent(in), optional :: module, procedure
 
@@ -147,7 +151,7 @@ contains
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
 
-      integer :: log_level_value
+      integer(default_int) :: log_level_value
 
       select case (trim(level))
       case ('DEBUG')
