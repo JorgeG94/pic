@@ -59,10 +59,10 @@ else()
   message(STATUS "Builing ${PROJECT_NAME} without MPI support")
 endif()
 
-find_package(BLAS REQUIRED)
-find_package(LAPACK REQUIRED)
+# find_package(BLAS REQUIRED) find_package(LAPACK REQUIRED)
 
-set(libraries_to_link OpenMP::OpenMP_Fortran LAPACK::LAPACK BLAS::BLAS)
+# set(libraries_to_link OpenMP::OpenMP_Fortran LAPACK::LAPACK BLAS::BLAS)
+set(libraries_to_link OpenMP::OpenMP_Fortran)
 
 if(PIC_ENABLE_MPI)
   list(APPEND libraries_to_link MPI::MPI_Fortran)
