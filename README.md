@@ -1,6 +1,9 @@
 [![CMake Build](https://github.com/JorgeG94/pic/actions/workflows/cmake-build.yml/badge.svg)](https://github.com/JorgeG94/pic/actions/workflows/cmake-build.yml)
 [![FPM Build](https://github.com/JorgeG94/pic/actions/workflows/fpm-build.yml/badge.svg)](https://github.com/JorgeG94/pic/actions/workflows/fpm-build.yml)
 [![Deploy FORD Docs](https://github.com/JorgeG94/pic/actions/workflows/deploy-docs.yml/badge.svg)](https://github.com/JorgeG94/pic/actions/workflows/deploy-docs.yml)
+[![GitHub top language](https://img.shields.io/github/languages/top/JorgeG94/pic)](https://github.com/JorgeG94/pic)
+![License](https://img.shields.io/github/license/JorgeG94/pic)
+![Last Commit](https://img.shields.io/github/last-commit/JorgeG94/pic)
 
 PIC is named after the Huastec word PIC which means otter.
 
