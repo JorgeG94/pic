@@ -6,7 +6,7 @@ program main
    use testdrive, only: run_testsuite
    use pic_types
    use omp_lib
-   use pic_comms
+   use pic_mpi
    use pic_matrix_printer
    implicit none
    type(pic_comm) :: comm

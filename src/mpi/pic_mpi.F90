@@ -1,4 +1,4 @@
-module pic_comms
+module pic_mpi
   !! General MPI interface module
    use pic_types, only: default_int
 #ifdef USE_MPI
@@ -56,4 +56,4 @@ contains
 #endif
    end subroutine pic_comm_finalize
 
-end module pic_comms
+end module pic_mpi
