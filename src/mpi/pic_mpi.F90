@@ -33,6 +33,7 @@ module pic_mpi
 contains
 
    subroutine pic_comm_init(self)
+    !! initilalize the MPI library and get the size and rank variables
       class(pic_comm), intent(inout) :: self
       integer(default_int) :: ierr, rank, size
 #ifdef USE_MPI
@@ -49,6 +50,7 @@ contains
    end subroutine pic_comm_init
 
    subroutine pic_comm_finalize(self)
+    !! finalize the MPI library
       class(pic_comm), intent(inout) :: self
 #ifdef USE_MPI
       integer(default_int) :: ierr
