@@ -21,3 +21,9 @@ make -j
 ### FPM
 
 Install the FPM following the [instructions](https://fpm.fortran-lang.org/install/index.html#install) and then simply: `fpm build`
+
+## STATUS
+
+[![CMake Build](https://github.com/JorgeG94/pic/actions/workflows/cmake-build.yml/badge.svg)](https://github.com/JorgeG94/pic/actions/workflows/cmake-build.yml)
+[![FPM Build](https://github.com/JorgeG94/pic/actions/workflows/fpm-build.yml/badge.svg)](https://github.com/JorgeG94/pic/actions/workflows/fpm-build.yml)
+[![Deploy FORD Docs](https://github.com/JorgeG94/pic/actions/workflows/deploy-docs.yml/badge.svg)](https://github.com/JorgeG94/pic/actions/workflows/deploy-docs.yml)
