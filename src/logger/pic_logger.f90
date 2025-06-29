@@ -8,7 +8,7 @@ module pic_logger
    public :: global_logger, logger_type
 
    character(*), parameter :: name = 'pic_logger'
-   integer, parameter, public :: &
+   integer(default_int), parameter, public :: &
       debug_level = 10, &
       verbose_level = 9, &
       info_level = 8, &
@@ -65,7 +65,7 @@ contains
       character(*), intent(in) :: filename
       integer(default_int), intent(in), optional :: level
 
-      integer :: ios
+      integer(default_int) :: ios
 
       if (self%log_file_open) call self%close_log_file()
 
@@ -132,7 +132,7 @@ contains
    end subroutine error
 
    subroutine write_log_line(unit, level, message, module, procedure)
-      integer, intent(in) :: unit
+      integer(default_int), intent(in) :: unit
       character(*), intent(in) :: level, message
       character(*), intent(in), optional :: module, procedure
 
@@ -151,7 +151,7 @@ contains
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
 
-      integer :: log_level_value
+      integer(default_int) :: log_level_value
 
       select case (trim(level))
       case ('DEBUG')

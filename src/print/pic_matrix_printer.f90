@@ -26,7 +26,7 @@ contains
    subroutine print_vector_n(vec, n_elements, format_type)
     !! print a vector from start up to n_elements
       implicit none(type, external)
-      double precision, intent(in) :: vec(:)
+      real(dp), intent(in) :: vec(:)
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: format_selected
       integer(kind=default_int), intent(in) :: n_elements

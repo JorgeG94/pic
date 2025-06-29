@@ -21,8 +21,8 @@ module pic_types
 #endif
     !! default integer kind, be careful if you are using fdefault-size=8
    integer, parameter :: default_real = dp
-     !! naturally, our default real is double precision
+    !! naturally, our default real is double precision
    integer, parameter :: default_complex = dp
-     !! default complex is double precision
+    !! default complex is double precision
 
 end module pic_types

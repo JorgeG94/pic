@@ -1,5 +1,6 @@
 module pic_command_line
   !! command line interaction module
+   use pic_types, only: default_int
    implicit none(type, external)
 
    public
@@ -9,7 +10,7 @@ contains
    function get_first_argument_from_command_line() result(filename)
       character(len=255) :: filename
       character(len=255) :: arg
-      integer :: num_args
+      integer(default_int) :: num_args
 
       num_args = command_argument_count()
 
