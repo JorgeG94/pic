@@ -1,3 +1,7 @@
+!! pic_types.F90 controls the standarized sizes for the datatypes across
+!! pic, this is key for interfacing with other codes specially those that
+!! use default sizes
+
 module pic_types
    !! main module for defining types for integer and double precision
    use iso_fortran_env, only: int32, int64

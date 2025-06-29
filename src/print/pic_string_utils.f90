@@ -1,3 +1,7 @@
+!! Life is easier when we have strings. This file
+!! contains the necessary routines to transform key data
+!! types into strings
+
 module pic_string_utils
 !! General string utilities
    use pic_types, only: sp, dp, int32, int64

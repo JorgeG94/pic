@@ -1,3 +1,6 @@
+!! this file contains "helper" routines, for example printing
+!! a set amount of x characters to creates tables, etc.
+
 module pic_output_helpers
   !! Assorted output helper routines
    use pic_types, only: default_int

@@ -1,3 +1,5 @@
+!! The pic_command_line.f90 file will contain all routines that will interact with the command line
+
 module pic_command_line
   !! command line interaction module
    use pic_types, only: default_int

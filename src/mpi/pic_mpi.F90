@@ -1,3 +1,7 @@
+!! The pic_mpi.F90 file is the main interface to the MPI implementation, it should
+!! be done in such a way that we can compile the library with and without MPI
+!! it will be a pain in general, but meh, let's see what we can do
+
 module pic_mpi
   !! General MPI interface module
    use pic_types, only: default_int
