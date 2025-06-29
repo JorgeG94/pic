@@ -12,16 +12,6 @@ jobs:
         # mpi on windows is a nightmare
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
         compiler: ["gfortran"]
-        #compiler: ["gfortran", "ifx_linux-64", "lfortran", "flang"]
-        #exclude:
-        #  - os: macos-latest
-        #    compiler: flang
-        #  - os: macos-latest
-        #    compiler: ifx_linux-64
-        #  - os: windows-latest
-        #    compiler: ifx_linux-64
-        #  - os: windows-latest
-        #    compiler: flang
     steps:
       - uses: actions/checkout@v4
       - uses: conda-incubator/setup-miniconda@v3
@@ -38,7 +28,7 @@ jobs:
       - name: Install our own compiler using conda
         shell: bash -el {0}
         run: |
-          conda install -c conda-forge -n pic ${{matrix.compiler}}
+          conda install -c conda-forge -n pic ${{matrix.compiler}}=14.2.0
 
       - name: Execute cmake and build on Windows
         if: runner.os == 'Windows'
