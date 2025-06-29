@@ -48,3 +48,9 @@ jobs:
           export FC=${{matrix.compiler}}
           cmake -G "Ninja" -DPIC_ENABLE_MPI=ON -B build
           cmake --build build
+
+      - name: Run unit tests
+        shell: bash -el {0}
+        run: |
+          conda activate pic
+          ctest --test-dir build -V
