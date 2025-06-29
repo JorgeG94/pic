@@ -1,3 +1,9 @@
+!! the pic_logger.f90 is the base file that defines the logger function
+!! this is heavily inspired by the logger from the standard library
+!! but with some key changes for my purposes.
+!! The logger will be the way in which the code interacts
+!! with the output to console and files
+
 module pic_logger
 !! this is the logger module
    use pic_types, only: default_int

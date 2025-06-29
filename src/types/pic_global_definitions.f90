@@ -1,3 +1,7 @@
+!! this is an experimental file that contains definitions
+!! that will be uses across the program, for example input/output units
+!! that PIC will use across things.
+
 module pic_global_definitions
 !! Global definitions for input output
    use pic_types, only: default_int

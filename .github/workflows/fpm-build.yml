@@ -28,7 +28,7 @@ jobs:
       - name: Install our own compiler using conda
         shell: bash -el {0}
         run: |
-          conda install -c conda-forge -n pic ${{matrix.compiler}}
+          conda install -c conda-forge -n pic ${{matrix.compiler}}=14.2.0
 
       - name: FPM build
         shell: bash -el {0}
@@ -36,3 +36,8 @@ jobs:
           conda activate pic
           export FC=${{matrix.compiler}}
           fpm build
+      - name: FPM unit tests
+        shell: bash -el {0}
+        run: |
+          conda activate pic
+          fpm test

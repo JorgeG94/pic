@@ -1,3 +1,6 @@
+!! Routines to print vectors and matrices, currently no support for higher
+!! dimensional arrays. Need to fix that!
+
 module pic_matrix_printer
    !! Matrix printing module
    use pic_types, only: dp, default_int

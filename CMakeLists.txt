@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.22)
 
 project(
-  PIC
+  "PIC"
   LANGUAGES Fortran C
   VERSION 1.0
   DESCRIPTION "Jorge's cool stuff")
+set(project_name pic)
+enable_testing()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(GNUInstallDirs)
@@ -41,6 +43,8 @@ message(STATUS "Fortran compiler: ${CMAKE_Fortran_COMPILER}")
 message(STATUS "Using 8-byte integers: ${PIC_DEFAULT_INT8}")
 
 add_subdirectory(src)
+add_subdirectory(test)
+
 find_package(
   OpenMP
   COMPONENTS Fortran
@@ -78,9 +82,8 @@ set(exe_name app)
 add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.F90)
 target_include_directories(${exe_name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
 
-target_link_libraries(
-  ${exe_name} PRIVATE ${core_lib} BLAS::BLAS jonquil::jonquil
-                      test-drive::test-drive)
+target_link_libraries(${exe_name} PRIVATE ${core_lib} jonquil::jonquil
+                                          test-drive::test-drive)
 
 install(
   DIRECTORY ${CMAKE_BINARY_DIR}/

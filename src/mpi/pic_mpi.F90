@@ -1,3 +1,7 @@
+!! The pic_mpi.F90 file is the main interface to the MPI implementation, it should
+!! be done in such a way that we can compile the library with and without MPI
+!! it will be a pain in general, but meh, let's see what we can do
+
 module pic_mpi
   !! General MPI interface module
    use pic_types, only: default_int
@@ -33,6 +37,7 @@ module pic_mpi
 contains
 
    subroutine pic_comm_init(self)
+    !! initilalize the MPI library and get the size and rank variables
       class(pic_comm), intent(inout) :: self
       integer(default_int) :: ierr, rank, size
 #ifdef USE_MPI
@@ -49,6 +54,7 @@ contains
    end subroutine pic_comm_init
 
    subroutine pic_comm_finalize(self)
+    !! finalize the MPI library
       class(pic_comm), intent(inout) :: self
 #ifdef USE_MPI
       integer(default_int) :: ierr
