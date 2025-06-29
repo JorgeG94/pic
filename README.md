@@ -1,9 +1,3 @@
-# pic
-
----
-project: PIC
-author: Jorge Luis Gálvez Vallejo
----
 
 PIC is named after the Huastec word PIC which means otter.
 
