@@ -31,7 +31,6 @@ add_library(${core_lib} STATIC)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Make sure Fortran modules are handled properly
-set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/modules)
 
 if(PIC_DEFAULT_INT8)
   target_compile_definitions(${core_lib} PRIVATE USE_INT8)
@@ -46,6 +45,8 @@ message(STATUS "Using 8-byte integers: ${PIC_DEFAULT_INT8}")
 
 add_subdirectory(src)
 add_subdirectory(test)
+set_target_properties(${core_lib} PROPERTIES Fortran_MODULE_DIRECTORY
+                                             ${CMAKE_BINARY_DIR}/modules)
 if(PIC_ENABLE_OMP)
   find_package(
     OpenMP
@@ -76,6 +77,8 @@ install(
   TARGETS ${core_lib}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
+  INCLUDES
+  DESTINATION include/pic
   RUNTIME DESTINATION bin)
 
 # Install Fortran module files (assuming they are in the build directory)
@@ -88,7 +91,41 @@ target_link_libraries(${exe_name} PRIVATE ${core_lib} jonquil::jonquil
                                           test-drive::test-drive)
 
 install(
-  DIRECTORY ${CMAKE_BINARY_DIR}/
-  DESTINATION include
+  TARGETS pic
+  EXPORT picTargets
+  ARCHIVE DESTINATION lib
+  INCLUDES
+  DESTINATION include/pic)
+
+install(
+  DIRECTORY ${CMAKE_BINARY_DIR}/modules/
+  DESTINATION include/pic
   FILES_MATCHING
   PATTERN "*.mod")
+
+install(
+  EXPORT picTargets
+  FILE picTargets.cmake
+  NAMESPACE pic::
+  DESTINATION lib/cmake/pic)
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/picConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/picConfig.cmake"
+  INSTALL_DESTINATION lib/cmake/pic)
+
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/picConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY AnyNewerVersion)
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/picConfig.cmake"
+              "${CMAKE_CURRENT_BINARY_DIR}/picConfigVersion.cmake"
+        DESTINATION lib/cmake/pic)
+
+install(
+  FILES "${CMAKE_CURRENT_BINARY_DIR}/picConfig.cmake"
+  DESTINATION lib/cmake/pic
+  RENAME pic-config.cmake)
