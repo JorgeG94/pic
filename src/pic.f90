@@ -1,4 +1,4 @@
-module pic_library
+module pic
    implicit none
 
 contains
@@ -20,4 +20,4 @@ contains
       print *, ""
 
    end subroutine pic_print_banner
-end module pic_library
+end module pic
