@@ -13,6 +13,8 @@ include(GNUInstallDirs)
 
 option(PIC_DEFAULT_INT8 "Use 8-byte integers as default" OFF)
 option(PIC_ENABLE_MPI "Enable the use of MPI in PIC" OFF)
+option(PIC_ENABLE_OMP "Enable the use of OpenMP in PIC" OFF)
+
 add_subdirectory(cmake)
 
 if(NOT TARGET "test-drive::test-drive")
@@ -44,25 +46,25 @@ message(STATUS "Using 8-byte integers: ${PIC_DEFAULT_INT8}")
 
 add_subdirectory(src)
 add_subdirectory(test)
+if(PIC_ENABLE_OMP)
+  find_package(
+    OpenMP
+    COMPONENTS Fortran
+    REQUIRED)
+endif()
 
-find_package(
-  OpenMP
-  COMPONENTS Fortran
-  REQUIRED)
 if(PIC_ENABLE_MPI)
   find_package(
     MPI
     COMPONENTS Fortran
     REQUIRED)
   target_compile_definitions(${core_lib} PRIVATE USE_MPI)
-else()
-  message(STATUS "Builing ${PROJECT_NAME} without MPI support")
 endif()
 
-find_package(BLAS REQUIRED)
-find_package(LAPACK REQUIRED)
+# find_package(BLAS REQUIRED) find_package(LAPACK REQUIRED)
 
-set(libraries_to_link OpenMP::OpenMP_Fortran LAPACK::LAPACK BLAS::BLAS)
+# set(libraries_to_link OpenMP::OpenMP_Fortran LAPACK::LAPACK BLAS::BLAS)
+# set(libraries_to_link OpenMP::OpenMP_Fortran)
 
 if(PIC_ENABLE_MPI)
   list(APPEND libraries_to_link MPI::MPI_Fortran)

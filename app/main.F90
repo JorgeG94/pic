@@ -5,7 +5,6 @@ program main
    use pic_logger, only: global => global_logger, warning_level, verbose_level
    use testdrive, only: run_testsuite
    use pic_types
-   use omp_lib
    use pic_mpi
    use pic_matrix_printer
    implicit none
@@ -22,7 +21,7 @@ program main
    call comm%init()
 
    if (comm%m_rank == 0) then
-      print *, "This is the root process, rank: ", comm%m_rank, " with ", omp_get_max_threads(), " threads"
+      print *, "This is the root process, rank: ", comm%m_rank
       ! n = 4
       ! m = 4
       ! k = 4
