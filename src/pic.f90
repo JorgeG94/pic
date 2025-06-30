@@ -1,9 +1,12 @@
 module pic
+ !! simple interface module that prints banner and other information about the library
+ !! mostly here to verify installs, etc.
    implicit none
 
 contains
 
    subroutine pic_print_banner
+    !! my cool banner, work in progress
       implicit none
 
       print *, "========================================"
