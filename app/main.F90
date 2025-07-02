@@ -1,19 +1,19 @@
 program main
-   use jonquil, only: json_object, json_dump, json_error, json_array, &
-                      set_value, add_array, json_serialize, json_value, json_loads, &
-                      cast_to_object, get_value, add_object
+   !use jonquil, only: json_object, json_dump, json_error, json_array, &
+   !                   set_value, add_array, json_serialize, json_value, json_loads, &
+   !                   cast_to_object, get_value, add_object
    use pic_logger, only: global => global_logger, warning_level, verbose_level
-   use testdrive, only: run_testsuite
+   !use testdrive, only: run_testsuite
    use pic_types
    use pic_mpi
    use pic_matrix_printer
    use pic_timers
    implicit none
    type(pic_comm) :: comm
-   class(json_value), allocatable :: val
-   type(json_object), pointer :: my_object, new_object
-   type(json_array), pointer :: my_array, new_array
-   type(json_error), allocatable :: error
+   !class(json_value), allocatable :: val
+   !type(json_object), pointer :: my_object, new_object
+   !type(json_array), pointer :: my_array, new_array
+   !type(json_error), allocatable :: error
    integer(default_int) :: ierr, rank, size, ival
    real(dp), dimension(:, :), allocatable :: A, B, C
    real(dp), dimension(:), allocatable :: C_flat

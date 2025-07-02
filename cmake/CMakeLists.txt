@@ -6,12 +6,6 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     STATUS "Setting build type to '${CMAKE_BUILD_TYPE}' as none was specified.")
 endif()
 
-# Add modules to the CMake build
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modules")
-set(CMAKE_MODULE_PATH
-    "${CMAKE_MODULE_PATH}"
-    PARENT_SCOPE)
-
 # specify module installation directory
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/modules/"
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")

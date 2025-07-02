@@ -6,23 +6,30 @@ project(
   VERSION 1.0
   DESCRIPTION "Jorge's cool stuff")
 set(project_name pic)
-enable_testing()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(GNUInstallDirs)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+include(print_status)
 
 option(PIC_DEFAULT_INT8 "Use 8-byte integers as default" OFF)
 option(PIC_ENABLE_MPI "Enable the use of MPI in PIC" OFF)
 option(PIC_ENABLE_OMP "Enable the use of OpenMP in PIC" OFF)
 option(PIC_ENABLE_BLAS "Enable BLAS/LAPACK libraries in PIC" OFF)
+option(PIC_ENABLE_TESTING "Enable testing for PIC" ON)
+option(PIC_ENABLE_JONQUIL "Enable Jonquil for json/toml handling" OFF)
 
 add_subdirectory(cmake)
 
-if(NOT TARGET "test-drive::test-drive")
+set(external_libraries_to_link)
+if(NOT TARGET test-drive::test-drive AND PIC_ENABLE_TESTING)
+  enable_testing()
   find_package("test-drive" REQUIRED)
+  list(APPEND external_libraries_to_link test-drive::test-drive)
 endif()
-if(NOT TARGET "jonquil::jonquil")
+if(NOT TARGET jonquil::jonquil AND PIC_ENABLE_JONQUIL)
   find_package("jonquil" REQUIRED)
+  list(APPEND external_libraries_to_link jonquil::jonquil)
 endif()
 
 set(core_lib pic)
@@ -45,7 +52,9 @@ message(STATUS "Fortran compiler: ${CMAKE_Fortran_COMPILER}")
 message(STATUS "Using 8-byte integers: ${PIC_DEFAULT_INT8}")
 
 add_subdirectory(src)
-add_subdirectory(test)
+if(PIC_ENABLE_TESTING)
+  add_subdirectory(test)
+endif()
 set_target_properties(${core_lib} PROPERTIES Fortran_MODULE_DIRECTORY
                                              ${CMAKE_BINARY_DIR}/modules)
 set(libraries_to_link)
@@ -88,8 +97,8 @@ set(exe_name app)
 add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.F90)
 target_include_directories(${exe_name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
 
-target_link_libraries(${exe_name} PRIVATE ${core_lib} jonquil::jonquil
-                                          test-drive::test-drive)
+target_link_libraries(${exe_name} PRIVATE ${core_lib}
+                                          ${external_libraries_to_link})
 
 install(
   TARGETS pic
@@ -130,3 +139,5 @@ install(
   FILES "${CMAKE_CURRENT_BINARY_DIR}/picConfig.cmake"
   DESTINATION lib/cmake/pic
   RENAME pic-config.cmake)
+
+print_pic_summary()
