@@ -1,3 +1,4 @@
+!! the main pic module interface: versions, banners, random quotes etc will go here
 module pic
  !! simple interface module that prints banner and other information about the library
  !! mostly here to verify installs, etc.
