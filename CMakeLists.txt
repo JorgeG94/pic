@@ -14,6 +14,7 @@ include(GNUInstallDirs)
 option(PIC_DEFAULT_INT8 "Use 8-byte integers as default" OFF)
 option(PIC_ENABLE_MPI "Enable the use of MPI in PIC" OFF)
 option(PIC_ENABLE_OMP "Enable the use of OpenMP in PIC" OFF)
+option(PIC_ENABLE_BLAS "Enable BLAS/LAPACK libraries in PIC" OFF)
 
 add_subdirectory(cmake)
 
@@ -47,11 +48,13 @@ add_subdirectory(src)
 add_subdirectory(test)
 set_target_properties(${core_lib} PROPERTIES Fortran_MODULE_DIRECTORY
                                              ${CMAKE_BINARY_DIR}/modules)
+set(libraries_to_link)
 if(PIC_ENABLE_OMP)
   find_package(
     OpenMP
     COMPONENTS Fortran
     REQUIRED)
+  list(APPEND libraries_to_link OpenMP::OpenMP_Fortran)
 endif()
 
 if(PIC_ENABLE_MPI)
@@ -60,18 +63,13 @@ if(PIC_ENABLE_MPI)
     COMPONENTS Fortran
     REQUIRED)
   target_compile_definitions(${core_lib} PRIVATE USE_MPI)
-endif()
-
-# find_package(BLAS REQUIRED) find_package(LAPACK REQUIRED)
-
-# set(libraries_to_link OpenMP::OpenMP_Fortran LAPACK::LAPACK BLAS::BLAS)
-# set(libraries_to_link OpenMP::OpenMP_Fortran)
-
-if(PIC_ENABLE_MPI)
   list(APPEND libraries_to_link MPI::MPI_Fortran)
 endif()
-if(PIC_ENABLE_OMP)
-  list(APPEND libraries_to_link OpenMP::OpenMP_Fortran)
+
+if(PIC_ENABLE_BLAS)
+  find_package(BLAS REQUIRED)
+  find_package(LAPACK REQUIRED)
+  list(APPEND libraries_to_link LAPACK::LAPACK BLAS::BLAS)
 endif()
 
 target_link_libraries(${core_lib} ${libraries_to_link})
