@@ -70,6 +70,9 @@ endif()
 if(PIC_ENABLE_MPI)
   list(APPEND libraries_to_link MPI::MPI_Fortran)
 endif()
+if(PIC_ENABLE_OMP)
+  list(APPEND libraries_to_link OpenMP::OpenMP_Fortran)
+endif()
 
 target_link_libraries(${core_lib} ${libraries_to_link})
 # Install targets
