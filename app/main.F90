@@ -7,6 +7,7 @@ program main
    use pic_types
    use pic_mpi
    use pic_matrix_printer
+   use pic_timers
    implicit none
    type(pic_comm) :: comm
    class(json_value), allocatable :: val
@@ -22,6 +23,27 @@ program main
 
    if (comm%m_rank == 0) then
       print *, "This is the root process, rank: ", comm%m_rank
+
+      ! block
+      !   type(pic_timer) :: my_timer
+      !   integer :: i
+      !   integer, parameter :: n_loops = 200000000
+      !   real(dp) :: s
+      !   real(dp) :: elapsed_time
+      !   s = 0.0_dp
+      !   call my_timer%begin()
+      !   do i = 1, n_loops
+      !   s = s + sin(real(i, dp))
+      !   end do
+      !   call my_timer%finish()
+      !   call my_timer%print_time()
+      !   elapsed_time = my_timer%get_elapsed_time()
+      !   print *, "My elpsed time is ", elapsed_time
+      !   do i = 1, 5
+      !     print *, s
+      !   end do
+      ! end block
+
       ! n = 4
       ! m = 4
       ! k = 4
