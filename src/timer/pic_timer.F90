@@ -13,37 +13,37 @@ module pic_timers
     !! derived type for a timer, contains the start, stop, and count variables
     !! can work with or without omp
       private
-      real(dp) :: start, stop
+      real(dp) :: start_time, stop_time
       integer :: start_count, stop_count
       integer :: count_rate
    contains
-      procedure :: begin => pic_timer_begin
-      procedure :: finish => pic_timer_finish
+      procedure :: start => pic_timer_start
+      procedure :: end => pic_timer_end
       procedure :: print_time => pic_timer_print_time
       procedure :: get_elapsed_time => pic_timer_get_elapsed_time
    end type pic_timer
 
 contains
 
-   subroutine pic_timer_begin(self)
+   subroutine pic_timer_start(self)
     !! and away we go!
       class(pic_timer), intent(inout) :: self
 #ifdef _OPENMP
-      self%start = omp_get_wtime()
+      self%start_time = omp_get_wtime()
 #else
       call system_clock(self%start_count, self%count_rate)
 #endif
-   end subroutine pic_timer_begin
+   end subroutine pic_timer_start
 
-   subroutine pic_timer_finish(self)
+   subroutine pic_timer_end(self)
     !! and we're done!
       class(pic_timer), intent(inout) :: self
 #ifdef _OPENMP
-      self%stop = omp_get_wtime()
+      self%stop_time = omp_get_wtime()
 #else
       call system_clock(self%stop_count)
 #endif
-   end subroutine pic_timer_finish
+   end subroutine pic_timer_end
 
    subroutine pic_timer_print_time(self)
     !! print the time nicely
@@ -58,7 +58,7 @@ contains
       class(pic_timer), intent(in) :: self
       real(dp) :: elapsed
 #ifdef _OPENMP
-      elapsed = self%stop - self%start
+      elapsed = self%stop_time - self%start_time
 #else
       elapsed = real(self%stop_count - self%start_count, dp)/real(self%count_rate, dp)
 #endif
