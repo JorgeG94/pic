@@ -1,6 +1,5 @@
 ---
 src_dir: src
-         test
 output_dir: docs/fpm-ford
 project: PIC
 summary: A set of commonly used modules for HPC

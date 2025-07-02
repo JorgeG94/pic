@@ -15,6 +15,8 @@ There's two build systems included in the present version, CMake and the [Fortra
 
 The dependencies of the project are, as of now, CMake (if using cmake), MPI, OpenMP, and a BLAS/LAPACK library.
 
+You can find the the source docs [here](https://jorgeg94.github.io/pic/)
+
 ### CMake
 
 ```
