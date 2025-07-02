@@ -1,4 +1,7 @@
+!! timing routines in general
+
 module pic_timers
+  !! contains a simple timer module to measure and record time
    use pic_types
    use pic_string_utils
 #ifdef _OPENMP
@@ -7,6 +10,8 @@ module pic_timers
    implicit none
 
    type :: pic_timer
+    !! derived type for a timer, contains the start, stop, and count variables
+    !! can work with or without omp
       private
       real(dp) :: start, stop
       integer :: start_count, stop_count
@@ -21,6 +26,7 @@ module pic_timers
 contains
 
    subroutine pic_timer_begin(self)
+    !! and away we go!
       class(pic_timer), intent(inout) :: self
 #ifdef _OPENMP
       self%start = omp_get_wtime()
@@ -30,6 +36,7 @@ contains
    end subroutine pic_timer_begin
 
    subroutine pic_timer_finish(self)
+    !! and we're done!
       class(pic_timer), intent(inout) :: self
 #ifdef _OPENMP
       self%stop = omp_get_wtime()
@@ -39,6 +46,7 @@ contains
    end subroutine pic_timer_finish
 
    subroutine pic_timer_print_time(self)
+    !! print the time nicely
       class(pic_timer), intent(in) :: self
       real(dp) :: elapsed
       elapsed = self%get_elapsed_time()
@@ -46,6 +54,7 @@ contains
    end subroutine pic_timer_print_time
 
    function pic_timer_get_elapsed_time(self) result(elapsed)
+    !! return the elapsed time in double precision, in case the user wants it
       class(pic_timer), intent(in) :: self
       real(dp) :: elapsed
 #ifdef _OPENMP
