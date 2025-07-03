@@ -3,7 +3,7 @@
 module pic_command_line
   !! command line interaction module
    use pic_types, only: default_int
-   implicit none(type, external)
+   implicit none
 
    public
 
