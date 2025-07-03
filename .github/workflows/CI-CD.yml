@@ -1,143 +1,65 @@
-# Thanks to infinity to https://github.com/gha3mi/setup-fortran-conda
-# for setting this up. MIT Licensed.
-name: Setup Fortran Conda CI/CD
+name: CI
 
-on:
-  push:
-    branches: [feat/big-ci]
-  pull_request:
-    branches: [main]
-
-permissions:
-  contents: write
-  pull-requests: write
+on: [push, pull_request]
 
 jobs:
-
-  # Run FPM tests (debug + release) on all OS/compiler combinations
-  test_fpm:
-    name: ${{ matrix.os }}_${{ matrix.compiler }}_fpm
+  Build:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        compiler: [gfortran, ifx, lfortran, flang-new, nvfortran]
-        include:
-          - os: ubuntu-latest
-            extra-packages: ""
-          - os: windows-latest
-            extra-packages: ""
-          - os: macos-latest
-            extra-packages: ""
-        exclude:
-          - os: macos-latest
-            compiler: flang-new
-          - os: macos-latest
-            compiler: ifx
-          - os: macos-latest
-            compiler: nvfortran
-          - os: windows-latest
-            compiler: nvfortran
+        os: [ubuntu-latest]
+        toolchain:
+          - {compiler: gcc, version: 10}
+          - {compiler: gcc, version: 11}
+          - {compiler: gcc, version: 12}
+          - {compiler: gcc, version: 13}
+          - {compiler: gcc, version: 14}
+          - {compiler: intel, version: '2024.1'}
+        build: [cmake]
+    env:
+      BUILD_DIR: ${{ matrix.build == 'cmake' && 'build' || '.' }}
 
     steps:
-      - name: Setup Fortran
-        uses: gha3mi/setup-fortran-conda@latest
-        with:
-          compiler: ${{ matrix.compiler }}
-          platform: ${{ matrix.os }}
-          extra-packages: ${{ matrix.extra-packages }}
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: fpm test (debug)
-        run: fpm test --compiler ${{ matrix.compiler }} --profile debug --verbose
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v5 # Use pip to install latest CMake, & FORD/Jin2For, etc.
+      with:
+        python-version: 3.x
 
-      - name: fpm test (release)
-        run: fpm test --compiler ${{ matrix.compiler }} --profile release --verbose
+    - name: Install fypp
+      run: pip install --upgrade fypp ninja
 
-  # Run CMake + Ninja build/tests across OS/compiler matrix
-  test_cmake:
-    name: ${{ matrix.os }}_${{ matrix.compiler }}_cmake
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        compiler: [gfortran, ifx, lfortran, flang-new, nvfortran]
-        include:
-          - os: ubuntu-latest
-            extra-packages: "cmake, ninja"
-          - os: windows-latest
-            extra-packages: "cmake, ninja"
-          - os: macos-latest
-            extra-packages: "cmake, ninja"
-        exclude:
-          - os: macos-latest
-            compiler: flang-new
-          - os: macos-latest
-            compiler: ifx
-          - os: macos-latest
-            compiler: nvfortran
-          - os: windows-latest
-            compiler: nvfortran
+    - name: Setup Fortran compiler
+      uses: fortran-lang/setup-fortran@v1.6.2
+      id: setup-fortran
+      with:
+        compiler: ${{ matrix.toolchain.compiler }}
+        version: ${{ matrix.toolchain.version }}
 
-    steps:
-      - name: Setup Fortran
-        uses: gha3mi/setup-fortran-conda@latest
-        with:
-          compiler: ${{ matrix.compiler }}
-          platform: ${{ matrix.os }}
-          extra-packages: ${{ matrix.extra-packages }}
+    # Build and test with built-in BLAS and LAPACK
+    - name: Configure with CMake
+      if: ${{ contains(matrix.build, 'cmake') }}
+      run: >-
+        cmake -G Ninja
+        -DCMAKE_BUILD_TYPE=Release
+        -S . -B ${{ env.BUILD_DIR }}
 
-      - name: cmake test (debug)
-        run: |
-          cmake -S . -B build/debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -G Ninja
-          cmake --build build/debug
-          ctest --test-dir build/debug --output-on-failure
+    - name: Build and compile
+      if: ${{ contains(matrix.build, 'cmake') }}
+      run: cmake --build ${{ env.BUILD_DIR }} --parallel
 
-      - name: cmake test (release)
-        run: |
-          cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -G Ninja
-          cmake --build build/release
-          ctest --test-dir build/release --output-on-failure
+    - name: catch build fail
+      if: ${{ failure() && contains(matrix.build, 'cmake') }}
+      run: cmake --build ${{ env.BUILD_DIR }} --verbose --parallel 1
 
-
-  # Generate STATUS.md from FPM job results
-  status_fpm:
-    name: Generate STATUS.md
-    if: always()
-    needs: test_fpm
-    runs-on: ubuntu-latest
-    steps:
-      - name: Generate summary
-        uses: gha3mi/setup-fortran-conda@latest
-        with:
-          generate-status-fpm: true
-
-  # Generate STATUS.md from CMake job results
-  status_cmake:
-    name: Generate STATUS.md
-    if: always()
-    needs: test_cmake
-    runs-on: ubuntu-latest
-    steps:
-      - name: Generate summary
-        uses: gha3mi/setup-fortran-conda@latest
-        with:
-          generate-status-cmake: true
-
-  # Inject CI status table into README.md
-#  update_readme_table:
-#    name: Update README.md status table
-#    if: |
-#      always() &&
-#      github.ref != 'refs/heads/update-readme-table'
-#    needs: [status_fpm, status_cmake]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Update README status
-#        uses: gha3mi/setup-fortran-conda@latest
-#        with:
-#          update-readme-table: true
-#          update-readme-token: ${{ secrets.GH_PAT }}   # Update with your GitHub personal access token
-#          update-readme-user-name: "Your Name" # Update with your name
-#          update-readme-user-email: "you@example.com"  # Update with your email
+    - name: test
+      if: ${{ contains(matrix.build, 'cmake') }}
+      run: >-
+        ctest
+        --test-dir ${{ env.BUILD_DIR }}
+        --parallel
+        --output-on-failure
+        --no-tests=error
