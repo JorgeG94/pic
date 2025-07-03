@@ -9,7 +9,7 @@ module pic_logger
    use pic_types, only: default_int
    use pic_global_definitions, only: stdout, logfile_unit
 
-   implicit none(type, external)
+   implicit none
    private
    public :: global_logger, logger_type
 

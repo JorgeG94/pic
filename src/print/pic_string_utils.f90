@@ -5,7 +5,7 @@
 module pic_string_utils
 !! General string utilities
    use pic_types, only: sp, dp, int32, int64
-   implicit none(type, external)
+   implicit none
    ! Generic interface for to_string to handle different types
    public
    interface to_string

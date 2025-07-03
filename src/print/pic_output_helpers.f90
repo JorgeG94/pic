@@ -4,7 +4,7 @@
 module pic_output_helpers
   !! Assorted output helper routines
    use pic_types, only: default_int
-   implicit none(type, external)
+   implicit none
    public
 
 contains
