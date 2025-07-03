@@ -1,4 +1,4 @@
-name: Test cmake build
+name: Multi OS build with GNU
 
 on: [push]
 
@@ -37,7 +37,7 @@ jobs:
           conda activate pic
           export FC=${{matrix.compiler}}
           #cmake -DCMAKE_AR=gcc-ar -G "Ninja" -B build
-          cmake -G "Ninja" -B build
+          cmake -DPIC_ENABLE_OMP=ON -DPIC_ENABLE_BLAS=ON -G "Ninja" -B build
           cmake --build build
 
       - name: Execute cmake and build
@@ -46,7 +46,7 @@ jobs:
         run: |
           conda activate pic
           export FC=${{matrix.compiler}}
-          cmake -G "Ninja" -DPIC_ENABLE_MPI=ON -B build
+          cmake -G "Ninja" -DPIC_ENABLE_MPI=ON -DPIC_ENABLE_OMP=ON -DPIC_ENABLE_BLAS=ON -B build
           cmake --build build
 
       - name: Run unit tests
@@ -54,3 +54,20 @@ jobs:
         run: |
           conda activate pic
           ctest --test-dir build -V
+
+      - name: Clean build dir
+        shell: bash -el {0}
+        run: |
+          rm -rf build
+
+      - name: FPM build
+        shell: bash -el {0}
+        run: |
+          conda activate pic
+          export FC=${{matrix.compiler}}
+          fpm build
+      - name: FPM unit tests
+        shell: bash -el {0}
+        run: |
+          conda activate pic
+          fpm test
