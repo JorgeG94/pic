@@ -6,15 +6,13 @@ program main
    use pic_flop_rate
    use mpi_f08
    implicit none
-   integer(default_int) :: ierr, rank, size, ival
-   real(dp), dimension(:), allocatable :: C_flat
+   integer(default_int) :: ierr, rank, size
    !integer(default_int) :: n, m, k, flat_size
    integer(int64) :: flops, total_flops
    !type(flop_recorder_type) :: pic_flops
    type(flop_rate_type) :: pic_flops
    real(dp) :: max_time
    real(dp) :: elapsed_time
-   real(dp) :: flop_rate
 
    call MPI_Init(ierr)
    call MPI_Comm_rank(MPI_COMM_WORLD, rank, ierr)
@@ -24,7 +22,6 @@ program main
    total_flops = 0_int64
 
    block
-      type(pic_timer) :: my_timer
       real(dp), dimension(:, :), allocatable :: A, B, C
       integer, parameter :: n_loops = 10
       integer, parameter :: m_size = 1024
@@ -57,10 +54,12 @@ program main
    call MPI_Reduce(elapsed_time, max_time, 1, MPI_DOUBLE_PRECISION, MPI_MAX, 0, MPI_COMM_WORLD, ierr)
 
    if (rank == 0) then
-      flop_rate = pic_flops%get_flop_rate()!real(total_flops, dp)/max_time/1.0d9
+      !flop_rate = pic_flops%get_flop_rate()
+      ! you can also get the FLOP rate like this and use it for something
       print *, "Global time: ", max_time, " seconds"
       print *, "Total GFLOPs: ", total_flops/1d9
-      print *, "Global FLOP rate: ", flop_rate, " GFLOP/s"
+      !print *, "Global FLOP rate: ", flop_rate, " GFLOP/s"
+      call pic_flops%report()
    end if
 
    call MPI_Finalize(ierr)

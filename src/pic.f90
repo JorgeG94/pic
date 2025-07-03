@@ -19,9 +19,7 @@ contains
       print *, "        |_|    |_____|\\_____|"
       print *, "                                        "
       print *, "               PIC LIBRARY"
-      print *, ""
       print *, "========================================"
-      print *, ""
 
    end subroutine pic_print_banner
 end module pic
