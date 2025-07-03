@@ -2,14 +2,9 @@
 # for setting this up. MIT Licensed.
 name: LFORTRAN CI
 
-# on Wednesday we wear pink (and see if lfortran works)
 on:
-  push:
-    branches:
-      - main
   schedule:
-    - cron: '0 0 * * 3'
-
+    - cron: '0 0 * * *'  # Every day at 00:00 UTC
 
 permissions:
   contents: write
@@ -17,7 +12,6 @@ permissions:
 
 jobs:
 
-  # Run FPM tests (debug + release) on all OS/compiler combinations
   test_fpm:
     name: ${{ matrix.os }}_${{ matrix.compiler }}_fpm
     runs-on: ${{ matrix.os }}
