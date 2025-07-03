@@ -5,7 +5,7 @@ module pic_flop_recorder
    implicit none
 
    type :: flop_recorder_type
-    !! the flop recorder type simply contains a flop count 
+    !! the flop recorder type simply contains a flop count
     !! this should be the largest possible integer in the planet
     !! currently this will overflow for zetta flops
 
@@ -23,7 +23,7 @@ module pic_flop_recorder
 contains
 
    subroutine add_flops(self, flops)
-    !! add the FLOPs! 
+    !! add the FLOPs!
       implicit none
       class(flop_recorder_type), intent(inout) :: self
       integer(int64), intent(in) :: flops
