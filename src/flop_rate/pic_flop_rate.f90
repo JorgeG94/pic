@@ -5,6 +5,7 @@ module pic_flop_rate
    use pic_types
    use pic_timers
    use pic_flop_recorder
+   use pic_string_utils, only: to_string
    implicit none
 
    type flop_rate_type
@@ -102,8 +103,9 @@ contains
   !! report the flop rate in GFLOP/s
   !! this is a convenience function to print the flop rate
       implicit none
-      class(flop_rate_type), intent(in) :: self
-      print *, "The flop rate is ", self%m_flop_rate, " GFLOP/s"
+      class(flop_rate_type), intent(inout) :: self
+      self%m_flop_rate = self%get_flop_rate()
+      print *, "Flop rate is "//to_string(self%m_flop_rate)//" GFLOP/s"
 
    end subroutine flop_rate_report
 
