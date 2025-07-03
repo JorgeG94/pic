@@ -48,8 +48,6 @@ else()
 endif()
 
 # Print summary info
-message(STATUS "Fortran compiler: ${CMAKE_Fortran_COMPILER}")
-message(STATUS "Using 8-byte integers: ${PIC_DEFAULT_INT8}")
 
 add_subdirectory(src)
 if(PIC_ENABLE_TESTING)
