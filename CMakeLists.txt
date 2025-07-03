@@ -18,6 +18,8 @@ option(PIC_ENABLE_OMP "Enable the use of OpenMP in PIC" OFF)
 option(PIC_ENABLE_BLAS "Enable BLAS/LAPACK libraries in PIC" OFF)
 option(PIC_ENABLE_TESTING "Enable testing for PIC" ON)
 option(PIC_ENABLE_JONQUIL "Enable Jonquil for json/toml handling" OFF)
+option(PIC_BUILD_STRESS "Build dgemm flop stress case" OFF)
+mark_as_advanced(PIC_BUILD_STRESS)
 
 add_subdirectory(cmake)
 
@@ -48,8 +50,6 @@ else()
 endif()
 
 # Print summary info
-message(STATUS "Fortran compiler: ${CMAKE_Fortran_COMPILER}")
-message(STATUS "Using 8-byte integers: ${PIC_DEFAULT_INT8}")
 
 add_subdirectory(src)
 if(PIC_ENABLE_TESTING)
@@ -96,9 +96,17 @@ install(
 set(exe_name app)
 add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.F90)
 target_include_directories(${exe_name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
-
 target_link_libraries(${exe_name} PRIVATE ${core_lib}
                                           ${external_libraries_to_link})
+if(PIC_BUILD_STRESS)
+  set(exe_name_2 stress)
+  add_executable(${exe_name_2}
+                 ${PROJECT_SOURCE_DIR}/examples/stress_test/main.f90)
+  target_include_directories(${exe_name_2}
+                             PRIVATE "${CMAKE_BINARY_DIR}/modules")
+  target_link_libraries(${exe_name_2} PRIVATE ${core_lib}
+                                              ${external_libraries_to_link})
+endif()
 
 install(
   TARGETS pic

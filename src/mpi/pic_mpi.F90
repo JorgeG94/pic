@@ -26,6 +26,7 @@ module pic_mpi
         !! MPI rank
       integer(default_int), public :: m_size
         !! MPI size
+      integer(default_int), public :: m_ierr
    contains
       procedure :: init => pic_comm_init
       procedure :: finalize => pic_comm_finalize
@@ -39,9 +40,10 @@ contains
    subroutine pic_comm_init(self)
     !! initilalize the MPI library and get the size and rank variables
       class(pic_comm), intent(inout) :: self
-      integer(default_int) :: ierr, rank, size
 #ifdef USE_MPI
+      integer(default_int) :: ierr, rank, size
       call MPI_Init(ierr)
+      self%m_ierr = ierr
       self%comm = MPI_COMM_WORLD
       call MPI_Comm_size(self%comm, size, ierr)
       call MPI_Comm_rank(self%comm, rank, ierr)
@@ -59,6 +61,9 @@ contains
 #ifdef USE_MPI
       integer(default_int) :: ierr
       call MPI_Finalize(ierr)
+      self%m_ierr = ierr
+#else
+      self%m_ierr = 0
 #endif
    end subroutine pic_comm_finalize
 

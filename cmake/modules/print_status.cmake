@@ -1,6 +1,7 @@
 function(print_pic_summary)
   message(STATUS "")
   message(STATUS "========== PIC Configuration Summary ==========")
+  message(STATUS "  Fortran compiler      : ${CMAKE_Fortran_COMPILER_ID}")
   message(STATUS "  PIC_DEFAULT_INT8      : ${PIC_DEFAULT_INT8}")
   message(STATUS "  PIC_ENABLE_MPI        : ${PIC_ENABLE_MPI}")
   message(STATUS "  PIC_ENABLE_OMP        : ${PIC_ENABLE_OMP}")

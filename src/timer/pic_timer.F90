@@ -17,15 +17,15 @@ module pic_timers
       integer :: start_count, stop_count
       integer :: count_rate
    contains
-      procedure :: start => pic_timer_start
-      procedure :: end => pic_timer_end
-      procedure :: print_time => pic_timer_print_time
-      procedure :: get_elapsed_time => pic_timer_get_elapsed_time
+      procedure :: start => timer_start
+      procedure :: stop => timer_stop
+      procedure :: print_time => timer_print_time
+      procedure :: get_elapsed_time => timer_get_elapsed_time
    end type pic_timer
 
 contains
 
-   subroutine pic_timer_start(self)
+   subroutine timer_start(self)
     !! and away we go!
       class(pic_timer), intent(inout) :: self
 #ifdef _OPENMP
@@ -33,9 +33,9 @@ contains
 #else
       call system_clock(self%start_count, self%count_rate)
 #endif
-   end subroutine pic_timer_start
+   end subroutine timer_start
 
-   subroutine pic_timer_end(self)
+   subroutine timer_stop(self)
     !! and we're done!
       class(pic_timer), intent(inout) :: self
 #ifdef _OPENMP
@@ -43,17 +43,17 @@ contains
 #else
       call system_clock(self%stop_count)
 #endif
-   end subroutine pic_timer_end
+   end subroutine timer_stop
 
-   subroutine pic_timer_print_time(self)
+   subroutine timer_print_time(self)
     !! print the time nicely
       class(pic_timer), intent(in) :: self
       real(dp) :: elapsed
       elapsed = self%get_elapsed_time()
       print *, "Elapsed time: "//to_string(elapsed)//" seconds"
-   end subroutine pic_timer_print_time
+   end subroutine timer_print_time
 
-   function pic_timer_get_elapsed_time(self) result(elapsed)
+   function timer_get_elapsed_time(self) result(elapsed)
     !! return the elapsed time in double precision, in case the user wants it
       class(pic_timer), intent(in) :: self
       real(dp) :: elapsed
@@ -62,6 +62,6 @@ contains
 #else
       elapsed = real(self%stop_count - self%start_count, dp)/real(self%count_rate, dp)
 #endif
-   end function pic_timer_get_elapsed_time
+   end function timer_get_elapsed_time
 
 end module pic_timers
