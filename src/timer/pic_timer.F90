@@ -18,7 +18,7 @@ module pic_timers
       integer :: count_rate
    contains
       procedure :: start => timer_start
-      procedure :: end => timer_end
+      procedure :: stop => timer_stop
       procedure :: print_time => timer_print_time
       procedure :: get_elapsed_time => timer_get_elapsed_time
    end type pic_timer
@@ -35,7 +35,7 @@ contains
 #endif
    end subroutine timer_start
 
-   subroutine timer_end(self)
+   subroutine timer_stop(self)
     !! and we're done!
       class(pic_timer), intent(inout) :: self
 #ifdef _OPENMP
@@ -43,7 +43,7 @@ contains
 #else
       call system_clock(self%stop_count)
 #endif
-   end subroutine timer_end
+   end subroutine timer_stop
 
    subroutine timer_print_time(self)
     !! print the time nicely

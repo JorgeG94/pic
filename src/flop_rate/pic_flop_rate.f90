@@ -44,7 +44,7 @@ contains
       implicit none
       class(flop_rate_type), intent(inout) :: self
 
-      call self%m_timer%end()
+      call self%m_timer%stop()
 
    end subroutine flop_rate_stop_time
 
