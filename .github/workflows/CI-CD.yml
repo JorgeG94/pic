@@ -41,12 +41,12 @@ jobs:
         compiler: ${{ matrix.toolchain.compiler }}
         version: ${{ matrix.toolchain.version }}
 
-    # Build and test with built-in BLAS and LAPACK
     - name: Configure with CMake
       if: ${{ contains(matrix.build, 'cmake') }}
       run: >-
         cmake -G Ninja
         -DCMAKE_BUILD_TYPE=Release
+        -DPIC_ENABLE_OMP=ON
         -S . -B ${{ env.BUILD_DIR }}
 
     - name: Build and compile
