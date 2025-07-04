@@ -45,7 +45,7 @@ program main
       call pic_flops%stop_time()
       elapsed_time = pic_flops%get_time()
       flops = pic_flops%get_flops()
-      !print *, "TIME is " // to_string(elapsed_time) // " seconds in rank "//to_string(rank)
+      print *, "TIME is "//to_string(elapsed_time)//" seconds in rank "//to_string(rank)
 
    end block
 

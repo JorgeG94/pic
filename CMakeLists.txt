@@ -34,6 +34,12 @@ if(NOT TARGET jonquil::jonquil AND PIC_ENABLE_JONQUIL)
   list(APPEND external_libraries_to_link jonquil::jonquil)
 endif()
 
+set(libraries_to_link)
+if(NOT TARGET vapaa::vapaa)
+  find_package("vapaa" REQUIRED)
+  list(APPEND libraries_to_link vapaa::vapaa)
+endif()
+
 set(core_lib pic)
 add_library(${core_lib} STATIC)
 
@@ -57,7 +63,6 @@ if(PIC_ENABLE_TESTING)
 endif()
 set_target_properties(${core_lib} PROPERTIES Fortran_MODULE_DIRECTORY
                                              ${CMAKE_BINARY_DIR}/modules)
-set(libraries_to_link)
 if(PIC_ENABLE_OMP)
   find_package(
     OpenMP
@@ -69,10 +74,10 @@ endif()
 if(PIC_ENABLE_MPI)
   find_package(
     MPI
-    COMPONENTS Fortran
+    COMPONENTS C
     REQUIRED)
   target_compile_definitions(${core_lib} PRIVATE USE_MPI)
-  list(APPEND libraries_to_link MPI::MPI_Fortran)
+  list(APPEND libraries_to_link MPI::MPI_C)
 endif()
 
 if(PIC_ENABLE_BLAS)
