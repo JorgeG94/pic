@@ -115,7 +115,8 @@ contains
       call dummy_work()
       call dummy_work()
       time2 = flop_rate%get_time()  ! Should be final time
-
+      print *, "Time 1: ", time1
+      print *, "Time 2: ", time2
       call check(error, time2 >= time1 - tolerance)
       if (allocated(error)) then
          print *, "Time 2 is not larger than time 1"
