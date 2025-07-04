@@ -374,17 +374,11 @@ contains
 
       ! first check for the constants
       if (present(alpha)) then
-         if (alpha < 0.0_sp) then
-            error stop "pic_sgemm: alpha must be non-negative"
-         end if
          l_alpha = alpha
       else
          l_alpha = 1.0_sp
       end if
       if (present(beta)) then
-         if (beta < 0.0_sp) then
-            error stop "pic_sgemm: beta must be non-negative"
-         end if
          l_beta = beta
       else
          l_beta = 0.0_sp
@@ -434,17 +428,11 @@ contains
 
       ! first check for the constants
       if (present(alpha)) then
-         if (alpha < 0.0_sp) then
-            error stop "pic_sgemm: alpha must be non-negative"
-         end if
          l_alpha = alpha
       else
          l_alpha = 1.0_sp
       end if
       if (present(beta)) then
-         if (beta < 0.0_sp) then
-            error stop "pic_sgemm: beta must be non-negative"
-         end if
          l_beta = beta
       else
          l_beta = 0.0_sp
