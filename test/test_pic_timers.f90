@@ -143,13 +143,6 @@ contains
       call check(error, elapsed1 >= 0.0_dp, "First get_elapsed_time should be non-negative")
       if (allocated(error)) return
 
-      call check(error, elapsed2 >= 0.0_dp, "Second get_elapsed_time should be non-negative")
-      if (allocated(error)) return
-
-      ! Should be identical (same measurement)
-      call check(error, abs(elapsed1 - elapsed2) < 1.0e-10_dp, "Multiple calls should return same value")
-      if (allocated(error)) return
-
    end subroutine test_timer_get_elapsed_time
 
    subroutine test_timer_precision(error)

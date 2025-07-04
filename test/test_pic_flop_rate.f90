@@ -34,10 +34,8 @@ contains
 
       expected_rate = 1000.0_dp/flop_rate%get_time()/1.0d9
       actual_rate = flop_rate%get_flop_rate()
-      print *, "expected ", expected_rate
-      print *, "actual rate", actual_rate
 
-      call check(error, abs(actual_rate - expected_rate) < tolerance)
+      call check(error, abs(actual_rate - expected_rate) < tolerance, "actual rate and expected rate differ")
       if (allocated(error)) return
    end subroutine test_flop_rate_basic_calculation
 
@@ -53,7 +51,7 @@ contains
       call flop_rate%add_flops(300_int64)
       call flop_rate%stop_time()
 
-      call check(error, flop_rate%get_flops() == expected_flops)
+      call check(error, flop_rate%get_flops() == expected_flops, "Flop count should match expected value")
       if (allocated(error)) return
    end subroutine test_flop_rate_multiple_flops
 
@@ -67,11 +65,11 @@ contains
       ! Add no flops
       call flop_rate%stop_time()
 
-      call check(error, flop_rate%get_flops() == 0)
+      call check(error, flop_rate%get_flops() == 0, "Flop count should be zero")
       if (allocated(error)) return
 
       flop_rate_value = flop_rate%get_flop_rate()
-      call check(error, flop_rate_value == 0.0_dp)
+      call check(error, flop_rate_value == 0.0_dp, "Flop rate should be zero when no flops are added")
       if (allocated(error)) return
    end subroutine test_flop_rate_zero_flops
 
@@ -88,14 +86,14 @@ contains
 
       ! Test that accessors return reasonable values
       time_value = flop_rate%get_time()
-      call check(error, time_value > 0.0_dp)
+      call check(error, time_value > 0.0_dp, "Time should be positive after adding flops")
       if (allocated(error)) return
 
       flop_count = flop_rate%get_flops()
-      call check(error, flop_count == 2000)
+      call check(error, flop_count == 2000, "Flop count should match added flops")
       if (allocated(error)) return
 
-      call check(error, flop_rate%get_flop_rate() > 0.0_dp)
+      call check(error, flop_rate%get_flop_rate() > 0.0_dp, "Flop rate should be positive after adding flops")
       if (allocated(error)) return
 
    end subroutine test_flop_rate_accessors
@@ -117,13 +115,10 @@ contains
       time2 = flop_rate%get_time()  ! Should be final time
       print *, "Time 1: ", time1
       print *, "Time 2: ", time2
-      call check(error, time2 >= time1 - tolerance)
-      if (allocated(error)) then
-         print *, "Time 2 is not larger than time 1"
-         return
-      end if
+      call check(error, time2 >= time1 - tolerance, "Final time should be greater than or equal to initial time")
+      if (allocated(error)) return
 
-      call check(error, time2 > 0.0_dp)
+      call check(error, time2 > 0.0_dp, "Final time should be positive")
       if (allocated(error)) return
    end subroutine test_flop_rate_timing_order
 
@@ -145,7 +140,7 @@ contains
       call flop_rate%stop_time()
 
       ! Should only count flops from second measurement
-      call check(error, flop_rate%get_flops() == 500)
+      call check(error, flop_rate%get_flops() == 500, "Flop count should be reset after calling reset")
       if (allocated(error)) return
    end subroutine test_flop_rate_reset_behavior
 
@@ -162,7 +157,7 @@ contains
       call flop_rate%report()
 
       ! If we get here without crashing, the test passes
-      call check(error, .true.)
+      call check(error, .true., "Flop rate report should not crash")
       if (allocated(error)) return
    end subroutine test_flop_rate_report
 
