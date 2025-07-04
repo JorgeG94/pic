@@ -91,12 +91,12 @@ contains
       call check(error, time_value > 0.0_dp)
       if (allocated(error)) return
 
-      !flop_count = flop_rate%get_flops()
-      !call check(error, flop_count == 2000)
-      !if (allocated(error)) return
-      !
-      !call check(error, flop_rate%get_flop_rate() > 0.0_dp)
-      !if (allocated(error)) return
+      flop_count = flop_rate%get_flops()
+      call check(error, flop_count == 2000)
+      if (allocated(error)) return
+
+      call check(error, flop_rate%get_flop_rate() > 0.0_dp)
+      if (allocated(error)) return
 
    end subroutine test_flop_rate_accessors
 
