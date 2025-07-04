@@ -27,6 +27,7 @@ contains
 
       result = to_string(int(123, kind=int32))
       call check(error, result == "123")
+      if (allocated(error)) return
    end subroutine test_to_string_int32
 
    subroutine test_to_string_int64(error)
@@ -35,6 +36,7 @@ contains
 
       result = to_string(int(12345678, kind=int64))
       call check(error, result == "12345678")
+      if (allocated(error)) return
    end subroutine test_to_string_int64
 
    subroutine test_to_string_dp(error)
@@ -43,6 +45,7 @@ contains
 
       result = to_string(123.456_dp)
       call check(error, result == "123.456000000000")
+      if (allocated(error)) return
    end subroutine test_to_string_dp
 
    subroutine test_to_string_char(error)
@@ -51,6 +54,7 @@ contains
 
       result = to_string("Hello, world!")
       call check(error, result == "Hello, world!")
+      if (allocated(error)) return
    end subroutine test_to_string_char
 
    subroutine test_to_string_logical(error)
@@ -63,6 +67,7 @@ contains
 
       result = to_string(.false.)
       call check(error, result == "FALSE")
+      if (allocated(error)) return
    end subroutine test_to_string_logical
 
 end module test_pic_string_utils

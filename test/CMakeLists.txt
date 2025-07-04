@@ -1,10 +1,12 @@
 # Unit testing
-set(tests "base_utils" "pic_string_utils")
+set(tests "base_utils" "pic_string_utils" "pic_timers" "pic_logger"
+          "pic_flop_recorder" "pic_flop_rate")
 set(test-srcs "main_tests.f90")
 foreach(t IN LISTS tests)
   string(MAKE_C_IDENTIFIER ${t} t)
   list(APPEND test-srcs "test_${t}.f90")
 endforeach()
+list(APPEND test-srcs helpers.f90)
 
 add_executable("${project_name}-tester" "${test-srcs}")
 set_target_properties(
