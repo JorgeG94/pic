@@ -14,6 +14,8 @@ module pic_timers
     !! can work with or without omp
       private
       real(dp) :: start_time, stop_time
+      real(dp) :: walltime
+      logical :: is_running = .false.
       integer :: start_count, stop_count
       integer :: count_rate
    contains
@@ -21,6 +23,7 @@ module pic_timers
       procedure :: stop => timer_stop
       procedure :: print_time => timer_print_time
       procedure :: get_elapsed_time => timer_get_elapsed_time
+      procedure :: set
    end type pic_timer
 
 contains
@@ -28,6 +31,7 @@ contains
    subroutine timer_start(self)
     !! and away we go!
       class(pic_timer), intent(inout) :: self
+      self%is_running = .true.
 #ifdef _OPENMP
       self%start_time = omp_get_wtime()
 #else
@@ -54,14 +58,30 @@ contains
    end subroutine timer_print_time
 
    function timer_get_elapsed_time(self) result(elapsed)
-    !! return the elapsed time in double precision, in case the user wants it
       class(pic_timer), intent(in) :: self
       real(dp) :: elapsed
+      integer :: current_count
 #ifdef _OPENMP
-      elapsed = self%stop_time - self%start_time
+      if (self%is_running) then
+         elapsed = omp_get_wtime() - self%start_time
+      else
+         elapsed = self%stop_time - self%start_time
+      end if
 #else
-      elapsed = real(self%stop_count - self%start_count, dp)/real(self%count_rate, dp)
+      if (self%is_running) then
+         call system_clock(count=current_count)
+         elapsed = real(current_count - self%start_count, dp)/real(self%count_rate, dp)
+      else
+         elapsed = real(self%stop_count - self%start_count, dp)/real(self%count_rate, dp)
+      end if
 #endif
    end function timer_get_elapsed_time
+
+   subroutine set(self, time)
+      implicit none
+      class(pic_timer), intent(inout) :: self
+      real(dp), intent(in) :: time
+      self%walltime = time
+   end subroutine set
 
 end module pic_timers

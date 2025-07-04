@@ -88,7 +88,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="<p>17.7% of total for derived types.</p>Including implementation: 30 statements, 11.6% of total for derived types.">11 statements</a>
+                 title="<p>21.2% of total for derived types.</p>Including implementation: 46 statements, 16.4% of total for derived types.">14 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -148,6 +148,7 @@
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../type/pic_timer.html#boundprocedure-get_elapsed_time">get_elapsed_time</a>
             <a class="list-group-item" href="../type/pic_timer.html#boundprocedure-print_time">print_time</a>
+            <a class="list-group-item" href="../type/pic_timer.html#boundprocedure-set">set</a>
             <a class="list-group-item" href="../type/pic_timer.html#boundprocedure-start">start</a>
             <a class="list-group-item" href="../type/pic_timer.html#boundprocedure-stop">stop</a>
         </div>
@@ -197,7 +198,7 @@ can work with or without omp</p>
 </h3>
     
 
-  <p>return the elapsed time in double precision, in case the user wants it</p>
+  
 
   <h4>Arguments</h4>
       <table class="table table-striped varlist">
@@ -280,6 +281,75 @@ can work with or without omp</p>
             </td>
             <td>::</td>
             <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-set"></span>
+      <h3>
+          procedure, public ::
+  <strong>set</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/set.html'>set</a>(self, time)  
+</h3>
+    
+
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='pic_timer.html'>pic_timer</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>time</strong></td>
             <td>
 
             </td>
@@ -410,6 +480,8 @@ can work with or without omp</p>
 <span class="w">    </span><span class="c">!! can work with or without omp</span>
 <span class="w">      </span><span class="k">private</span>
 <span class="k">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">start_time</span><span class="p">,</span><span class="w"> </span><span class="n">stop_time</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">walltime</span>
+<span class="w">      </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">is_running</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
 <span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">start_count</span><span class="p">,</span><span class="w"> </span><span class="n">stop_count</span>
 <span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">count_rate</span>
 <span class="w">   </span><span class="k">contains</span>
@@ -417,6 +489,7 @@ can work with or without omp</p>
 <span class="w">      </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="k">stop</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">timer_stop</span>
 <span class="w">      </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">print_time</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">timer_print_time</span>
 <span class="w">      </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_elapsed_time</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">timer_get_elapsed_time</span>
+<span class="w">      </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">set</span>
 <span class="w">   </span><span class="k">end type </span><span class="n">pic_timer</span>
 </pre></div>
 
@@ -440,7 +513,7 @@ can work with or without omp</p>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-07-04 03:20 +0000             </p>
+ on 2025-07-04 06:08 +0000             </p>
           </div>
         </div>
         <br>
