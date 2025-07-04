@@ -111,10 +111,13 @@ contains
       call flop_rate%add_flops(100_int64)
       time1 = flop_rate%get_time()  ! Should be running time
       call flop_rate%stop_time()
+      call dummy_work()
+      call dummy_work()
       time2 = flop_rate%get_time()  ! Should be final time
 
       call check(error, time2 >= time1)
       if (allocated(error)) return
+
       call check(error, time2 > 0.0_dp)
       if (allocated(error)) return
    end subroutine test_flop_rate_timing_order
