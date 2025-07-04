@@ -19,11 +19,14 @@ option(PIC_ENABLE_BLAS "Enable BLAS/LAPACK libraries in PIC" OFF)
 option(PIC_ENABLE_TESTING "Enable testing for PIC" ON)
 option(PIC_ENABLE_JONQUIL "Enable Jonquil for json/toml handling" OFF)
 option(PIC_BUILD_STRESS "Build dgemm flop stress case" OFF)
+option(PIC_USE_VAPAA "Use vapaa to link to a C mpi library" OFF)
 mark_as_advanced(PIC_BUILD_STRESS)
+mark_as_advanced(PIC_USE_VAPAA)
 
 add_subdirectory(cmake)
 
 set(external_libraries_to_link)
+set(libraries_to_link)
 if(NOT TARGET test-drive::test-drive AND PIC_ENABLE_TESTING)
   enable_testing()
   find_package("test-drive" REQUIRED)
@@ -32,12 +35,6 @@ endif()
 if(NOT TARGET jonquil::jonquil AND PIC_ENABLE_JONQUIL)
   find_package("jonquil" REQUIRED)
   list(APPEND external_libraries_to_link jonquil::jonquil)
-endif()
-
-set(libraries_to_link)
-if(NOT TARGET vapaa::vapaa)
-  find_package("vapaa" REQUIRED)
-  list(APPEND libraries_to_link vapaa::vapaa)
 endif()
 
 set(core_lib pic)
@@ -72,12 +69,21 @@ if(PIC_ENABLE_OMP)
 endif()
 
 if(PIC_ENABLE_MPI)
+  if(PIC_USE_VAPAA)
+    if(NOT TARGET vapaa::vapaa)
+      find_package("vapaa" REQUIRED)
+      list(APPEND libraries_to_link vapaa::vapaa)
+    endif()
+    set(language_component C)
+  else()
+    set(language_component Fortran)
+  endif()
   find_package(
     MPI
-    COMPONENTS C
+    COMPONENTS ${language_component}
     REQUIRED)
+  list(APPEND libraries_to_link MPI::MPI_${language_component})
   target_compile_definitions(${core_lib} PRIVATE USE_MPI)
-  list(APPEND libraries_to_link MPI::MPI_C)
 endif()
 
 if(PIC_ENABLE_BLAS)
