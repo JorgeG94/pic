@@ -14,6 +14,7 @@ module pic_timers
     !! can work with or without omp
       private
       real(dp) :: start_time, stop_time
+      real(dp) :: walltime
       integer :: start_count, stop_count
       integer :: count_rate
    contains
@@ -21,6 +22,7 @@ module pic_timers
       procedure :: stop => timer_stop
       procedure :: print_time => timer_print_time
       procedure :: get_elapsed_time => timer_get_elapsed_time
+      procedure :: set
    end type pic_timer
 
 contains
@@ -63,5 +65,12 @@ contains
       elapsed = real(self%stop_count - self%start_count, dp)/real(self%count_rate, dp)
 #endif
    end function timer_get_elapsed_time
+
+   subroutine set(self, time)
+      implicit none
+      class(pic_timer), intent(inout) :: self
+      real(dp), intent(in) :: time
+      self%walltime = time
+   end subroutine set
 
 end module pic_timers

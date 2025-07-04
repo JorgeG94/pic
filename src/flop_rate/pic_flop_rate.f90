@@ -26,6 +26,7 @@ module pic_flop_rate
       procedure :: get_time => flop_rate_get_time
       procedure :: get_flop_rate => flop_rate_get_flop_rate
       procedure :: report => flop_rate_report
+      procedure :: reset => flop_rate_reset
 
    end type flop_rate_type
 
@@ -108,5 +109,12 @@ contains
       print *, "Flop rate is "//to_string(self%m_flop_rate)//" GFLOP/s"
 
    end subroutine flop_rate_report
+
+   subroutine flop_rate_reset(self)
+      implicit none
+      class(flop_rate_type), intent(inout) :: self
+
+      call self%m_flops%reset()
+   end subroutine flop_rate_reset
 
 end module pic_flop_rate
