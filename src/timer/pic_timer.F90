@@ -47,8 +47,8 @@ contains
 #else
       call system_clock(self%stop_count)
 #endif
-     ! if someone stops the timer, we stop !
-     self%is_running = .false.
+      ! if someone stops the timer, we stop !
+      self%is_running = .false.
    end subroutine timer_stop
 
    subroutine timer_print_time(self)
