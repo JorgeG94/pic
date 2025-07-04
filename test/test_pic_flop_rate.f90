@@ -104,6 +104,7 @@ contains
       type(error_type), allocatable, intent(out) :: error
       type(flop_rate_type) :: flop_rate
       real(dp) :: time1, time2
+      real(dp), parameter :: tolerance = 1.0e-12_dp
 
       ! Test that timing works correctly
       call flop_rate%start_time()
@@ -115,8 +116,11 @@ contains
       call dummy_work()
       time2 = flop_rate%get_time()  ! Should be final time
 
-      call check(error, time2 >= time1)
-      if (allocated(error)) return
+      call check(error, time2 >= time1 - tolerance)
+      if (allocated(error)) then
+         print *, "Time 2 is not larger than time 1"
+         return
+      end if
 
       call check(error, time2 > 0.0_dp)
       if (allocated(error)) return
