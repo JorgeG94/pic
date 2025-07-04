@@ -30,6 +30,19 @@ CMake offers a very modular build of PIC, the following options are available an
 | `PIC_ENABLE_TESTING`   | `ON`    | Enable testing for PIC                     |
 | `PIC_ENABLE_JONQUIL`   | `OFF`   | Enable Jonquil for JSON/TOML handling      |
 
+#### Advanced options:
+
+| Option Name            | Default | Description                                |
+|------------------------|---------|--------------------------------------------|
+| `PIC_USE_VAPAA`        | `OFF`   | Use vapaa for binding to MPI               |
+
+Information on vapaa see [here](https://github.com/JorgeG94/vapaa/tree/main) which is my
+personal fork which is pulled from here, and Jeff's [project](https://github.com/jeffhammond/vapaa).
+
+Will update to use the orignal project at a later date.
+
+
+### Building:
 
 ```
 mkdir build
