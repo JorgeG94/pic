@@ -19,6 +19,7 @@ module pic_blas_interfaces
    interface pic_gemm
       module procedure :: pic_sgemm
       module procedure :: pic_dgemm
+      module procedure :: pic_zgemm
    end interface pic_gemm
 
    interface blas_asum
@@ -466,5 +467,123 @@ contains
       call blas_gemm(OP_A, OP_B, m, n, k, l_alpha, A, lda, B, ldb, l_beta, C, ldc)
 
    end subroutine pic_dgemm
+   pure subroutine pic_zgemm(A, B, C, transa, transb, alpha, beta)
+      !! interface for single precision matrix multiplication
+      complex(dp), intent(in) :: A(:, :)
+      complex(dp), intent(in) :: B(:, :)
+      complex(dp), intent(inout) :: C(:, :)
+      character(len=1), intent(in), optional :: transa
+      character(len=1), intent(in), optional :: transb
+      complex(dp), intent(in), optional :: alpha
+      complex(dp), intent(in), optional :: beta
+      character(len=1) :: OP_A, OP_B
+      complex(dp) :: l_alpha, l_beta
+      integer(default_int) :: m, n, k, lda, ldb, ldc
+
+      ! first check for the constants
+      if (present(alpha)) then
+         l_alpha = alpha
+      else
+         l_alpha = 1.0_sp
+      end if
+      if (present(beta)) then
+         l_beta = beta
+      else
+         l_beta = 0.0_sp
+      end if
+      ! check the OP options, maybe this should not be optional
+      if (present(transa)) then
+         OP_A = transa
+      else
+         OP_A = 'N'
+      end if
+      if (present(transb)) then
+         OP_B = transb
+      else
+         OP_B = 'N'
+      end if
+
+      ! check for the dimensions now
+      if ((OP_A == 'N' .or. OP_A == 'n')) then
+         k = size(A, 2)
+      else
+         k = size(A, 1)
+      end if
+
+      ! get LDA, LDB, and LDC
+      lda = max(1, size(A, 1))
+      ldb = max(1, size(B, 1))
+      ldc = max(1, size(C, 1))
+      m = size(C, 1)
+      n = size(C, 2)
+
+      call blas_gemm(OP_A, OP_B, m, n, k, l_alpha, A, lda, B, ldb, l_beta, C, ldc)
+
+   end subroutine pic_zgemm
+
+   pure subroutine pic_sgemv(A, x, y, trans_a, alpha, beta)
+      real(sp), intent(in) :: A(:, :)
+      real(sp), intent(in) :: x(:)
+      real(sp), intent(inout) :: y(:)
+      character(len=1), intent(in), optional :: trans_a
+      real(sp), intent(in), optional :: alpha
+      real(sp), intent(in), optional :: beta
+      real(sp) :: l_alpha, l_beta
+      character(len=1) :: l_trans_a
+      integer :: incx, incy, m, n, lda
+      if (present(alpha)) then
+         l_alpha = alpha
+      else
+         l_alpha = 1.0_sp
+      end if
+      if (present(beta)) then
+         l_beta = beta
+      else
+         l_beta = 0.0_sp
+      end if
+      if (present(trans_a)) then
+         l_trans_a = trans_a
+      else
+         l_trans_a = 'n'
+      end if
+      incx = 1
+      incy = 1
+      lda = max(1, size(A, 1))
+      m = size(A, 1)
+      n = size(A, 2)
+      call blas_gemv(l_trans_a, m, n, l_alpha, A, lda, x, incx, l_beta, y, incy)
+   end subroutine pic_sgemv
+   pure subroutine pic_dgemv(A, x, y, trans_a, alpha, beta)
+      real(dp), intent(in) :: A(:, :)
+      real(dp), intent(in) :: x(:)
+      real(dp), intent(inout) :: y(:)
+      character(len=1), intent(in), optional :: trans_a
+      real(dp), intent(in), optional :: alpha
+      real(dp), intent(in), optional :: beta
+      real(dp) :: l_alpha, l_beta
+      character(len=1) :: l_trans_a
+      integer :: incx, incy, m, n, lda
+      if (present(alpha)) then
+         l_alpha = alpha
+      else
+         l_alpha = 1.0_sp
+      end if
+      if (present(beta)) then
+         l_beta = beta
+      else
+         l_beta = 0.0_sp
+      end if
+      if (present(trans_a)) then
+         l_trans_a = trans_a
+      else
+         l_trans_a = 'n'
+      end if
+      incx = 1
+      incy = 1
+      lda = max(1, size(A, 1))
+      m = size(A, 1)
+      n = size(A, 2)
+      call blas_gemv(l_trans_a, m, n, l_alpha, A, lda, x, incx, l_beta, y, incy)
+   end subroutine pic_dgemv
 
 end module pic_blas_interfaces
