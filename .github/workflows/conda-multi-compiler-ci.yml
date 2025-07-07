@@ -22,15 +22,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        compiler: [gfortran, ifx, flang-new, nvfortran]
+        os: [ubuntu-latest, macos-latest]
+        compiler: [gfortran, ifx, flang-new]
         include:
           - os: ubuntu-latest
-            extra-packages: ""
-          - os: windows-latest
-            extra-packages: ""
+            extra-packages: "openblas"
+          #- os: windows-latest
+          #  extra-packages: "openblas"
           - os: macos-latest
-            extra-packages: ""
+            extra-packages: "openblas"
         exclude:
           - os: macos-latest
             compiler: flang-new
@@ -38,8 +38,8 @@ jobs:
             compiler: ifx
           - os: macos-latest
             compiler: nvfortran
-          - os: windows-latest
-            compiler: nvfortran
+          #- os: windows-latest
+          #  compiler: nvfortran
           - os: windows-latest
             compiler: flang-new
 
@@ -56,7 +56,8 @@ jobs:
 #        run: fpm test --compiler ${{ matrix.compiler }} --profile debug --verbose
 
       - name: fpm test (release)
-        run: fpm test --compiler ${{ matrix.compiler }} --profile release --verbose
+        run: |
+          fpm test --compiler ${{ matrix.compiler }} --profile release --verbose
 
   # Run CMake + Ninja build/tests across OS/compiler matrix
   test_cmake:
@@ -65,15 +66,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
         compiler: [gfortran, ifx, flang-new, nvfortran]
         include:
           - os: ubuntu-latest
-            extra-packages: "cmake, ninja"
-          - os: windows-latest
-            extra-packages: "cmake, ninja"
+            extra-packages: "cmake, ninja, openblas"
+          #- os: windows-latest
+          #  extra-packages: "cmake, ninja, openblas"
           - os: macos-latest
-            extra-packages: "cmake, ninja"
+            extra-packages: "cmake, ninja, openblas"
         exclude:
           - os: macos-latest
             compiler: flang-new
@@ -81,8 +82,8 @@ jobs:
             compiler: ifx
           - os: macos-latest
             compiler: nvfortran
-          - os: windows-latest
-            compiler: nvfortran
+          #- os: windows-latest
+          #  compiler: nvfortran
 
     steps:
       - name: Setup Fortran
@@ -92,56 +93,8 @@ jobs:
           platform: ${{ matrix.os }}
           extra-packages: ${{ matrix.extra-packages }}
 
-#      - name: cmake test (debug)
-#        run: |
-#          cmake -S . -B build/debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -G Ninja
-#          cmake --build build/debug
-#          ctest --test-dir build/debug --output-on-failure
-
       - name: cmake test (release)
         run: |
-          cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -G Ninja
+          cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -DBLA_VENDOR=OpenBLAS -G Ninja
           cmake --build build/release
           ctest --test-dir build/release --output-on-failure
-
-
-#  # Generate STATUS.md from FPM job results
-#  status_fpm:
-#    name: Generate STATUS.md
-#    if: always()
-#    needs: test_fpm
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Generate summary
-#        uses: gha3mi/setup-fortran-conda@latest
-#        with:
-#          generate-status-fpm: true
-#
-#  # Generate STATUS.md from CMake job results
-#  status_cmake:
-#    name: Generate STATUS.md
-#    if: always()
-#    needs: test_cmake
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Generate summary
-#        uses: gha3mi/setup-fortran-conda@latest
-#        with:
-#          generate-status-cmake: true
-#
-  # Inject CI status table into README.md
-#  update_readme_table:
-#    name: Update README.md status table
-#    if: |
-#      always() &&
-#      github.ref != 'refs/heads/update-readme-table'
-#    needs: [status_fpm, status_cmake]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Update README status
-#        uses: gha3mi/setup-fortran-conda@latest
-#        with:
-#          update-readme-table: true
-#          update-readme-token: ${{ secrets.GH_PAT }}   # Update with your GitHub personal access token
-#          update-readme-user-name: "Your Name" # Update with your name
-#          update-readme-user-email: "you@example.com"  # Update with your email

@@ -1,16 +1,15 @@
 program main
    use pic
-   implicit none
 
-   call pic_print_banner()
    !use jonquil, only: json_object, json_dump, json_error, json_array, &
    !                   set_value, add_array, json_serialize, json_value, json_loads, &
    !                   cast_to_object, get_value, add_object
    !use pic_logger, only: global => global_logger, warning_level, verbose_level
    !use testdrive, only: run_testsuite
-   !use pic_types
+   use pic_types
+   use pic_matrix_printer
+   implicit none
    !use pic_mpi
-   !use pic_matrix_printer
    !use pic_timers
    !implicit none
    !type(pic_comm) :: comm
@@ -19,10 +18,11 @@ program main
    !type(json_array), pointer :: my_array, new_array
    !type(json_error), allocatable :: error
    !integer(default_int) :: ierr, rank, size, ival
-   !real(dp), dimension(:, :), allocatable :: A, B, C
+   real(dp), dimension(:, :), allocatable :: A, B, C
    !real(dp), dimension(:), allocatable :: C_flat
-   !integer(default_int) :: n, m, k, flat_size
+   integer(default_int) :: n, m, k, flat_size
 
+   call pic_print_banner()
    !call comm%init()
 
    !if (comm%m_rank == 0) then
@@ -48,19 +48,19 @@ program main
    !   end do
    ! end block
 
-   ! n = 4
-   ! m = 4
-   ! k = 4
-   ! allocate (A(n, k), B(k, m), C(n, m))
+   n = 4
+   m = 4
+   k = 4
+   allocate (A(n, k), B(k, m), C(n, m))
    ! flat_size = m*n
    ! allocate (C_flat(flat_size))
-   ! A = 1.0d0
-   ! B = 1.0d0
+   A = 1.0d0
+   B = 1.0d0
 
-   ! call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
+   call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
    ! C_flat = reshape(C, [flat_size])
 
-   ! call print_matrix(C, "PLAIN")
+   call print_matrix(C, "PLAIN")
 
    ! call json_loads(val, '{"a":1,"b":2}', error=error)
    ! if (allocated(error)) then
