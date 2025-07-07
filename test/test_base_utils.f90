@@ -30,10 +30,11 @@ contains
 
    subroutine test_invalid(error)
       type(error_type), allocatable, intent(out) :: error
-      integer :: i = 1
+      integer :: i
       ! ...
+      i = 1
 
-      if (i .eq. 1) then
+      if (i == 1) then
          call test_failed(error, "Custom check failed")
          return
       end if

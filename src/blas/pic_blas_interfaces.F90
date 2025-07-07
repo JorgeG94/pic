@@ -91,6 +91,7 @@ module pic_blas_interfaces
    interface blas_asum
       pure function sasum(n, x, incx)
          import :: sp, default_int
+         implicit none
          real(sp) :: sasum
          real(sp), intent(in) :: x(*)
          integer(default_int), intent(in) :: incx
@@ -98,6 +99,7 @@ module pic_blas_interfaces
       end function sasum
       pure function dasum(n, x, incx)
          import :: dp, default_int
+         implicit none
          real(dp) :: dasum
          real(dp), intent(in) :: x(*)
          integer(default_int), intent(in) :: incx
@@ -105,6 +107,7 @@ module pic_blas_interfaces
       end function dasum
       pure function scasum(n, x, incx)
          import :: sp, default_int
+         implicit none
          real(sp) :: scasum
          complex(sp), intent(in) :: x(*)
          integer(default_int), intent(in) :: incx
@@ -112,6 +115,7 @@ module pic_blas_interfaces
       end function scasum
       pure function dzasum(n, x, incx)
          import :: dp, default_int
+         implicit none
          real(dp) :: dzasum
          complex(dp), intent(in) :: x(*)
          integer(default_int), intent(in) :: incx
@@ -122,6 +126,7 @@ module pic_blas_interfaces
    interface blas_axpy
       pure subroutine saxpy(n, alpha, x, incx, y, incy)
          import :: sp, default_int
+         implicit none
          real(sp), intent(in) :: alpha
          real(sp), intent(in) :: x(*)
          real(sp), intent(inout) :: y(*)
@@ -131,6 +136,7 @@ module pic_blas_interfaces
       end subroutine saxpy
       pure subroutine daxpy(n, alpha, x, incx, y, incy)
          import :: dp, default_int
+         implicit none
          real(dp), intent(in) :: alpha
          real(dp), intent(in) :: x(*)
          real(dp), intent(inout) :: y(*)
@@ -140,6 +146,7 @@ module pic_blas_interfaces
       end subroutine daxpy
       pure subroutine caxpy(n, alpha, x, incx, y, incy)
          import :: sp, default_int
+         implicit none
          complex(sp), intent(in) :: alpha
          complex(sp), intent(in) :: x(*)
          complex(sp), intent(inout) :: y(*)
@@ -149,6 +156,7 @@ module pic_blas_interfaces
       end subroutine caxpy
       pure subroutine zaxpy(n, alpha, x, incx, y, incy)
          import :: dp, default_int
+         implicit none
          complex(dp), intent(in) :: alpha
          complex(dp), intent(in) :: x(*)
          complex(dp), intent(inout) :: y(*)
@@ -161,6 +169,7 @@ module pic_blas_interfaces
    interface blas_copy
       pure subroutine scopy(n, x, incx, y, incy)
          import :: sp, default_int
+         implicit none
          real(sp), intent(in) :: x(*)
          real(sp), intent(inout) :: y(*)
          integer(default_int), intent(in) :: incx
@@ -169,6 +178,7 @@ module pic_blas_interfaces
       end subroutine scopy
       pure subroutine dcopy(n, x, incx, y, incy)
          import :: dp, default_int
+         implicit none
          real(dp), intent(in) :: x(*)
          real(dp), intent(inout) :: y(*)
          integer(default_int), intent(in) :: incx
@@ -177,6 +187,7 @@ module pic_blas_interfaces
       end subroutine dcopy
       pure subroutine ccopy(n, x, incx, y, incy)
          import :: sp, default_int
+         implicit none
          complex(sp), intent(in) :: x(*)
          complex(sp), intent(inout) :: y(*)
          integer(default_int), intent(in) :: incx
@@ -185,6 +196,7 @@ module pic_blas_interfaces
       end subroutine ccopy
       pure subroutine zcopy(n, x, incx, y, incy)
          import :: dp, default_int
+         implicit none
          complex(dp), intent(in) :: x(*)
          complex(dp), intent(inout) :: y(*)
          integer(default_int), intent(in) :: incx
@@ -196,6 +208,7 @@ module pic_blas_interfaces
    interface blas_dot
       pure function sdot(n, x, incx, y, incy) result(res)
          import :: sp, default_int
+         implicit none
          real(sp) :: res
          real(sp), intent(in) :: x(*)
          real(sp), intent(in) :: y(*)
@@ -205,6 +218,7 @@ module pic_blas_interfaces
       end function sdot
       pure function ddot(n, x, incx, y, incy) result(res)
          import :: dp, default_int
+         implicit none
          real(dp) :: res
          real(dp), intent(in) :: x(*)
          real(dp), intent(in) :: y(*)
@@ -214,6 +228,7 @@ module pic_blas_interfaces
       end function ddot
       pure function cdotc(n, x, incx, y, incy) result(res)
          import :: sp, default_int
+         implicit none
          complex(sp) :: res
          complex(sp), intent(in) :: x(*)
          complex(sp), intent(in) :: y(*)
@@ -223,6 +238,7 @@ module pic_blas_interfaces
       end function cdotc
       pure function zdotc(n, x, incx, y, incy) result(res)
          import :: dp, default_int
+         implicit none
          complex(dp) :: res
          complex(dp), intent(in) :: x(*)
          complex(dp), intent(in) :: y(*)
@@ -235,6 +251,7 @@ module pic_blas_interfaces
    interface blas_scal
       pure subroutine sscal(n, alpha, x, incx)
          import :: sp, default_int
+         implicit none
          real(sp), intent(in) :: alpha
          real(sp), intent(inout) :: x(*)
          integer(default_int), intent(in) :: incx
@@ -242,6 +259,7 @@ module pic_blas_interfaces
       end subroutine sscal
       pure subroutine dscal(n, alpha, x, incx)
          import :: dp, default_int
+         implicit none
          real(dp), intent(in) :: alpha
          real(dp), intent(inout) :: x(*)
          integer(default_int), intent(in) :: incx
@@ -249,6 +267,7 @@ module pic_blas_interfaces
       end subroutine dscal
       pure subroutine cscal(n, alpha, x, incx)
          import :: sp, default_int
+         implicit none
          complex(sp), intent(in) :: alpha
          complex(sp), intent(inout) :: x(*)
          integer(default_int), intent(in) :: incx
@@ -256,6 +275,7 @@ module pic_blas_interfaces
       end subroutine cscal
       pure subroutine zscal(n, alpha, x, incx)
          import :: dp, default_int
+         implicit none
          complex(dp), intent(in) :: alpha
          complex(dp), intent(inout) :: x(*)
          integer(default_int), intent(in) :: incx
@@ -266,6 +286,7 @@ module pic_blas_interfaces
    interface blas_iamax
       pure function isamax(n, x, incx) result(idx)
          import :: sp, default_int
+         implicit none
          integer(default_int) :: idx
          real(sp), intent(in) :: x(*)
          integer(default_int), intent(in) :: incx
@@ -273,6 +294,7 @@ module pic_blas_interfaces
       end function isamax
       pure function idamax(n, x, incx) result(idx)
          import :: dp, default_int
+         implicit none
          integer(default_int) :: idx
          real(dp), intent(in) :: x(*)
          integer(default_int), intent(in) :: incx
@@ -280,6 +302,7 @@ module pic_blas_interfaces
       end function idamax
       pure function icamax(n, x, incx) result(idx)
          import :: sp, default_int
+         implicit none
          integer(default_int) :: idx
          complex(sp), intent(in) :: x(*)
          integer(default_int), intent(in) :: incx
@@ -287,6 +310,7 @@ module pic_blas_interfaces
       end function icamax
       pure function izamax(n, x, incx) result(idx)
          import :: dp, default_int
+         implicit none
          integer(default_int) :: idx
          complex(dp), intent(in) :: x(*)
          integer(default_int), intent(in) :: incx
@@ -297,6 +321,7 @@ module pic_blas_interfaces
    interface blas_gemv
       pure subroutine sgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
          import :: sp, default_int
+         implicit none
          real(sp), intent(in) :: a(lda, *)
          real(sp), intent(in) :: x(*)
          real(sp), intent(inout) :: y(*)
@@ -311,6 +336,7 @@ module pic_blas_interfaces
       end subroutine sgemv
       pure subroutine dgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
          import :: dp, default_int
+         implicit none
          real(dp), intent(in) :: a(lda, *)
          real(dp), intent(in) :: x(*)
          real(dp), intent(inout) :: y(*)
@@ -325,6 +351,7 @@ module pic_blas_interfaces
       end subroutine dgemv
       pure subroutine cgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
          import :: sp, default_int
+         implicit none
          complex(sp), intent(in) :: a(lda, *)
          complex(sp), intent(in) :: x(*)
          complex(sp), intent(inout) :: y(*)
@@ -339,6 +366,7 @@ module pic_blas_interfaces
       end subroutine cgemv
       pure subroutine zgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
          import :: dp, default_int
+         implicit none
          complex(dp), intent(in) :: a(lda, *)
          complex(dp), intent(in) :: x(*)
          complex(dp), intent(inout) :: y(*)
@@ -357,6 +385,7 @@ module pic_blas_interfaces
       pure subroutine sgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, &
            & beta, c, ldc)
          import :: sp, default_int
+         implicit none
          real(sp), intent(in) :: a(lda, *)
          real(sp), intent(in) :: b(ldb, *)
          real(sp), intent(inout) :: c(ldc, *)
@@ -374,6 +403,7 @@ module pic_blas_interfaces
       pure subroutine dgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, &
            & beta, c, ldc)
          import :: dp, default_int
+         implicit none
          real(dp), intent(in) :: a(lda, *)
          real(dp), intent(in) :: b(ldb, *)
          real(dp), intent(inout) :: c(ldc, *)
@@ -391,6 +421,7 @@ module pic_blas_interfaces
       pure subroutine cgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, &
            & beta, c, ldc)
          import :: sp, default_int
+         implicit none
          complex(sp), intent(in) :: a(lda, *)
          complex(sp), intent(in) :: b(ldb, *)
          complex(sp), intent(inout) :: c(ldc, *)
@@ -408,6 +439,7 @@ module pic_blas_interfaces
       pure subroutine zgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, &
            & beta, c, ldc)
          import :: dp, default_int
+         implicit none
          complex(dp), intent(in) :: a(lda, *)
          complex(dp), intent(in) :: b(ldb, *)
          complex(dp), intent(inout) :: c(ldc, *)
