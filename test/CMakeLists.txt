@@ -9,7 +9,9 @@ set(tests
     "pic_blas_sgemm"
     "pic_blas_dgemm"
     "pic_blas_dgemv"
-    "pic_blas_sgemv")
+    "pic_blas_sgemv"
+    "pic_blas_asum")
+
 set(test-srcs "main_tests.f90")
 foreach(t IN LISTS tests)
   string(MAKE_C_IDENTIFIER ${t} t)

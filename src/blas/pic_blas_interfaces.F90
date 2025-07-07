@@ -40,7 +40,7 @@ module pic_blas_interfaces
    end interface pic_gemv
 
    interface pic_asum
-      !! general interface of the BLAS SASUM routines, will call SASUM
+      !! general interface of the BLAS SASUM routines, will call xASUM
       module procedure :: pic_sasum
       module procedure :: pic_dasum
       module procedure :: pic_scasum

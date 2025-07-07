@@ -12,10 +12,11 @@ program pic_tester
    use test_pic_blas_interfaces_dgemm, only: collect_pic_dgemm_tests
    use test_pic_blas_interfaces_sgemv, only: collect_pic_sgemv_tests
    use test_pic_blas_interfaces_dgemv, only: collect_pic_dgemv_tests
+   use test_pic_blas_interfaces_asum, only: collect_pic_asum_tests
    ! add here the module you want to test
    implicit none
    integer :: stat, is
-   integer, parameter :: ntest_suites = 10
+   integer, parameter :: ntest_suites = 11
     !! number of tests, this number needs to be modified and equal to the number of files we have with unit tests
    character(len=:), allocatable :: suite_name, test_name
    type(testsuite_type), allocatable :: testsuites(:)
@@ -34,6 +35,7 @@ program pic_tester
    testsuites(8) = new_testsuite("pic_blas_dgemm", collect_pic_dgemm_tests)
    testsuites(9) = new_testsuite("pic_blas_sgemv", collect_pic_sgemv_tests)
    testsuites(10) = new_testsuite("pic_blas_dgemv", collect_pic_dgemv_tests)
+   testsuites(11) = new_testsuite("pic_blas_asum", collect_pic_asum_tests)
    !testsuites(3) = new_testsuite("suite3", collect_integrator_tests)
    !testsuites(4) = new_testsuite("suite4", collect_pic_math_utils_test)
 
