@@ -8,6 +8,10 @@ project_download: https://github.com/JorgeG94/pic/archive/refs/heads/main.zip
 author: Jorge Luis Galvez Vallejo
 github: https://github.com/JorgeG94
 media_dir: docs/images
+graph: true
+graph_maxnodes: 250
+graph_maxdepth: 5
+coloured_edges: true
 display: public
          protected
 source: true
