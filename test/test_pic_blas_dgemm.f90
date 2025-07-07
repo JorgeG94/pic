@@ -1,7 +1,7 @@
 module test_pic_blas_interfaces_dgemm
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_blas_interfaces
-   use pic_types, only: sp, dp, default_int  ! assuming sp is your single precision kind
+   use pic_types, only: sp, dp, default_int
    implicit none
    private
    public :: collect_pic_dgemm_tests

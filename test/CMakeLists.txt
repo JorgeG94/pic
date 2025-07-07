@@ -10,7 +10,8 @@ set(tests
     "pic_blas_dgemm"
     "pic_blas_dgemv"
     "pic_blas_sgemv"
-    "pic_blas_asum")
+    "pic_blas_asum"
+    "pib_blas_axpy")
 
 set(test-srcs "main_tests.f90")
 foreach(t IN LISTS tests)

@@ -26,19 +26,20 @@ module pic_blas_interfaces
    ! this _needs_ allocatable arrays since we deduce shapes from the arrays themselves
    public :: pic_gemm, pic_gemv, pic_asum, pic_axpy, pic_copy, pic_dot, pic_scal, pic_iamax
 
+   ! tested
    interface pic_gemm
       !! general interface of the BLAS GEMM routines, will call SGEMM, DGEMM, or ZGEMM
       module procedure :: pic_sgemm
       module procedure :: pic_dgemm
       module procedure :: pic_zgemm
    end interface pic_gemm
-
+   ! tested
    interface pic_gemv
       !! general interface of the BLAS GEMV routines, will call SGEMV, DGEMV
       module procedure :: pic_sgemv
       module procedure :: pic_dgemv
    end interface pic_gemv
-
+   ! tested
    interface pic_asum
       !! general interface of the BLAS SASUM routines, will call xASUM
       module procedure :: pic_sasum
