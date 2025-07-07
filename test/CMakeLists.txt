@@ -1,6 +1,15 @@
 # Unit testing
-set(tests "base_utils" "pic_string_utils" "pic_timers" "pic_logger"
-          "pic_flop_recorder" "pic_flop_rate")
+set(tests
+    "base_utils"
+    "pic_string_utils"
+    "pic_timers"
+    "pic_logger"
+    "pic_flop_recorder"
+    "pic_flop_rate"
+    "pic_blas_sgemm"
+    "pic_blas_dgemm"
+    "pic_blas_dgemv"
+    "pic_blas_sgemv")
 set(test-srcs "main_tests.f90")
 foreach(t IN LISTS tests)
   string(MAKE_C_IDENTIFIER ${t} t)
