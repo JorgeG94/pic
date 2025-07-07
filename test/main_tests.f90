@@ -17,10 +17,11 @@ program pic_tester
    use test_pic_blas_interfaces_copy, only: collect_pic_copy_tests
    use test_pic_blas_interfaces_dot, only: collect_pic_blas_dot_tests
    use test_pic_blas_interfaces_scal, only: collect_pic_scal_tests
+   use test_pic_blas_iamax, only: collect_pic_blas_iamax_tests
    ! add here the module you want to test
    implicit none
    integer :: stat, is
-   integer, parameter :: ntest_suites = 15
+   integer, parameter :: ntest_suites = 16
     !! number of tests, this number needs to be modified and equal to the number of files we have with unit tests
    character(len=:), allocatable :: suite_name, test_name
    type(testsuite_type), allocatable :: testsuites(:)
@@ -44,6 +45,7 @@ program pic_tester
    testsuites(13) = new_testsuite("pic_blas_copy", collect_pic_copy_tests)
    testsuites(14) = new_testsuite("pic_blas_dot", collect_pic_blas_dot_tests)
    testsuites(15) = new_testsuite("pic_blas_scal", collect_pic_scal_tests)
+   testsuites(16) = new_testsuite("pic_blas_iamax", collect_pic_blas_iamax_tests)
    !testsuites(3) = new_testsuite("suite3", collect_integrator_tests)
    !testsuites(4) = new_testsuite("suite4", collect_pic_math_utils_test)
 

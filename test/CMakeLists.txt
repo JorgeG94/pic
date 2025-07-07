@@ -14,7 +14,8 @@ set(tests
     "pic_blas_axpy"
     "pic_blas_copy"
     "pic_blas_dot"
-    "pic_blas_scal")
+    "pic_blas_scal"
+    "pic_blas_iamax")
 
 set(test-srcs "main_tests.f90")
 foreach(t IN LISTS tests)
@@ -33,6 +34,7 @@ target_include_directories("${project_name}-tester"
 target_link_libraries("${project_name}-tester" PRIVATE "${core_lib}"
                                                        test-drive::test-drive)
 
+message(STATUS "Adding the following tests to ctests...")
 foreach(t IN LISTS tests)
   message(STATUS "${project_name}/${t} ${project_name}-tester ${t}")
   add_test("${project_name}/${t}" "${project_name}-tester" "${t}")
