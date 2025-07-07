@@ -1,5 +1,6 @@
 program main
    use pic_string_utils
+   use pic_blas_interfaces
    use pic_types
    use pic_timers
    use pic_flop_recorder
@@ -13,6 +14,7 @@ program main
    type(flop_rate_type) :: pic_flops
    real(dp) :: max_time
    real(dp) :: elapsed_time
+   real(dp) :: flop_rate
 
    call MPI_Init(ierr)
    call MPI_Comm_rank(MPI_COMM_WORLD, rank, ierr)
@@ -34,13 +36,16 @@ program main
       A = 1.0_dp
       B = 1.0_dp
       C = 0.0_dp
-      call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
+      !call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
+      call pic_gemm(A, B, C)
       !call my_timer%start()
       call pic_flops%start_time()
       do i = 1, n_loops
          curr_flops = 2*m*n*k
          call pic_flops%add_flops(curr_flops)
-         call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
+         !   call pic_gemm(A,B,C)
+         call pic_gemm(A, B, C)
+         !call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
       end do
       call pic_flops%stop_time()
       elapsed_time = pic_flops%get_time()
@@ -55,11 +60,12 @@ program main
 
    if (rank == 0) then
       !flop_rate = pic_flops%get_flop_rate()
+      flop_rate = real(total_flops, dp)/max_time/1.0d9
       ! you can also get the FLOP rate like this and use it for something
       print *, "Global time: ", max_time, " seconds"
       print *, "Total GFLOPs: ", total_flops/1d9
-      !print *, "Global FLOP rate: ", flop_rate, " GFLOP/s"
-      call pic_flops%report()
+      print *, "Global FLOP rate: ", flop_rate, " GFLOP/s"
+      !call pic_flops%report()
    end if
 
    call MPI_Finalize(ierr)
