@@ -52,8 +52,8 @@ module pic_blas_interfaces
       !! general interface of the BLAS AXPY routines, will call SAXPY, DAXPY, CAXPY, ZAXPY
       module procedure :: pic_saxpy
       module procedure :: pic_daxpy
-      module procedure :: pic_caxpy
-      module procedure :: pic_zaxpy
+      module procedure :: pic_caxpy ! not tested
+      module procedure :: pic_zaxpy ! not tested
    end interface pic_axpy
 
    interface pic_copy
