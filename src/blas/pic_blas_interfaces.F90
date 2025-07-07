@@ -809,53 +809,53 @@ contains
       call blas_copy(n, x, incx, y, incy)
    end subroutine pic_zcopy
 
-   subroutine pic_sdot(x, y, res)
+   function pic_sdot(x, y) result(res)
       !! interface for single precision dot product
       real(sp), intent(in) :: x(:)
       real(sp), intent(in) :: y(:)
-      real(sp), intent(out) :: res
+      real(sp) :: res
       integer(default_int) :: n, incx, incy
       n = size(x)
       incx = 1
       incy = 1
       res = blas_dot(n, x, incx, y, incy)
-   end subroutine pic_sdot
+   end function pic_sdot
 
-   subroutine pic_ddot(x, y, res)
+   function pic_ddot(x, y) result(res)
       !! interface for double precision dot product
       real(dp), intent(in) :: x(:)
       real(dp), intent(in) :: y(:)
-      real(dp), intent(out) :: res
+      real(dp) :: res
       integer(default_int) :: n, incx, incy
       n = size(x)
       incx = 1
       incy = 1
       res = blas_dot(n, x, incx, y, incy)
-   end subroutine pic_ddot
+   end function pic_ddot
 
-   subroutine pic_cdotc(x, y, res)
+   function pic_cdotc(x, y) result(res)
       !! interface for single precision complex dot product
       complex(sp), intent(in) :: x(:)
       complex(sp), intent(in) :: y(:)
-      complex(sp), intent(out) :: res
+      complex(sp) :: res
       integer(default_int) :: n, incx, incy
       n = size(x)
       incx = 1
       incy = 1
       res = blas_dot(n, x, incx, y, incy)
-   end subroutine pic_cdotc
+   end function pic_cdotc
 
-   subroutine pic_zdotc(x, y, res)
+   function pic_zdotc(x, y) result(res)
       !! interface for double precision complex dot product
       complex(dp), intent(in) :: x(:)
       complex(dp), intent(in) :: y(:)
-      complex(dp), intent(out) :: res
+      complex(dp) :: res
       integer(default_int) :: n, incx, incy
       n = size(x)
       incx = 1
       incy = 1
       res = blas_dot(n, x, incx, y, incy)
-   end subroutine pic_zdotc
+   end function pic_zdotc
 
    subroutine pic_sscal(x, alpha)
       !! interface for single precision scaling
