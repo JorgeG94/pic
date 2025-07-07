@@ -17,7 +17,6 @@ contains
 
    subroutine pic_print_banner
     !! my cool banner, work in progress
-      implicit none
 
       print *, "========================================"
       print *, "         _____  _____  _____ "

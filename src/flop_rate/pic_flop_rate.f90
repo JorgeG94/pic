@@ -34,7 +34,6 @@ contains
 
    subroutine flop_rate_start_time(self)
   !! start the timer for the flop rate
-      implicit none
       class(flop_rate_type), intent(inout) :: self
 
       call self%m_timer%start()
@@ -42,7 +41,6 @@ contains
 
    subroutine flop_rate_stop_time(self)
   !! stop the timer for the flop rate
-      implicit none
       class(flop_rate_type), intent(inout) :: self
 
       call self%m_timer%stop()
@@ -51,7 +49,6 @@ contains
 
    subroutine flop_rate_add_flops(self, flops)
   !! add flops to the flop rate
-      implicit none
       class(flop_rate_type), intent(inout) :: self
       integer(int64), intent(in) :: flops
 
@@ -61,7 +58,6 @@ contains
 
    function flop_rate_get_flops(self) result(flops)
   !! get the number of flops recorded
-      implicit none
       class(flop_rate_type), intent(in) :: self
       integer(int64) :: flops
 
@@ -71,7 +67,6 @@ contains
 
    function flop_rate_get_time(self) result(time)
   !! get the elapsed time for the timer through the flop rate type
-      implicit none
       class(flop_rate_type), intent(in) :: self
       real(dp) :: time
 
@@ -81,7 +76,6 @@ contains
 
    function flop_rate_get_flop_rate(self) result(flop_rate)
   !! get the flop rate in GFLOP/s, return 0.0 if time is zero or negative
-      implicit none
       class(flop_rate_type), intent(inout) :: self
       real(dp) :: flop_rate
       real(dp) :: time
@@ -103,7 +97,6 @@ contains
    subroutine flop_rate_report(self)
   !! report the flop rate in GFLOP/s
   !! this is a convenience function to print the flop rate
-      implicit none
       class(flop_rate_type), intent(inout) :: self
       self%m_flop_rate = self%get_flop_rate()
       print *, "Flop rate is "//to_string(self%m_flop_rate)//" GFLOP/s"
@@ -111,7 +104,6 @@ contains
    end subroutine flop_rate_report
 
    subroutine flop_rate_reset(self)
-      implicit none
       class(flop_rate_type), intent(inout) :: self
 
       call self%m_flops%reset()

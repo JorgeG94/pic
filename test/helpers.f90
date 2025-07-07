@@ -4,7 +4,6 @@ module pic_test_helpers
 
 contains
    subroutine dummy_work()
-      implicit none
       integer(int64) ::  i, j, k
       integer :: m
       real(dp), allocatable :: A(:, :), B(:, :), C(:, :)

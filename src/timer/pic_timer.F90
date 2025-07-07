@@ -80,7 +80,6 @@ contains
    end function timer_get_elapsed_time
 
    subroutine set(self, time)
-      implicit none
       class(pic_timer), intent(inout) :: self
       real(dp), intent(in) :: time
       self%walltime = time
