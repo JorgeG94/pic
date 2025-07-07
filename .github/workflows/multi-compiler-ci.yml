@@ -1,6 +1,6 @@
 name: linux-multi-compiler-ci
 
-on: [push, pull_request]
+on: [pull_request, push]
 
 jobs:
   Build:
@@ -34,12 +34,16 @@ jobs:
     - name: Install fypp
       run: pip install --upgrade fypp ninja
 
+
     - name: Setup Fortran compiler
       uses: fortran-lang/setup-fortran@v1.6.2
       id: setup-fortran
       with:
         compiler: ${{ matrix.toolchain.compiler }}
         version: ${{ matrix.toolchain.version }}
+
+    - name: Install openblas
+      run: sudo apt install libopenblas-dev
 
     - name: Configure with CMake
       if: ${{ contains(matrix.build, 'cmake') }}
