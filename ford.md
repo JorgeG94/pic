@@ -13,6 +13,7 @@ graph_maxnodes: 250
 graph_maxdepth: 5
 coloured_edges: true
 display: public
+         private
          protected
 source: true
 proc_internals: true

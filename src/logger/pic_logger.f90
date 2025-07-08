@@ -55,18 +55,21 @@ module pic_logger
 contains
 
    pure subroutine configuration(self, level)
+      !! Get the current log level set for the logger
       class(logger_type), intent(in) :: self
       integer(default_int), intent(out), optional :: level
       if (present(level)) level = self%log_level
    end subroutine configuration
 
    pure subroutine configure(self, level)
+      !! set the log level for the logger
       class(logger_type), intent(inout) :: self
       integer(default_int), intent(in), optional :: level
       if (present(level)) self%log_level = level
    end subroutine configure
 
    subroutine configure_file_output(self, filename, level)
+      !! configure the log level for the file output
       class(logger_type), intent(inout) :: self
       character(*), intent(in) :: filename
       integer(default_int), intent(in), optional :: level
@@ -87,6 +90,7 @@ contains
    end subroutine configure_file_output
 
    subroutine close_log_file(self)
+      !! simple file closer
       class(logger_type), intent(inout) :: self
       if (self%log_file_open) then
          close (self%log_file_unit)
@@ -96,6 +100,7 @@ contains
    end subroutine close_log_file
 
    subroutine debug(self, message, module, procedure)
+      !! log message to debug level
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -103,6 +108,7 @@ contains
    end subroutine debug
 
    subroutine verbose(self, message, module, procedure)
+      !! log message to verbose level
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -110,6 +116,7 @@ contains
    end subroutine verbose
 
    subroutine info(self, message, module, procedure)
+      !! log message to info level
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -117,6 +124,7 @@ contains
    end subroutine info
 
    subroutine warning(self, message, module, procedure)
+      !! log message to warning level
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -124,6 +132,7 @@ contains
    end subroutine warning
 
    subroutine performance(self, message, module, procedure)
+      !! log message to performance level
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -131,6 +140,7 @@ contains
    end subroutine performance
 
    subroutine error(self, message, module, procedure)
+      !! log message to error level
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -138,6 +148,7 @@ contains
    end subroutine error
 
    subroutine write_log_line(unit, level, message, module, procedure)
+      !! write the message at the appropriate level with formatting to the string
       integer(default_int), intent(in) :: unit
       character(*), intent(in) :: level, message
       character(*), intent(in), optional :: module, procedure
@@ -152,6 +163,7 @@ contains
    end subroutine write_log_line
 
    subroutine log(self, level, message, module, procedure)
+      !! general subroutine to control at what level somethings gets printed
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: level
       character(*), intent(in) :: message
