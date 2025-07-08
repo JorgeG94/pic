@@ -3,6 +3,8 @@ module pic
  !! simple interface module that prints banner and other information about the library
  !! mostly here to verify installs, etc.
    implicit none
+   private
+   public :: pic_print_banner
 
 contains
 

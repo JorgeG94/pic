@@ -10,6 +10,8 @@ module pic_mpi
                       MPI_Comm_size, MPI_Comm_rank
 #endif
    implicit none
+   private
+   public :: pic_comm
 
    type :: pic_comm
     !! custom data type that holds the MPI communicators

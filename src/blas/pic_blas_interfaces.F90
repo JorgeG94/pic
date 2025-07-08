@@ -15,7 +15,7 @@ module pic_blas_interfaces
   !! call the "overloaded" BLAS interfaces to call the correct BLAS routine
    use pic_types, only: sp, dp, default_int
    implicit none
-
+   private
    ! these are the generic interfaces to the BLAS library
    public :: blas_asum, blas_axpy, blas_copy, blas_dot, blas_scal, &
              blas_iamax, blas_gemv, blas_gemm

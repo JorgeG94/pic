@@ -5,7 +5,8 @@ module pic_output_helpers
   !! Assorted output helper routines
    use pic_types, only: default_int
    implicit none
-   public
+   private
+   public :: print_asterisk_row
 
 contains
 

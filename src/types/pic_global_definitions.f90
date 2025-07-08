@@ -7,7 +7,8 @@ module pic_global_definitions
    use pic_types, only: default_int
    implicit none
 
-   public
+   private
+   public :: stdout, logfile_unit
    integer(default_int), parameter :: stdout = 6
      !! assign output unit 6 for stdout
    integer(default_int), parameter :: logfile_unit = 99

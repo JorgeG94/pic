@@ -7,7 +7,7 @@ program main
    !use pic_logger, only: global => global_logger, warning_level, verbose_level
    !use testdrive, only: run_testsuite
    use pic_types, only: dp, default_int
-   use pic_matrix_printer, only: print_matrix
+   use pic_matrix_printer, only: print_array
    implicit none
    !use pic_mpi
    !use pic_timers
@@ -60,7 +60,7 @@ program main
    call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
    ! C_flat = reshape(C, [flat_size])
 
-   call print_matrix(C, "PLAIN")
+   call print_array(C, "PLAIN")
 
    ! call json_loads(val, '{"a":1,"b":2}', error=error)
    ! if (allocated(error)) then

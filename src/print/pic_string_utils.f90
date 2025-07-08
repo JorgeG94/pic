@@ -7,7 +7,8 @@ module pic_string_utils
    use pic_types, only: sp, dp, int32, int64
    implicit none
    ! Generic interface for to_string to handle different types
-   public
+   private
+   public :: to_string
    interface to_string
      !! public interface to transform variables to strings
       module procedure to_string_int32

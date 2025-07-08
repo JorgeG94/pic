@@ -8,6 +8,8 @@ module pic_timers
    use omp_lib, only: omp_get_wtime
 #endif
    implicit none
+   private
+   public :: pic_timer
 
    type :: pic_timer
     !! derived type for a timer, contains the start, stop, and count variables

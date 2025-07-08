@@ -5,8 +5,8 @@ module pic_command_line
    use pic_types, only: default_int
    implicit none
 
-   public
-
+   private
+   public :: get_first_arg_from_command_line
 contains
 
    function get_first_arg_from_command_line() result(filename)

@@ -6,7 +6,8 @@ module pic_matrix_printer
    use pic_types, only: dp, default_int
    use pic_string_utils, only: to_string
    implicit none
-   public
+   private
+   public :: print_array, print_array_with_bounds
    interface print_array
      !! general interface for printing a one or two dimensional array
       module procedure print_vector

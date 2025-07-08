@@ -7,6 +7,8 @@ module pic_flop_rate
    use pic_flop_recorder, only: flop_recorder_type
    use pic_string_utils, only: to_string
    implicit none
+   private
+   public :: flop_rate_type
 
    type flop_rate_type
   !! derived type for flop rate, contains a timer and a flop recorder

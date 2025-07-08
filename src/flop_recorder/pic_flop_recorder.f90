@@ -3,6 +3,8 @@ module pic_flop_recorder
   !! general flop recorder module
    use pic_types, only: int64
    implicit none
+   private
+   public :: flop_recorder_type
 
    type :: flop_recorder_type
     !! the flop recorder type simply contains a flop count
