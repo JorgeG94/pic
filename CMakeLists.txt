@@ -160,3 +160,16 @@ install(
   RENAME pic-config.cmake)
 
 print_pic_summary()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Coverage")
+  add_custom_target(
+    coverage
+    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+    COMMAND ${CMAKE_COMMAND} -E remove -f coverage.info
+    COMMAND lcov --directory . --capture --output-file coverage.info
+    COMMAND lcov --ignore-errors unused --remove coverage.info '/usr/*'
+            '*/build/*' --output-file coverage_filtered.info
+    COMMAND genhtml coverage_filtered.info --output-directory coverage_report
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Generating code coverage report")
+endif()
