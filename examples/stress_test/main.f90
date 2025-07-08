@@ -5,12 +5,12 @@ program main
    use pic_timers, only: pic_timer
    use pic_flop_recorder, only: flop_recorder_type
    use pic_flop_rate, only: flop_rate_type
-   use pic_mpi, only: pic_comm
+   use pic_mpi, only: pic_comm, MPI_SUM, MPI_MAX
    implicit none
    type(pic_comm) :: comm
+   type(flop_rate_type) :: pic_flops
    integer(default_int) :: ierr, rank, size
    integer(int64) :: flops, total_flops
-   type(flop_rate_type) :: pic_flops
    real(dp) :: max_time
    real(dp) :: elapsed_time
    real(dp) :: flop_rate

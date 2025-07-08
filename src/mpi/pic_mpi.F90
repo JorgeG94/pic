@@ -15,7 +15,9 @@ module pic_mpi
    private
    public :: pic_comm
    ! Module-level world communicator
-
+#ifdef USE_MPI
+   public :: MPI_SUM, MPI_MAX
+#endif
    type :: pic_comm
       private
 #ifdef USE_MPI

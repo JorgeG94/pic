@@ -37,6 +37,14 @@ if(NOT TARGET jonquil::jonquil AND PIC_ENABLE_JONQUIL)
   list(APPEND external_libraries_to_link jonquil::jonquil)
 endif()
 
+if(PIC_BUILD_STRESS)
+  if(NOT PIC_ENABLE_MPI)
+    message(STATUS "PIC_BUILD_STRESS is ON, so enabling MPI automatically.")
+    set(PIC_ENABLE_MPI
+        ON
+        CACHE BOOL "Enable MPI support" FORCE)
+  endif()
+endif()
 set(core_lib pic)
 add_library(${core_lib} STATIC)
 
