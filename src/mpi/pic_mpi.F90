@@ -8,7 +8,8 @@ module pic_mpi
 #ifdef USE_MPI
    use mpi_f08, only: MPI_COMM, MPI_COMM_WORLD, MPI_Init, MPI_Finalize, &
                       MPI_Comm_size, MPI_Comm_rank, MPI_OP, MPI_INTEGER8, &
-                      MPI_DOUBLE_PRECISION, MPI_Barrier, MPI_Reduce
+                      MPI_DOUBLE_PRECISION, MPI_Barrier, MPI_Reduce, MPI_SUM, &
+                      MPI_MAX, MPI_MIN, MPI_COMM_NULL
 #endif
    implicit none
    private

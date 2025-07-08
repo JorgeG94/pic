@@ -5,16 +5,11 @@ program main
    use pic_timers, only: pic_timer
    use pic_flop_recorder, only: flop_recorder_type
    use pic_flop_rate, only: flop_rate_type
-   use mpi_f08, only: MPI_COMM_WORLD, MPI_Init, MPI_Finalize, &
-                      MPI_Comm_rank, MPI_Comm_size, MPI_Reduce, MPI_INTEGER8, &
-                      MPI_DOUBLE_PRECISION, MPI_MAX, MPI_SUM
    use pic_mpi, only: pic_comm
    implicit none
    type(pic_comm) :: comm
    integer(default_int) :: ierr, rank, size
-   !integer(default_int) :: n, m, k, flat_size
    integer(int64) :: flops, total_flops
-   !type(flop_recorder_type) :: pic_flops
    type(flop_rate_type) :: pic_flops
    real(dp) :: max_time
    real(dp) :: elapsed_time
@@ -22,9 +17,6 @@ program main
 
    ! this thing has the comm world
    call comm%init(from_world=.true.)
-   !call MPI_Init(ierr)
-   !call MPI_Comm_rank(MPI_COMM_WORLD, rank, ierr)
-   !call MPI_Comm_size(MPI_COMM_WORLD, size, ierr)
 
    flops = 0_int64
    total_flops = 0_int64
@@ -57,19 +49,14 @@ program main
    end block
 
    ! Global reduction
-   !call MPI_Reduce(flops, total_flops, 1, MPI_INTEGER8, MPI_SUM, 0, MPI_COMM_WORLD, ierr)
-   !call MPI_Reduce(elapsed_time, max_time, 1, MPI_DOUBLE_PRECISION, MPI_MAX, 0, MPI_COMM_WORLD, ierr)
    call comm%reduce(flops, total_flops, 1, MPI_SUM, 0)
    call comm%reduce(elapsed_time, max_time, 1, MPI_MAX, 0)
 
    if (comm%m_rank == 0) then
-      !flop_rate = pic_flops%get_flop_rate()
       flop_rate = real(total_flops, dp)/max_time/1.0e9_dp
-      ! you can also get the FLOP rate like this and use it for something
       print *, "Global time: ", max_time, " seconds"
       print *, "Total GFLOPs: ", total_flops/1.0e9_dp
       print *, "Global FLOP rate: ", flop_rate, " GFLOP/s"
-      !call pic_flops%report()
    end if
 
    call comm%finalize()
