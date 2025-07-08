@@ -58,6 +58,7 @@ contains
    subroutine test_flop_rate_zero_flops(error)
       type(error_type), allocatable, intent(out) :: error
       type(flop_rate_type) :: flop_rate
+      real(dp), parameter :: tol = 1.0e-12_dp
       real(dp) :: flop_rate_value
 
       call flop_rate%start_time()
@@ -69,7 +70,8 @@ contains
       if (allocated(error)) return
 
       flop_rate_value = flop_rate%get_flop_rate()
-      call check(error, flop_rate_value == 0.0_dp, "Flop rate should be zero when no flops are added")
+      !call check(error, flop_rate_value == 0.0_dp, "Flop rate should be zero when no flops are added")
+      call check(error, abs(flop_rate_value) < tol, "Flop rate should be close to zero")
       if (allocated(error)) return
    end subroutine test_flop_rate_zero_flops
 

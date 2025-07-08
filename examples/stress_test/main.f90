@@ -38,16 +38,12 @@ program main
       A = 1.0_dp
       B = 1.0_dp
       C = 0.0_dp
-      !call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
       call pic_gemm(A, B, C)
-      !call my_timer%start()
       call pic_flops%start_time()
       do i = 1, n_loops
          curr_flops = 2*m*n*k
          call pic_flops%add_flops(curr_flops)
-         !   call pic_gemm(A,B,C)
          call pic_gemm(A, B, C)
-         !call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
       end do
       call pic_flops%stop_time()
       elapsed_time = pic_flops%get_time()

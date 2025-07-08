@@ -322,62 +322,62 @@ module pic_blas_interfaces
       pure subroutine sgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
          import :: sp, default_int
          implicit none
+         integer(default_int), intent(in) :: m
+         integer(default_int), intent(in) :: n
+         integer(default_int), intent(in) :: lda
+         integer(default_int), intent(in) :: incx
+         integer(default_int), intent(in) :: incy
          real(sp), intent(in) :: a(lda, *)
          real(sp), intent(in) :: x(*)
          real(sp), intent(inout) :: y(*)
          character(len=1), intent(in) :: trans
          real(sp), intent(in) :: alpha
          real(sp), intent(in) :: beta
+      end subroutine sgemv
+      pure subroutine dgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
+         import :: dp, default_int
+         implicit none
          integer(default_int), intent(in) :: m
          integer(default_int), intent(in) :: n
          integer(default_int), intent(in) :: lda
          integer(default_int), intent(in) :: incx
          integer(default_int), intent(in) :: incy
-      end subroutine sgemv
-      pure subroutine dgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
-         import :: dp, default_int
-         implicit none
          real(dp), intent(in) :: a(lda, *)
          real(dp), intent(in) :: x(*)
          real(dp), intent(inout) :: y(*)
          character(len=1), intent(in) :: trans
          real(dp), intent(in) :: alpha
          real(dp), intent(in) :: beta
+      end subroutine dgemv
+      pure subroutine cgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
+         import :: sp, default_int
+         implicit none
          integer(default_int), intent(in) :: m
          integer(default_int), intent(in) :: n
          integer(default_int), intent(in) :: lda
          integer(default_int), intent(in) :: incx
          integer(default_int), intent(in) :: incy
-      end subroutine dgemv
-      pure subroutine cgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
-         import :: sp, default_int
-         implicit none
          complex(sp), intent(in) :: a(lda, *)
          complex(sp), intent(in) :: x(*)
          complex(sp), intent(inout) :: y(*)
          character(len=1), intent(in) :: trans
          complex(sp), intent(in) :: alpha
          complex(sp), intent(in) :: beta
+      end subroutine cgemv
+      pure subroutine zgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
+         import :: dp, default_int
+         implicit none
          integer(default_int), intent(in) :: m
          integer(default_int), intent(in) :: n
          integer(default_int), intent(in) :: lda
          integer(default_int), intent(in) :: incx
          integer(default_int), intent(in) :: incy
-      end subroutine cgemv
-      pure subroutine zgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
-         import :: dp, default_int
-         implicit none
          complex(dp), intent(in) :: a(lda, *)
          complex(dp), intent(in) :: x(*)
          complex(dp), intent(inout) :: y(*)
          character(len=1), intent(in) :: trans
          complex(dp), intent(in) :: alpha
          complex(dp), intent(in) :: beta
-         integer(default_int), intent(in) :: m
-         integer(default_int), intent(in) :: n
-         integer(default_int), intent(in) :: lda
-         integer(default_int), intent(in) :: incx
-         integer(default_int), intent(in) :: incy
       end subroutine zgemv
    end interface blas_gemv
 
@@ -386,6 +386,12 @@ module pic_blas_interfaces
            & beta, c, ldc)
          import :: sp, default_int
          implicit none
+         integer(default_int), intent(in) :: m
+         integer(default_int), intent(in) :: n
+         integer(default_int), intent(in) :: k
+         integer(default_int), intent(in) :: lda
+         integer(default_int), intent(in) :: ldb
+         integer(default_int), intent(in) :: ldc
          real(sp), intent(in) :: a(lda, *)
          real(sp), intent(in) :: b(ldb, *)
          real(sp), intent(inout) :: c(ldc, *)
@@ -393,17 +399,17 @@ module pic_blas_interfaces
          character(len=1), intent(in) :: transb
          real(sp), intent(in) :: alpha
          real(sp), intent(in) :: beta
+      end subroutine sgemm
+      pure subroutine dgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, &
+           & beta, c, ldc)
+         import :: dp, default_int
+         implicit none
          integer(default_int), intent(in) :: m
          integer(default_int), intent(in) :: n
          integer(default_int), intent(in) :: k
          integer(default_int), intent(in) :: lda
          integer(default_int), intent(in) :: ldb
          integer(default_int), intent(in) :: ldc
-      end subroutine sgemm
-      pure subroutine dgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, &
-           & beta, c, ldc)
-         import :: dp, default_int
-         implicit none
          real(dp), intent(in) :: a(lda, *)
          real(dp), intent(in) :: b(ldb, *)
          real(dp), intent(inout) :: c(ldc, *)
@@ -411,17 +417,17 @@ module pic_blas_interfaces
          character(len=1), intent(in) :: transb
          real(dp), intent(in) :: alpha
          real(dp), intent(in) :: beta
+      end subroutine dgemm
+      pure subroutine cgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, &
+           & beta, c, ldc)
+         import :: sp, default_int
+         implicit none
          integer(default_int), intent(in) :: m
          integer(default_int), intent(in) :: n
          integer(default_int), intent(in) :: k
          integer(default_int), intent(in) :: lda
          integer(default_int), intent(in) :: ldb
          integer(default_int), intent(in) :: ldc
-      end subroutine dgemm
-      pure subroutine cgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, &
-           & beta, c, ldc)
-         import :: sp, default_int
-         implicit none
          complex(sp), intent(in) :: a(lda, *)
          complex(sp), intent(in) :: b(ldb, *)
          complex(sp), intent(inout) :: c(ldc, *)
@@ -429,17 +435,17 @@ module pic_blas_interfaces
          character(len=1), intent(in) :: transb
          complex(sp), intent(in) :: alpha
          complex(sp), intent(in) :: beta
+      end subroutine cgemm
+      pure subroutine zgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, &
+           & beta, c, ldc)
+         import :: dp, default_int
+         implicit none
          integer(default_int), intent(in) :: m
          integer(default_int), intent(in) :: n
          integer(default_int), intent(in) :: k
          integer(default_int), intent(in) :: lda
          integer(default_int), intent(in) :: ldb
          integer(default_int), intent(in) :: ldc
-      end subroutine cgemm
-      pure subroutine zgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, &
-           & beta, c, ldc)
-         import :: dp, default_int
-         implicit none
          complex(dp), intent(in) :: a(lda, *)
          complex(dp), intent(in) :: b(ldb, *)
          complex(dp), intent(inout) :: c(ldc, *)
@@ -447,12 +453,6 @@ module pic_blas_interfaces
          character(len=1), intent(in) :: transb
          complex(dp), intent(in) :: alpha
          complex(dp), intent(in) :: beta
-         integer(default_int), intent(in) :: m
-         integer(default_int), intent(in) :: n
-         integer(default_int), intent(in) :: k
-         integer(default_int), intent(in) :: lda
-         integer(default_int), intent(in) :: ldb
-         integer(default_int), intent(in) :: ldc
       end subroutine zgemm
    end interface blas_gemm
 

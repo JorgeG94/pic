@@ -20,7 +20,7 @@ program main
    !integer(default_int) :: ierr, rank, size, ival
    real(dp), dimension(:, :), allocatable :: A, B, C
    !real(dp), dimension(:), allocatable :: C_flat
-   integer(default_int) :: n, m, k, flat_size
+   integer(default_int) :: n, m, k
 
    call pic_print_banner()
    !call comm%init()
