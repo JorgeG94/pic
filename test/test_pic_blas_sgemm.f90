@@ -1,6 +1,6 @@
 module test_pic_blas_interfaces_sgemm
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_blas_interfaces
+   use pic_blas_interfaces, only: pic_gemm
    use pic_types, only: sp, dp, default_int  ! assuming sp is your single precision kind
    implicit none
    private
@@ -51,7 +51,7 @@ contains
       B = reshape([5.0_sp, 6.0_sp, 7.0_sp, 8.0_sp], [2, 2])
       C = 0.0_sp
 
-      call pic_gemm(A, B, C, transa='T')
+      call pic_gemm(A, B, C, transa="T")
 
       ! Expected result: A^T * B = [1,2;3,4] * [5,6;7,8] = [19,22;43,50]
       expected = reshape([23.0_sp, 34.0_sp, 31.0_sp, 46.0_sp], [2, 2])
@@ -70,7 +70,7 @@ contains
       B = reshape([5.0_sp, 7.0_sp, 6.0_sp, 8.0_sp], [2, 2])  ! B^T will be [5,6;7,8]
       C = 0.0_sp
 
-      call pic_gemm(A, B, C, transb='T')
+      call pic_gemm(A, B, C, transb="T")
 
       ! Expected result: A * B^T = [1,3;2,4] * [5,6;7,8] = [26,30;38,44]
       expected = reshape([23.0_sp, 34.0_sp, 31.0_sp, 46.0_sp], [2, 2])
@@ -89,7 +89,7 @@ contains
       B = reshape([5.0_sp, 7.0_sp, 6.0_sp, 8.0_sp], [2, 2])  ! B^T = [5,6;7,8]
       C = 0.0_sp
 
-      call pic_gemm(A, B, C, transa='T', transb='T')
+      call pic_gemm(A, B, C, transa="T", transb="T")
 
       ! Expected result: A^T * B^T = [1,2;3,4] * [5,6;7,8] = [19,22;43,50]
       expected = reshape([23.0_sp, 34.0_sp, 31.0_sp, 46.0_sp], [2, 2])

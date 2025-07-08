@@ -1,7 +1,7 @@
 module test_pic_flop_rate
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_types, only: dp
-   use pic_flop_rate
+   use pic_types, only: dp, int64
+   use pic_flop_rate, only: flop_rate_type
    use pic_test_helpers, only: dummy_work
    implicit none
    private
@@ -32,7 +32,7 @@ contains
       call dummy_work()
       call flop_rate%stop_time()
 
-      expected_rate = 1000.0_dp/flop_rate%get_time()/1.0d9
+      expected_rate = 1000.0_dp/flop_rate%get_time()/1.0e9_dp  ! Convert to GFLOP/s
       actual_rate = flop_rate%get_flop_rate()
 
       call check(error, abs(actual_rate - expected_rate) < tolerance, "actual rate and expected rate differ")
@@ -58,6 +58,7 @@ contains
    subroutine test_flop_rate_zero_flops(error)
       type(error_type), allocatable, intent(out) :: error
       type(flop_rate_type) :: flop_rate
+      real(dp), parameter :: tol = 1.0e-12_dp
       real(dp) :: flop_rate_value
 
       call flop_rate%start_time()
@@ -69,7 +70,8 @@ contains
       if (allocated(error)) return
 
       flop_rate_value = flop_rate%get_flop_rate()
-      call check(error, flop_rate_value == 0.0_dp, "Flop rate should be zero when no flops are added")
+      !call check(error, flop_rate_value == 0.0_dp, "Flop rate should be zero when no flops are added")
+      call check(error, abs(flop_rate_value) < tol, "Flop rate should be close to zero")
       if (allocated(error)) return
    end subroutine test_flop_rate_zero_flops
 

@@ -1,8 +1,10 @@
 !! flop recorder
 module pic_flop_recorder
   !! general flop recorder module
-   use pic_types
+   use pic_types, only: int64
    implicit none
+   private
+   public :: flop_recorder_type
 
    type :: flop_recorder_type
     !! the flop recorder type simply contains a flop count
@@ -24,7 +26,6 @@ contains
 
    subroutine add_flops(self, flops)
     !! add the FLOPs!
-      implicit none
       class(flop_recorder_type), intent(inout) :: self
       integer(int64), intent(in) :: flops
       self%flop_count = self%flop_count + flops
@@ -33,7 +34,6 @@ contains
 
    function get_flops(self) result(flops)
     !! return the FLOPs at a given point in time
-      implicit none
       class(flop_recorder_type), intent(in) :: self
       integer(int64) :: flops
 
@@ -43,7 +43,6 @@ contains
 
    subroutine reset_flop_counter(self)
     !! reset the FLOP the counter
-      implicit none
       class(flop_recorder_type), intent(inout) :: self
 
       self%flop_count = 0_int64

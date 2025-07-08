@@ -1,11 +1,13 @@
 program main
-   use pic_string_utils
-   use pic_blas_interfaces
-   use pic_types
-   use pic_timers
-   use pic_flop_recorder
-   use pic_flop_rate
-   use mpi_f08
+   use pic_string_utils, only: to_string
+   use pic_blas_interfaces, only: pic_gemm
+   use pic_types, only: dp, int64, default_int
+   use pic_timers, only: pic_timer
+   use pic_flop_recorder, only: flop_recorder_type
+   use pic_flop_rate, only: flop_rate_type
+   use mpi_f08, only: MPI_COMM_WORLD, MPI_Init, MPI_Finalize, &
+                      MPI_Comm_rank, MPI_Comm_size, MPI_Reduce, MPI_INTEGER8, &
+                      MPI_DOUBLE_PRECISION, MPI_MAX, MPI_SUM
    implicit none
    integer(default_int) :: ierr, rank, size
    !integer(default_int) :: n, m, k, flat_size
@@ -36,16 +38,12 @@ program main
       A = 1.0_dp
       B = 1.0_dp
       C = 0.0_dp
-      !call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
       call pic_gemm(A, B, C)
-      !call my_timer%start()
       call pic_flops%start_time()
       do i = 1, n_loops
          curr_flops = 2*m*n*k
          call pic_flops%add_flops(curr_flops)
-         !   call pic_gemm(A,B,C)
          call pic_gemm(A, B, C)
-         !call dgemm('N', 'N', n, m, k, 1.0d0, A, n, B, k, 0.0d0, C, n)
       end do
       call pic_flops%stop_time()
       elapsed_time = pic_flops%get_time()
@@ -60,10 +58,10 @@ program main
 
    if (rank == 0) then
       !flop_rate = pic_flops%get_flop_rate()
-      flop_rate = real(total_flops, dp)/max_time/1.0d9
+      flop_rate = real(total_flops, dp)/max_time/1.0e9_dp
       ! you can also get the FLOP rate like this and use it for something
       print *, "Global time: ", max_time, " seconds"
-      print *, "Total GFLOPs: ", total_flops/1d9
+      print *, "Total GFLOPs: ", total_flops/1.0e9_dp
       print *, "Global FLOP rate: ", flop_rate, " GFLOP/s"
       !call pic_flops%report()
    end if

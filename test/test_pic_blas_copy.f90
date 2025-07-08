@@ -1,6 +1,6 @@
 module test_pic_blas_interfaces_copy
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_blas_interfaces
+   use pic_blas_interfaces, only: pic_copy
    use pic_types, only: sp, dp, default_int
    implicit none
    private

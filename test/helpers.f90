@@ -1,10 +1,12 @@
 module pic_test_helpers
-   use pic_types
+   use pic_types, only: int64, dp
    implicit none
+
+   private
+   public :: dummy_work
 
 contains
    subroutine dummy_work()
-      implicit none
       integer(int64) ::  i, j, k
       integer :: m
       real(dp), allocatable :: A(:, :), B(:, :), C(:, :)

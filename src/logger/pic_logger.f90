@@ -13,7 +13,7 @@ module pic_logger
    private
    public :: global_logger, logger_type
 
-   character(*), parameter :: name = 'pic_logger'
+   character(*), parameter :: name = "pic_logger"
    integer(default_int), parameter, public :: &
       debug_level = 10, &
       verbose_level = 9, &
@@ -75,9 +75,9 @@ contains
 
       if (self%log_file_open) call self%close_log_file()
 
-      open (unit=logfile_unit, file=trim(filename), status='replace', action='write', iostat=ios)
+      open (unit=logfile_unit, file=trim(filename), status="replace", action="write", iostat=ios)
       if (ios /= 0) then
-         write (*, *) 'ERROR: Failed to open log file: ', trim(filename)
+         write (*, *) "ERROR: Failed to open log file: ", trim(filename)
          return
       end if
 
@@ -160,17 +160,17 @@ contains
       integer(default_int) :: log_level_value
 
       select case (trim(level))
-      case ('DEBUG')
+      case ("DEBUG")
          log_level_value = debug_level
-      case ('VERBOSE')
+      case ("VERBOSE")
          log_level_value = verbose_level
-      case ('INFO')
+      case ("INFO")
          log_level_value = info_level
-      case ('WARNING')
+      case ("WARNING")
          log_level_value = warning_level
-      case ('PERFORMANCE')
+      case ("PERFORMANCE")
          log_level_value = performance_level
-      case ('ERROR')
+      case ("ERROR")
          log_level_value = error_level
       case default
          write (*, *) 'ERROR: Invalid log level "', trim(level), '"'

@@ -1,7 +1,7 @@
 module test_pic_blas_interfaces_sgemv
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_blas_interfaces
-   use pic_types, only: dp, default_int
+   use pic_blas_interfaces, only: pic_gemv
+   use pic_types, only: sp, dp, default_int
    implicit none
    private
    public :: collect_pic_sgemv_tests
@@ -44,7 +44,7 @@ contains
       x = [5.0_sp, 6.0_sp]
       y = [0.0_sp, 0.0_sp]
 
-      call pic_gemv(A, x, y, trans_a='T')
+      call pic_gemv(A, x, y, trans_a="T")
 
       expected = [1.0_sp*5.0_sp + 3.0_sp*6.0_sp, 2.0_sp*5.0_sp + 4.0_sp*6.0_sp]
       call check(error, all(abs(y - expected) < tol))

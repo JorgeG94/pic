@@ -69,7 +69,6 @@ contains
       type(error_type), allocatable, intent(out) :: error
       type(pic_timer) :: timer
       real(dp) :: elapsed
-      integer :: i, j
 
       call timer%start()
 
@@ -96,7 +95,6 @@ contains
       type(error_type), allocatable, intent(out) :: error
       type(pic_timer) :: timer
       real(dp) :: elapsed1, elapsed2
-      integer :: i, j
 
       ! First measurement
       call timer%start()
@@ -150,7 +148,6 @@ contains
       type(error_type), allocatable, intent(out) :: error
       type(pic_timer) :: timer1, timer2
       real(dp) :: elapsed_short, elapsed_long
-      integer :: i, j
 
       ! Short work
       call timer1%start()

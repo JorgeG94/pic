@@ -1,11 +1,12 @@
 module test_pic_blas_interfaces_asum
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_blas_interfaces
+   use pic_blas_interfaces, only: pic_asum
    use pic_types, only: sp, dp, default_int
 
    implicit none
    private
    public :: collect_pic_asum_tests
+   integer(default_int), parameter :: size_of_asum = 5
 
 contains
 
@@ -23,7 +24,7 @@ contains
 
    subroutine test_sasum(error)
       type(error_type), allocatable, intent(out) :: error
-      real(sp) :: A(5)
+      real(sp) :: A(size_of_asum)
       real(sp), parameter :: tol = 1.0e-6_sp
       real(sp) :: result, expected
       expected = 15.0_sp
@@ -35,7 +36,7 @@ contains
 
    subroutine test_dasum(error)
       type(error_type), allocatable, intent(out) :: error
-      real(dp) :: A(5)
+      real(dp) :: A(size_of_asum)
       real(dp), parameter :: tol = 1.0e-6_dp
       real(dp) :: result, expected
       expected = 15.0_dp
@@ -47,7 +48,7 @@ contains
 
    subroutine test_scasum(error)
       type(error_type), allocatable, intent(out) :: error
-      complex(sp) :: A(5)
+      complex(sp) :: A(size_of_asum)
       real(sp), parameter :: tol = 1.0e-6_sp
       complex(sp) :: result, expected
       expected = 15.0_sp
@@ -59,7 +60,7 @@ contains
 
    subroutine test_dcasum(error)
       type(error_type), allocatable, intent(out) :: error
-      complex(dp) :: A(5)
+      complex(dp) :: A(size_of_asum)
       real(dp), parameter :: tol = 1.0e-6_dp
       complex(dp) :: result, expected
       expected = 15.0_dp
