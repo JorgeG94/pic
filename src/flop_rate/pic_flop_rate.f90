@@ -91,7 +91,7 @@ contains
          flop_rate = 0.0_dp
          return
       else
-         self%m_flop_rate = flops/time/1.0d9
+         self%m_flop_rate = flops/time/1.0e9_dp
          flop_rate = self%m_flop_rate
       end if
    end function flop_rate_get_flop_rate

@@ -3,6 +3,7 @@ module test_pic_logger
    use pic_logger, only: logger_type, debug_level, verbose_level, info_level, &
                          performance_level, warning_level, error_level
    use pic_types, only: default_int
+   use pic_global_definitions, only: logfile_unit
    implicit none
    private
    public :: collect_pic_logger_tests
@@ -85,8 +86,8 @@ contains
 
       ! Clean up
       if (file_exists) then
-         open (unit=99, file=test_filename, status='old')
-         close (99, status='delete')
+         open (unit=logfile_unit, file=test_filename, status='old', action='readwrite')
+         close (logfile_unit, status='delete')
       end if
 
    end subroutine test_logger_file_output
@@ -145,8 +146,8 @@ contains
 
       ! Clean up
       if (file_exists) then
-         open (unit=99, file=test_filename, status='old')
-         close (99, status='delete')
+         open (unit=logfile_unit, file=test_filename, status='old', action='read')
+         close (logfile_unit, status='delete')
       end if
 
    end subroutine test_logger_file_levels
@@ -177,8 +178,8 @@ contains
 
       ! Clean up
       if (file_exists) then
-         open (unit=99, file=test_filename, status='old')
-         close (99, status='delete')
+         open (unit=logfile_unit, file=test_filename, status='old', action='read')
+         close (logfile_unit, status='delete')
       end if
 
    end subroutine test_logger_close_file
@@ -216,8 +217,8 @@ contains
 
       ! Clean up
       if (file_exists) then
-         open (unit=99, file=test_filename, status='old')
-         close (99, status='delete')
+         open (unit=logfile_unit, file=test_filename, status='old', action='read')
+         close (logfile_unit, status='delete')
       end if
 
    end subroutine test_logger_convenience_methods
@@ -248,17 +249,17 @@ contains
       ! Read file content
       found_message = .false.
       open (newunit=unit_num, file=test_filename, status='old', action='read')
-      do
+      read: do
          read (unit_num, '(A)', iostat=ios) line
-         if (ios /= 0) exit
+         if (ios /= 0) exit read
          if (index(line, 'Test content message') > 0 .and. &
              index(line, 'test_module') > 0 .and. &
              index(line, 'test_procedure') > 0 .and. &
              index(line, 'INFO') > 0) then
             found_message = .true.
-            exit
+            exit read
          end if
-      end do
+      end do read
       close (unit_num)
 
       call check(error, found_message, "Should find expected message format in log file")
@@ -266,8 +267,8 @@ contains
 
       ! Clean up
       if (file_exists) then
-         open (unit=99, file=test_filename, status='old')
-         close (99, status='delete')
+         open (unit=logfile_unit, file=test_filename, status='old', action='read')
+         close (logfile_unit, status='delete')
       end if
 
    end subroutine test_logger_file_content

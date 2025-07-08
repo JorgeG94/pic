@@ -89,34 +89,34 @@ module pic_blas_interfaces
    end interface pic_iamax
 
    interface blas_asum
-      pure function sasum(n, x, incx)
+      pure function sasum(n, x, incx) result(res_sasum)
          import :: sp, default_int
          implicit none
-         real(sp) :: sasum
+         real(sp) :: res_sasum
          real(sp), intent(in) :: x(*)
          integer(default_int), intent(in) :: incx
          integer(default_int), intent(in) :: n
       end function sasum
-      pure function dasum(n, x, incx)
+      pure function dasum(n, x, incx) result(res_dasum)
          import :: dp, default_int
          implicit none
-         real(dp) :: dasum
+         real(dp) :: res_dasum
          real(dp), intent(in) :: x(*)
          integer(default_int), intent(in) :: incx
          integer(default_int), intent(in) :: n
       end function dasum
-      pure function scasum(n, x, incx)
+      pure function scasum(n, x, incx) result(res_scasum)
          import :: sp, default_int
          implicit none
-         real(sp) :: scasum
+         real(sp) :: res_scasum
          complex(sp), intent(in) :: x(*)
          integer(default_int), intent(in) :: incx
          integer(default_int), intent(in) :: n
       end function scasum
-      pure function dzasum(n, x, incx)
+      pure function dzasum(n, x, incx) result(res_dzasum)
          import :: dp, default_int
          implicit none
-         real(dp) :: dzasum
+         real(dp) :: res_dzasum
          complex(dp), intent(in) :: x(*)
          integer(default_int), intent(in) :: incx
          integer(default_int), intent(in) :: n

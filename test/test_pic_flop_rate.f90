@@ -32,7 +32,7 @@ contains
       call dummy_work()
       call flop_rate%stop_time()
 
-      expected_rate = 1000.0_dp/flop_rate%get_time()/1.0d9
+      expected_rate = 1000.0_dp/flop_rate%get_time()/1.0e9_dp  ! Convert to GFLOP/s
       actual_rate = flop_rate%get_flop_rate()
 
       call check(error, abs(actual_rate - expected_rate) < tolerance, "actual rate and expected rate differ")

@@ -4,7 +4,7 @@
 
 module pic_types
    !! main module for defining types for integer and double precision
-   use iso_fortran_env, only: int32, int64
+   use, intrinsic :: iso_fortran_env, only: int32, int64
    implicit none
 
    private

@@ -58,10 +58,10 @@ program main
 
    if (rank == 0) then
       !flop_rate = pic_flops%get_flop_rate()
-      flop_rate = real(total_flops, dp)/max_time/1.0d9
+      flop_rate = real(total_flops, dp)/max_time/1.0e9_dp
       ! you can also get the FLOP rate like this and use it for something
       print *, "Global time: ", max_time, " seconds"
-      print *, "Total GFLOPs: ", total_flops/1d9
+      print *, "Total GFLOPs: ", total_flops/1.0e9_dp
       print *, "Global FLOP rate: ", flop_rate, " GFLOP/s"
       !call pic_flops%report()
    end if
