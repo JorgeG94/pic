@@ -89,6 +89,7 @@ module pic_blas_interfaces
    end interface pic_iamax
 
    interface blas_asum
+      !! explicit interface for BLAS ASUM routines
       pure function sasum(n, x, incx) result(res_sasum)
          import :: sp, default_int
          implicit none
@@ -124,6 +125,7 @@ module pic_blas_interfaces
    end interface blas_asum
 
    interface blas_axpy
+      !! explicit interface for BLAS AXPY routines
       pure subroutine saxpy(n, alpha, x, incx, y, incy)
          import :: sp, default_int
          implicit none
@@ -167,6 +169,7 @@ module pic_blas_interfaces
    end interface blas_axpy
 
    interface blas_copy
+      !! explicit interface for BLAS COPY routines
       pure subroutine scopy(n, x, incx, y, incy)
          import :: sp, default_int
          implicit none
@@ -206,6 +209,7 @@ module pic_blas_interfaces
    end interface blas_copy
 
    interface blas_dot
+      !! explicit interface for BLAS DOT routines
       pure function sdot(n, x, incx, y, incy) result(res)
          import :: sp, default_int
          implicit none
@@ -249,6 +253,7 @@ module pic_blas_interfaces
    end interface blas_dot
 
    interface blas_scal
+      !! explicit interface for BLAS SCAL routines
       pure subroutine sscal(n, alpha, x, incx)
          import :: sp, default_int
          implicit none
@@ -284,6 +289,7 @@ module pic_blas_interfaces
    end interface blas_scal
 
    interface blas_iamax
+      !! explicit interface for BLAS IAMAX routines
       pure function isamax(n, x, incx) result(idx)
          import :: sp, default_int
          implicit none
@@ -319,6 +325,7 @@ module pic_blas_interfaces
    end interface blas_iamax
 
    interface blas_gemv
+      !! explicit interface for BLAS GEMV routines
       pure subroutine sgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
          import :: sp, default_int
          implicit none
@@ -382,6 +389,7 @@ module pic_blas_interfaces
    end interface blas_gemv
 
    interface blas_gemm
+      !! explicit interface for BLAS GEMM routines
       pure subroutine sgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, &
            & beta, c, ldc)
          import :: sp, default_int
@@ -620,6 +628,7 @@ contains
    end subroutine pic_zgemm
 
    pure subroutine pic_sgemv(A, x, y, trans_a, alpha, beta)
+      !! interface for single precision matrix-vector multiplication
       real(sp), intent(in) :: A(:, :)
       real(sp), intent(in) :: x(:)
       real(sp), intent(inout) :: y(:)
@@ -653,6 +662,7 @@ contains
    end subroutine pic_sgemv
 
    pure subroutine pic_dgemv(A, x, y, trans_a, alpha, beta)
+      !! interface for double precision matrix-vector multiplication
       real(dp), intent(in) :: A(:, :)
       real(dp), intent(in) :: x(:)
       real(dp), intent(inout) :: y(:)

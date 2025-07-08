@@ -106,6 +106,7 @@ contains
    end subroutine flop_rate_report
 
    subroutine flop_rate_reset(self)
+      !! reset the flop rate, this will reset the flops, this is mostly for testing
       class(flop_rate_type), intent(inout) :: self
 
       call self%m_flops%reset()

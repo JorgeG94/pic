@@ -62,6 +62,7 @@ contains
    end subroutine timer_print_time
 
    function timer_get_elapsed_time(self) result(elapsed)
+      !! get the elapsed time in seconds, the function is aware if you're asking for the time while the timer is running or not
       class(pic_timer), intent(in) :: self
       real(dp) :: elapsed
       integer :: current_count
@@ -82,6 +83,7 @@ contains
    end function timer_get_elapsed_time
 
    subroutine set(self, time)
+      !! set the walltime directly, useful for testing or when you want to set a specific time
       class(pic_timer), intent(inout) :: self
       real(dp), intent(in) :: time
       self%walltime = time
