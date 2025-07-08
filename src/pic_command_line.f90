@@ -5,8 +5,8 @@ module pic_command_line
    use pic_types, only: default_int
    implicit none
 
-   public
-
+   private
+   public :: get_first_arg_from_command_line
 contains
 
    function get_first_arg_from_command_line() result(filename)
@@ -18,7 +18,7 @@ contains
       num_args = command_argument_count()
 
       if (num_args < 1) then
-         write (*, '(A)') 'Usage: ./my_executable <filename>'
+         write (*, "(A)") "Usage: ./my_executable <filename>"
          stop 1
       end if
 

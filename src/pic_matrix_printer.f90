@@ -6,7 +6,8 @@ module pic_matrix_printer
    use pic_types, only: dp, default_int
    use pic_string_utils, only: to_string
    implicit none
-   public
+   private
+   public :: print_array, print_array_with_bounds
    interface print_array
      !! general interface for printing a one or two dimensional array
       module procedure print_vector
@@ -19,7 +20,7 @@ module pic_matrix_printer
       module procedure print_matrix_m_n
    end interface print_array_with_bounds
 
-   character(len=*), parameter :: fmt_edge = '(F14.10)'
+   character(len=*), parameter :: fmt_edge = "(F14.10)"
     !! no comma format
    character(len=*), parameter :: fmt_in = '(F14.10, ", ")'
     !! comma format for between arrays
@@ -28,7 +29,6 @@ contains
 
    subroutine print_vector_n(vec, n_elements, format_type)
     !! print a vector from start up to n_elements
-      implicit none
       real(dp), intent(in) :: vec(:)
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: format_selected
@@ -37,10 +37,10 @@ contains
       if (present(format_type)) then
          format_selected = trim(adjustl(format_type))
       else
-         format_selected = 'PLAIN'
+         format_selected = "PLAIN"
       end if
       ! Handle plain format separately or delegate to print routine based on the format
-      if (format_selected == 'PLAIN') then
+      if (format_selected == "PLAIN") then
          call print_plain_vector(vec, n_elements)
       else
          call print_vector_in_format(vec, format_selected, n_elements)
@@ -49,7 +49,6 @@ contains
 
    subroutine print_vector(vec, format_type)
     !! print a vector
-      implicit none
       real(kind=dp), intent(in) :: vec(:)  ! 1D array
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: format_selected
@@ -58,10 +57,10 @@ contains
       if (present(format_type)) then
          format_selected = trim(adjustl(format_type))
       else
-         format_selected = 'PLAIN'
+         format_selected = "PLAIN"
       end if
       ! Handle plain format separately or delegate to print routine based on the format
-      if (format_selected == 'PLAIN') then
+      if (format_selected == "PLAIN") then
          call print_plain_vector(vec)
       else
          call print_vector_in_format(vec, format_selected)
@@ -70,7 +69,6 @@ contains
 
    subroutine print_matrix_m_n(mat, n_cols, n_rows, format_type)
     !! Print a matrix of n_cols by n_rows
-      implicit none
       real(kind=dp), intent(in) :: mat(:, :)  ! 2D array
       integer(kind=default_int), intent(in) :: n_cols, n_rows
       character(len=*), intent(in), optional :: format_type
@@ -79,10 +77,10 @@ contains
       if (present(format_type)) then
          format_selected = trim(adjustl(format_type))
       else
-         format_selected = 'PLAIN'
+         format_selected = "PLAIN"
       end if
       ! Handle plain format separately or delegate to print routine based on the format
-      if (format_selected == 'PLAIN') then
+      if (format_selected == "PLAIN") then
          call print_plain_matrix(mat, n_cols, n_rows)
       else
          call print_matrix_in_format(mat, format_selected, n_cols, n_rows)
@@ -91,7 +89,6 @@ contains
 
    subroutine print_matrix(mat, format_type)
     !! print a matrix in a given format
-      implicit none
       real(kind=dp), intent(in) :: mat(:, :)  ! 2D array
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: format_selected
@@ -99,10 +96,10 @@ contains
       if (present(format_type)) then
          format_selected = trim(adjustl(format_type))
       else
-         format_selected = 'PLAIN'
+         format_selected = "PLAIN"
       end if
       ! Handle plain format separately or delegate to print routine based on the format
-      if (format_selected == 'PLAIN') then
+      if (format_selected == "PLAIN") then
          call print_plain_matrix(mat)
       else
          call print_matrix_in_format(mat, format_selected)
@@ -111,7 +108,6 @@ contains
 
    subroutine print_plain_vector(vec, n_elements)
     !! private subroutine that prints a vector of n_elements
-      implicit none
       real(kind=dp), intent(in) :: vec(:)
       integer(kind=default_int), intent(in), optional :: n_elements
       integer(kind=default_int) :: i, loop_bound
@@ -128,7 +124,6 @@ contains
 
    subroutine print_plain_matrix(mat, n_cols, n_rows)
     !! private subroutine that prints a plain matrix of n_cols by n_rows
-      implicit none
       real(kind=dp), intent(in) :: mat(:, :)
       integer(kind=default_int), intent(in), optional :: n_cols, n_rows
       integer(kind=default_int) :: i, j, loop_bound_i, loop_bound_j
@@ -153,7 +148,6 @@ contains
 
    subroutine print_vector_in_format(vec, format_type, n_elements)
     !! private subroutine that prints a vector in a format
-      implicit none
       real(kind=dp), intent(in) :: vec(:)
       character(len=*), intent(in) :: format_type
         !! format can be mathematica or numpy
@@ -167,16 +161,16 @@ contains
          loop_bound_i = size(vec)
       end if
       ! Select brackets based on format type
-      if (format_type == 'NUMPY') then
-         open_bracket = '['
-         close_bracket = ']'
-      else if (format_type == 'MATHEMATICA') then
-         open_bracket = '{'
-         close_bracket = '}'
+      if (format_type == "NUMPY") then
+         open_bracket = "["
+         close_bracket = "]"
+      else if (format_type == "MATHEMATICA") then
+         open_bracket = "{"
+         close_bracket = "}"
       else
          print *, "Error: Unsupported format type. Defaulting to NumPy format."
-         open_bracket = '['
-         close_bracket = ']'
+         open_bracket = "["
+         close_bracket = "]"
       end if
       ! Print the vector in the selected format
       print *, "Vector (", trim(format_type), " format):"
@@ -193,7 +187,6 @@ contains
 
    subroutine print_matrix_in_format(mat, format_type, n_cols, n_rows)
     !! private subroutine to print a matrix in format
-      implicit none
       real(kind=dp), intent(in) :: mat(:, :)
       character(len=*), intent(in) :: format_type
         !! format can be mathematica or numpy
@@ -209,23 +202,23 @@ contains
       end if
 
       ! Select brackets based on format type
-      if (format_type == 'NUMPY') then
-         open_bracket = '['
-         close_bracket = ']'
-      else if (format_type == 'MATHEMATICA') then
-         open_bracket = '{'
-         close_bracket = '}'
+      if (format_type == "NUMPY") then
+         open_bracket = "["
+         close_bracket = "]"
+      else if (format_type == "MATHEMATICA") then
+         open_bracket = "{"
+         close_bracket = "}"
       else
          print *, "Error: Unsupported format type. Defaulting to NumPy format."
-         open_bracket = '['
-         close_bracket = ']'
+         open_bracket = "["
+         close_bracket = "]"
       end if
 
       ! Print the matrix in the selected format
       print *, "Matrix (", trim(format_type), " format):"
       print *, open_bracket
       do i = 1, loop_bound_i
-         write (*, '(A)', advance="no") open_bracket  ! Start of a row
+         write (*, "(A)", advance="no") open_bracket  ! Start of a row
          do j = 1, loop_bound_j
             if (j == loop_bound_j) then  ! Last element in the row
                write (*, fmt_edge, advance="no") mat(i, j)

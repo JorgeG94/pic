@@ -5,7 +5,8 @@ module pic_output_helpers
   !! Assorted output helper routines
    use pic_types, only: default_int
    implicit none
-   public
+   private
+   public :: print_asterisk_row
 
 contains
 
@@ -15,7 +16,7 @@ contains
       !! number of asterisks to print
       integer(kind=default_int) :: i
       do i = 1, n
-         write (*, '(A)', advance='no') '*'
+         write (*, "(A)", advance="no") "*"
       end do
       write (*, *)
    end subroutine print_asterisk_row

@@ -2,12 +2,14 @@
 
 module pic_timers
   !! contains a simple timer module to measure and record time
-   use pic_types
-   use pic_string_utils
+   use pic_types, only: dp
+   use pic_string_utils, only: to_string
 #ifdef _OPENMP
-   use omp_lib
+   use omp_lib, only: omp_get_wtime
 #endif
    implicit none
+   private
+   public :: pic_timer
 
    type :: pic_timer
     !! derived type for a timer, contains the start, stop, and count variables
@@ -60,6 +62,7 @@ contains
    end subroutine timer_print_time
 
    function timer_get_elapsed_time(self) result(elapsed)
+      !! get the elapsed time in seconds, the function is aware if you're asking for the time while the timer is running or not
       class(pic_timer), intent(in) :: self
       real(dp) :: elapsed
       integer :: current_count
@@ -80,7 +83,7 @@ contains
    end function timer_get_elapsed_time
 
    subroutine set(self, time)
-      implicit none
+      !! set the walltime directly, useful for testing or when you want to set a specific time
       class(pic_timer), intent(inout) :: self
       real(dp), intent(in) :: time
       self%walltime = time
