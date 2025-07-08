@@ -36,3 +36,11 @@ set(CMAKE_Fortran_FLAGS_DEBUG
 set(CMAKE_Fortran_FLAGS
     "${CMAKE_Fortran_FLAGS} ${standard_compile_flags}"
     PARENT_SCOPE)
+
+set(CMAKE_Fortran_FLAGS_COVERAGE
+    "-O0 -g -coverage -fprofile-arcs -ftest-coverage")
+if(CMAKE_BUILD_TYPE STREQUAL "Coverage")
+  set(CMAKE_Fortran_FLAGS
+      "${CMAKE_Fortran_FLAGS} ${CMAKE_Fortran_FLAGS_COVERAGE}"
+      PARENT_SCOPE)
+endif()
