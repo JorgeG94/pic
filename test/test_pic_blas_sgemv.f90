@@ -44,7 +44,7 @@ contains
       x = [5.0_sp, 6.0_sp]
       y = [0.0_sp, 0.0_sp]
 
-      call pic_gemv(A, x, y, trans_a='T')
+      call pic_gemv(A, x, y, trans_a="T")
 
       expected = [1.0_sp*5.0_sp + 3.0_sp*6.0_sp, 2.0_sp*5.0_sp + 4.0_sp*6.0_sp]
       call check(error, all(abs(y - expected) < tol))

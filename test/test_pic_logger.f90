@@ -67,7 +67,7 @@ contains
       !! Test file output configuration
       type(error_type), allocatable, intent(out) :: error
       type(logger_type) :: logger
-      character(len=*), parameter :: test_filename = 'test_logger.log'
+      character(len=*), parameter :: test_filename = "test_logger.log"
       logical :: file_exists
 
       ! Configure file output
@@ -86,8 +86,8 @@ contains
 
       ! Clean up
       if (file_exists) then
-         open (unit=logfile_unit, file=test_filename, status='old', action='readwrite')
-         close (logfile_unit, status='delete')
+         open (unit=logfile_unit, file=test_filename, status="old", action="readwrite")
+         close (logfile_unit, status="delete")
       end if
 
    end subroutine test_logger_file_output
@@ -122,7 +122,7 @@ contains
       !! Test file-specific log levels
       type(error_type), allocatable, intent(out) :: error
       type(logger_type) :: logger
-      character(len=*), parameter :: test_filename = 'test_logger_levels.log'
+      character(len=*), parameter :: test_filename = "test_logger_levels.log"
       logical :: file_exists
 
       ! Configure file output with debug level
@@ -146,8 +146,8 @@ contains
 
       ! Clean up
       if (file_exists) then
-         open (unit=logfile_unit, file=test_filename, status='old', action='read')
-         close (logfile_unit, status='delete')
+         open (unit=logfile_unit, file=test_filename, status="old", action="read")
+         close (logfile_unit, status="delete")
       end if
 
    end subroutine test_logger_file_levels
@@ -156,7 +156,7 @@ contains
       !! Test closing log file
       type(error_type), allocatable, intent(out) :: error
       type(logger_type) :: logger
-      character(len=*), parameter :: test_filename = 'test_logger_close.log'
+      character(len=*), parameter :: test_filename = "test_logger_close.log"
       logical :: file_exists
 
       ! Configure file output
@@ -178,8 +178,8 @@ contains
 
       ! Clean up
       if (file_exists) then
-         open (unit=logfile_unit, file=test_filename, status='old', action='read')
-         close (logfile_unit, status='delete')
+         open (unit=logfile_unit, file=test_filename, status="old", action="read")
+         close (logfile_unit, status="delete")
       end if
 
    end subroutine test_logger_close_file
@@ -188,7 +188,7 @@ contains
       !! Test all convenience methods (debug, verbose, info, etc.)
       type(error_type), allocatable, intent(out) :: error
       type(logger_type) :: logger
-      character(len=*), parameter :: test_filename = 'test_logger_methods.log'
+      character(len=*), parameter :: test_filename = "test_logger_methods.log"
       logical :: file_exists
 
       ! Configure file output to capture all messages
@@ -217,8 +217,8 @@ contains
 
       ! Clean up
       if (file_exists) then
-         open (unit=logfile_unit, file=test_filename, status='old', action='read')
-         close (logfile_unit, status='delete')
+         open (unit=logfile_unit, file=test_filename, status="old", action="read")
+         close (logfile_unit, status="delete")
       end if
 
    end subroutine test_logger_convenience_methods
@@ -227,7 +227,7 @@ contains
       !! Test actual file content
       type(error_type), allocatable, intent(out) :: error
       type(logger_type) :: logger
-      character(len=*), parameter :: test_filename = 'test_logger_content.log'
+      character(len=*), parameter :: test_filename = "test_logger_content.log"
       character(len=200) :: line
       logical :: file_exists, found_message
       integer :: ios, unit_num
@@ -248,14 +248,14 @@ contains
 
       ! Read file content
       found_message = .false.
-      open (newunit=unit_num, file=test_filename, status='old', action='read')
+      open (newunit=unit_num, file=test_filename, status="old", action="read")
       read: do
-         read (unit_num, '(A)', iostat=ios) line
+         read (unit_num, "(A)", iostat=ios) line
          if (ios /= 0) exit read
-         if (index(line, 'Test content message') > 0 .and. &
-             index(line, 'test_module') > 0 .and. &
-             index(line, 'test_procedure') > 0 .and. &
-             index(line, 'INFO') > 0) then
+         if (index(line, "Test content message") > 0 .and. &
+             index(line, "test_module") > 0 .and. &
+             index(line, "test_procedure") > 0 .and. &
+             index(line, "INFO") > 0) then
             found_message = .true.
             exit read
          end if
@@ -267,8 +267,8 @@ contains
 
       ! Clean up
       if (file_exists) then
-         open (unit=logfile_unit, file=test_filename, status='old', action='read')
-         close (logfile_unit, status='delete')
+         open (unit=logfile_unit, file=test_filename, status="old", action="read")
+         close (logfile_unit, status="delete")
       end if
 
    end subroutine test_logger_file_content

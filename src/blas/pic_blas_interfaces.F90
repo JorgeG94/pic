@@ -486,16 +486,16 @@ contains
       if (present(transa)) then
          OP_A = transa
       else
-         OP_A = 'N'
+         OP_A = "N"
       end if
       if (present(transb)) then
          OP_B = transb
       else
-         OP_B = 'N'
+         OP_B = "N"
       end if
 
       ! check for the dimensions now
-      if ((OP_A == 'N' .or. OP_A == 'n')) then
+      if ((OP_A == "N" .or. OP_A == "n")) then
          k = size(A, 2)
       else
          k = size(A, 1)
@@ -540,16 +540,16 @@ contains
       if (present(transa)) then
          OP_A = transa
       else
-         OP_A = 'N'
+         OP_A = "N"
       end if
       if (present(transb)) then
          OP_B = transb
       else
-         OP_B = 'N'
+         OP_B = "N"
       end if
 
       ! check for the dimensions now
-      if ((OP_A == 'N' .or. OP_A == 'n')) then
+      if ((OP_A == "N" .or. OP_A == "n")) then
          k = size(A, 2)
       else
          k = size(A, 1)
@@ -593,16 +593,16 @@ contains
       if (present(transa)) then
          OP_A = transa
       else
-         OP_A = 'N'
+         OP_A = "N"
       end if
       if (present(transb)) then
          OP_B = transb
       else
-         OP_B = 'N'
+         OP_B = "N"
       end if
 
       ! check for the dimensions now
-      if ((OP_A == 'N' .or. OP_A == 'n')) then
+      if ((OP_A == "N" .or. OP_A == "n")) then
          k = size(A, 2)
       else
          k = size(A, 1)
@@ -642,7 +642,7 @@ contains
       if (present(trans_a)) then
          l_trans_a = trans_a
       else
-         l_trans_a = 'n'
+         l_trans_a = "n"
       end if
       incx = 1
       incy = 1
@@ -675,7 +675,7 @@ contains
       if (present(trans_a)) then
          l_trans_a = trans_a
       else
-         l_trans_a = 'n'
+         l_trans_a = "n"
       end if
       incx = 1
       incy = 1

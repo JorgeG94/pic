@@ -20,7 +20,7 @@ module pic_matrix_printer
       module procedure print_matrix_m_n
    end interface print_array_with_bounds
 
-   character(len=*), parameter :: fmt_edge = '(F14.10)'
+   character(len=*), parameter :: fmt_edge = "(F14.10)"
     !! no comma format
    character(len=*), parameter :: fmt_in = '(F14.10, ", ")'
     !! comma format for between arrays
@@ -37,10 +37,10 @@ contains
       if (present(format_type)) then
          format_selected = trim(adjustl(format_type))
       else
-         format_selected = 'PLAIN'
+         format_selected = "PLAIN"
       end if
       ! Handle plain format separately or delegate to print routine based on the format
-      if (format_selected == 'PLAIN') then
+      if (format_selected == "PLAIN") then
          call print_plain_vector(vec, n_elements)
       else
          call print_vector_in_format(vec, format_selected, n_elements)
@@ -57,10 +57,10 @@ contains
       if (present(format_type)) then
          format_selected = trim(adjustl(format_type))
       else
-         format_selected = 'PLAIN'
+         format_selected = "PLAIN"
       end if
       ! Handle plain format separately or delegate to print routine based on the format
-      if (format_selected == 'PLAIN') then
+      if (format_selected == "PLAIN") then
          call print_plain_vector(vec)
       else
          call print_vector_in_format(vec, format_selected)
@@ -77,10 +77,10 @@ contains
       if (present(format_type)) then
          format_selected = trim(adjustl(format_type))
       else
-         format_selected = 'PLAIN'
+         format_selected = "PLAIN"
       end if
       ! Handle plain format separately or delegate to print routine based on the format
-      if (format_selected == 'PLAIN') then
+      if (format_selected == "PLAIN") then
          call print_plain_matrix(mat, n_cols, n_rows)
       else
          call print_matrix_in_format(mat, format_selected, n_cols, n_rows)
@@ -96,10 +96,10 @@ contains
       if (present(format_type)) then
          format_selected = trim(adjustl(format_type))
       else
-         format_selected = 'PLAIN'
+         format_selected = "PLAIN"
       end if
       ! Handle plain format separately or delegate to print routine based on the format
-      if (format_selected == 'PLAIN') then
+      if (format_selected == "PLAIN") then
          call print_plain_matrix(mat)
       else
          call print_matrix_in_format(mat, format_selected)
@@ -161,16 +161,16 @@ contains
          loop_bound_i = size(vec)
       end if
       ! Select brackets based on format type
-      if (format_type == 'NUMPY') then
-         open_bracket = '['
-         close_bracket = ']'
-      else if (format_type == 'MATHEMATICA') then
-         open_bracket = '{'
-         close_bracket = '}'
+      if (format_type == "NUMPY") then
+         open_bracket = "["
+         close_bracket = "]"
+      else if (format_type == "MATHEMATICA") then
+         open_bracket = "{"
+         close_bracket = "}"
       else
          print *, "Error: Unsupported format type. Defaulting to NumPy format."
-         open_bracket = '['
-         close_bracket = ']'
+         open_bracket = "["
+         close_bracket = "]"
       end if
       ! Print the vector in the selected format
       print *, "Vector (", trim(format_type), " format):"
@@ -202,23 +202,23 @@ contains
       end if
 
       ! Select brackets based on format type
-      if (format_type == 'NUMPY') then
-         open_bracket = '['
-         close_bracket = ']'
-      else if (format_type == 'MATHEMATICA') then
-         open_bracket = '{'
-         close_bracket = '}'
+      if (format_type == "NUMPY") then
+         open_bracket = "["
+         close_bracket = "]"
+      else if (format_type == "MATHEMATICA") then
+         open_bracket = "{"
+         close_bracket = "}"
       else
          print *, "Error: Unsupported format type. Defaulting to NumPy format."
-         open_bracket = '['
-         close_bracket = ']'
+         open_bracket = "["
+         close_bracket = "]"
       end if
 
       ! Print the matrix in the selected format
       print *, "Matrix (", trim(format_type), " format):"
       print *, open_bracket
       do i = 1, loop_bound_i
-         write (*, '(A)', advance="no") open_bracket  ! Start of a row
+         write (*, "(A)", advance="no") open_bracket  ! Start of a row
          do j = 1, loop_bound_j
             if (j == loop_bound_j) then  ! Last element in the row
                write (*, fmt_edge, advance="no") mat(i, j)

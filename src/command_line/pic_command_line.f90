@@ -18,7 +18,7 @@ contains
       num_args = command_argument_count()
 
       if (num_args < 1) then
-         write (*, '(A)') 'Usage: ./my_executable <filename>'
+         write (*, "(A)") "Usage: ./my_executable <filename>"
          stop 1
       end if
 
