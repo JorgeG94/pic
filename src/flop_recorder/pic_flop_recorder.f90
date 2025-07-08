@@ -1,7 +1,7 @@
 !! flop recorder
 module pic_flop_recorder
   !! general flop recorder module
-   use pic_types
+   use pic_types, only: int64
    implicit none
 
    type :: flop_recorder_type

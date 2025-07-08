@@ -1,6 +1,6 @@
 module test_pic_blas_interfaces_axpy
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_blas_interfaces
+   use pic_blas_interfaces, only: pic_axpy
    use pic_types, only: sp, dp, default_int
    implicit none
    private

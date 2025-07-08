@@ -2,9 +2,9 @@
 module pic_flop_rate
   !! pic_flop_rate is a convenient encapsulation of the flop_recorder and pic_timer
   !! it is used to measure the flop rate of a given operation, and report it
-   use pic_types
-   use pic_timers
-   use pic_flop_recorder
+   use pic_types, only: dp, int64
+   use pic_timers, only: pic_timer
+   use pic_flop_recorder, only: flop_recorder_type
    use pic_string_utils, only: to_string
    implicit none
 

@@ -6,7 +6,8 @@ module pic_mpi
   !! General MPI interface module
    use pic_types, only: default_int
 #ifdef USE_MPI
-   use mpi_f08
+   use mpi_f08, only: MPI_COMM, MPI_COMM_WORLD, MPI_Init, MPI_Finalize, &
+                      MPI_Comm_size, MPI_Comm_rank
 #endif
    implicit none
 

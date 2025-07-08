@@ -13,7 +13,7 @@ module pic_blas_interfaces
   !! the idea is to have a two level interface, first pic_blas_xyz which
   !! is the way programmers will use BLAS, it'll do some checks and then
   !! call the "overloaded" BLAS interfaces to call the correct BLAS routine
-   use pic_types
+   use pic_types, only: sp, dp, default_int
    implicit none
 
    ! these are the generic interfaces to the BLAS library

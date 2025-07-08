@@ -1,5 +1,5 @@
 module pic_test_helpers
-   use pic_types
+   use pic_types, only: int64, dp
    implicit none
 
 contains

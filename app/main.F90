@@ -1,13 +1,13 @@
 program main
-   use pic
+   use pic, only: pic_print_banner
 
    !use jonquil, only: json_object, json_dump, json_error, json_array, &
    !                   set_value, add_array, json_serialize, json_value, json_loads, &
    !                   cast_to_object, get_value, add_object
    !use pic_logger, only: global => global_logger, warning_level, verbose_level
    !use testdrive, only: run_testsuite
-   use pic_types
-   use pic_matrix_printer
+   use pic_types, only: dp, default_int
+   use pic_matrix_printer, only: print_matrix
    implicit none
    !use pic_mpi
    !use pic_timers

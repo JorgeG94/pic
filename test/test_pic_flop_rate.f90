@@ -1,7 +1,7 @@
 module test_pic_flop_rate
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_types, only: dp
-   use pic_flop_rate
+   use pic_types, only: dp, int64
+   use pic_flop_rate, only: flop_rate_type
    use pic_test_helpers, only: dummy_work
    implicit none
    private

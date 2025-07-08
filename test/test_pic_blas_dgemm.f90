@@ -1,6 +1,6 @@
 module test_pic_blas_interfaces_dgemm
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_blas_interfaces
+   use pic_blas_interfaces, only: pic_gemm
    use pic_types, only: sp, dp, default_int
    implicit none
    private

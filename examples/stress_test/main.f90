@@ -1,11 +1,13 @@
 program main
-   use pic_string_utils
-   use pic_blas_interfaces
-   use pic_types
-   use pic_timers
-   use pic_flop_recorder
-   use pic_flop_rate
-   use mpi_f08
+   use pic_string_utils, only: to_string
+   use pic_blas_interfaces, only: pic_gemm
+   use pic_types, only: dp, int64, default_int
+   use pic_timers, only: pic_timer
+   use pic_flop_recorder, only: flop_recorder_type
+   use pic_flop_rate, only: flop_rate_type
+   use mpi_f08, only: MPI_COMM_WORLD, MPI_Init, MPI_Finalize, &
+                      MPI_Comm_rank, MPI_Comm_size, MPI_Reduce, MPI_INTEGER8, &
+                      MPI_DOUBLE_PRECISION, MPI_MAX, MPI_SUM
    implicit none
    integer(default_int) :: ierr, rank, size
    !integer(default_int) :: n, m, k, flat_size

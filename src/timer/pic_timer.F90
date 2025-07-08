@@ -2,10 +2,10 @@
 
 module pic_timers
   !! contains a simple timer module to measure and record time
-   use pic_types
-   use pic_string_utils
+   use pic_types, only: dp
+   use pic_string_utils, only: to_string
 #ifdef _OPENMP
-   use omp_lib
+   use omp_lib, only: omp_get_wtime
 #endif
    implicit none
 
