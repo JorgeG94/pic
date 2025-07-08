@@ -2,6 +2,7 @@
 module pic
  !! simple interface module that prints banner and other information about the library
  !! mostly here to verify installs, etc.
+   use pic_types
    implicit none
    private
    public :: pic_print_banner
