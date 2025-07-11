@@ -1,6 +1,6 @@
 module test_pic_timers
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_timers, only: pic_timer
+   use pic_timers, only: pic_timer_type
    use pic_types, only: dp
    use pic_test_helpers, only: dummy_work
    implicit none
@@ -24,7 +24,7 @@ contains
    subroutine test_timer_basic_functionality(error)
       !! Test basic start/stop functionality
       type(error_type), allocatable, intent(out) :: error
-      type(pic_timer) :: timer
+      type(pic_timer_type) :: timer
       real(dp) :: elapsed
 
       ! Start and immediately stop timer
@@ -46,7 +46,7 @@ contains
    subroutine test_timer_zero_elapsed(error)
       !! Test that timer handles near-zero elapsed time correctly
       type(error_type), allocatable, intent(out) :: error
-      type(pic_timer) :: timer
+      type(pic_timer_type) :: timer
       real(dp) :: elapsed
 
       call timer%start()
@@ -67,7 +67,7 @@ contains
    subroutine test_timer_short_delay(error)
       !! Test timer with a short deliberate delay
       type(error_type), allocatable, intent(out) :: error
-      type(pic_timer) :: timer
+      type(pic_timer_type) :: timer
       real(dp) :: elapsed
 
       call timer%start()
@@ -93,7 +93,7 @@ contains
    subroutine test_timer_multiple_measurements(error)
       !! Test multiple consecutive measurements
       type(error_type), allocatable, intent(out) :: error
-      type(pic_timer) :: timer
+      type(pic_timer_type) :: timer
       real(dp) :: elapsed1, elapsed2
 
       ! First measurement
@@ -128,7 +128,7 @@ contains
    subroutine test_timer_get_elapsed_time(error)
       !! Test the get_elapsed_time function specifically
       type(error_type), allocatable, intent(out) :: error
-      type(pic_timer) :: timer
+      type(pic_timer_type) :: timer
       real(dp) :: elapsed1, elapsed2
 
       call timer%start()
@@ -146,7 +146,7 @@ contains
    subroutine test_timer_precision(error)
       !! Test timer precision by ensuring it can distinguish different amounts of work
       type(error_type), allocatable, intent(out) :: error
-      type(pic_timer) :: timer1, timer2
+      type(pic_timer_type) :: timer1, timer2
       real(dp) :: elapsed_short, elapsed_long
 
       ! Short work
