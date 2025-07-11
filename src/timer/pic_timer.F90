@@ -9,9 +9,9 @@ module pic_timers
 #endif
    implicit none
    private
-   public :: pic_timer
+   public :: pic_timer_type
 
-   type :: pic_timer
+   type :: pic_timer_type
     !! derived type for a timer, contains the start, stop, and count variables
     !! can work with or without omp
       private
@@ -26,13 +26,13 @@ module pic_timers
       procedure :: print_time => timer_print_time
       procedure :: get_elapsed_time => timer_get_elapsed_time
       procedure :: set
-   end type pic_timer
+   end type pic_timer_type
 
 contains
 
    subroutine timer_start(self)
     !! and away we go!
-      class(pic_timer), intent(inout) :: self
+      class(pic_timer_type), intent(inout) :: self
       self%is_running = .true.
 #ifdef _OPENMP
       self%start_time = omp_get_wtime()
@@ -43,7 +43,7 @@ contains
 
    subroutine timer_stop(self)
     !! and we're done!
-      class(pic_timer), intent(inout) :: self
+      class(pic_timer_type), intent(inout) :: self
 #ifdef _OPENMP
       self%stop_time = omp_get_wtime()
 #else
@@ -55,7 +55,7 @@ contains
 
    subroutine timer_print_time(self)
     !! print the time nicely
-      class(pic_timer), intent(in) :: self
+      class(pic_timer_type), intent(in) :: self
       real(dp) :: elapsed
       elapsed = self%get_elapsed_time()
       print *, "Elapsed time: "//to_string(elapsed)//" seconds"
@@ -63,7 +63,7 @@ contains
 
    function timer_get_elapsed_time(self) result(elapsed)
       !! get the elapsed time in seconds, the function is aware if you're asking for the time while the timer is running or not
-      class(pic_timer), intent(in) :: self
+      class(pic_timer_type), intent(in) :: self
       real(dp) :: elapsed
       integer :: current_count
 #ifdef _OPENMP
@@ -84,7 +84,7 @@ contains
 
    subroutine set(self, time)
       !! set the walltime directly, useful for testing or when you want to set a specific time
-      class(pic_timer), intent(inout) :: self
+      class(pic_timer_type), intent(inout) :: self
       real(dp), intent(in) :: time
       self%walltime = time
    end subroutine set
