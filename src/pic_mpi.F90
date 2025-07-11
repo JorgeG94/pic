@@ -11,9 +11,9 @@ module pic_mpi
 #endif
    implicit none
    private
-   public :: pic_comm
+   public :: pic_comm_type
 
-   type :: pic_comm
+   type :: pic_comm_type
     !! custom data type that holds the MPI communicators
 
       private
@@ -33,16 +33,16 @@ module pic_mpi
    contains
       procedure :: init => pic_comm_init
       procedure :: finalize => pic_comm_finalize
-   end type pic_comm
+   end type pic_comm_type
 
-   type(pic_comm), public :: world_comm
+   type(pic_comm_type), public :: world_comm
     !! our world comm
 
 contains
 
    subroutine pic_comm_init(self)
     !! initilalize the MPI library and get the size and rank variables
-      class(pic_comm), intent(inout) :: self
+      class(pic_comm_type), intent(inout) :: self
 #ifdef USE_MPI
       integer(default_int) :: ierr, rank, size
       call MPI_Init(ierr)
@@ -60,7 +60,7 @@ contains
 
    subroutine pic_comm_finalize(self)
     !! finalize the MPI library
-      class(pic_comm), intent(inout) :: self
+      class(pic_comm_type), intent(inout) :: self
 #ifdef USE_MPI
       integer(default_int) :: ierr
       call MPI_Finalize(ierr)
