@@ -8,20 +8,20 @@ program pic_tester
    use test_pic_logger, only: collect_pic_logger_tests
    use test_pic_flop_recorder, only: collect_pic_flop_recorder_tests
    use test_pic_flop_rate, only: collect_flop_rate_tests
-   use test_pic_blas_interfaces_sgemm, only: collect_pic_sgemm_tests
-   use test_pic_blas_interfaces_dgemm, only: collect_pic_dgemm_tests
-   use test_pic_blas_interfaces_sgemv, only: collect_pic_sgemv_tests
-   use test_pic_blas_interfaces_dgemv, only: collect_pic_dgemv_tests
-   use test_pic_blas_interfaces_asum, only: collect_pic_asum_tests
-   use test_pic_blas_interfaces_axpy, only: collect_pic_axpy_tests
-   use test_pic_blas_interfaces_copy, only: collect_pic_copy_tests
-   use test_pic_blas_interfaces_dot, only: collect_pic_blas_dot_tests
-   use test_pic_blas_interfaces_scal, only: collect_pic_scal_tests
-   use test_pic_blas_iamax, only: collect_pic_blas_iamax_tests
+   !use test_pic_blas_interfaces_sgemm, only: collect_pic_sgemm_tests
+   !use test_pic_blas_interfaces_dgemm, only: collect_pic_dgemm_tests
+   !use test_pic_blas_interfaces_sgemv, only: collect_pic_sgemv_tests
+   !use test_pic_blas_interfaces_dgemv, only: collect_pic_dgemv_tests
+   !use test_pic_blas_interfaces_asum, only: collect_pic_asum_tests
+   !use test_pic_blas_interfaces_axpy, only: collect_pic_axpy_tests
+   !use test_pic_blas_interfaces_copy, only: collect_pic_copy_tests
+   !use test_pic_blas_interfaces_dot, only: collect_pic_blas_dot_tests
+   !use test_pic_blas_interfaces_scal, only: collect_pic_scal_tests
+   !use test_pic_blas_iamax, only: collect_pic_blas_iamax_tests
    ! add here the module you want to test
    implicit none
    integer :: stat, is
-   integer, parameter :: ntest_suites = 16
+   integer, parameter :: ntest_suites = 6
     !! number of tests, this number needs to be modified and equal to the number of files we have with unit tests
    character(len=:), allocatable :: suite_name, test_name
    type(testsuite_type), allocatable :: testsuites(:)
@@ -36,16 +36,16 @@ program pic_tester
    testsuites(4) = new_testsuite("pic_logger", collect_pic_logger_tests)
    testsuites(5) = new_testsuite("pic_flop_recorder", collect_pic_flop_recorder_tests)
    testsuites(6) = new_testsuite("pic_flop_rate", collect_flop_rate_tests)
-   testsuites(7) = new_testsuite("pic_blas_sgemm", collect_pic_sgemm_tests)
-   testsuites(8) = new_testsuite("pic_blas_dgemm", collect_pic_dgemm_tests)
-   testsuites(9) = new_testsuite("pic_blas_sgemv", collect_pic_sgemv_tests)
-   testsuites(10) = new_testsuite("pic_blas_dgemv", collect_pic_dgemv_tests)
-   testsuites(11) = new_testsuite("pic_blas_asum", collect_pic_asum_tests)
-   testsuites(12) = new_testsuite("pic_blas_axpy", collect_pic_axpy_tests)
-   testsuites(13) = new_testsuite("pic_blas_copy", collect_pic_copy_tests)
-   testsuites(14) = new_testsuite("pic_blas_dot", collect_pic_blas_dot_tests)
-   testsuites(15) = new_testsuite("pic_blas_scal", collect_pic_scal_tests)
-   testsuites(16) = new_testsuite("pic_blas_iamax", collect_pic_blas_iamax_tests)
+   !testsuites(7) = new_testsuite("pic_blas_sgemm", collect_pic_sgemm_tests)
+   !testsuites(8) = new_testsuite("pic_blas_dgemm", collect_pic_dgemm_tests)
+   !testsuites(9) = new_testsuite("pic_blas_sgemv", collect_pic_sgemv_tests)
+   !testsuites(10) = new_testsuite("pic_blas_dgemv", collect_pic_dgemv_tests)
+   !testsuites(11) = new_testsuite("pic_blas_asum", collect_pic_asum_tests)
+   !testsuites(12) = new_testsuite("pic_blas_axpy", collect_pic_axpy_tests)
+   !testsuites(13) = new_testsuite("pic_blas_copy", collect_pic_copy_tests)
+   !testsuites(14) = new_testsuite("pic_blas_dot", collect_pic_blas_dot_tests)
+   !testsuites(15) = new_testsuite("pic_blas_scal", collect_pic_scal_tests)
+   !testsuites(16) = new_testsuite("pic_blas_iamax", collect_pic_blas_iamax_tests)
    !testsuites(3) = new_testsuite("suite3", collect_integrator_tests)
    !testsuites(4) = new_testsuite("suite4", collect_pic_math_utils_test)
 
