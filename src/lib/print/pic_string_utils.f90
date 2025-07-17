@@ -13,6 +13,7 @@ module pic_string_utils
      !! public interface to transform variables to strings
       module procedure to_string_int32
       module procedure to_string_int64
+      module procedure to_string_sp
       module procedure to_string_dp
       module procedure to_string_char
       module procedure to_string_logical
@@ -37,6 +38,15 @@ contains
       write (str, "(I0)") i  ! Convert integer to string without leading spaces
       trimmed_str = trim(str)
    end function to_string_int64
+
+   function to_string_sp(r) result(trimmed_str)
+      !! transform a real to a string
+      real(kind=sp), intent(in) :: r
+      character(len=50) :: str
+      character(len=:), allocatable :: trimmed_str
+      write (str, "(F0.12)") r  ! Convert real to string with 3 decimal places
+      trimmed_str = trim(str)
+   end function to_string_sp
 
    function to_string_dp(r) result(trimmed_str)
       !! transform a real to a string

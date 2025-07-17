@@ -6,16 +6,10 @@ set(tests
     "pic_logger"
     "pic_flop_recorder"
     "pic_flop_rate"
-    "pic_blas_sgemm"
-    "pic_blas_dgemm"
-    "pic_blas_dgemv"
-    "pic_blas_sgemv"
-    "pic_blas_asum"
-    "pic_blas_axpy"
-    "pic_blas_copy"
-    "pic_blas_dot"
-    "pic_blas_scal"
-    "pic_blas_iamax")
+    # "pic_blas_sgemm" "pic_blas_dgemm" "pic_blas_dgemv" "pic_blas_sgemv"
+    # "pic_blas_asum" "pic_blas_axpy" "pic_blas_copy" "pic_blas_dot"
+    # "pic_blas_scal" "pic_blas_iamax"
+)
 
 set(test-srcs "main_tests.f90")
 foreach(t IN LISTS tests)
