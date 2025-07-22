@@ -8,6 +8,7 @@ program main
    !use testdrive, only: run_testsuite
    use pic_types, only: dp, default_int
    use pic_matrix_printer, only: print_array
+   use pic_string_utils, only: to_string, set_precision
    implicit none
    !use pic_mpi
    !use pic_timers
@@ -23,6 +24,7 @@ program main
    integer(default_int) :: n, m, k
 
    call pic_print_banner()
+
    !call comm%init()
 
    !if (comm%m_rank == 0) then
