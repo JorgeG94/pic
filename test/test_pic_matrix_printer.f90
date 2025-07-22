@@ -21,7 +21,7 @@ contains
 
    subroutine test_print_vector_plain(error)
       type(error_type), allocatable, intent(out) :: error
-      real(dp) :: v(3) = [1.0_dp, 2.0_dp, 3.0_dp]
+      real(dp), parameter :: v(3) = [1.0_dp, 2.0_dp, 3.0_dp]
 
       call print_array(v, "PLAIN")
       call check(error, .true.)  ! Assuming the print is correct, no error expected
@@ -30,7 +30,7 @@ contains
 
    subroutine test_print_vector_numpy(error)
       type(error_type), allocatable, intent(out) :: error
-      real(dp) :: v(2) = [10.0_dp, 20.0_dp]
+      real(dp), parameter :: v(2) = [10.0_dp, 20.0_dp]
 
       call print_array(v, "NUMPY")
       call check(error, .true.)
@@ -39,7 +39,7 @@ contains
 
    subroutine test_print_matrix_plain(error)
       type(error_type), allocatable, intent(out) :: error
-      real(dp) :: m(2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp], [2, 2])
+      real(dp), parameter :: m(2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp], [2, 2])
 
       call print_array(m, "PLAIN")
       call check(error, .true.)
@@ -48,7 +48,7 @@ contains
 
    subroutine test_print_matrix_mathematica(error)
       type(error_type), allocatable, intent(out) :: error
-      real(dp) :: m(1, 2) = reshape([1.0_dp, 2.0_dp], [1, 2])
+      real(dp), parameter :: m(1, 2) = reshape([1.0_dp, 2.0_dp], [1, 2])
 
       call print_array(m, "MATHEMATICA")
       call check(error, .true.)
@@ -57,7 +57,7 @@ contains
 
    subroutine test_print_vector_n(error)
       type(error_type), allocatable, intent(out) :: error
-      real(dp) :: v(5) = [1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp]
+      real(dp), parameter :: v(5) = [1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp]
 
       call print_array_with_bounds(v, 3, "PLAIN")
       call check(error, .true.)
