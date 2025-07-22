@@ -26,11 +26,6 @@ if(PIC_ENABLE_BLAS)
   endforeach()
 endif()
 
-list(APPEND test-srcs helpers.f90)
-if(PIC_ENABLE_BLAS)
-  list(APPEND blas-test-srcs helpers.f90)
-endif()
-
 add_executable("${project_name}-tester" "${test-srcs}")
 if(PIC_ENABLE_BLAS)
   add_executable("${project_name}-blas-tester" "${blas-test-srcs}")
