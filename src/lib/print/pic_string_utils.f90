@@ -24,12 +24,6 @@ module pic_string_utils
       module procedure to_string_logical
    end interface
 
-   interface write_with_precision
-     !! public interface to write a real with a certain precision
-      module procedure write_with_precision_sp
-      module procedure write_with_precision_dp
-   end interface write_with_precision
-
 contains
 
    subroutine set_precision(precision)
@@ -48,26 +42,6 @@ contains
       integer :: precision
       precision = dp_precision
    end function get_precision
-
-   subroutine write_with_precision_sp(r, str)
-    !! Internal subroutine to format a real using current sp_precision
-      real(sp), intent(in) :: r
-      character(len=*), intent(out) :: str
-      character(len=32) :: fmt
-
-      write (fmt, '(A,I0,A)') '(F0.', dp_precision, ')'
-      write (str, fmt) r
-   end subroutine write_with_precision_sp
-
-   subroutine write_with_precision_dp(r, str)
-    !! Internal subroutine to format a real using current dp_precision
-      real(dp), intent(in) :: r
-      character(len=*), intent(out) :: str
-      character(len=32) :: fmt
-
-      write (fmt, '(A,I0,A)') '(F0.', dp_precision, ')'
-      write (str, fmt) r
-   end subroutine write_with_precision_dp
 
    function to_string_int32(i) result(trimmed_str)
       !! transform an int32 to a string
@@ -92,7 +66,10 @@ contains
       real(kind=sp), intent(in) :: r
       character(len=50) :: str
       character(len=:), allocatable :: trimmed_str
-      call write_with_precision(r, str)
+      character(len=32) :: fmt
+      !call write_with_precision(r, str)
+      write (fmt, '(A,I0,A)') '(F0.', dp_precision, ')'
+      write (str, fmt) r
       trimmed_str = trim(str)
    end function to_string_sp
 
@@ -101,8 +78,10 @@ contains
       real(kind=dp), intent(in) :: r
       character(len=50) :: str
       character(len=:), allocatable :: trimmed_str
-      call write_with_precision(r, str)
-
+      character(len=32) :: fmt
+      !call write_with_precision(r, str)
+      write (fmt, '(A,I0,A)') '(F0.', dp_precision, ')'
+      write (str, fmt) r
       trimmed_str = trim(str)
    end function to_string_dp
 
