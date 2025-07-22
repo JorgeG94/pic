@@ -1,4 +1,5 @@
 module pic_test_helpers
+  !! simple reusable helpers for random things
    use pic_types, only: int64, dp
    implicit none
 
@@ -7,6 +8,7 @@ module pic_test_helpers
 
 contains
    subroutine dummy_work()
+    !! this subroutine runs a random dgemm to create work so that timers and other testing utils work nicely
       integer(int64) ::  i, j, k
       integer :: m
       real(dp), allocatable :: A(:, :), B(:, :), C(:, :)
