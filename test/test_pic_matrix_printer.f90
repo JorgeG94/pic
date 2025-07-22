@@ -66,7 +66,7 @@ contains
 
    subroutine test_print_matrix_m_n(error)
       type(error_type), allocatable, intent(out) :: error
-      real(dp) :: m(2, 3) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp], [2, 3])
+      real(dp), parameter :: m(2, 3) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp], [2, 3])
 
       call print_array_with_bounds(m, 2, 3, "PLAIN")
       call check(error, .true.)
