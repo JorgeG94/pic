@@ -1,4 +1,6 @@
+!! all things constants, physical, chemical, etc
 module pic_constants
+  !! this will be the physical constants module
    use pic_types, only: dp
    implicit none
    private
