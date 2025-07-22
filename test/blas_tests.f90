@@ -2,16 +2,20 @@ program pic_tester
    use, intrinsic :: iso_fortran_env, only: error_unit
    use testdrive, only: run_testsuite, new_testsuite, testsuite_type, &
    & select_suite, run_selected, get_argument
-   use test_suite1, only: collect_suite1
-   use test_pic_string_utils, only: collect_pic_string_utils_tests
-   use test_pic_timers, only: collect_pic_timers_tests
-   use test_pic_logger, only: collect_pic_logger_tests
-   use test_pic_flop_recorder, only: collect_pic_flop_recorder_tests
-   use test_pic_flop_rate, only: collect_flop_rate_tests
+   use test_pic_blas_interfaces_sgemm, only: collect_pic_sgemm_tests
+   use test_pic_blas_interfaces_dgemm, only: collect_pic_dgemm_tests
+   use test_pic_blas_interfaces_sgemv, only: collect_pic_sgemv_tests
+   use test_pic_blas_interfaces_dgemv, only: collect_pic_dgemv_tests
+   use test_pic_blas_interfaces_asum, only: collect_pic_asum_tests
+   use test_pic_blas_interfaces_axpy, only: collect_pic_axpy_tests
+   use test_pic_blas_interfaces_copy, only: collect_pic_copy_tests
+   use test_pic_blas_interfaces_dot, only: collect_pic_blas_dot_tests
+   use test_pic_blas_interfaces_scal, only: collect_pic_scal_tests
+   use test_pic_blas_iamax, only: collect_pic_blas_iamax_tests
    ! add here the module you want to test
    implicit none
    integer :: stat, is
-   integer, parameter :: ntest_suites = 6
+   integer, parameter :: ntest_suites = 10
     !! number of tests, this number needs to be modified and equal to the number of files we have with unit tests
    character(len=:), allocatable :: suite_name, test_name
    type(testsuite_type), allocatable :: testsuites(:)
@@ -20,12 +24,16 @@ program pic_tester
    stat = 0
    allocate (testsuites(ntest_suites))
    ! here you add another test suite to the array
-   testsuites(1) = new_testsuite("base_utils", collect_suite1)
-   testsuites(2) = new_testsuite("pic_string_utils", collect_pic_string_utils_tests)
-   testsuites(3) = new_testsuite("pic_timers", collect_pic_timers_tests)
-   testsuites(4) = new_testsuite("pic_logger", collect_pic_logger_tests)
-   testsuites(5) = new_testsuite("pic_flop_recorder", collect_pic_flop_recorder_tests)
-   testsuites(6) = new_testsuite("pic_flop_rate", collect_flop_rate_tests)
+   testsuites(1) = new_testsuite("pic_blas_sgemm", collect_pic_sgemm_tests)
+   testsuites(2) = new_testsuite("pic_blas_dgemm", collect_pic_dgemm_tests)
+   testsuites(3) = new_testsuite("pic_blas_sgemv", collect_pic_sgemv_tests)
+   testsuites(4) = new_testsuite("pic_blas_dgemv", collect_pic_dgemv_tests)
+   testsuites(5) = new_testsuite("pic_blas_asum", collect_pic_asum_tests)
+   testsuites(6) = new_testsuite("pic_blas_axpy", collect_pic_axpy_tests)
+   testsuites(7) = new_testsuite("pic_blas_copy", collect_pic_copy_tests)
+   testsuites(8) = new_testsuite("pic_blas_dot", collect_pic_blas_dot_tests)
+   testsuites(9) = new_testsuite("pic_blas_scal", collect_pic_scal_tests)
+   testsuites(10) = new_testsuite("pic_blas_iamax", collect_pic_blas_iamax_tests)
 
    call get_argument(1, suite_name)
    call get_argument(2, test_name)

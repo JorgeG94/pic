@@ -57,7 +57,7 @@ program main
    A = 1.0_dp
    B = 1.0_dp
 
-   call dgemm("N", "N", n, m, k, 1.0_dp, A, n, B, k, 0.0_dp, C, n)
+   !call dgemm("N", "N", n, m, k, 1.0_dp, A, n, B, k, 0.0_dp, C, n)
    ! C_flat = reshape(C, [flat_size])
 
    call print_array(C, "PLAIN")

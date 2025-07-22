@@ -1,7 +1,7 @@
 module test_pic_string_utils
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_string_utils, only: to_string
-   use pic_types, only: int32, int64, dp
+   use pic_types, only: int32, int64, dp, sp
    implicit none
    private
 
@@ -11,13 +11,14 @@ contains
 
    subroutine collect_pic_string_utils_tests(testsuite2)
       type(unittest_type), allocatable, intent(out) :: testsuite2(:)
-      integer, parameter :: ntests = 5
+      integer, parameter :: ntests = 6
       allocate (testsuite2(ntests))
       testsuite2(1) = new_unittest("test_to_string_int32", test_to_string_int32)
       testsuite2(2) = new_unittest("test_to_string_int64", test_to_string_int64)
       testsuite2(3) = new_unittest("test_to_string_dp", test_to_string_dp)
       testsuite2(4) = new_unittest("test_to_string_char", test_to_string_char)
       testsuite2(5) = new_unittest("test_to_string_logical", test_to_string_logical)
+      testsuite2(6) = new_unittest("test_to_string_sp", test_to_string_sp)
 
    end subroutine collect_pic_string_utils_tests
 
@@ -47,6 +48,16 @@ contains
       call check(error, result == "123.456000000000")
       if (allocated(error)) return
    end subroutine test_to_string_dp
+
+   subroutine test_to_string_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=50) :: result
+
+      result = to_string(123.456_sp)
+      print *, result
+      call check(error, result == "123.456001281738")
+      if (allocated(error)) return
+   end subroutine test_to_string_sp
 
    subroutine test_to_string_char(error)
       type(error_type), allocatable, intent(out) :: error
