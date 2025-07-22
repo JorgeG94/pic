@@ -1,6 +1,12 @@
 # Unit testing
-set(tests "base_utils" "pic_string_utils" "pic_timers" "pic_logger"
-          "pic_flop_recorder" "pic_flop_rate")
+set(tests
+    "base_utils"
+    "pic_string_utils"
+    "pic_timers"
+    "pic_logger"
+    "pic_flop_recorder"
+    "pic_flop_rate"
+    "pic_matrix_printer")
 set(blas_tests
     "pic_blas_sgemm"
     "pic_blas_dgemm"
