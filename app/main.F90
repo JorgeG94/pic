@@ -20,28 +20,11 @@ program main
    !type(json_error), allocatable :: error
    !integer(default_int) :: ierr, rank, size, ival
    real(dp), dimension(:, :), allocatable :: A, B, C
-   real(dp) :: jorge
-   character(len=100) :: char_jorge
    !real(dp), dimension(:), allocatable :: C_flat
    integer(default_int) :: n, m, k
 
    call pic_print_banner()
-   jorge = 1.12345678910111213_dp
 
-   call set_precision(2)
-   char_jorge = to_string(jorge)
-   print *, char_jorge
-   print *, len_trim(char_jorge)
-
-   call set_precision(3)
-   char_jorge = to_string(jorge)
-   print *, char_jorge
-   print *, len_trim(char_jorge)
-   call set_precision(12)
-   char_jorge = to_string(jorge)
-   print *, char_jorge
-   print *, len_trim(char_jorge)
-   !call comm%init()
    !call comm%init()
 
    !if (comm%m_rank == 0) then
