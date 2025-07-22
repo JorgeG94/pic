@@ -8,7 +8,12 @@ module pic_string_utils
    implicit none
    ! Generic interface for to_string to handle different types
    private
+   integer, parameter :: default_dp_precision = 12
+   integer :: dp_precision = default_dp_precision
+
    public :: to_string
+   public :: set_precision, get_precision
+
    interface to_string
      !! public interface to transform variables to strings
       module procedure to_string_int32
@@ -19,7 +24,50 @@ module pic_string_utils
       module procedure to_string_logical
    end interface
 
+   interface write_with_precision
+     !! public interface to write a real with a certain precision
+      module procedure write_with_precision_sp
+      module procedure write_with_precision_dp
+   end interface write_with_precision
+
 contains
+
+   subroutine set_precision(precision)
+      !! Set the precision for real numbers
+      integer, intent(in) :: precision
+      if (precision > 0) then
+         dp_precision = precision
+      else
+         print *, "Warning: Precision must be positive. Using default."
+         dp_precision = default_dp_precision
+      end if
+   end subroutine set_precision
+
+   function get_precision() result(precision)
+      !! Get the current precision for real numbers
+      integer :: precision
+      precision = dp_precision
+   end function get_precision
+
+   subroutine write_with_precision_sp(r, str)
+    !! Internal subroutine to format a real using current sp_precision
+      real(sp), intent(in) :: r
+      character(len=*), intent(out) :: str
+      character(len=32) :: fmt
+
+      write (fmt, '(A,I0,A)') '(F0.', dp_precision, ')'
+      write (str, fmt) r
+   end subroutine write_with_precision_sp
+
+   subroutine write_with_precision_dp(r, str)
+    !! Internal subroutine to format a real using current dp_precision
+      real(dp), intent(in) :: r
+      character(len=*), intent(out) :: str
+      character(len=32) :: fmt
+
+      write (fmt, '(A,I0,A)') '(F0.', dp_precision, ')'
+      write (str, fmt) r
+   end subroutine write_with_precision_dp
 
    function to_string_int32(i) result(trimmed_str)
       !! transform an int32 to a string
@@ -40,20 +88,21 @@ contains
    end function to_string_int64
 
    function to_string_sp(r) result(trimmed_str)
-      !! transform a real to a string
+      !! transform a real(sp) to a string
       real(kind=sp), intent(in) :: r
       character(len=50) :: str
       character(len=:), allocatable :: trimmed_str
-      write (str, "(F0.12)") r  ! Convert real to string with 3 decimal places
+      call write_with_precision(r, str)
       trimmed_str = trim(str)
    end function to_string_sp
 
    function to_string_dp(r) result(trimmed_str)
-      !! transform a real to a string
+      !! transform a real(dp) to a string
       real(kind=dp), intent(in) :: r
       character(len=50) :: str
       character(len=:), allocatable :: trimmed_str
-      write (str, "(F0.12)") r  ! Convert real to string with 3 decimal places
+      call write_with_precision(r, str)
+
       trimmed_str = trim(str)
    end function to_string_dp
 
