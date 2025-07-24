@@ -45,8 +45,8 @@ contains
          open_bracket = "{"
          close_bracket = "}"
       case ("PLAIN")
-         open_bracket = ""
-         close_bracket = ""
+         open_bracket = "["
+         close_bracket = "]"
       case default
          print *, "Warning: Unsupported format type '"//trim(format_type)//"'. Defaulting to NumPy style."
          open_bracket = "["
@@ -71,7 +71,7 @@ contains
          integer(int32) :: i, loop_bound_i
          loop_bound_i = size(vector)
          call set_brackets(print_format, open_bracket, close_bracket)
-         print *, open_bracket
+         write (*, "(A)", advance="no") open_bracket
          do i = 1, loop_bound_i
             if (i == loop_bound_i) then  ! Last element in the vector
                write (*, fmt_edge, advance="no") to_string(vector(i))
@@ -102,7 +102,7 @@ contains
          integer(int64) :: i, loop_bound_i
          loop_bound_i = size(vector)
          call set_brackets(print_format, open_bracket, close_bracket)
-         print *, open_bracket
+         write (*, "(A)", advance="no") open_bracket
          do i = 1, loop_bound_i
             if (i == loop_bound_i) then  ! Last element in the vector
                write (*, fmt_edge, advance="no") to_string(vector(i))
@@ -133,7 +133,7 @@ contains
          integer(int32) :: i, loop_bound_i
          loop_bound_i = size(vector)
          call set_brackets(print_format, open_bracket, close_bracket)
-         print *, open_bracket
+         write (*, "(A)", advance="no") open_bracket
          do i = 1, loop_bound_i
             if (i == loop_bound_i) then  ! Last element in the vector
                write (*, fmt_edge, advance="no") to_string(vector(i))
@@ -164,7 +164,7 @@ contains
          integer(int32) :: i, loop_bound_i
          loop_bound_i = size(vector)
          call set_brackets(print_format, open_bracket, close_bracket)
-         print *, open_bracket
+         write (*, "(A)", advance="no") open_bracket
          do i = 1, loop_bound_i
             if (i == loop_bound_i) then  ! Last element in the vector
                write (*, fmt_edge, advance="no") to_string(vector(i))
@@ -198,6 +198,7 @@ contains
          call set_brackets(print_format, open_bracket, close_bracket)
          print *, open_bracket
          do i = 1, rows
+            write (*, "(A)", advance="no") open_bracket
             do j = 1, cols
                if (j == cols) then  ! Last element in the row
                   write (*, fmt_edge, advance="no") to_string(matrix(i, j))
@@ -236,6 +237,7 @@ contains
          call set_brackets(print_format, open_bracket, close_bracket)
          print *, open_bracket
          do i = 1, rows
+            write (*, "(A)", advance="no") open_bracket
             do j = 1, cols
                if (j == cols) then  ! Last element in the row
                   write (*, fmt_edge, advance="no") to_string(matrix(i, j))
@@ -274,6 +276,7 @@ contains
          call set_brackets(print_format, open_bracket, close_bracket)
          print *, open_bracket
          do i = 1, rows
+            write (*, "(A)", advance="no") open_bracket
             do j = 1, cols
                if (j == cols) then  ! Last element in the row
                   write (*, fmt_edge, advance="no") to_string(matrix(i, j))
@@ -312,6 +315,7 @@ contains
          call set_brackets(print_format, open_bracket, close_bracket)
          print *, open_bracket
          do i = 1, rows
+            write (*, "(A)", advance="no") open_bracket
             do j = 1, cols
                if (j == cols) then  ! Last element in the row
                   write (*, fmt_edge, advance="no") to_string(matrix(i, j))
