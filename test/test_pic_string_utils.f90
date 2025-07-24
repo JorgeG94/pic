@@ -1,6 +1,6 @@
 module test_pic_string_utils
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_string_utils, only: to_string, set_precision, get_precision
+   use pic_string_utils, only: to_string, set_precision, get_precision, pad
    use pic_types, only: int32, int64, dp, sp
    implicit none
    private
@@ -11,7 +11,7 @@ contains
 
    subroutine collect_pic_string_utils_tests(testsuite2)
       type(unittest_type), allocatable, intent(out) :: testsuite2(:)
-      integer, parameter :: ntests = 9
+      integer, parameter :: ntests = 10
       allocate (testsuite2(ntests))
       testsuite2(1) = new_unittest("test_to_string_int32", test_to_string_int32)
       testsuite2(2) = new_unittest("test_to_string_int64", test_to_string_int64)
@@ -22,6 +22,7 @@ contains
       testsuite2(7) = new_unittest("test_set_get_precision", test_set_get_precision)
       testsuite2(8) = new_unittest("test_write_with_precision_sp", test_write_with_precision_sp)
       testsuite2(9) = new_unittest("test_write_with_precision_dp", test_write_with_precision_dp)
+      testsuite2(10) = new_unittest("test_padding", test_padding)
 
    end subroutine collect_pic_string_utils_tests
 
@@ -127,5 +128,20 @@ contains
 
       if (allocated(error)) return
    end subroutine test_write_with_precision_dp
+
+   subroutine test_padding(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=:), allocatable :: result
+      real(kind=dp), parameter :: value = 123.456_dp
+      integer :: expected_len
+
+      call set_precision(3)
+      result = to_string(value)
+      result = pad(result, 15)
+      expected_len = len_trim(result)
+      print *, "Result: ", to_string(expected_len)//to_string(result)
+      call check(error, expected_len == 15, "expected length of string is 15")
+      if (allocated(error)) return
+   end subroutine test_padding
 
 end module test_pic_string_utils
