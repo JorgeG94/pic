@@ -2,7 +2,7 @@
 module test_pic_matrix_printer_v2
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_matrix_printer_v2, only: print_array_v2
-   use pic_types, only: sp, dp, int32, int64
+   use pic_types, only: sp, dp, int32, int64, default_int
    implicit none
    private
    public :: collect_pic_matrix_printer_v2_tests
@@ -109,6 +109,7 @@ contains
 
    subroutine test_print_packed_matrix_plain(error)
       type(error_type), allocatable, intent(out) :: error
+      integer(default_int), parameter :: six = 6
       real(sp), parameter :: v_sp(6) = [1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp]
       real(dp), parameter :: v_dp(6) = [1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp]
       integer(int32), parameter :: v_int32(6) = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32]
@@ -118,19 +119,19 @@ contains
       call print_array_v2(v_dp)
       call print_array_v2(v_int32)
       call print_array_v2(v_int64)
-      call print_array_v2(v_sp, 6, "PLAIN")
+      call print_array_v2(v_sp, six, "PLAIN")
       call check(error, .true.)  ! Assuming the print is correct, no error expected
       if (allocated(error)) return
 
-      call print_array_v2(v_dp, 6, "PLAIN")
+      call print_array_v2(v_dp, six, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int32, 6, "PLAIN")
+      call print_array_v2(v_int32, six, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int64, 6, "PLAIN")
+      call print_array_v2(v_int64, six, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
@@ -138,24 +139,25 @@ contains
 
    subroutine test_print_packed_matrix_numpy(error)
       type(error_type), allocatable, intent(out) :: error
+      integer(default_int), parameter :: six = 6
       real(sp), parameter :: v_sp(6) = [1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp]
       real(dp), parameter :: v_dp(6) = [1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp]
       integer(int32), parameter :: v_int32(6) = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32]
       integer(int64), parameter :: v_int64(6) = [1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64]
 
-      call print_array_v2(v_sp, 6, "NUMPY")
+      call print_array_v2(v_sp, six, "NUMPY")
       call check(error, .true.)  ! Assuming the print is correct, no error expected
       if (allocated(error)) return
 
-      call print_array_v2(v_dp, 6, "NUMPY")
+      call print_array_v2(v_dp, six, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int32, 6, "NUMPY")
+      call print_array_v2(v_int32, six, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int64, 6, "NUMPY")
+      call print_array_v2(v_int64, six, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
@@ -165,22 +167,23 @@ contains
       type(error_type), allocatable, intent(out) :: error
       real(sp), parameter :: v_sp(6) = [1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp]
       real(dp), parameter :: v_dp(6) = [1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp]
+      integer(default_int), parameter :: six = 6
       integer(int32), parameter :: v_int32(6) = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32]
       integer(int64), parameter :: v_int64(6) = [1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64]
 
-      call print_array_v2(v_sp, 6, "MATHEMATICA")
+      call print_array_v2(v_sp, six, "MATHEMATICA")
       call check(error, .true.)  ! Assuming the print is correct, no error expected
       if (allocated(error)) return
 
-      call print_array_v2(v_dp, 6, "MATHEMATICA")
+      call print_array_v2(v_dp, six, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int32, 6, "MATHEMATICA")
+      call print_array_v2(v_int32, six, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int64, 6, "MATHEMATICA")
+      call print_array_v2(v_int64, six, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
 

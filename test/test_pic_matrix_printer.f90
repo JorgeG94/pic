@@ -1,7 +1,7 @@
 module test_pic_matrix_printer
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_matrix_printer, only: print_array, print_array_with_bounds
-   use pic_types, only: dp
+   use pic_types, only: dp, default_int
    implicit none
    private
    public :: collect_pic_matrix_printer_tests
@@ -57,18 +57,21 @@ contains
 
    subroutine test_print_vector_n(error)
       type(error_type), allocatable, intent(out) :: error
+      integer(default_int), parameter :: n = 3
       real(dp), parameter :: v(5) = [1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp]
 
-      call print_array_with_bounds(v, 3, "PLAIN")
+      call print_array_with_bounds(v, n, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
    end subroutine test_print_vector_n
 
    subroutine test_print_matrix_m_n(error)
       type(error_type), allocatable, intent(out) :: error
+      integer(default_int), parameter :: n = 2
+      integer(default_int), parameter :: mm = 3
       real(dp), parameter :: m(2, 3) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp], [2, 3])
 
-      call print_array_with_bounds(m, 2, 3, "PLAIN")
+      call print_array_with_bounds(m, n, mm, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
    end subroutine test_print_matrix_m_n
