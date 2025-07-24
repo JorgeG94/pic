@@ -6,8 +6,8 @@ program main
    !                   cast_to_object, get_value, add_object
    !use pic_logger, only: global => global_logger, warning_level, verbose_level
    !use testdrive, only: run_testsuite
-   use pic_types, only: dp, default_int
-   use pic_matrix_printer, only: print_array
+   use pic_types, only: dp, default_int, sp, int32, int64
+   use pic_matrix_printer_v2, only: print_array_v2
    use pic_string_utils, only: to_string, set_precision
    implicit none
    !use pic_mpi
@@ -20,6 +20,7 @@ program main
    !type(json_error), allocatable :: error
    !integer(default_int) :: ierr, rank, size, ival
    real(dp), dimension(:, :), allocatable :: A, B, C
+   real(dp), dimension(:), allocatable :: symA
    !real(dp), dimension(:), allocatable :: C_flat
    integer(default_int) :: n, m, k
 
@@ -52,17 +53,35 @@ program main
 
    n = 4
    m = 4
-   k = 4
+   k = 2
    allocate (A(n, k), B(k, m), C(n, m))
+   allocate (symA(n*n))
    ! flat_size = m*n
    ! allocate (C_flat(flat_size))
+   !oA = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
    A = 1.0_dp
    B = 1.0_dp
+   block
+      integer(int32) :: i, j, k
+      real(dp), allocatable :: test_vec(:, :, :)
+      integer, parameter :: sizee = 2
+
+      allocate (test_vec(sizee, sizee, 5))
+
+      do i = 1, sizee
+         do j = 1, sizee
+            do k = 1, 5
+               test_vec(i, j, k) = real(i + j + k, dp)
+            end do
+         end do
+      end do
+
+      call set_precision(3)
+      call print_array_v2(test_vec, "MATHEMATICA")
+   end block
 
    !call dgemm("N", "N", n, m, k, 1.0_dp, A, n, B, k, 0.0_dp, C, n)
    ! C_flat = reshape(C, [flat_size])
-
-   call print_array(C, "PLAIN")
 
    ! call json_loads(val, '{"a":1,"b":2}', error=error)
    ! if (allocated(error)) then

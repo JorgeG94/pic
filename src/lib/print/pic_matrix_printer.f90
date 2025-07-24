@@ -12,6 +12,7 @@ module pic_matrix_printer
      !! general interface for printing a one or two dimensional array
       module procedure print_vector
       module procedure print_matrix
+      module procedure print_packed_matrix
    end interface print_array
 
    interface print_array_with_bounds
@@ -106,6 +107,26 @@ contains
       end if
    end subroutine print_matrix
 
+   subroutine print_packed_matrix(mat, n_cols, n_rows, format_type)
+    !! print a packed COLUMN MAJOR matrix in a given format
+      real(dp), intent(in) :: mat(:)
+      integer(default_int), intent(in) :: n_cols, n_rows
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: format_selected
+
+      if (present(format_type)) then
+         format_selected = trim(adjustl(format_type))
+      else
+         format_selected = "PLAIN"
+      end if
+      ! Handle plain format separately or delegate to print routine based on the format
+      if (format_selected == "PLAIN") then
+         call print_plain_packed_symmetric_matrix(mat, n_cols)
+      else
+         !call print_packed_matrix_in_format(mat, format_selected)
+      end if
+   end subroutine print_packed_matrix
+
    subroutine print_plain_vector(vec, n_elements)
     !! private subroutine that prints a vector of n_elements
       real(kind=dp), intent(in) :: vec(:)
@@ -145,6 +166,32 @@ contains
          end do
       end do
    end subroutine print_plain_matrix
+
+   subroutine print_plain_packed_symmetric_matrix(vec, n, format_type)
+   !! Print a symmetric matrix stored in packed lower-triangle 1D format
+      real(kind=dp), intent(in) :: vec(:)
+      integer(kind=default_int), intent(in) :: n
+      character(len=*), intent(in), optional :: format_type
+      integer(kind=default_int) :: i, j, idx
+      character(len=20) :: fmt
+
+      print *, "Symmetric Matrix (Plain format, lower triangle packed):"
+
+      do i = 1, n
+         do j = 1, n
+            if (j <= i) then
+               idx = j + (i - 1)*i/2
+            else
+               idx = i + (j - 1)*j/2
+            end if
+            if (j == n) then
+               write (*, fmt_edge, advance="yes") vec(idx)
+            else
+               write (*, fmt_in, advance="no") vec(idx)
+            end if
+         end do
+      end do
+   end subroutine print_plain_packed_symmetric_matrix
 
    subroutine print_vector_in_format(vec, format_type, n_elements)
     !! private subroutine that prints a vector in a format

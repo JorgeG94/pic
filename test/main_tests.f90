@@ -9,10 +9,11 @@ program pic_tester
    use test_pic_flop_recorder, only: collect_pic_flop_recorder_tests
    use test_pic_flop_rate, only: collect_flop_rate_tests
    use test_pic_matrix_printer, only: collect_pic_matrix_printer_tests
+   use test_pic_matrix_printer_v2, only: collect_pic_matrix_printer_v2_tests
    ! add here the module you want to test
    implicit none
    integer :: stat, is
-   integer, parameter :: ntest_suites = 7
+   integer, parameter :: ntest_suites = 8
     !! number of tests, this number needs to be modified and equal to the number of files we have with unit tests
    character(len=:), allocatable :: suite_name, test_name
    type(testsuite_type), allocatable :: testsuites(:)
@@ -28,6 +29,7 @@ program pic_tester
    testsuites(5) = new_testsuite("pic_flop_recorder", collect_pic_flop_recorder_tests)
    testsuites(6) = new_testsuite("pic_flop_rate", collect_flop_rate_tests)
    testsuites(7) = new_testsuite("pic_matrix_printer", collect_pic_matrix_printer_tests)
+   testsuites(8) = new_testsuite("pic_matrix_printer_v2", collect_pic_matrix_printer_v2_tests)
 
    call get_argument(1, suite_name)
    call get_argument(2, test_name)
