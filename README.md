@@ -56,7 +56,3 @@ ctest
 ### FPM
 
 Install the FPM following the [instructions](https://fpm.fortran-lang.org/install/index.html#install) and then simply: `fpm build`
-
-## Testing coverage
-
-![coverage](https://codecov.io/github/JorgeG94/pic/graphs/sunburst.svg?token=6A6PGOZ7GW)

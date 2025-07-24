@@ -51,32 +51,32 @@ program main
    !   end do
    ! end block
 
-   n = 4
-   m = 4
-   k = 2
-   allocate (A(n, k), B(k, m), C(n, m))
-   allocate (symA(n*n))
-   ! flat_size = m*n
-   ! allocate (C_flat(flat_size))
-   !oA = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-   A = 1.0_dp
-   B = 1.0_dp
-   block
-      integer(int32) :: i, j, k
-      real(dp), allocatable :: test_vec(:, :)
-      integer, parameter :: sizee = 2
+   !n = 4
+   !m = 4
+   !k = 2
+   !allocate (A(n, k), B(k, m), C(n, m))
+   !allocate (symA(n*n))
+   !! flat_size = m*n
+   !! allocate (C_flat(flat_size))
+   !!oA = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+   !A = 1.0_dp
+   !B = 1.0_dp
+   !block
+   !   integer(int32) :: i, j, k
+   !   real(dp), allocatable :: test_vec(:, :)
+   !   integer, parameter :: sizee = 2
 
-      allocate (test_vec(sizee, sizee))
+   !   allocate (test_vec(sizee, sizee))
 
-      do i = 1, sizee
-         do j = 1, sizee
-            test_vec(i, j) = real(i + j, dp)
-         end do
-      end do
+   !   do i = 1, sizee
+   !      do j = 1, sizee
+   !         test_vec(i, j) = real(i + j, dp)
+   !      end do
+   !   end do
 
-      call set_precision(3)
-      call print_array_v2(test_vec, "NUMPY")
-   end block
+   !   call set_precision(3)
+   !   call print_array_v2(test_vec, "NUMPY")
+   !end block
 
    !call dgemm("N", "N", n, m, k, 1.0_dp, A, n, B, k, 0.0_dp, C, n)
    ! C_flat = reshape(C, [flat_size])
