@@ -35,6 +35,10 @@ contains
       integer(int32), parameter :: v_int32(3) = [1_int32, 2_int32, 3_int32]
       integer(int64), parameter :: v_int64(3) = [1_int64, 2_int64, 3_int64]
 
+      call print_array_v2(v_sp)
+      call print_array_v2(v_dp)
+      call print_array_v2(v_int32)
+      call print_array_v2(v_int64)
       call print_array_v2(v_sp, "PLAIN")
       call check(error, .true.)  ! Assuming the print is correct, no error expected
       if (allocated(error)) return
@@ -110,6 +114,10 @@ contains
       integer(int32), parameter :: v_int32(6) = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32]
       integer(int64), parameter :: v_int64(6) = [1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64]
 
+      call print_array_v2(v_sp)
+      call print_array_v2(v_dp)
+      call print_array_v2(v_int32)
+      call print_array_v2(v_int64)
       call print_array_v2(v_sp, 6, "PLAIN")
       call check(error, .true.)  ! Assuming the print is correct, no error expected
       if (allocated(error)) return
@@ -185,6 +193,10 @@ contains
       real(sp), parameter :: m_sp(2, 2) = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp], [2, 2])
       real(dp), parameter :: m_dp(2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp], [2, 2])
 
+      call print_array_v2(m_int32)
+      call print_array_v2(m_int64)
+      call print_array_v2(m_sp)
+      call print_array_v2(m_dp)
       call print_array_v2(m_int32, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
@@ -254,6 +266,8 @@ contains
     real(sp), parameter :: tensor_sp(2, 2, 2) = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp, 7.0_sp, 8.0_sp], [2, 2, 2])
     real(dp), parameter :: tensor_dp(2, 2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp, 7.0_dp, 8.0_dp], [2, 2, 2])
 
+      call print_array_v2(tensor_sp)
+      call print_array_v2(tensor_dp)
       call print_array_v2(tensor_sp, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
