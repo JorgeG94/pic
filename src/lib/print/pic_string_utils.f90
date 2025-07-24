@@ -27,7 +27,6 @@ module pic_string_utils
 contains
 
    function to_upper(str) result(upper_str)
-      implicit none
       character(len=*), intent(in) :: str
       character(len=len(str)) :: upper_str
       integer :: i
