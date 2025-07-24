@@ -1,6 +1,7 @@
 module test_pic_string_utils
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_string_utils, only: to_string, set_precision, get_precision, pad
+   use pic_string_utils, only: to_string, set_precision, get_precision, pad, &
+                               to_upper
    use pic_types, only: int32, int64, dp, sp
    implicit none
    private
@@ -11,7 +12,7 @@ contains
 
    subroutine collect_pic_string_utils_tests(testsuite2)
       type(unittest_type), allocatable, intent(out) :: testsuite2(:)
-      integer, parameter :: ntests = 10
+      integer, parameter :: ntests = 11
       allocate (testsuite2(ntests))
       testsuite2(1) = new_unittest("test_to_string_int32", test_to_string_int32)
       testsuite2(2) = new_unittest("test_to_string_int64", test_to_string_int64)
@@ -23,6 +24,7 @@ contains
       testsuite2(8) = new_unittest("test_write_with_precision_sp", test_write_with_precision_sp)
       testsuite2(9) = new_unittest("test_write_with_precision_dp", test_write_with_precision_dp)
       testsuite2(10) = new_unittest("test_padding", test_padding)
+      testsuite2(11) = new_unittest("test_to_upper", test_to_upper)
 
    end subroutine collect_pic_string_utils_tests
 
@@ -143,5 +145,15 @@ contains
       call check(error, expected_len == 15, "expected length of string is 15")
       if (allocated(error)) return
    end subroutine test_padding
+
+   subroutine test_to_upper(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=500) :: result
+
+      result = to_upper("Hello, world!")
+      call check(error, result == "HELLO, WORLD!")
+      if (allocated(error)) return
+
+   end subroutine test_to_upper
 
 end module test_pic_string_utils
