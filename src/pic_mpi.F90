@@ -4,7 +4,7 @@
 
 module pic_mpi
   !! General MPI interface module
-   use pic_types, only: default_int
+   use pic_types, only: int32, int32
 #ifdef USE_MPI
    use mpi_f08, only: MPI_COMM, MPI_COMM_WORLD, MPI_Init, MPI_Finalize, &
                       MPI_Comm_size, MPI_Comm_rank
@@ -22,14 +22,14 @@ module pic_mpi
       type(MPI_COMM), public :: comm
         !! use the MPI_COMM from the mpi_f08 module interface
 #else
-      integer(default_int), public :: dummy_comm
+      integer(int32), public :: dummy_comm
         !! if we don't use MPI use an integer for a comm
 #endif
-      integer(default_int), public :: m_rank
+      integer(int32), public :: m_rank
         !! MPI rank
-      integer(default_int), public :: m_size
+      integer(int32), public :: m_size
         !! MPI size
-      integer(default_int), public :: m_ierr
+      integer(int32), public :: m_ierr
    contains
       procedure :: init => pic_comm_init
       procedure :: finalize => pic_comm_finalize
@@ -44,7 +44,7 @@ contains
     !! initilalize the MPI library and get the size and rank variables
       class(pic_comm_type), intent(inout) :: self
 #ifdef USE_MPI
-      integer(default_int) :: ierr, rank, size
+      integer(int32) :: ierr, rank, size
       call MPI_Init(ierr)
       self%m_ierr = ierr
       self%comm = MPI_COMM_WORLD
@@ -62,7 +62,7 @@ contains
     !! finalize the MPI library
       class(pic_comm_type), intent(inout) :: self
 #ifdef USE_MPI
-      integer(default_int) :: ierr
+      integer(int32) :: ierr
       call MPI_Finalize(ierr)
       self%m_ierr = ierr
 #else
