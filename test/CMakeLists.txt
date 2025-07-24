@@ -6,7 +6,8 @@ set(tests
     "pic_logger"
     "pic_flop_recorder"
     "pic_flop_rate"
-    "pic_matrix_printer")
+    "pic_matrix_printer"
+    "pic_matrix_printer_v2")
 set(blas_tests
     "pic_blas_sgemm"
     "pic_blas_dgemm"
