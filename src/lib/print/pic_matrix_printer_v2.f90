@@ -2,7 +2,7 @@
 module pic_matrix_printer_v2
 !! Generic module for printing arrays
    use pic_types, only: sp, dp, int32, int64, default_int
-   use pic_string_utils, only: to_string
+   use pic_string_utils, only: to_string, to_upper
    implicit none
    private
 
@@ -10,6 +10,11 @@ module pic_matrix_printer_v2
 
    interface print_array_v2
     !! Generic interface for printing arrays of different types
+    !! usage: call print_array(array) implemented types are:
+    !! array(:)   -> int32, int64, sp, dp
+    !! array(:,:) -> int32, int64, sp, dp
+    !! array(:) (packed matrix) -> sp, dp
+    !! array(:,:,:) -> sp, dp
       module procedure print_vector_int32
       module procedure print_vector_int64
       module procedure print_vector_sp
@@ -27,6 +32,7 @@ module pic_matrix_printer_v2
    end interface print_array_v2
 
    character(len=5), parameter :: default_format = "NUMPY"
+    !! supported formats: NUMPY, MATHEMATICA, and PLAIN which resembles numpy
 
    character(len=*), parameter :: fmt_edge = "(A)"
    character(len=*), parameter :: fmt_in = '(A, ", ")'
@@ -37,7 +43,7 @@ contains
    !! Set brackets based on output format type
       character(len=*), intent(in) :: format_type
       character(len=1), intent(out) :: open_bracket, close_bracket
-      select case (trim(adjustl(format_type)))
+      select case (trim(to_upper(adjustl(format_type))))
       case ("NUMPY")
          open_bracket = "["
          close_bracket = "]"

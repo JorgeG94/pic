@@ -11,7 +11,7 @@ module pic_string_utils
    integer, parameter :: default_dp_precision = 12
    integer :: dp_precision = default_dp_precision
 
-   public :: to_string
+   public :: to_string, pad, to_upper
    public :: set_precision, get_precision
 
    interface to_string
@@ -25,6 +25,37 @@ module pic_string_utils
    end interface
 
 contains
+
+   function to_upper(str) result(upper_str)
+      character(len=*), intent(in) :: str
+      character(len=len(str)) :: upper_str
+      integer :: i
+      character :: ch
+
+      do i = 1, len(str)
+         ch = str(i:i)
+         if (ch >= 'a' .and. ch <= 'z') then
+            upper_str(i:i) = char(iachar(ch) - 32)
+         else
+            upper_str(i:i) = ch
+         end if
+      end do
+   end function to_upper
+
+   function pad(s, width) result(padded)
+    !! function to pad a string with a certain number of characters for nice printing
+      character(len=*), intent(in) :: s
+      integer, intent(in) :: width
+      character(len=:), allocatable :: padded
+      integer :: len_s
+
+      len_s = len_trim(s)
+      if (len_s >= width) then
+         padded = s(1:width)
+      else
+         padded = repeat(" ", width - len_s)//s
+      end if
+   end function pad
 
    subroutine set_precision(precision)
       !! Set the precision for real numbers
