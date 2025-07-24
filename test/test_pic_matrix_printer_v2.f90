@@ -304,7 +304,6 @@ contains
       call print_array_v2(tensor_sp, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
-
       call print_array_v2(tensor_dp, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return

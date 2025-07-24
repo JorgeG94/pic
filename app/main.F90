@@ -63,21 +63,19 @@ program main
    B = 1.0_dp
    block
       integer(int32) :: i, j, k
-      real(dp), allocatable :: test_vec(:, :, :)
+      real(dp), allocatable :: test_vec(:, :)
       integer, parameter :: sizee = 2
 
-      allocate (test_vec(sizee, sizee, 5))
+      allocate (test_vec(sizee, sizee))
 
       do i = 1, sizee
          do j = 1, sizee
-            do k = 1, 5
-               test_vec(i, j, k) = real(i + j + k, dp)
-            end do
+            test_vec(i, j) = real(i + j, dp)
          end do
       end do
 
       call set_precision(3)
-      call print_array_v2(test_vec, "MATHEMATICA")
+      call print_array_v2(test_vec, "NUMPY")
    end block
 
    !call dgemm("N", "N", n, m, k, 1.0_dp, A, n, B, k, 0.0_dp, C, n)
