@@ -1,6 +1,7 @@
 add_subdirectory(types)
 add_subdirectory(constants)
 add_subdirectory(print)
+add_subdirectory(strings)
 add_subdirectory(logger)
 add_subdirectory(mpi)
 add_subdirectory(command_line)
