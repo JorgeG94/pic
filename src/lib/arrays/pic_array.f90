@@ -44,7 +44,7 @@ contains
       integer(int32), intent(inout) :: vector(:)
       integer(int32), intent(in)    :: alpha
       integer(default_int) :: i
-      !$omp target teams loop collapse(2)
+      !$omp target teams loop collapse(1)
       do i = 1, size(vector, 1)
          vector(i) = alpha
       end do
@@ -55,7 +55,7 @@ contains
       integer(int64), intent(inout) :: vector(:)
       integer(int64), intent(in)    :: alpha
       integer(default_int) :: i
-      !$omp target teams loop collapse(2)
+      !$omp target teams loop collapse(1)
       do i = 1, size(vector, 1)
          vector(i) = alpha
       end do
@@ -66,7 +66,7 @@ contains
       real(sp), intent(inout) :: vector(:)
       real(sp), intent(in)    :: alpha
       integer(default_int) :: i
-      !$omp target teams loop collapse(2)
+      !$omp target teams loop collapse(1)
       do i = 1, size(vector, 1)
          vector(i) = alpha
       end do
@@ -77,7 +77,7 @@ contains
       real(dp), intent(inout) :: vector(:)
       real(dp), intent(in)    :: alpha
       integer(default_int) :: i
-      !$omp target teams loop collapse(2)
+      !$omp target teams loop collapse(1)
       do i = 1, size(vector, 1)
          vector(i) = alpha
       end do
@@ -171,7 +171,7 @@ contains
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
-      !$omp target teams loop collapse(2)
+      !$omp target teams loop collapse(1)
       do i = 1, size(dest, 1)
          dest(i) = source(i)
       end do
@@ -185,7 +185,7 @@ contains
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
-      !$omp target teams loop collapse(2)
+      !$omp target teams loop collapse(1)
       do i = 1, size(dest, 1)
          dest(i) = source(i)
       end do
@@ -199,7 +199,7 @@ contains
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
-      !$omp target teams loop collapse(2)
+      !$omp target teams loop collapse(1)
       do i = 1, size(dest, 1)
          dest(i) = source(i)
       end do
@@ -213,7 +213,7 @@ contains
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
-      !$omp target teams loop collapse(2)
+      !$omp target teams loop collapse(1)
       do i = 1, size(dest, 1)
          dest(i) = source(i)
       end do
