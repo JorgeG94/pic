@@ -10,6 +10,7 @@ module pic_matrix_printer
    public :: print_array, print_array_with_bounds
    interface print_array
      !! general interface for printing a one or two dimensional array
+     !! will be deprecated
       module procedure print_vector
       module procedure print_matrix
    end interface print_array
