@@ -37,16 +37,37 @@ module pic_logger
    contains
 
       procedure, public, pass(self) :: configuration
+      !! Get the current logger verbosity configuration.
+      !! Usage: call my_logger%configuration(level)
       procedure, public, pass(self) :: configure
+      !! Configure the logger to be a certain verbosity level.
+      !! Usage: call my_logger%configure(level)
       procedure, public, pass(self) :: configure_file_output
+      !! Configure the logger to file to be a certain verbosity level.
+      !! Usage: call my_logger%configure_file_output(filename, level)
       procedure, public, pass(self) :: close_log_file
-      procedure, public, pass(self) :: log
+      !! Close the log file, needs to be called at the end of the program.
+      !! Usage: call my_logger%close_log_file()
       procedure, public, pass(self) :: debug
+      !! Log a message that will only be printed at the debug level of verbosity.
+      !! Usage: call my_logger%debug("MESSAGE")
       procedure, public, pass(self) :: verbose
+      !! Log a message that will only be printed at the verbose level of verbosity.
+      !! Usage: call my_logger%verbose("MESSAGE")
       procedure, public, pass(self) :: info
+      !! Log a message that will only be printed at the info level of verbosity.
+      !! Usage: call my_logger%info("MESSAGE")
       procedure, public, pass(self) :: performance
+      !! Log a message that will only be printed at the performance level of verbosity.
+      !! Usage: call my_logger%performance("MESSAGE")
       procedure, public, pass(self) :: warning
+      !! Log a message that will only be printed at the warning level of verbosity.
+      !! Usage: call my_logger%warning("MESSAGE")
       procedure, public, pass(self) :: error
+      !! Log a message that will only be printed at the error level of verbosity.
+      !! Usage: call my_logger%error("MESSAGE")
+      procedure, private, pass(self) :: log
+      !! internal: processes the message and filters it according to the verbosity level set by the user or the default
 
    end type logger_type
 
@@ -55,21 +76,61 @@ module pic_logger
 contains
 
    pure subroutine configuration(self, level)
-      !! Get the current log level set for the logger
+      !! Get the current logger verbosity configuration
+      !!
+      !! Usage: call my_logger%configuration(level)
+      !!
+      !! TODO: this should be a function
       class(logger_type), intent(in) :: self
       integer(default_int), intent(out), optional :: level
       if (present(level)) level = self%log_level
    end subroutine configuration
 
    pure subroutine configure(self, level)
-      !! set the log level for the logger
+      !! Configure the logger to be a certain verbosity level
+      !!
+      !! Usage: call my_logger%configure(level)
+      !!
+      !! Where level can be a number according to the level struct
+      !! or can be loaded from the level struct to be
+      !!
+      !! debug_level = 10, &
+      !!
+      !! verbose_level = 9, &
+      !!
+      !! info_level = 8, &
+      !!
+      !! performance_level = 7, &
+      !!
+      !! warning_level = 6, &
+      !!
+      !! error_level = 5
+      !!
       class(logger_type), intent(inout) :: self
       integer(default_int), intent(in), optional :: level
       if (present(level)) self%log_level = level
    end subroutine configure
 
    subroutine configure_file_output(self, filename, level)
-      !! configure the log level for the file output
+      !! Configure the logger to file to be a certain verbosity level
+      !!
+      !! Usage: call my_logger%configure_file_output(level)
+      !!
+      !! Where level can be a number according to the level struct
+      !! or can be loaded from the level struct to be
+      !!
+      !! debug_level = 10, &
+      !!
+      !! verbose_level = 9, &
+      !!
+      !! info_level = 8, &
+      !!
+      !! performance_level = 7, &
+      !!
+      !! warning_level = 6, &
+      !!
+      !! error_level = 5
+      !!
       class(logger_type), intent(inout) :: self
       character(*), intent(in) :: filename
       integer(default_int), intent(in), optional :: level
@@ -90,7 +151,11 @@ contains
    end subroutine configure_file_output
 
    subroutine close_log_file(self)
-      !! simple file closer
+      !! Close the log file, needs to be called at the end of the program
+      !!
+      !! Usage: call my_logger%close_log_file()
+      !!
+      !! TODO: revisit
       class(logger_type), intent(inout) :: self
       if (self%log_file_open) then
          close (self%log_file_unit)
@@ -100,7 +165,10 @@ contains
    end subroutine close_log_file
 
    subroutine debug(self, message, module, procedure)
-      !! log message to debug level
+      !! Log a message that will only be printed at the debug level of verbosity
+      !!
+      !! Usage: call my_logger%debug("MESSAGE")
+      !!
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -108,7 +176,10 @@ contains
    end subroutine debug
 
    subroutine verbose(self, message, module, procedure)
-      !! log message to verbose level
+      !! Log a message that will only be printed at the verbose level of verbosity
+      !!
+      !! Usage: call my_logger%verbose("MESSAGE")
+      !!
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -116,7 +187,10 @@ contains
    end subroutine verbose
 
    subroutine info(self, message, module, procedure)
-      !! log message to info level
+      !! Log a message that will only be printed at the info level of verbosity
+      !!
+      !! Usage: call my_logger%info("MESSAGE")
+      !!
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -124,7 +198,10 @@ contains
    end subroutine info
 
    subroutine warning(self, message, module, procedure)
-      !! log message to warning level
+      !! Log a message that will only be printed at the warning level of verbosity
+      !!
+      !! Usage: call my_logger%warning("MESSAGE")
+      !!
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -132,7 +209,10 @@ contains
    end subroutine warning
 
    subroutine performance(self, message, module, procedure)
-      !! log message to performance level
+      !! Log a message that will only be printed at the performance of verbosity
+      !!
+      !! Usage: call my_logger%performance("MESSAGE")
+      !!
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -140,7 +220,10 @@ contains
    end subroutine performance
 
    subroutine error(self, message, module, procedure)
-      !! log message to error level
+      !! Log a message that will only be printed at the error of verbosity
+      !!
+      !! Usage: call my_logger%error("MESSAGE")
+      !!
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: message
       character(*), intent(in), optional :: module, procedure
@@ -148,7 +231,8 @@ contains
    end subroutine error
 
    subroutine write_log_line(unit, level, message, module, procedure)
-      !! write the message at the appropriate level with formatting to the string
+      !! Internal subroutine that will write the message to the log
+      !! no interface to the public
       integer(default_int), intent(in) :: unit
       character(*), intent(in) :: level, message
       character(*), intent(in), optional :: module, procedure
@@ -163,7 +247,9 @@ contains
    end subroutine write_log_line
 
    subroutine log(self, level, message, module, procedure)
-      !! general subroutine to control at what level somethings gets printed
+      !! internal subroutines that processes the message and filters it according to
+      !! the verbosity level set by the user or the default
+      !! this is a private subroutine so it is not exposed to the user
       class(logger_type), intent(in) :: self
       character(*), intent(in) :: level
       character(*), intent(in) :: message

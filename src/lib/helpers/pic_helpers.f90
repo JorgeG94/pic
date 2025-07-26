@@ -10,6 +10,10 @@ module pic_test_helpers
 contains
    subroutine dummy_work()
     !! this subroutine runs a random dgemm to create work so that timers and other testing utils work nicely
+    !!
+    !! Usage: call dummy_work()
+    !!
+    !! it will simply do a 256 by 256 dgemm, woo
       integer(int64) ::  i, j, k
       integer(default_int) :: m
       real(dp), allocatable :: A(:, :), B(:, :), C(:, :)

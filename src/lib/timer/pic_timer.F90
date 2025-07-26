@@ -27,7 +27,6 @@ module pic_timers
       procedure :: stop => timer_stop
       procedure :: print_time => timer_print_time
       procedure :: get_elapsed_time => timer_get_elapsed_time
-      procedure :: set
    end type pic_timer_type
 
 contains
@@ -114,12 +113,5 @@ contains
       end if
 #endif
    end function timer_get_elapsed_time
-
-   subroutine set(self, time)
-      !! set the walltime directly, useful for testing or when you want to set a specific time
-      class(pic_timer_type), intent(inout) :: self
-      real(dp), intent(in) :: time
-      self%walltime = time
-   end subroutine set
 
 end module pic_timers

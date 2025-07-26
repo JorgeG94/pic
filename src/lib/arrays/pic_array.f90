@@ -34,7 +34,7 @@ module pic_array
 
    interface copy
   !! copy provides a blas-less implementation of xcopy where x is (i,s,d) icopy, scopy, dcopy
-  !! if you built pic with BLAS use the copy interface provided there, I will not beat BLAS
+  !! if you built pic with BLAS use pic_copy instead, I will not beat BLAS
   !! copy is implemented for (int32, int64, sp, dp) for 1 and 2d arrays of the same types
   !!
   !! Usage: call copy(destination, source)

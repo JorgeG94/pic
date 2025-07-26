@@ -11,7 +11,10 @@ module pic_matrix_printer_v2
    interface print_array_v2
     !! Generic interface for printing arrays of different types
     !!
-    !! usage: call print_array(array) implemented types are:
+    !! Usage: call print_array_v2(array, [optional] format)
+    !! Where format can be: NUMPY, PLAIN, MATHEMATICA (can use lower caps)
+    !!
+    !! Implemented types are:
     !!
     !! array(:)   -> int32, int64, sp, dp
     !!
