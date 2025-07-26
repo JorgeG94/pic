@@ -1,13 +1,16 @@
+
 !! pic array contains L0.5 BLAS level routines, as in things that could be use in
 !! lieu of blas if you don't have it but if you do, please don't use these routines
 module pic_array
-  !! Provides interfaces to array operating routines, current support is only for
-  !! 1 and 2d arrays with plans to cover up to 4d ones. I don't know why you'd use 5?
+!! Provides interfaces to array operating routines, current support is only for
+!! 1 and 2d arrays with plans to cover up to 4d ones. I don't know why you'd use 5?
    use pic_types, only: sp, dp, int32, int64, default_int
    implicit none
    private
 
    public :: fill, copy, pic_transpose, pic_sum
+
+   logical :: use_threaded = .false.
 
    interface fill
   !! fill provides a generic interface to assing a value
@@ -15,13 +18,11 @@ module pic_array
   !! The inteface supports filling 1d and 2d arrays of the specified
   !! variables
   !!
-  !! Usage: call fill(array, value)
+  !! Usage: call fill(array, value, [optional] threaded)
   !!
-  !! This subroutine is threaded for performance purposes beyond a certian
-  !! size of vector/matrices.
+  !! This subroutine is threaded for performance purposes if threaded is set to .true.
   !!
   !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
-  !!
       module procedure fill_vector_int32
       module procedure fill_vector_int64
       module procedure fill_vector_sp
@@ -34,16 +35,14 @@ module pic_array
 
    interface copy
   !! copy provides a blas-less implementation of xcopy where x is (i,s,d) icopy, scopy, dcopy
-  !! if you built pic with BLAS use pic_copy instead, I will not beat BLAS
+  !! if you built pic with BLAS use the copy interface provided there, I will not beat BLAS
   !! copy is implemented for (int32, int64, sp, dp) for 1 and 2d arrays of the same types
   !!
-  !! Usage: call copy(destination, source)
+  !! Usage: call copy(destination, source, [optional] threaded)
   !!
-  !! This subroutine is threaded for performance purposes beyond a certian
-  !! size of vector/matrices.
+  !! This subroutine is threaded for performance purposes if threaded is set to .true.
   !!
   !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
-  !!
       module procedure copy_vector_int32
       module procedure copy_vector_int64
       module procedure copy_vector_sp
@@ -60,10 +59,9 @@ module pic_array
   !!
   !! pic_transpose is implemented for (int32, int64, sp, dp) 2d arrays
   !!
-  !! Usage: call pic_transpose(matrix_to_transpose, result)
+  !! Usage: call pic_transpose(matrix_to_transpose, result, [optional] threaded)
   !!
-  !! This subroutine is threaded for performance purposes beyond a certian
-  !! size of vector/matrices.
+  !! This subroutine is threaded for performance purposes if threaded is set to true
   !!
   !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
   !!
@@ -80,10 +78,9 @@ module pic_array
   !!
   !! pic_sum is implemented for (int32, int64, sp, dp) 1 and 2d arrays
   !!
-  !! Usage: result = pic_sum(array)
+  !! Usage: result = pic_sum(array, [optional] threaded)
   !!
-  !! This subroutine is threaded for performance purposes beyond a certian
-  !! size of vector/matrices.
+  !! This subroutine is threaded for performance purposes if threaded is set to true
   !!
   !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
   !!
@@ -100,19 +97,18 @@ module pic_array
    ! potentially implement a shallow copy? nah?
    integer(default_int), parameter :: block_size = 32
     !! This is the size to block over for matrices for performance purposes
-   integer(default_int), parameter :: min_n_elements_parallel = 1024*1024
-    !! If an array (vector or matrix) has more than these elements, it will
-    !! use the openmp threaded parallelism otherwise it will use Fortran intrinsics
-    !! this will only be a problem for really large arrays
 
 contains
 
-   subroutine fill_vector_int32(vector, alpha)
+   subroutine fill_vector_int32(vector, alpha, threaded)
       integer(int32), intent(inout) :: vector(:)
       integer(int32), intent(in)    :: alpha
-      integer(default_int) :: i, n_elements
-      n_elements = size(vector, 1)
-      if (n_elements > min_n_elements_parallel) then
+      logical, intent(in), optional :: threaded
+      integer(default_int) :: i
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(vector, 1)
             vector(i) = alpha
@@ -124,12 +120,15 @@ contains
 
    end subroutine fill_vector_int32
 
-   subroutine fill_vector_int64(vector, alpha)
+   subroutine fill_vector_int64(vector, alpha, threaded)
       integer(int64), intent(inout) :: vector(:)
       integer(int64), intent(in)    :: alpha
-      integer(default_int) :: i, n_elements
-      n_elements = size(vector, 1)
-      if (n_elements > min_n_elements_parallel) then
+      logical, intent(in), optional :: threaded
+      integer(default_int) :: i
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(vector, 1)
             vector(i) = alpha
@@ -141,12 +140,15 @@ contains
 
    end subroutine fill_vector_int64
 
-   subroutine fill_vector_sp(vector, alpha)
+   subroutine fill_vector_sp(vector, alpha, threaded)
       real(sp), intent(inout) :: vector(:)
       real(sp), intent(in)    :: alpha
-      integer(default_int) :: i, n_elements
-      n_elements = size(vector, 1)
-      if (n_elements > min_n_elements_parallel) then
+      logical, intent(in), optional :: threaded
+      integer(default_int) :: i
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(vector, 1)
             vector(i) = alpha
@@ -158,12 +160,15 @@ contains
 
    end subroutine fill_vector_sp
 
-   subroutine fill_vector_dp(vector, alpha)
+   subroutine fill_vector_dp(vector, alpha, threaded)
       real(dp), intent(inout) :: vector(:)
       real(dp), intent(in)    :: alpha
-      integer(default_int) :: i, n_elements
-      n_elements = size(vector, 1)
-      if (n_elements > min_n_elements_parallel) then
+      logical, intent(in), optional :: threaded
+      integer(default_int) :: i
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(vector, 1)
             vector(i) = alpha
@@ -175,15 +180,18 @@ contains
 
    end subroutine fill_vector_dp
 
-   subroutine fill_matrix_int32(matrix, alpha)
+   subroutine fill_matrix_int32(matrix, alpha, threaded)
       integer(int32), intent(inout) :: matrix(:, :)
       integer(int32), intent(in)    :: alpha
       integer(default_int) :: i, j, rows, cols
-      integer(default_int) :: ii, jj, n_elements
+      integer(default_int) :: ii, jj
+      logical, intent(in), optional :: threaded
       rows = size(matrix, 1)
       cols = size(matrix, 2)
-      n_elements = rows*cols
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -200,15 +208,18 @@ contains
       end if
    end subroutine fill_matrix_int32
 
-   subroutine fill_matrix_int64(matrix, alpha)
+   subroutine fill_matrix_int64(matrix, alpha, threaded)
       integer(int64), intent(inout) :: matrix(:, :)
       integer(int64), intent(in)    :: alpha
       integer(default_int) :: i, j, rows, cols
-      integer(default_int) :: ii, jj, n_elements
+      integer(default_int) :: ii, jj
+      logical, intent(in), optional :: threaded
       rows = size(matrix, 1)
       cols = size(matrix, 2)
-      n_elements = rows*cols
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -225,15 +236,18 @@ contains
       end if
    end subroutine fill_matrix_int64
 
-   subroutine fill_matrix_sp(matrix, alpha)
+   subroutine fill_matrix_sp(matrix, alpha, threaded)
       real(sp), intent(inout) :: matrix(:, :)
       real(sp), intent(in)    :: alpha
       integer(default_int) :: i, j, rows, cols
-      integer(default_int) :: ii, jj, n_elements
+      integer(default_int) :: ii, jj
+      logical, intent(in), optional :: threaded
       rows = size(matrix, 1)
       cols = size(matrix, 2)
-      n_elements = rows*cols
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -250,15 +264,18 @@ contains
       end if
    end subroutine fill_matrix_sp
 
-   subroutine fill_matrix_dp(matrix, alpha)
+   subroutine fill_matrix_dp(matrix, alpha, threaded)
       real(dp), intent(inout) :: matrix(:, :)
       real(dp), intent(in)    :: alpha
       integer(default_int) :: i, j, rows, cols
-      integer(default_int) :: ii, jj, n_elements
+      integer(default_int) :: ii, jj
+      logical, intent(in), optional :: threaded
       rows = size(matrix, 1)
       cols = size(matrix, 2)
-      n_elements = rows*cols
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -275,15 +292,18 @@ contains
       end if
    end subroutine fill_matrix_dp
 
-   subroutine copy_vector_int32(dest, source)
+   subroutine copy_vector_int32(dest, source, threaded)
       integer(int32), intent(inout) :: dest(:)
       integer(int32), intent(in)    :: source(:)
-      integer(default_int) :: i, n_elements
+      logical, intent(in), optional :: threaded
+      integer(default_int) :: i
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
-      n_elements = size(dest, 1)
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
             dest(i) = source(i)
@@ -294,15 +314,18 @@ contains
       end if
    end subroutine copy_vector_int32
 
-   subroutine copy_vector_int64(dest, source)
+   subroutine copy_vector_int64(dest, source, threaded)
       integer(int64), intent(inout) :: dest(:)
       integer(int64), intent(in)    :: source(:)
-      integer(default_int) :: i, n_elements
+      logical, intent(in), optional :: threaded
+      integer(default_int) :: i
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
-      n_elements = size(dest, 1)
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
             dest(i) = source(i)
@@ -313,15 +336,18 @@ contains
       end if
    end subroutine copy_vector_int64
 
-   subroutine copy_vector_sp(dest, source)
+   subroutine copy_vector_sp(dest, source, threaded)
       real(sp), intent(inout) :: dest(:)
       real(sp), intent(in)    :: source(:)
-      integer(default_int) :: i, n_elements
+      logical, intent(in), optional :: threaded
+      integer(default_int) :: i
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
-      n_elements = size(dest, 1)
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
             dest(i) = source(i)
@@ -332,15 +358,18 @@ contains
       end if
    end subroutine copy_vector_sp
 
-   subroutine copy_vector_dp(dest, source)
+   subroutine copy_vector_dp(dest, source, threaded)
       real(dp), intent(inout) :: dest(:)
       real(dp), intent(in)    :: source(:)
-      integer(default_int) :: i, n_elements
+      logical, intent(in), optional :: threaded
+      integer(default_int) :: i
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
-      n_elements = size(dest, 1)
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
             dest(i) = source(i)
@@ -351,18 +380,21 @@ contains
       end if
    end subroutine copy_vector_dp
 
-   subroutine copy_matrix_int32(dest, source)
+   subroutine copy_matrix_int32(dest, source, threaded)
       integer(int32), intent(inout) :: dest(:, :)
       integer(int32), intent(in)    :: source(:, :)
+      logical, intent(in), optional :: threaded
       integer(default_int) :: i, j, rows, cols
-      integer(default_int) :: ii, jj, n_elements
+      integer(default_int) :: ii, jj
       if (size(dest, 1) /= size(source, 1) .or. size(dest, 2) /= size(source, 2)) then
          error stop "Matrix size mismatch"
       end if
       rows = size(source, 1)
       cols = size(source, 2)
-      n_elements = rows*cols
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -379,18 +411,21 @@ contains
       end if
    end subroutine copy_matrix_int32
 
-   subroutine copy_matrix_int64(dest, source)
+   subroutine copy_matrix_int64(dest, source, threaded)
       integer(int64), intent(inout) :: dest(:, :)
       integer(int64), intent(in)    :: source(:, :)
+      logical, intent(in), optional :: threaded
       integer(default_int) :: i, j, rows, cols
-      integer(default_int) :: ii, jj, n_elements
+      integer(default_int) :: ii, jj
       if (size(dest, 1) /= size(source, 1) .or. size(dest, 2) /= size(source, 2)) then
          error stop "Matrix size mismatch"
       end if
       rows = size(source, 1)
       cols = size(source, 2)
-      n_elements = rows*cols
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -407,18 +442,21 @@ contains
       end if
    end subroutine copy_matrix_int64
 
-   subroutine copy_matrix_sp(dest, source)
+   subroutine copy_matrix_sp(dest, source, threaded)
       real(sp), intent(inout) :: dest(:, :)
       real(sp), intent(in)    :: source(:, :)
+      logical, intent(in), optional :: threaded
       integer(default_int) :: i, j, rows, cols
-      integer(default_int) :: ii, jj, n_elements
+      integer(default_int) :: ii, jj
       if (size(dest, 1) /= size(source, 1) .or. size(dest, 2) /= size(source, 2)) then
          error stop "Matrix size mismatch"
       end if
       rows = size(source, 1)
       cols = size(source, 2)
-      n_elements = rows*cols
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -435,18 +473,21 @@ contains
       end if
    end subroutine copy_matrix_sp
 
-   subroutine copy_matrix_dp(dest, source)
+   subroutine copy_matrix_dp(dest, source, threaded)
       real(dp), intent(inout) :: dest(:, :)
       real(dp), intent(in)    :: source(:, :)
+      logical, intent(in), optional :: threaded
       integer(default_int) :: i, j, rows, cols
-      integer(default_int) :: ii, jj, n_elements
+      integer(default_int) :: ii, jj
       if (size(dest, 1) /= size(source, 1) .or. size(dest, 2) /= size(source, 2)) then
          error stop "Matrix size mismatch"
       end if
       rows = size(source, 1)
       cols = size(source, 2)
-      n_elements = rows*cols
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -463,11 +504,11 @@ contains
       end if
    end subroutine copy_matrix_dp
 
-   subroutine transpose_matrix_int32(A, B)
+   subroutine transpose_matrix_int32(A, B, threaded)
       integer(int32), intent(in)  :: A(:, :)
       integer(int32), intent(out) :: B(:, :)
+      logical, intent(in), optional :: threaded
       integer(default_int) :: i, j, ii, jj, rows, cols
-      integer(default_int) :: n_elements
 
       rows = size(A, 1)
       cols = size(A, 2)
@@ -476,9 +517,11 @@ contains
          error stop "transpose: size mismatch"
       end if
 
-      n_elements = rows*cols
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
 
-      if (n_elements > min_n_elements_parallel) then
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -495,11 +538,11 @@ contains
       end if
    end subroutine transpose_matrix_int32
 
-   subroutine transpose_matrix_int64(A, B)
+   subroutine transpose_matrix_int64(A, B, threaded)
       integer(int64), intent(in)  :: A(:, :)
       integer(int64), intent(out) :: B(:, :)
+      logical, intent(in), optional :: threaded
       integer(default_int) :: i, j, ii, jj, rows, cols
-      integer(default_int) :: n_elements
 
       rows = size(A, 1)
       cols = size(A, 2)
@@ -508,9 +551,11 @@ contains
          error stop "transpose: size mismatch"
       end if
 
-      n_elements = rows*cols
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
 
-      if (n_elements > min_n_elements_parallel) then
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -527,11 +572,11 @@ contains
       end if
    end subroutine transpose_matrix_int64
 
-   subroutine transpose_matrix_sp(A, B)
+   subroutine transpose_matrix_sp(A, B, threaded)
       real(sp), intent(in)  :: A(:, :)
       real(sp), intent(out) :: B(:, :)
+      logical, intent(in), optional :: threaded
       integer(default_int) :: i, j, ii, jj, rows, cols
-      integer(default_int) :: n_elements
 
       rows = size(A, 1)
       cols = size(A, 2)
@@ -540,9 +585,11 @@ contains
          error stop "transpose: size mismatch"
       end if
 
-      n_elements = rows*cols
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
 
-      if (n_elements > min_n_elements_parallel) then
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -559,11 +606,11 @@ contains
       end if
    end subroutine transpose_matrix_sp
 
-   subroutine transpose_matrix_dp(A, B)
+   subroutine transpose_matrix_dp(A, B, threaded)
       real(dp), intent(in)  :: A(:, :)
       real(dp), intent(out) :: B(:, :)
+      logical, intent(in), optional :: threaded
       integer(default_int) :: i, j, ii, jj, rows, cols
-      integer(default_int) :: n_elements
 
       rows = size(A, 1)
       cols = size(A, 2)
@@ -572,9 +619,11 @@ contains
          error stop "transpose: size mismatch"
       end if
 
-      n_elements = rows*cols
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
 
-      if (n_elements > min_n_elements_parallel) then
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -591,15 +640,18 @@ contains
       end if
    end subroutine transpose_matrix_dp
 
-   function sum_vector_int32(vector) result(res)
+   function sum_vector_int32(vector, threaded) result(res)
       integer(int32), intent(in)  :: vector(:)
+      logical, intent(in), optional :: threaded
       integer(int32) :: res
-      integer(default_int) :: i, n_elements
+      integer(default_int) :: i
       res = 0_int32
-      n_elements = size(vector, 1)
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do private(i) collapse(1) reduction(+:res)
-         do i = 1, n_elements
+         do i = 1, size(vector, 1)
             res = res + vector(i)
          end do
          !$omp end parallel do
@@ -607,15 +659,18 @@ contains
          res = sum(vector)
       end if
    end function sum_vector_int32
-   function sum_vector_int64(vector) result(res)
+   function sum_vector_int64(vector, threaded) result(res)
       integer(int64), intent(in)  :: vector(:)
+      logical, intent(in), optional :: threaded
       integer(int64) :: res
-      integer(default_int) :: i, n_elements
+      integer(default_int) :: i
       res = 0_int64
-      n_elements = size(vector, 1)
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do private(i) collapse(1) reduction(+:res)
-         do i = 1, n_elements
+         do i = 1, size(vector, 1)
             res = res + vector(i)
          end do
          !$omp end parallel do
@@ -623,15 +678,18 @@ contains
          res = sum(vector)
       end if
    end function sum_vector_int64
-   function sum_vector_sp(vector) result(res)
+   function sum_vector_sp(vector, threaded) result(res)
       real(sp), intent(in)  :: vector(:)
+      logical, intent(in), optional :: threaded
       real(sp) :: res
-      integer(default_int) :: i, n_elements
+      integer(default_int) :: i
       res = 0_sp
-      n_elements = size(vector, 1)
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do private(i) collapse(1) reduction(+:res)
-         do i = 1, n_elements
+         do i = 1, size(vector, 1)
             res = res + vector(i)
          end do
          !$omp end parallel do
@@ -639,15 +697,18 @@ contains
          res = sum(vector)
       end if
    end function sum_vector_sp
-   function sum_vector_dp(vector) result(res)
+   function sum_vector_dp(vector, threaded) result(res)
       real(dp), intent(in)  :: vector(:)
+      logical, intent(in), optional :: threaded
       real(dp) :: res
-      integer(default_int) :: i, n_elements
+      integer(default_int) :: i
       res = 0_dp
-      n_elements = size(vector, 1)
-      if (n_elements > min_n_elements_parallel) then
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
+      if (use_threaded) then
          !$omp parallel do private(i) collapse(1) reduction(+:res)
-         do i = 1, n_elements
+         do i = 1, size(vector, 1)
             res = res + vector(i)
          end do
          !$omp end parallel do
@@ -656,17 +717,20 @@ contains
       end if
    end function sum_vector_dp
 
-   function sum_matrix_int32(matrix) result(res)
+   function sum_matrix_int32(matrix, threaded) result(res)
       integer(int32), intent(in) :: matrix(:, :)
+      logical, intent(in), optional :: threaded
       integer(int32) :: res
-      integer(default_int) :: cols, rows, n_elements, i, j, ii, jj
+      integer(default_int) :: cols, rows, i, j, ii, jj
 
       rows = size(matrix, 1)
       cols = size(matrix, 2)
 
-      n_elements = rows*cols
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
       res = 0_int32
-      if (n_elements > min_n_elements_parallel) then
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -684,17 +748,20 @@ contains
 
    end function sum_matrix_int32
 
-   function sum_matrix_int64(matrix) result(res)
+   function sum_matrix_int64(matrix, threaded) result(res)
       integer(int64), intent(in) :: matrix(:, :)
+      logical, intent(in), optional :: threaded
       integer(int64) :: res
-      integer(default_int) :: cols, rows, n_elements, i, j, ii, jj
+      integer(default_int) :: cols, rows, i, j, ii, jj
 
       rows = size(matrix, 1)
       cols = size(matrix, 2)
 
-      n_elements = rows*cols
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
       res = 0_int64
-      if (n_elements > min_n_elements_parallel) then
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -712,17 +779,20 @@ contains
 
    end function sum_matrix_int64
 
-   function sum_matrix_sp(matrix) result(res)
+   function sum_matrix_sp(matrix, threaded) result(res)
       real(sp), intent(in) :: matrix(:, :)
+      logical, intent(in), optional :: threaded
       real(sp) :: res
-      integer(default_int) :: cols, rows, n_elements, i, j, ii, jj
+      integer(default_int) :: cols, rows, i, j, ii, jj
 
       rows = size(matrix, 1)
       cols = size(matrix, 2)
 
-      n_elements = rows*cols
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
       res = 0_sp
-      if (n_elements > min_n_elements_parallel) then
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -740,17 +810,20 @@ contains
 
    end function sum_matrix_sp
 
-   function sum_matrix_dp(matrix) result(res)
+   function sum_matrix_dp(matrix, threaded) result(res)
       real(dp), intent(in) :: matrix(:, :)
+      logical, intent(in), optional :: threaded
       real(dp) :: res
-      integer(default_int) :: cols, rows, n_elements, i, j, ii, jj
+      integer(default_int) :: cols, rows, i, j, ii, jj
 
       rows = size(matrix, 1)
       cols = size(matrix, 2)
 
-      n_elements = rows*cols
+      if (present(threaded)) then
+         use_threaded = threaded
+      end if
       res = 0_dp
-      if (n_elements > min_n_elements_parallel) then
+      if (use_threaded) then
          !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
