@@ -19,7 +19,6 @@ program main
    !type(json_array), pointer :: my_array, new_array
    !type(json_error), allocatable :: error
    !integer(default_int) :: ierr, rank, size, ival
-   type(pic_timer_type) :: my_timer
    integer(int64), parameter :: size_1 = 512*512*512
    integer(int64), parameter :: size_2 = 1024*1024*1024
    integer(int64), parameter :: size_3 = 2048*2048*2048
