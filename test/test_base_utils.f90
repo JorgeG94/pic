@@ -1,4 +1,5 @@
 module test_suite1
+   use pic_types, only: default_int
    use testdrive, only: new_unittest, unittest_type, error_type, check, test_failed
    use, intrinsic :: iso_fortran_env, only: error_unit
    implicit none
@@ -12,7 +13,7 @@ contains
    subroutine collect_suite1(testsuite)
       !> Collection of tests
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer, parameter :: ntests = 2
+      integer(default_int), parameter :: ntests = 2
 
       allocate (testsuite(ntests))
       testsuite(1) = new_unittest("valid", test_valid)
@@ -30,7 +31,7 @@ contains
 
    subroutine test_invalid(error)
       type(error_type), allocatable, intent(out) :: error
-      integer :: i
+      integer(default_int) :: i
       ! ...
       i = 1
 

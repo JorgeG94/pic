@@ -1,5 +1,6 @@
 program pic_tester
    use, intrinsic :: iso_fortran_env, only: error_unit
+   use pic_types, only: default_int, int32
    use testdrive, only: run_testsuite, new_testsuite, testsuite_type, &
    & select_suite, run_selected, get_argument
    use test_pic_blas_interfaces_sgemm, only: collect_pic_sgemm_tests
@@ -14,14 +15,14 @@ program pic_tester
    use test_pic_blas_iamax, only: collect_pic_blas_iamax_tests
    ! add here the module you want to test
    implicit none
-   integer :: stat, is
-   integer, parameter :: ntest_suites = 10
+   integer(int32) :: stat, is
+   integer(default_int), parameter :: ntest_suites = 10
     !! number of tests, this number needs to be modified and equal to the number of files we have with unit tests
    character(len=:), allocatable :: suite_name, test_name
    type(testsuite_type), allocatable :: testsuites(:)
    character(len=*), parameter :: fmt = '("#", *(1x, a))'
 
-   stat = 0
+   stat = 0_int32
    allocate (testsuites(ntest_suites))
    ! here you add another test suite to the array
    testsuites(1) = new_testsuite("pic_blas_sgemm", collect_pic_sgemm_tests)

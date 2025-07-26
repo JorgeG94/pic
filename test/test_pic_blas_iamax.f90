@@ -10,7 +10,7 @@ contains
 
    subroutine collect_pic_blas_iamax_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer, parameter :: ntests = 2
+      integer(default_int), parameter :: ntests = 2
       allocate (testsuite(ntests))
       testsuite(1) = new_unittest("test_siamax", test_siamax)
       testsuite(2) = new_unittest("test_diamax", test_diamax)
@@ -19,7 +19,7 @@ contains
    subroutine test_siamax(error)
       type(error_type), allocatable, intent(out) :: error
       real(sp) :: x(3)
-      integer :: result, expected
+      integer(default_int) :: result, expected
       real(sp), parameter :: tol = 1.0e-6_sp
 
       ! Initialize vector
@@ -35,7 +35,7 @@ contains
    subroutine test_diamax(error)
       type(error_type), allocatable, intent(out) :: error
       real(dp) :: x(3)
-      integer :: result, expected
+      integer(default_int) :: result, expected
       real(dp), parameter :: tol = 1.0e-6_dp
 
       ! Initialize vector

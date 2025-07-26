@@ -4,18 +4,25 @@
 
 module pic_string_utils
 !! General string utilities
-   use pic_types, only: sp, dp, int32, int64
+   use pic_types, only: sp, dp, int32, int64, default_int
    implicit none
    ! Generic interface for to_string to handle different types
    private
-   integer, parameter :: default_dp_precision = 12
-   integer :: dp_precision = default_dp_precision
+   integer(default_int), parameter :: default_dp_precision = 12
+   integer(default_int) :: dp_precision = default_dp_precision
 
    public :: to_string, pad, to_upper
    public :: set_precision, get_precision
 
    interface to_string
-     !! public interface to transform variables to strings
+      !! converts a variable of type (int32, int64, sp, dp, char, logical)
+      !! to a "string" which is just a collecting of chars.
+      !!
+      !! Usage result = to_string(variable)
+      !!
+      !! @note the functions here are not elemental so they won't work for
+      !! arrays. Please use pic_print_array_v2 module for this
+      !!
       module procedure to_string_int32
       module procedure to_string_int64
       module procedure to_string_sp
@@ -24,12 +31,48 @@ module pic_string_utils
       module procedure to_string_logical
    end interface
 
+   interface to_upper
+    !! takes a character variable and transforms it to uppercase
+    !!
+    !! usage var = to_upper("hello")
+    !!
+      module procedure to_upper
+   end interface
+
+   interface pad
+    !! adds a number X of spaces to the left of a "string" whcih is just a
+    !! collection of characters. Mostly used for nice printing
+    !!
+    !! Usage: var = pad("hello", n_spaces)
+    !!
+      module procedure pad
+   end interface
+
+   interface set_precision
+    !! This routine overrides the default dp precision used for
+    !! printing strings in the to_string function, the default
+    !! is : integer(default_int), parameter :: default_dp_precision = 12
+    !!
+    !! Usage: call set_precision(variable) where variable is default_int
+    !!
+      module procedure set_precision
+   end interface
+
+   interface get_precision
+    !! Obtain the current precision being used to print variables to strings
+    !!
+    !! Usage: precision = get_precision()
+    !!
+    !! returns a default_int result
+      module procedure get_precision
+   end interface
+
 contains
 
    function to_upper(str) result(upper_str)
       character(len=*), intent(in) :: str
       character(len=len(str)) :: upper_str
-      integer :: i
+      integer(default_int) :: i
       character :: ch
 
       do i = 1, len(str)
@@ -45,9 +88,9 @@ contains
    function pad(s, width) result(padded)
     !! function to pad a string with a certain number of characters for nice printing
       character(len=*), intent(in) :: s
-      integer, intent(in) :: width
+      integer(default_int), intent(in) :: width
       character(len=:), allocatable :: padded
-      integer :: len_s
+      integer(default_int) :: len_s
 
       len_s = len_trim(s)
       if (len_s >= width) then
@@ -59,7 +102,7 @@ contains
 
    subroutine set_precision(precision)
       !! Set the precision for real numbers
-      integer, intent(in) :: precision
+      integer(default_int), intent(in) :: precision
       if (precision > 0) then
          dp_precision = precision
       else
@@ -70,7 +113,7 @@ contains
 
    function get_precision() result(precision)
       !! Get the current precision for real numbers
-      integer :: precision
+      integer(default_int) :: precision
       precision = dp_precision
    end function get_precision
 

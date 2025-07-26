@@ -33,8 +33,8 @@ program main
 
    ! block
    !   type(pic_timer) :: my_timer
-   !   integer :: i
-   !   integer, parameter :: n_loops = 200000000
+   !   integer(default_int) :: i
+   !   integer(default_int), parameter :: n_loops = 200000000
    !   real(dp) :: s
    !   real(dp) :: elapsed_time
    !   s = 0.0_dp
@@ -64,7 +64,7 @@ program main
    !block
    !   integer(int32) :: i, j, k
    !   real(dp), allocatable :: test_vec(:, :)
-   !   integer, parameter :: sizee = 2
+   !   integer(default_int), parameter :: sizee = 2
 
    !   allocate (test_vec(sizee, sizee))
 

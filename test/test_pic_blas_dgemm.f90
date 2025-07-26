@@ -10,7 +10,7 @@ contains
 
    subroutine collect_pic_dgemm_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer, parameter :: ntests = 8
+      integer(default_int), parameter :: ntests = 8
       allocate (testsuite(ntests))
       testsuite(1) = new_unittest("test_dgemm_basic", test_dgemm_basic)
       testsuite(2) = new_unittest("test_dgemm_transpose_a", test_dgemm_transpose_a)
