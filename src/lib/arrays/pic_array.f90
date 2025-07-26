@@ -1,5 +1,8 @@
-
+!! pic array contains L0.5 BLAS level routines, as in things that could be use in
+!! lieu of blas if you don't have it but if you do, please don't use these routines
 module pic_array
+  !! Provides interfaces to array operating routines, current support is only for
+  !! 1 and 2d arrays with plans to cover up to 4d ones. I don't know why you'd use 5?
    use pic_types, only: sp, dp, int32, int64, default_int
    implicit none
    private
@@ -18,6 +21,7 @@ module pic_array
   !! size of vector/matrices.
   !!
   !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
+  !!
       module procedure fill_vector_int32
       module procedure fill_vector_int64
       module procedure fill_vector_sp
@@ -39,6 +43,7 @@ module pic_array
   !! size of vector/matrices.
   !!
   !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
+  !!
       module procedure copy_vector_int32
       module procedure copy_vector_int64
       module procedure copy_vector_sp
