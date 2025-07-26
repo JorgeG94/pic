@@ -1,0 +1,298 @@
+#:set TYPES = ['int32', 'int64', 'sp', 'dp']
+
+#:set FORTRAN_TYPES = { &
+    'int32': 'integer(int32)',&
+    'int64': 'integer(int64)', &
+    'sp':    'real(sp)', &
+    'dp':    'real(dp)' &
+}
+
+module pic_array
+  use pic_types, only: sp, dp, int32, int64, default_int
+  implicit none
+  private
+
+  public :: fill, copy, pic_transpose, pic_sum
+
+  interface fill
+  !! fill provides a generic interface to assing a value
+  !! alpha of types (int32, int64, sp, dp) as defined in pic_types.F90
+  !! The inteface supports filling 1d and 2d arrays of the specified
+  !! variables
+  !!
+  !! Usage: call fill(array, value)
+  !!
+  !! This subroutine is threaded for performance purposes beyond a certian
+  !! size of vector/matrices.
+  !!
+  !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
+  #:for T in TYPES
+    module procedure fill_vector_${T}$
+  #:endfor
+  #:for T in TYPES
+    module procedure fill_matrix_${T}$
+  #:endfor
+  end interface
+
+  interface copy
+  !! copy provides a blas-less implementation of xcopy where x is (i,s,d) icopy, scopy, dcopy
+  !! if you built pic with BLAS use the copy interface provided there, I will not beat BLAS
+  !! copy is implemented for (int32, int64, sp, dp) for 1 and 2d arrays of the same types
+  !!
+  !! Usage: call copy(destination, source)
+  !!
+  !! This subroutine is threaded for performance purposes beyond a certian
+  !! size of vector/matrices.
+  !!
+  !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
+  #:for T in TYPES
+    module procedure copy_vector_${T}$
+  #:endfor
+  #:for T in TYPES
+    module procedure copy_matrix_${T}$
+  #:endfor
+  end interface
+
+  interface pic_transpose
+  !! pic_transpose provides a blas-less, threaded alternative to the Fortran transpose intrinsic
+  !! which will be slow for large matrix sizes. pic_transpose does not assume symmetric matrices
+  !!
+  !! pic_transpose is implemented for (int32, int64, sp, dp) 2d arrays
+  !!
+  !! Usage: call pic_transpose(matrix_to_transpose, result)
+  !!
+  !! This subroutine is threaded for performance purposes beyond a certian
+  !! size of vector/matrices.
+  !!
+  !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
+  !!
+  #:for T in TYPES
+    module procedure transpose_matrix_${T}$
+  #:endfor
+  end interface
+
+  interface pic_sum
+  !! pic_sum provides a threaded alternative to the sum(array) Fortran intrinsic which will
+  !! be too slow for large sizes of vectors and matrices. Note that this provides the total
+  !! sum. As opposed to the blas alternative XASUM which does the absolute sum
+  !!
+  !! pic_sum is implemented for (int32, int64, sp, dp) 1 and 2d arrays
+  !!
+  !! Usage: result = pic_sum(array)
+  !!
+  !! This subroutine is threaded for performance purposes beyond a certian
+  !! size of vector/matrices.
+  !!
+  !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
+  !!
+  #: for T in TYPES
+    module procedure sum_vector_${T}$
+  #:endfor
+  #: for T in TYPES
+    module procedure sum_matrix_${T}$
+  #:endfor
+  end interface pic_sum
+
+  ! potentially implement a shallow copy? nah?
+  integer(default_int), parameter :: block_size = 32
+    !! This is the size to block over for matrices for performance purposes
+  integer(default_int), parameter :: min_n_elements_parallel = 1024*1024
+    !! If an array (vector or matrix) has more than these elements, it will
+    !! use the openmp threaded parallelism otherwise it will use Fortran intrinsics
+    !! this will only be a problem for really large arrays
+
+contains
+
+#:for T in TYPES
+  #:set FTYPE = FORTRAN_TYPES[T]
+
+  subroutine fill_vector_${T}$(vector, alpha)
+    ${FTYPE}$, intent(inout) :: vector(:)
+    ${FTYPE}$, intent(in)    :: alpha
+    integer(default_int) :: i, n_elements
+    n_elements = size(vector,1)
+    if(n_elements > min_n_elements_parallel) then
+      !$omp parallel do collapse(1) private(i)
+        do i = 1, size(vector,1)
+          vector(i) = alpha
+        end do
+      !$omp end parallel do
+    else
+      vector = alpha
+    endif
+
+  end subroutine fill_vector_${T}$
+#:endfor
+
+#:for T in TYPES
+  #:set FTYPE = FORTRAN_TYPES[T]
+
+  subroutine fill_matrix_${T}$(matrix, alpha)
+    ${FTYPE}$, intent(inout) :: matrix(:,:)
+    ${FTYPE}$, intent(in)    :: alpha
+    integer(default_int) :: i, j, rows, cols
+    integer(default_int) :: ii, jj, n_elements
+    rows = size(matrix, 1)
+    cols = size(matrix, 2)
+    n_elements = rows*cols
+    if(n_elements > min_n_elements_parallel) then
+    !$omp parallel do collapse(2) private(i,j,ii,jj)
+    do jj = 1, cols, block_size
+      do ii = 1, rows, block_size
+        do j = jj, min(jj + block_size - 1, cols)
+          do i = ii, min(ii + block_size - 1, rows)
+            matrix(i,j) = alpha
+          end do
+        end do
+      end do
+    end do
+    !$omp end parallel do
+    else
+      matrix = alpha
+    endif
+  end subroutine fill_matrix_${T}$
+#:endfor
+
+#:for T in TYPES
+  #:set FTYPE = FORTRAN_TYPES[T]
+  subroutine copy_vector_${T}$(dest, source)
+    ${FTYPE}$, intent(inout) :: dest(:)
+    ${FTYPE}$, intent(in)    :: source(:)
+    integer(default_int) :: i, n_elements
+    if (size(dest,1) /= size(source,1)) then
+      error stop "Vector size mismatch"
+    end if
+    n_elements = size(dest,1)
+    if(n_elements > min_n_elements_parallel) then
+    !$omp paralle do collapse(1) private(i)
+    do i = 1, size(dest,1)
+      dest(i) = source(i)
+    end do
+    !$omp end parallel do
+    else
+      dest = source
+    endif
+  end subroutine copy_vector_${T}$
+
+#:endfor
+#:for T in TYPES
+  #:set FTYPE = FORTRAN_TYPES[T]
+  subroutine copy_matrix_${T}$(dest, source)
+    ${FTYPE}$, intent(inout) :: dest(:,:)
+    ${FTYPE}$, intent(in)    :: source(:,:)
+    integer(default_int) :: i, j, rows, cols
+    integer(default_int) :: ii, jj, n_elements
+    if (size(dest,1) /= size(source,1) .or. size(dest,2) /= size(source,2)) then
+      error stop "Matrix size mismatch"
+    end if
+    rows = size(source, 1)
+    cols = size(source, 2)
+    n_elements = rows*cols
+    if(n_elements > min_n_elements_parallel) then
+    !$omp parallel do collapse(2) private(i,j,ii,jj)
+    do jj = 1, cols, block_size
+      do ii = 1, rows, block_size
+        do j = jj, min(jj + block_size - 1, cols)
+          do i = ii, min(ii + block_size - 1, rows)
+            dest(i,j) = source(i,j)
+          end do
+        end do
+      end do
+    end do
+    !$omp end parallel do
+    else
+      dest = source
+    endif
+  end subroutine copy_matrix_${T}$
+
+#:endfor
+
+#:for T in TYPES
+  #:set FTYPE = FORTRAN_TYPES[T]
+
+  subroutine transpose_matrix_${T}$(A, B)
+    ${FTYPE}$, intent(in)  :: A(:,:)
+    ${FTYPE}$, intent(out) :: B(:,:)
+    integer(default_int) :: i, j, ii, jj, rows, cols
+    integer(default_int) :: n_elements
+
+    rows = size(A,1)
+    cols = size(A,2)
+
+    if (size(B,1) /= cols .or. size(B,2) /= rows) then
+      error stop "transpose: size mismatch"
+    end if
+
+    n_elements = rows*cols
+
+    if(n_elements > min_n_elements_parallel) then
+    !$omp parallel do collapse(2) private(i,j,ii,jj)
+    do jj = 1, cols, block_size
+      do ii = 1, rows, block_size
+        do j = jj, min(jj+block_size-1, cols)
+          do i = ii, min(ii+block_size-1, rows)
+            B(j,i) = A(i,j)
+          end do
+        end do
+      end do
+    end do
+    !$omp end parallel do
+    else
+      B = transpose(A)
+    endif
+  end subroutine transpose_matrix_${T}$
+#:endfor
+
+#:for T in TYPES
+  #:set FTYPE = FORTRAN_TYPES[T]
+  function sum_vector_${T}$(vector) result(res)
+    ${FTYPE}$, intent(in)  :: vector(:)
+    ${FTYPE}$ :: res
+    integer(default_int) :: i, n_elements
+    res = 0_${T}$
+    n_elements = size(vector,1)
+    if(n_elements > min_n_elements_parallel) then
+      !$omp parallel do private(i) collapse(1) reduction(+:res)
+      do i = 1, n_elements
+        res = res + vector(i)
+      end do
+      !$omp end parallel do
+    else
+      res = sum(vector)
+    endif
+  end function sum_vector_${T}$
+#:endfor
+
+#:for T in TYPES
+  #:set FTYPE = FORTRAN_TYPES[T]
+  function sum_matrix_${T}$(matrix) result(res)
+    ${FTYPE}$, intent(in) :: matrix(:,:)
+    ${FTYPE}$ :: res
+    integer(default_int) :: cols, rows, n_elements, i, j, ii, jj
+
+    rows = size(matrix,1)
+    cols = size(matrix,2)
+
+    n_elements = rows*cols
+    res = 0_${T}$
+    if(n_elements > min_n_elements_parallel) then
+    !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
+    do jj = 1, cols, block_size
+      do ii = 1, rows, block_size
+        do j = jj, min(jj+block_size-1, cols)
+          do i = ii, min(ii+block_size-1, rows)
+            res = res + matrix(i,j)
+          end do
+        end do
+      end do
+    end do
+    !$omp end parallel do
+    else
+      res = sum(matrix)
+    endif
+
+  end function sum_matrix_${T}$
+
+#:endfor
+
+end module pic_array
