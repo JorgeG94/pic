@@ -9,8 +9,16 @@ module pic_array
    private
 
    public :: fill, copy, pic_transpose, pic_sum
+   public :: set_threading
 
    logical :: use_threaded = .false.
+
+   interface set_threading
+   !! set_threading sets the threading mode for the array routines
+   !! this will set the use_threaded variable to true or false depending on the input
+   !! Usage: call set_threading(.true.) or call set_threading(.false.)
+      module procedure set_threading
+   end interface
 
    interface fill
   !! fill provides a generic interface to assing a value
@@ -99,6 +107,15 @@ module pic_array
     !! This is the size to block over for matrices for performance purposes
 
 contains
+
+   subroutine set_threading(threaded)
+      !! set the threading mode for the array routines, this will set the use_threaded variable
+      !! to true or false depending on the input
+      !!
+      !! Usage: call set_threading(.true.) or call set_threading(.false.)
+      logical, intent(in) :: threaded
+      use_threaded = threaded
+   end subroutine set_threading
 
    subroutine fill_vector_int32(vector, alpha, threaded)
       integer(int32), intent(inout) :: vector(:)
