@@ -9,8 +9,6 @@ program main
    use pic_types, only: dp, default_int, sp, int32, int64
    use pic_matrix_printer_v2, only: print_array_v2
    use pic_string_utils, only: to_string, set_precision
-   use pic_array
-   use pic_timers
    implicit none
    !use pic_mpi
    !use pic_timers
@@ -33,60 +31,6 @@ program main
 
    call pic_print_banner()
 
-   print *, "Allocating vector of size", size_1
-   call my_timer%start()
-   allocate (symA(size_1))
-   call fill(symA, 1.0_dp)
-   sum_val = pic_sum(symA)
-   call my_timer%stop()
-   call my_timer%print_time()
-   deallocate (symA)
-
-   print *, "Allocating vector of size", size_2
-   call my_timer%start()
-   allocate (symA(size_2))
-   call fill(symA, 1.0_dp)
-   sum_val = pic_sum(symA)
-   call my_timer%stop()
-   call my_timer%print_time()
-   deallocate (symA)
-
-   print *, "Allocating vector of size", size_3
-   call my_timer%start()
-   allocate (symA(size_3))
-   call fill(symA, 1.0_dp)
-   sum_val = pic_sum(symA)
-   call my_timer%stop()
-   call my_timer%print_time()
-   deallocate (symA)
-
-   print *, "*************************"
-   print *, "Allocating vector of size", size_1
-   call my_timer%start()
-   allocate (symA(size_1))
-   call fill(symA, 1.0_dp, .true.)
-   sum_val = pic_sum(symA, .true.)
-   call my_timer%stop()
-   call my_timer%print_time()
-   deallocate (symA)
-
-   print *, "Allocating vector of size", size_2
-   call my_timer%start()
-   allocate (symA(size_2))
-   call fill(symA, 1.0_dp, .true.)
-   sum_val = pic_sum(symA, .true.)
-   call my_timer%stop()
-   call my_timer%print_time()
-   deallocate (symA)
-
-   print *, "Allocating vector of size", size_3
-   call my_timer%start()
-   allocate (symA(size_3))
-   call fill(symA, 1.0_dp, .true.)
-   sum_val = pic_sum(symA, .true.)
-   call my_timer%stop()
-   call my_timer%print_time()
-   deallocate (symA)
    !call comm%init()
 
    !if (comm%m_rank == 0) then
