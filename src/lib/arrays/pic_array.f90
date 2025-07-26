@@ -20,6 +20,12 @@ module pic_array
       module procedure set_threading
    end interface
 
+   interface get_threading_mode
+   !! get_threading_mode returns the current threading mode for the array routines
+   !! Usage: mode = get_threading_mode()
+      module procedure get_threading_mode
+   end interface get_threading_mode
+
    interface fill
   !! fill provides a generic interface to assing a value
   !! alpha of types (int32, int64, sp, dp) as defined in pic_types.F90
@@ -116,6 +122,13 @@ contains
       logical, intent(in) :: threaded
       use_threaded = threaded
    end subroutine set_threading
+
+   function get_threading_mode() result(mode)
+      !! get the current threading mode for the array routines
+      !! Usage: mode = get_threading_mode()
+      logical :: mode
+      mode = use_threaded
+   end function get_threading_mode
 
    subroutine fill_vector_int32(vector, alpha, threaded)
       integer(int32), intent(inout) :: vector(:)
