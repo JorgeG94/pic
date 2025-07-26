@@ -284,7 +284,7 @@ contains
       end if
       n_elements = size(dest, 1)
       if (n_elements > min_n_elements_parallel) then
-         !$omp paralle do collapse(1) private(i)
+         !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
             dest(i) = source(i)
          end do
@@ -303,7 +303,7 @@ contains
       end if
       n_elements = size(dest, 1)
       if (n_elements > min_n_elements_parallel) then
-         !$omp paralle do collapse(1) private(i)
+         !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
             dest(i) = source(i)
          end do
@@ -322,7 +322,7 @@ contains
       end if
       n_elements = size(dest, 1)
       if (n_elements > min_n_elements_parallel) then
-         !$omp paralle do collapse(1) private(i)
+         !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
             dest(i) = source(i)
          end do
@@ -341,7 +341,7 @@ contains
       end if
       n_elements = size(dest, 1)
       if (n_elements > min_n_elements_parallel) then
-         !$omp paralle do collapse(1) private(i)
+         !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
             dest(i) = source(i)
          end do
