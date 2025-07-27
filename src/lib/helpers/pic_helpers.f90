@@ -9,6 +9,13 @@ module pic_test_helpers
    public :: dummy_work, is_equal
 
    interface is_equal
+      !! The is equal interface is used to circumvent the fact that Fortran, rightfully, complains about
+      !! comparing two reals without involving a tolerance, i.e. if(a == b) since there is no guarantee that
+      !! the two reals are exactly equal due to floating point precision issues. The functions are defined as elemental
+      !!
+      !! Usage: if (is_equal(a, b)) then
+      !! where a and b are real numbers, and the function will return true if they are
+      !! equal within the tolerance defined in pic_global_definitions.
       module procedure is_equal_sp
       module procedure is_equal_dp
    end interface is_equal
