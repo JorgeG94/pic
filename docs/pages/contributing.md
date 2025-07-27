@@ -49,7 +49,6 @@ can be self explanatory or if they are `module procedure` inside an `interface` 
   !!
   !! This subroutine is threaded for performance purposes if threaded is set to .true.
   !!
-  !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
     module procedure fill_vector_int32
     module procedure fill_vector_int64
     module procedure fill_vector_sp
@@ -60,6 +59,7 @@ can be self explanatory or if they are `module procedure` inside an `interface` 
     module procedure fill_matrix_dp
   end interface
 ```
+
 
 There's really no need to go document each `fill_vector_*` or `fill_matrix_*` procedure, since the interface already provides
 everything we need to know about the procedures within the `fill` interface. Documenting each of these would mean to just
@@ -85,6 +85,8 @@ You can also run `pre-commit run --all-files` to format all the files in the rep
 All our of modules are named using the `pic_` prefix, followed by the name of the module. For example, the module that provides the basic types is called `pic_types`, and the module that provides the BLAS functionality is called `pic_blas_interfaces`. MOst of the time the module name matches the name of the file, if you find an instance where this is not the case, please open an issue or submit a pull request to fix it.
 
 Based on the `file = module_name` convention, there should only be one module per file.
+
+We follow the convention that the `end module` statement should contain the name of the module.
 
 ### Derived type naming convention
 
@@ -121,6 +123,8 @@ For example, in `pic_timer.F90` we have the following interface:
 
 
 You can see that the `start` procedure is mapped to `timer_start`, this way it is more intuitive for people to use `my_timer%start()` instead of `my_timer%timer_start()`. This is a good practice to follow, since it makes the code more readable and easier to use.
+
+We follow the same convention for functions and subroutines, as we do for modules. This is, the `end function` or `end subroutine` statement should contain the name of the function or subroutine.
 
 ## Code reviews
 
