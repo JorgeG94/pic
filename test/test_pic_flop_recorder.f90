@@ -1,7 +1,7 @@
 module test_pic_flop_recorder
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_flop_recorder, only: flop_recorder_type
-   use pic_types, only: int64
+   use pic_types, only: int64, default_int
    implicit none
    private
    public :: collect_pic_flop_recorder_tests
@@ -10,7 +10,7 @@ contains
 
    subroutine collect_pic_flop_recorder_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer, parameter :: ntests = 8
+      integer(default_int), parameter :: ntests = 8
       allocate (testsuite(ntests))
       testsuite(1) = new_unittest("test_flop_recorder_initialization", test_flop_recorder_initialization)
       testsuite(2) = new_unittest("test_flop_recorder_add_single", test_flop_recorder_add_single)
@@ -119,7 +119,7 @@ contains
       type(error_type), allocatable, intent(out) :: error
       type(flop_recorder_type) :: recorder
       integer(int64) :: flops, expected_total
-      integer :: i
+      integer(default_int) :: i
 
       expected_total = 0_int64
       do i = 1, 10

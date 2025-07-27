@@ -12,7 +12,7 @@ contains
 
    subroutine collect_pic_logger_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer, parameter :: ntests = 8
+      integer(default_int), parameter :: ntests = 8
       allocate (testsuite(ntests))
       testsuite(1) = new_unittest("test_logger_configuration", test_logger_configuration)
       testsuite(2) = new_unittest("test_logger_configure", test_logger_configure)
@@ -230,7 +230,7 @@ contains
       character(len=*), parameter :: test_filename = "test_logger_content.log"
       character(len=200) :: line
       logical :: file_exists, found_message
-      integer :: ios, unit_num
+      integer(default_int) :: ios, unit_num
 
       ! Configure file output
       call logger%configure_file_output(test_filename, info_level)

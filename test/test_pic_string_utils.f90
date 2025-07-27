@@ -2,7 +2,7 @@ module test_pic_string_utils
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_string_utils, only: to_string, set_precision, get_precision, pad, &
                                to_upper
-   use pic_types, only: int32, int64, dp, sp
+   use pic_types, only: int32, int64, dp, sp, default_int
    implicit none
    private
 
@@ -12,7 +12,7 @@ contains
 
    subroutine collect_pic_string_utils_tests(testsuite2)
       type(unittest_type), allocatable, intent(out) :: testsuite2(:)
-      integer, parameter :: ntests = 11
+      integer(default_int), parameter :: ntests = 11
       allocate (testsuite2(ntests))
       testsuite2(1) = new_unittest("test_to_string_int32", test_to_string_int32)
       testsuite2(2) = new_unittest("test_to_string_int64", test_to_string_int64)
@@ -88,11 +88,12 @@ contains
 
    subroutine test_set_get_precision(error)
       type(error_type), allocatable, intent(out) :: error
-      integer :: old_precision, new_precision
+      integer(default_int) :: old_precision, new_precision
+      integer(default_int), parameter :: ten = 10_default_int
 
       old_precision = get_precision()
       call check(error, old_precision > 0, "Initial precision should be positive")
-      new_precision = 10
+      new_precision = default_int
       call set_precision(new_precision)
       call check(error, get_precision() == new_precision)
       if (allocated(error)) return
@@ -104,9 +105,10 @@ contains
       type(error_type), allocatable, intent(out) :: error
       character(len=50) :: result
       real(kind=sp), parameter :: value = 123.456_sp
-      integer :: expected_len
+      integer(default_int) :: expected_len
+      integer(default_int), parameter :: six = 6_default_int
 
-      call set_precision(6)  ! Set precision for testing
+      call set_precision(six)  ! Set precision for testing
       result = to_string(value)
       expected_len = len_trim(result)
       ! 6 decimal places + 1 for the decimal point + 3 for the number to the right of the decimal point
@@ -119,9 +121,10 @@ contains
       type(error_type), allocatable, intent(out) :: error
       character(len=50) :: result
       real(kind=dp), parameter :: value = 123.456_dp
-      integer :: expected_len
+      integer(default_int) :: expected_len
+      integer(default_int), parameter :: six = 6_default_int
 
-      call set_precision(6)  ! Set precision for testing
+      call set_precision(six)  ! Set precision for testing
       result = to_string(value)
       expected_len = len_trim(result)
       print *, "Result: ", expected_len, result
@@ -135,14 +138,16 @@ contains
       type(error_type), allocatable, intent(out) :: error
       character(len=:), allocatable :: result
       real(kind=dp), parameter :: value = 123.456_dp
-      integer :: expected_len
+      integer(default_int) :: expected_len
+      integer(default_int), parameter :: three = 3_default_int
+      integer(default_int), parameter :: fifteen = 15_default_int
 
-      call set_precision(3)
+      call set_precision(three)
       result = to_string(value)
-      result = pad(result, 15)
+      result = pad(result, fifteen)
       expected_len = len_trim(result)
       print *, "Result: ", to_string(expected_len)//to_string(result)
-      call check(error, expected_len == 15, "expected length of string is 15")
+      call check(error, expected_len == fifteen, "expected length of string is 15")
       if (allocated(error)) return
    end subroutine test_padding
 

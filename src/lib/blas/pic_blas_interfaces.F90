@@ -16,9 +16,6 @@ module pic_blas_interfaces
    use pic_types, only: sp, dp, default_int
    implicit none
    private
-   ! these are the generic interfaces to the BLAS library
-   public :: blas_asum, blas_axpy, blas_copy, blas_dot, blas_scal, &
-             blas_iamax, blas_gemv, blas_gemm
 
    ! these are the cool overloaded interfaces, the pic_xyz function
    ! has the procedures pic_(type)xyz which will call the correct BLAS routine
@@ -28,20 +25,48 @@ module pic_blas_interfaces
 
    ! tested
    interface pic_gemm
-      !! general interface of the BLAS GEMM routines, will call SGEMM, DGEMM, or ZGEMM
+      !! general interface of the BLAS GEMM routines, will call SGEMM, DGEMM, CGEMM, ZGEMM
+      !!
+      !! Usage: call pic_gemm(A, B, C, [optional] transa, [optional] transb, [optional] alpha, [optional] beta)
+      !!
+      !! where A, B, C are matrices, transa and transb are optional transpose options,
+      !! alpha and beta are optional scaling factors
+      !!
+      !! By default, if not specified transA and transB are "N" (no transpose),
+      !! and alpha and beta are 1.0 and 0.0 respectively.
+      !!
+      !! The matrices A, B, C must be allocatable arrays, we deduce the shapes from them.
       module procedure :: pic_sgemm
       module procedure :: pic_dgemm
       module procedure :: pic_zgemm
    end interface pic_gemm
-   ! tested
+
    interface pic_gemv
-      !! general interface of the BLAS GEMV routines, will call SGEMV, DGEMV
+      !! general interface of the BLAS GEMV routines, will call SGEMV, DGEMV, CGEMV, ZGEMV
+      !!
+      !! Usage: call pic_gemv(A, x, y, [optional] transa, [optional] alpha, [optional] beta)
+      !!
+      !! where A is a matrix, x and y are vectors, transa is an optional transpose option,
+      !! alpha and beta are optional scaling factors.
+      !!
+      !! The matrix A must be an allocatable array, we deduce the shapes from it.
+      !! TransA is "N" (no transpose) by default. And alpha and beta are 1.0 and 0.0 respectively.
+      !!
       module procedure :: pic_sgemv
       module procedure :: pic_dgemv
    end interface pic_gemv
    ! tested
    interface pic_asum
-      !! general interface of the BLAS SASUM routines, will call xASUM
+      !! general interface of the BLAS ASUM routines, will call SASUM, DASUM, SCASUM, DZASUM
+      !!
+      !! Usage: result = pic_asum(x, incx)
+      !!
+      !! where x is a vector and incx is the increment, this will return the sum of the absolute values
+      !! of the elements of x.
+      !!
+      !! The vector x must be an allocatable array, we deduce the shape from it.
+      !! The increment incx is 1 by default.
+      !!
       module procedure :: pic_sasum
       module procedure :: pic_dasum
       module procedure :: pic_scasum
@@ -50,6 +75,16 @@ module pic_blas_interfaces
 
    interface pic_axpy
       !! general interface of the BLAS AXPY routines, will call SAXPY, DAXPY, CAXPY, ZAXPY
+      !!
+      !! Usage: call pic_axpy(n, alpha, x, incx, y, incy)
+      !!
+      !! where n is the number of elements, alpha is the scaling factor,
+      !! x is the input vector, incx is the increment for x, y is the output vector,
+      !! and incy is the increment for y.
+      !!
+      !! The vectors x and y must be allocatable arrays, we deduce the shapes from them.
+      !! The increments incx and incy are 1 by default.
+      !!
       module procedure :: pic_saxpy
       module procedure :: pic_daxpy
       module procedure :: pic_caxpy  ! not tested
@@ -58,6 +93,12 @@ module pic_blas_interfaces
 
    interface pic_copy
       !! general interface of the BLAS COPY routines, will call SCOPY, DCOPY, CCOPY, ZCOPY
+      !!
+      !! Usage: call pic_copy(x, y)
+      !!
+      !! where x is the input vector, y is the output vector.
+      !! The vectors x and y must be allocatable arrays, we deduce the shapes from them.
+      !!
       module procedure :: pic_scopy
       module procedure :: pic_dcopy
       module procedure :: pic_ccopy
@@ -66,6 +107,12 @@ module pic_blas_interfaces
 
    interface pic_dot
       !! general interface of the BLAS DOT routines, will call SDOT, DDOT, CDOTC, ZDOTC
+      !!
+      !! Usage: result = pic_dot(x, y)
+      !!
+      !! where x is the input vector, y is the output vector.
+      !! The vectors x and y must be allocatable arrays, we deduce the shapes from them.
+      !!
       module procedure :: pic_sdot
       module procedure :: pic_ddot
       module procedure :: pic_cdotc
@@ -74,6 +121,13 @@ module pic_blas_interfaces
 
    interface pic_scal
       !! general interface of the BLAS SCAL routines, will call SSCAL, DSCAL, CSCAL, ZSCAL
+      !!
+      !! Usage: call pic_scal(x, [optional] alpha)
+      !!
+      !! where x is the input vector, alpha is the scaling factor.
+      !! The vector x must be an allocatable array, we deduce the shape from it.
+      !! The scaling factor alpha is 1.0 by default.
+      !!
       module procedure :: pic_sscal
       module procedure :: pic_dscal
       module procedure :: pic_cscal
@@ -82,6 +136,13 @@ module pic_blas_interfaces
 
    interface pic_iamax
       !! general interface of the BLAS IAMAX routines, will call ISAMAX, IDAMAX, ICAMAX, IZAMAX
+      !!
+      !! Usage: idx = pic_iamax(x, incx)
+      !!
+      !! where x is the input vector, incx is the increment.
+      !! The vector x must be an allocatable array, we deduce the shape from it.
+      !! The increment incx is 1 by default.
+      !!
       module procedure :: pic_isamax
       module procedure :: pic_idamax
       module procedure :: pic_icamax
@@ -89,7 +150,11 @@ module pic_blas_interfaces
    end interface pic_iamax
 
    interface blas_asum
-      !! explicit interface for BLAS ASUM routines
+      !! this is the interface for the BLAS ASUM routines, it will call SASUM, DASUM, SCASUM, DZASUM
+      !! Usage: result = blas_asum(x, incx)
+      !! where x is the input vector, incx is the increment.
+      !!
+      !! This is not a public interface, it is used internally by pic_asum
       pure function sasum(n, x, incx) result(res_sasum)
          import :: sp, default_int
          implicit none
@@ -126,6 +191,10 @@ module pic_blas_interfaces
 
    interface blas_axpy
       !! explicit interface for BLAS AXPY routines
+      !!
+      !! Usage: call blas_axpy(n, alpha, x, incx, y, incy)
+      !!
+      !! This is not a public interface, it is used internally by pic_axpy
       pure subroutine saxpy(n, alpha, x, incx, y, incy)
          import :: sp, default_int
          implicit none
@@ -170,6 +239,10 @@ module pic_blas_interfaces
 
    interface blas_copy
       !! explicit interface for BLAS COPY routines
+      !!
+      !! Usage: call blas_copy(x, y)
+      !!
+      !! This is not a public interface, it is used internally by pic_copy
       pure subroutine scopy(n, x, incx, y, incy)
          import :: sp, default_int
          implicit none
@@ -210,6 +283,10 @@ module pic_blas_interfaces
 
    interface blas_dot
       !! explicit interface for BLAS DOT routines
+      !!
+      !! Usage: result = blas_dot(x, y, incx, incy, n)
+      !! This is not a public interface, it is used internally by pic_dot
+      !!
       pure function sdot(n, x, incx, y, incy) result(res)
          import :: sp, default_int
          implicit none
@@ -254,6 +331,10 @@ module pic_blas_interfaces
 
    interface blas_scal
       !! explicit interface for BLAS SCAL routines
+      !!
+      !! Usage: call blas_scal(n, alpha, x, incx)
+      !!
+      !! This is not a public interface, it is used internally by pic_scal
       pure subroutine sscal(n, alpha, x, incx)
          import :: sp, default_int
          implicit none
@@ -290,6 +371,10 @@ module pic_blas_interfaces
 
    interface blas_iamax
       !! explicit interface for BLAS IAMAX routines
+      !!
+      !! Usage: idx = blas_iamax(x, incx)
+      !!
+      !! This is not a public interface, it is used internally by pic_iamax
       pure function isamax(n, x, incx) result(idx)
          import :: sp, default_int
          implicit none
@@ -326,6 +411,10 @@ module pic_blas_interfaces
 
    interface blas_gemv
       !! explicit interface for BLAS GEMV routines
+      !!
+      !! Usage: call blas_gemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
+      !!
+      !! This is not a public interface, it is used internally by pic_gemv
       pure subroutine sgemv(trans, m, n, alpha, a, lda, x, incx, beta, y, incy)
          import :: sp, default_int
          implicit none
@@ -390,6 +479,10 @@ module pic_blas_interfaces
 
    interface blas_gemm
       !! explicit interface for BLAS GEMM routines
+      !!
+      !! Usage: call blas_gemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
+      !!
+      !! This is not a public interface, it is used internally by pic_gemm
       pure subroutine sgemm(transa, transb, m, n, k, alpha, a, lda, b, ldb, &
            & beta, c, ldc)
          import :: sp, default_int

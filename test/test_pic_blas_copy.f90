@@ -10,7 +10,7 @@ contains
 
    subroutine collect_pic_copy_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer, parameter :: ntests = 2
+      integer(default_int), parameter :: ntests = 2
       allocate (testsuite(ntests))
       testsuite(1) = new_unittest("test_scopy", test_scopy)
       testsuite(2) = new_unittest("test_dcopy", test_dcopy)

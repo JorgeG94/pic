@@ -19,8 +19,12 @@ program main
    !type(json_array), pointer :: my_array, new_array
    !type(json_error), allocatable :: error
    !integer(default_int) :: ierr, rank, size, ival
+   integer(int64), parameter :: size_1 = 512*512*512
+   integer(int64), parameter :: size_2 = 1024*1024*1024
+   integer(int64), parameter :: size_3 = 2048*2048*2048
    real(dp), dimension(:, :), allocatable :: A, B, C
    real(dp), dimension(:), allocatable :: symA
+   real(dp) :: sum_val
    !real(dp), dimension(:), allocatable :: C_flat
    integer(default_int) :: n, m, k
 
@@ -33,8 +37,8 @@ program main
 
    ! block
    !   type(pic_timer) :: my_timer
-   !   integer :: i
-   !   integer, parameter :: n_loops = 200000000
+   !   integer(default_int) :: i
+   !   integer(default_int), parameter :: n_loops = 200000000
    !   real(dp) :: s
    !   real(dp) :: elapsed_time
    !   s = 0.0_dp
@@ -64,7 +68,7 @@ program main
    !block
    !   integer(int32) :: i, j, k
    !   real(dp), allocatable :: test_vec(:, :)
-   !   integer, parameter :: sizee = 2
+   !   integer(default_int), parameter :: sizee = 2
 
    !   allocate (test_vec(sizee, sizee))
 

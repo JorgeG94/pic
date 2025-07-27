@@ -16,7 +16,11 @@ There's two build systems included in the present version, CMake and the [Fortra
 
 The dependencies of the project are, as of now, CMake (if using cmake), MPI, OpenMP, and a BLAS/LAPACK library.
 
-You can find the the source docs [here](https://jorgeg94.github.io/pic/)
+## Documentation
+
+The code itself is documented using [FORD](https://forddocs.readthedocs.io/en/stable/) and the documentation is available [here](https://jorgeg94.github.io/pic/).
+
+Comments in the code that are prefixed with `!!` are considered documentation comments and will be processed by FORD. Comments without that prefix are considered regular comments and will not be processed by FORD. So, please do not use `!!` for your comments unless you want them to be included in the documentation.
 
 ### CMake
 

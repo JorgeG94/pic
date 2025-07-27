@@ -1,7 +1,7 @@
 module test_pic_timers
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_timers, only: pic_timer_type
-   use pic_types, only: dp
+   use pic_types, only: dp, default_int
    use pic_test_helpers, only: dummy_work
    implicit none
    private
@@ -11,7 +11,7 @@ contains
 
    subroutine collect_pic_timers_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer, parameter :: ntests = 6
+      integer(default_int), parameter :: ntests = 6
       allocate (testsuite(ntests))
       testsuite(1) = new_unittest("test_timer_basic_functionality", test_timer_basic_functionality)
       testsuite(2) = new_unittest("test_timer_zero_elapsed", test_timer_zero_elapsed)

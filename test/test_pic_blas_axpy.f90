@@ -10,7 +10,7 @@ contains
 
    subroutine collect_pic_axpy_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer, parameter :: ntests = 4
+      integer(default_int), parameter :: ntests = 4
       allocate (testsuite(ntests))
       testsuite(1) = new_unittest("test_saxpy_basic", test_saxpy_basic)
       testsuite(2) = new_unittest("test_daxpy_basic", test_daxpy_basic)

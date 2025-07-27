@@ -1,6 +1,6 @@
 module test_pic_flop_rate
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_types, only: dp, int64
+   use pic_types, only: dp, int64, default_int
    use pic_flop_rate, only: flop_rate_type
    use pic_test_helpers, only: dummy_work
    implicit none
@@ -10,7 +10,7 @@ contains
 
    subroutine collect_flop_rate_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer, parameter :: ntests = 7
+      integer(default_int), parameter :: ntests = 7
       allocate (testsuite(ntests))
       testsuite(1) = new_unittest("test_flop_rate_basic_calculation", test_flop_rate_basic_calculation)
       testsuite(2) = new_unittest("test_flop_rate_multiple_flops", test_flop_rate_multiple_flops)
@@ -42,7 +42,7 @@ contains
    subroutine test_flop_rate_multiple_flops(error)
       type(error_type), allocatable, intent(out) :: error
       type(flop_rate_type) :: flop_rate
-      integer, parameter :: expected_flops = 1500
+      integer(default_int), parameter :: expected_flops = 1500
 
       call flop_rate%start_time()
       call dummy_work()
