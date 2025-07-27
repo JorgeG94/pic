@@ -9,15 +9,15 @@ module pic_array
    private
 
    public :: fill, copy, pic_transpose, pic_sum
-   public :: set_threading
+   public :: set_threading_mode, get_threading_mode
 
-   logical :: use_threaded = .false.
+   logical :: use_threaded_default = .false.
 
-   interface set_threading
+   interface set_threading_mode
    !! set_threading sets the threading mode for the array routines
    !! this will set the use_threaded variable to true or false depending on the input
-   !! Usage: call set_threading(.true.) or call set_threading(.false.)
-      module procedure set_threading
+   !! Usage: call set_threading_mode(.true.) or call set_threading_mode(.false.)
+      module procedure set_threading_mode
    end interface
 
    interface get_threading_mode
@@ -114,31 +114,35 @@ module pic_array
 
 contains
 
-   subroutine set_threading(threaded)
+   subroutine set_threading_mode(threaded)
       !! set the threading mode for the array routines, this will set the use_threaded variable
       !! to true or false depending on the input
       !!
       !! Usage: call set_threading(.true.) or call set_threading(.false.)
       logical, intent(in) :: threaded
-      use_threaded = threaded
-   end subroutine set_threading
+      use_threaded_default = threaded
+   end subroutine set_threading_mode
 
    function get_threading_mode() result(mode)
       !! get the current threading mode for the array routines
       !! Usage: mode = get_threading_mode()
       logical :: mode
-      mode = use_threaded
+      mode = use_threaded_default
    end function get_threading_mode
 
    subroutine fill_vector_int32(vector, alpha, threaded)
       integer(int32), intent(inout) :: vector(:)
       integer(int32), intent(in)    :: alpha
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i
+
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(vector, 1)
             vector(i) = alpha
@@ -154,11 +158,15 @@ contains
       integer(int64), intent(inout) :: vector(:)
       integer(int64), intent(in)    :: alpha
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i
+
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(vector, 1)
             vector(i) = alpha
@@ -174,11 +182,15 @@ contains
       real(sp), intent(inout) :: vector(:)
       real(sp), intent(in)    :: alpha
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i
+
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(vector, 1)
             vector(i) = alpha
@@ -194,11 +206,15 @@ contains
       real(dp), intent(inout) :: vector(:)
       real(dp), intent(in)    :: alpha
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i
+
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(vector, 1)
             vector(i) = alpha
@@ -216,12 +232,15 @@ contains
       integer(default_int) :: i, j, rows, cols
       integer(default_int) :: ii, jj
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       rows = size(matrix, 1)
       cols = size(matrix, 2)
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -244,12 +263,15 @@ contains
       integer(default_int) :: i, j, rows, cols
       integer(default_int) :: ii, jj
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       rows = size(matrix, 1)
       cols = size(matrix, 2)
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -272,12 +294,15 @@ contains
       integer(default_int) :: i, j, rows, cols
       integer(default_int) :: ii, jj
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       rows = size(matrix, 1)
       cols = size(matrix, 2)
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -300,12 +325,15 @@ contains
       integer(default_int) :: i, j, rows, cols
       integer(default_int) :: ii, jj
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       rows = size(matrix, 1)
       cols = size(matrix, 2)
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -326,14 +354,17 @@ contains
       integer(int32), intent(inout) :: dest(:)
       integer(int32), intent(in)    :: source(:)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
             dest(i) = source(i)
@@ -348,14 +379,17 @@ contains
       integer(int64), intent(inout) :: dest(:)
       integer(int64), intent(in)    :: source(:)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
             dest(i) = source(i)
@@ -370,14 +404,17 @@ contains
       real(sp), intent(inout) :: dest(:)
       real(sp), intent(in)    :: source(:)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
             dest(i) = source(i)
@@ -392,14 +429,17 @@ contains
       real(dp), intent(inout) :: dest(:)
       real(dp), intent(in)    :: source(:)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
             dest(i) = source(i)
@@ -414,6 +454,7 @@ contains
       integer(int32), intent(inout) :: dest(:, :)
       integer(int32), intent(in)    :: source(:, :)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i, j, rows, cols
       integer(default_int) :: ii, jj
       if (size(dest, 1) /= size(source, 1) .or. size(dest, 2) /= size(source, 2)) then
@@ -422,9 +463,11 @@ contains
       rows = size(source, 1)
       cols = size(source, 2)
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -445,6 +488,7 @@ contains
       integer(int64), intent(inout) :: dest(:, :)
       integer(int64), intent(in)    :: source(:, :)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i, j, rows, cols
       integer(default_int) :: ii, jj
       if (size(dest, 1) /= size(source, 1) .or. size(dest, 2) /= size(source, 2)) then
@@ -453,9 +497,11 @@ contains
       rows = size(source, 1)
       cols = size(source, 2)
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -476,6 +522,7 @@ contains
       real(sp), intent(inout) :: dest(:, :)
       real(sp), intent(in)    :: source(:, :)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i, j, rows, cols
       integer(default_int) :: ii, jj
       if (size(dest, 1) /= size(source, 1) .or. size(dest, 2) /= size(source, 2)) then
@@ -484,9 +531,11 @@ contains
       rows = size(source, 1)
       cols = size(source, 2)
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -507,6 +556,7 @@ contains
       real(dp), intent(inout) :: dest(:, :)
       real(dp), intent(in)    :: source(:, :)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i, j, rows, cols
       integer(default_int) :: ii, jj
       if (size(dest, 1) /= size(source, 1) .or. size(dest, 2) /= size(source, 2)) then
@@ -515,9 +565,11 @@ contains
       rows = size(source, 1)
       cols = size(source, 2)
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -538,6 +590,7 @@ contains
       integer(int32), intent(in)  :: A(:, :)
       integer(int32), intent(out) :: B(:, :)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i, j, ii, jj, rows, cols
 
       rows = size(A, 1)
@@ -548,10 +601,12 @@ contains
       end if
 
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
 
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -572,6 +627,7 @@ contains
       integer(int64), intent(in)  :: A(:, :)
       integer(int64), intent(out) :: B(:, :)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i, j, ii, jj, rows, cols
 
       rows = size(A, 1)
@@ -582,10 +638,12 @@ contains
       end if
 
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
 
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -606,6 +664,7 @@ contains
       real(sp), intent(in)  :: A(:, :)
       real(sp), intent(out) :: B(:, :)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i, j, ii, jj, rows, cols
 
       rows = size(A, 1)
@@ -616,10 +675,12 @@ contains
       end if
 
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
 
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -640,6 +701,7 @@ contains
       real(dp), intent(in)  :: A(:, :)
       real(dp), intent(out) :: B(:, :)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(default_int) :: i, j, ii, jj, rows, cols
 
       rows = size(A, 1)
@@ -650,10 +712,12 @@ contains
       end if
 
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
 
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -673,13 +737,16 @@ contains
    function sum_vector_int32(vector, threaded) result(res)
       integer(int32), intent(in)  :: vector(:)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(int32) :: res
       integer(default_int) :: i
       res = 0_int32
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do private(i) collapse(1) reduction(+:res)
          do i = 1, size(vector, 1)
             res = res + vector(i)
@@ -692,13 +759,16 @@ contains
    function sum_vector_int64(vector, threaded) result(res)
       integer(int64), intent(in)  :: vector(:)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(int64) :: res
       integer(default_int) :: i
       res = 0_int64
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do private(i) collapse(1) reduction(+:res)
          do i = 1, size(vector, 1)
             res = res + vector(i)
@@ -711,13 +781,16 @@ contains
    function sum_vector_sp(vector, threaded) result(res)
       real(sp), intent(in)  :: vector(:)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       real(sp) :: res
       integer(default_int) :: i
       res = 0_sp
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do private(i) collapse(1) reduction(+:res)
          do i = 1, size(vector, 1)
             res = res + vector(i)
@@ -730,13 +803,16 @@ contains
    function sum_vector_dp(vector, threaded) result(res)
       real(dp), intent(in)  :: vector(:)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       real(dp) :: res
       integer(default_int) :: i
       res = 0_dp
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do private(i) collapse(1) reduction(+:res)
          do i = 1, size(vector, 1)
             res = res + vector(i)
@@ -750,6 +826,7 @@ contains
    function sum_matrix_int32(matrix, threaded) result(res)
       integer(int32), intent(in) :: matrix(:, :)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(int32) :: res
       integer(default_int) :: cols, rows, i, j, ii, jj
 
@@ -757,10 +834,12 @@ contains
       cols = size(matrix, 2)
 
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
       res = 0_int32
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -781,6 +860,7 @@ contains
    function sum_matrix_int64(matrix, threaded) result(res)
       integer(int64), intent(in) :: matrix(:, :)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       integer(int64) :: res
       integer(default_int) :: cols, rows, i, j, ii, jj
 
@@ -788,10 +868,12 @@ contains
       cols = size(matrix, 2)
 
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
       res = 0_int64
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -812,6 +894,7 @@ contains
    function sum_matrix_sp(matrix, threaded) result(res)
       real(sp), intent(in) :: matrix(:, :)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       real(sp) :: res
       integer(default_int) :: cols, rows, i, j, ii, jj
 
@@ -819,10 +902,12 @@ contains
       cols = size(matrix, 2)
 
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
       res = 0_sp
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size
@@ -843,6 +928,7 @@ contains
    function sum_matrix_dp(matrix, threaded) result(res)
       real(dp), intent(in) :: matrix(:, :)
       logical, intent(in), optional :: threaded
+      logical :: use_threads
       real(dp) :: res
       integer(default_int) :: cols, rows, i, j, ii, jj
 
@@ -850,10 +936,12 @@ contains
       cols = size(matrix, 2)
 
       if (present(threaded)) then
-         use_threaded = threaded
+         use_threads = threaded
+      else
+         use_threads = use_threaded_default
       end if
       res = 0_dp
-      if (use_threaded) then
+      if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
          do jj = 1, cols, block_size
             do ii = 1, rows, block_size

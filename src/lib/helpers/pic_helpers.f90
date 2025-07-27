@@ -1,13 +1,34 @@
 !! General helpers
 module pic_test_helpers
   !! simple reusable helpers for random things
-   use pic_types, only: int64, dp, default_int
+   use pic_types, only: int64, dp, default_int, sp
+   use pic_global_definitions, only: tol_sp, tol_dp
    implicit none
 
    private
-   public :: dummy_work
+   public :: dummy_work, is_equal
+
+   interface is_equal
+      module procedure is_equal_sp
+      module procedure is_equal_dp
+   end interface is_equal
 
 contains
+
+   elemental function is_equal_sp(a, b) result(res)
+      real(sp), intent(in) :: a, b
+      logical :: res
+
+      res = abs(a - b) < tol_sp
+   end function is_equal_sp
+
+   elemental function is_equal_dp(a, b) result(res)
+      real(dp), intent(in) :: a, b
+      logical :: res
+
+      res = abs(a - b) < tol_dp
+   end function is_equal_dp
+
    subroutine dummy_work()
     !! this subroutine runs a random dgemm to create work so that timers and other testing utils work nicely
     !!
