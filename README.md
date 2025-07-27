@@ -60,3 +60,8 @@ ctest
 ### FPM
 
 Install the FPM following the [instructions](https://fpm.fortran-lang.org/install/index.html#install) and then simply: `fpm build`
+
+
+## Contributing
+
+Please see the [contributing guidelines](docs/pages/contributing.md) for information on how to contribute to the project.

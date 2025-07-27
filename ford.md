@@ -7,6 +7,7 @@ project_github: https://github.com/JorgeG94/pic
 project_download: https://github.com/JorgeG94/pic/archive/refs/heads/main.zip
 author: Jorge Luis Galvez Vallejo
 github: https://github.com/JorgeG94
+page_dir: docs/pages
 media_dir: docs/images
 graph: true
 graph_maxnodes: 250
