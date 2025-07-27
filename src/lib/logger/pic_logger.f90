@@ -67,7 +67,7 @@ module pic_logger
       !! Log a message that will only be printed at the error level of verbosity.
       !! Usage: call my_logger%error("MESSAGE")
       procedure, private, pass(self) :: log
-      !! internal: processes the message and filters it according to the verbosity level set by the user or the default
+      !! Processes the message and filters it according to the verbosity level set by the user or the default
 
    end type logger_type
 
