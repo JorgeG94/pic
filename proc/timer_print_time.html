@@ -88,7 +88,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.3% of total for procedures.">6 statements</a>
+                 title=" 0.4% of total for procedures.">10 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -170,7 +170,10 @@
 </h2>
     
 
-    <p>print the time nicely</p>
+    <p>Prints the elapsed time at the time of calling</p>
+<p>Usage: call my_timer%print_time()</p>
+<p>Needs my_timer to be declared previously as type(pic_timer_type) :: my_timer</p>
+<p>This function does not stop the timer, it will get the current time elapsed stopped or not</p>
 
     <h3>Type Bound</h3>
     <p><a href='../type/pic_timer_type.html'>pic_timer_type</a></p>
@@ -188,7 +191,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~5"></span>
+              <span class="anchor" id="variable-self~3"></span>
               class(<a href='../type/pic_timer_type.html'>pic_timer_type</a>),
             </td>
 <td>intent(in)</td>
@@ -479,12 +482,23 @@ large graphs.</div>
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">timer_print_time</span><span class="p">(</span><span class="n">self</span><span class="p">)</span>
-<span class="w">    </span><span class="c">!! print the time nicely</span>
+<span class="w">      </span><span class="c">!! Prints the elapsed time at the time of calling</span>
+<span class="w">      </span><span class="c">!!</span>
+<span class="w">      </span><span class="c">!! Usage: call my_timer%print_time()</span>
+<span class="w">      </span><span class="c">!!</span>
+<span class="w">      </span><span class="c">!! Needs my_timer to be declared previously as type(pic_timer_type) :: my_timer</span>
+<span class="w">      </span><span class="c">!!</span>
+<span class="w">      </span><span class="c">!! This function does not stop the timer, it will get the current time elapsed stopped or not</span>
 <span class="w">      </span><span class="k">class</span><span class="p">(</span><span class="n">pic_timer_type</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">self</span>
 <span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">elapsed</span>
+
 <span class="w">      </span><span class="n">elapsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">get_elapsed_time</span><span class="p">()</span>
-<span class="w">      </span><span class="k">print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Elapsed time: &quot;</span><span class="o">//</span><span class="n">to_string</span><span class="p">(</span><span class="n">elapsed</span><span class="p">)</span><span class="o">//</span><span class="s2">&quot; seconds&quot;</span>
-<span class="w">   </span><span class="k">end subroutine </span><span class="n">timer_print_time</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">is_running</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Currently elapsed time: &quot;</span><span class="o">//</span><span class="n">to_string</span><span class="p">(</span><span class="n">elapsed</span><span class="p">)</span><span class="o">//</span><span class="s2">&quot; seconds&quot;</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Elapsed time: &quot;</span><span class="o">//</span><span class="n">to_string</span><span class="p">(</span><span class="n">elapsed</span><span class="p">)</span><span class="o">//</span><span class="s2">&quot; seconds&quot;</span>
+<span class="w">      </span><span class="k">end if</span>
+<span class="k">   end subroutine </span><span class="n">timer_print_time</span>
 </pre></div>
 
     </section>
@@ -508,7 +522,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-07-25 03:19 +0000             </p>
+ on 2025-07-27 04:57 +0000             </p>
           </div>
         </div>
         <br>

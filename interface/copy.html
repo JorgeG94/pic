@@ -1,0 +1,993 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used modules for HPC">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>copy &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>copy
+      <small>Interface</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title="<p> 0.4% of total for procedures.</p>Including implementation: 222 statements,  8.3% of total for procedures.">10 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_array.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_array.f90.html'>pic_array.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_array.html'>pic_array</a></li>
+            <li class="breadcrumb-item active" aria-current="page">copy</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#modprocs-0"
+         aria-expanded="false" aria-controls="modprocs-0">
+         <h4 class="card-header bg-primary text-white">Module Procedures</h4>
+      </a>
+      <div id="modprocs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../interface/copy.html#moduleprocedure-copy_vector_int32">copy_vector_int32</a>
+            <a class="list-group-item" href="../interface/copy.html#moduleprocedure-copy_vector_int64">copy_vector_int64</a>
+            <a class="list-group-item" href="../interface/copy.html#moduleprocedure-copy_vector_sp">copy_vector_sp</a>
+            <a class="list-group-item" href="../interface/copy.html#moduleprocedure-copy_vector_dp">copy_vector_dp</a>
+            <a class="list-group-item" href="../interface/copy.html#moduleprocedure-copy_matrix_int32">copy_matrix_int32</a>
+            <a class="list-group-item" href="../interface/copy.html#moduleprocedure-copy_matrix_int64">copy_matrix_int64</a>
+            <a class="list-group-item" href="../interface/copy.html#moduleprocedure-copy_matrix_sp">copy_matrix_sp</a>
+            <a class="list-group-item" href="../interface/copy.html#moduleprocedure-copy_matrix_dp">copy_matrix_dp</a>
+        </div>
+      </div>
+    </div>
+
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <h2>public interface copy</h2>
+      <p>copy provides a blas-less implementation of xcopy where x is (i,s,d) icopy, scopy, dcopy
+if you built pic with BLAS use the copy interface provided there, I will not beat BLAS
+copy is implemented for (int32, int64, sp, dp) for 1 and 2d arrays of the same types</p>
+<p>Usage: call copy(destination, source, [optional] threaded)</p>
+<p>This subroutine is threaded for performance purposes if threaded is set to .true.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism</p>
+</div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Calls</h3>
+          </div>
+          <div class="card-body">
+            <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: interface~~copy~~CallsGraph Pages: 1 -->
+<svg id="interfacecopyCallsGraph" width="208pt" height="326pt"
+ viewBox="0.00 0.00 208.00 326.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="interface~~copy~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 322)">
+<title>interface~~copy~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-322 204,-322 204,4 -4,4"/>
+<!-- interface~copy -->
+<g id="interface~~copy~~CallsGraph_node1" class="node">
+<title>interface~copy</title>
+<polygon fill="none" stroke="black" points="54,-171 0,-171 0,-147 54,-147 54,-171"/>
+<text text-anchor="middle" x="27" y="-156.6" font-family="Helvetica,sans-Serif" font-size="10.50">copy</text>
+</g>
+<!-- proc~copy_matrix_dp -->
+<g id="interface~~copy~~CallsGraph_node2" class="node">
+<title>proc~copy_matrix_dp</title>
+<g id="a_interface~~copy~~CallsGraph_node2"><a xlink:href="../proc/copy_matrix_dp.html" xlink:title="copy_matrix_dp">
+<polygon fill="#d9534f" stroke="#d9534f" points="193.5,-318 96.5,-318 96.5,-294 193.5,-294 193.5,-318"/>
+<text text-anchor="middle" x="145" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">copy_matrix_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~copy&#45;&gt;proc~copy_matrix_dp -->
+<g id="interface~~copy~~CallsGraph_edge1" class="edge">
+<title>interface~copy&#45;&gt;proc~copy_matrix_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M30.82,-171.2C37.15,-196 54.78,-252.7 90,-285 91.45,-286.33 92.98,-287.57 94.59,-288.74"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="92.77,-291.73 103.12,-293.98 96.44,-285.77 92.77,-291.73"/>
+</g>
+<!-- proc~copy_matrix_int32 -->
+<g id="interface~~copy~~CallsGraph_node3" class="node">
+<title>proc~copy_matrix_int32</title>
+<g id="a_interface~~copy~~CallsGraph_node3"><a xlink:href="../proc/copy_matrix_int32.html" xlink:title="copy_matrix_int32">
+<polygon fill="#d9534f" stroke="#d9534f" points="200,-276 90,-276 90,-252 200,-252 200,-276"/>
+<text text-anchor="middle" x="145" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">copy_matrix_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~copy&#45;&gt;proc~copy_matrix_int32 -->
+<g id="interface~~copy~~CallsGraph_edge2" class="edge">
+<title>interface~copy&#45;&gt;proc~copy_matrix_int32</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M34.14,-171.27C43.74,-189.33 63.94,-223.07 90,-243 91.85,-244.42 93.81,-245.75 95.84,-247"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="94.63,-250.32 105.1,-251.97 97.94,-244.16 94.63,-250.32"/>
+</g>
+<!-- proc~copy_matrix_int64 -->
+<g id="interface~~copy~~CallsGraph_node4" class="node">
+<title>proc~copy_matrix_int64</title>
+<g id="a_interface~~copy~~CallsGraph_node4"><a xlink:href="../proc/copy_matrix_int64.html" xlink:title="copy_matrix_int64">
+<polygon fill="#d9534f" stroke="#d9534f" points="200,-234 90,-234 90,-210 200,-210 200,-234"/>
+<text text-anchor="middle" x="145" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">copy_matrix_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~copy&#45;&gt;proc~copy_matrix_int64 -->
+<g id="interface~~copy~~CallsGraph_edge3" class="edge">
+<title>interface~copy&#45;&gt;proc~copy_matrix_int64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M43.7,-171.09C55.88,-180.1 73.42,-192.3 90,-201 93.27,-202.71 96.7,-204.37 100.2,-205.94"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="98.92,-209.2 109.49,-209.92 101.67,-202.77 98.92,-209.2"/>
+</g>
+<!-- proc~copy_matrix_sp -->
+<g id="interface~~copy~~CallsGraph_node5" class="node">
+<title>proc~copy_matrix_sp</title>
+<g id="a_interface~~copy~~CallsGraph_node5"><a xlink:href="../proc/copy_matrix_sp.html" xlink:title="copy_matrix_sp">
+<polygon fill="#d9534f" stroke="#d9534f" points="192.5,-192 97.5,-192 97.5,-168 192.5,-168 192.5,-192"/>
+<text text-anchor="middle" x="145" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">copy_matrix_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~copy&#45;&gt;proc~copy_matrix_sp -->
+<g id="interface~~copy~~CallsGraph_edge4" class="edge">
+<title>interface~copy&#45;&gt;proc~copy_matrix_sp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M54.03,-163.71C63.85,-165.49 75.44,-167.59 86.98,-169.68"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="86.6,-173.17 97.07,-171.5 87.85,-166.28 86.6,-173.17"/>
+</g>
+<!-- proc~copy_vector_dp -->
+<g id="interface~~copy~~CallsGraph_node6" class="node">
+<title>proc~copy_vector_dp</title>
+<g id="a_interface~~copy~~CallsGraph_node6"><a xlink:href="../proc/copy_vector_dp.html" xlink:title="copy_vector_dp">
+<polygon fill="#d9534f" stroke="#d9534f" points="193,-150 97,-150 97,-126 193,-126 193,-150"/>
+<text text-anchor="middle" x="145" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">copy_vector_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~copy&#45;&gt;proc~copy_vector_dp -->
+<g id="interface~~copy~~CallsGraph_edge5" class="edge">
+<title>interface~copy&#45;&gt;proc~copy_vector_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M54.03,-154.29C63.75,-152.53 75.2,-150.46 86.62,-148.39"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="87.38,-151.81 96.6,-146.58 86.14,-144.92 87.38,-151.81"/>
+</g>
+<!-- proc~copy_vector_int32 -->
+<g id="interface~~copy~~CallsGraph_node7" class="node">
+<title>proc~copy_vector_int32</title>
+<g id="a_interface~~copy~~CallsGraph_node7"><a xlink:href="../proc/copy_vector_int32.html" xlink:title="copy_vector_int32">
+<polygon fill="#d9534f" stroke="#d9534f" points="199.5,-108 90.5,-108 90.5,-84 199.5,-84 199.5,-108"/>
+<text text-anchor="middle" x="145" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">copy_vector_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~copy&#45;&gt;proc~copy_vector_int32 -->
+<g id="interface~~copy~~CallsGraph_edge6" class="edge">
+<title>interface~copy&#45;&gt;proc~copy_vector_int32</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M43.7,-146.91C55.88,-137.9 73.42,-125.7 90,-117 93.27,-115.29 96.7,-113.63 100.2,-112.06"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="101.67,-115.23 109.49,-108.08 98.92,-108.8 101.67,-115.23"/>
+</g>
+<!-- proc~copy_vector_int64 -->
+<g id="interface~~copy~~CallsGraph_node8" class="node">
+<title>proc~copy_vector_int64</title>
+<g id="a_interface~~copy~~CallsGraph_node8"><a xlink:href="../proc/copy_vector_int64.html" xlink:title="copy_vector_int64">
+<polygon fill="#d9534f" stroke="#d9534f" points="199.5,-66 90.5,-66 90.5,-42 199.5,-42 199.5,-66"/>
+<text text-anchor="middle" x="145" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">copy_vector_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~copy&#45;&gt;proc~copy_vector_int64 -->
+<g id="interface~~copy~~CallsGraph_edge7" class="edge">
+<title>interface~copy&#45;&gt;proc~copy_vector_int64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M34.14,-146.73C43.74,-128.67 63.94,-94.93 90,-75 91.85,-73.58 93.81,-72.25 95.84,-71"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="97.94,-73.84 105.1,-66.03 94.63,-67.68 97.94,-73.84"/>
+</g>
+<!-- proc~copy_vector_sp -->
+<g id="interface~~copy~~CallsGraph_node9" class="node">
+<title>proc~copy_vector_sp</title>
+<g id="a_interface~~copy~~CallsGraph_node9"><a xlink:href="../proc/copy_vector_sp.html" xlink:title="copy_vector_sp">
+<polygon fill="#d9534f" stroke="#d9534f" points="192,-24 98,-24 98,0 192,0 192,-24"/>
+<text text-anchor="middle" x="145" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">copy_vector_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~copy&#45;&gt;proc~copy_vector_sp -->
+<g id="interface~~copy~~CallsGraph_edge8" class="edge">
+<title>interface~copy&#45;&gt;proc~copy_vector_sp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M30.82,-146.8C37.15,-122 54.78,-65.3 90,-33 91.45,-31.67 92.98,-30.43 94.59,-29.26"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="96.44,-32.23 103.12,-24.02 92.77,-26.27 96.44,-32.23"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+<br>
+
+
+        <h2>Module Procedures</h2>
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-copy_vector_int32"></span> <h3>private  subroutine <a href='../proc/copy_vector_int32.html'>copy_vector_int32</a>(dest, source, threaded)  
+</h3></div>
+    <div class="card-body">
+          
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dest"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dest</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-source"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>source</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-threaded~10"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>threaded</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-copy_vector_int64"></span> <h3>private  subroutine <a href='../proc/copy_vector_int64.html'>copy_vector_int64</a>(dest, source, threaded)  
+</h3></div>
+    <div class="card-body">
+          
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dest~2"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dest</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-source~2"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>source</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-threaded~11"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>threaded</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-copy_vector_sp"></span> <h3>private  subroutine <a href='../proc/copy_vector_sp.html'>copy_vector_sp</a>(dest, source, threaded)  
+</h3></div>
+    <div class="card-body">
+          
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dest~3"></span>
+              real(kind=sp),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dest</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-source~3"></span>
+              real(kind=sp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>source</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-threaded~12"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>threaded</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-copy_vector_dp"></span> <h3>private  subroutine <a href='../proc/copy_vector_dp.html'>copy_vector_dp</a>(dest, source, threaded)  
+</h3></div>
+    <div class="card-body">
+          
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dest~4"></span>
+              real(kind=dp),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dest</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-source~4"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>source</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-threaded~13"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>threaded</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-copy_matrix_int32"></span> <h3>private  subroutine <a href='../proc/copy_matrix_int32.html'>copy_matrix_int32</a>(dest, source, threaded)  
+</h3></div>
+    <div class="card-body">
+          
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dest~5"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dest</strong>(:,:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-source~5"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>source</strong>(:,:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-threaded~14"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>threaded</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-copy_matrix_int64"></span> <h3>private  subroutine <a href='../proc/copy_matrix_int64.html'>copy_matrix_int64</a>(dest, source, threaded)  
+</h3></div>
+    <div class="card-body">
+          
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dest~6"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dest</strong>(:,:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-source~6"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>source</strong>(:,:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-threaded~15"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>threaded</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-copy_matrix_sp"></span> <h3>private  subroutine <a href='../proc/copy_matrix_sp.html'>copy_matrix_sp</a>(dest, source, threaded)  
+</h3></div>
+    <div class="card-body">
+          
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dest~7"></span>
+              real(kind=sp),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dest</strong>(:,:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-source~7"></span>
+              real(kind=sp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>source</strong>(:,:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-threaded~16"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>threaded</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-copy_matrix_dp"></span> <h3>private  subroutine <a href='../proc/copy_matrix_dp.html'>copy_matrix_dp</a>(dest, source, threaded)  
+</h3></div>
+    <div class="card-body">
+          
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dest~8"></span>
+              real(kind=dp),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dest</strong>(:,:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-source~8"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>source</strong>(:,:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-threaded~17"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>threaded</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+</div>
+  </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2025-07-27 04:57 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

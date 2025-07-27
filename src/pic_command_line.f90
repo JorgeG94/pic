@@ -10,7 +10,10 @@ module pic_command_line
 contains
 
    function get_first_arg_from_command_line() result(filename)
-    !! obtain the first argument from the command line
+      !! get the first argument from the command line, this is expected to be a filename
+      !!
+      !! Usage: filename = get_first_arg_from_command_line()
+      !!
       character(len=255) :: filename
       character(len=255) :: arg
       integer(default_int) :: num_args

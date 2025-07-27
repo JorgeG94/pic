@@ -2,7 +2,7 @@
 
 module pic_timers
   !! contains a simple timer module to measure and record time
-   use pic_types, only: dp
+   use pic_types, only: dp, default_int
    use pic_string_utils, only: to_string
 #ifdef _OPENMP
    use omp_lib, only: omp_get_wtime
@@ -15,23 +15,29 @@ module pic_timers
     !! derived type for a timer, contains the start, stop, and count variables
     !! can work with or without omp
       private
-      real(dp) :: start_time, stop_time
+      real(dp) :: start_time = 0.0_dp
+      real(dp) :: stop_time = 0.0_dp
       real(dp) :: walltime
       logical :: is_running = .false.
-      integer :: start_count, stop_count
-      integer :: count_rate
+      integer(default_int) :: start_count = 0_default_int
+      integer(default_int) :: stop_count = 0_default_int
+      integer(default_int) :: count_rate = 1_default_int
    contains
       procedure :: start => timer_start
       procedure :: stop => timer_stop
       procedure :: print_time => timer_print_time
       procedure :: get_elapsed_time => timer_get_elapsed_time
-      procedure :: set
    end type pic_timer_type
 
 contains
 
    subroutine timer_start(self)
-    !! and away we go!
+      !! starts the timer. If OMP is enabled, it will use omp_get_wtime()
+      !! if not, it will use Fortran's system_clock
+      !!
+      !! Usage: call my_timer%start()
+      !!
+      !! Usage assumes a declaration of type(pic_timer_type) :: my_timer
       class(pic_timer_type), intent(inout) :: self
       self%is_running = .true.
 #ifdef _OPENMP
@@ -42,8 +48,17 @@ contains
    end subroutine timer_start
 
    subroutine timer_stop(self)
-    !! and we're done!
+      !! stop the timer. If OMP is enabled, it will use omp_get_wtime()
+      !! if not, it will use Fortran's system_clock
+      !!
+      !! Usage: call my_timer%stop()
+      !!
+      !! Usage assumes a declaration of type(pic_timer_type) :: my_timer
+      !! will fail if a timer has not been started!
       class(pic_timer_type), intent(inout) :: self
+      if (.not. self%is_running) then
+         error stop "Cannot stop a timer that has not been started!"
+      end if
 #ifdef _OPENMP
       self%stop_time = omp_get_wtime()
 #else
@@ -54,18 +69,35 @@ contains
    end subroutine timer_stop
 
    subroutine timer_print_time(self)
-    !! print the time nicely
+      !! Prints the elapsed time at the time of calling
+      !!
+      !! Usage: call my_timer%print_time()
+      !!
+      !! Needs my_timer to be declared previously as type(pic_timer_type) :: my_timer
+      !!
+      !! This function does not stop the timer, it will get the current time elapsed stopped or not
       class(pic_timer_type), intent(in) :: self
       real(dp) :: elapsed
+
       elapsed = self%get_elapsed_time()
-      print *, "Elapsed time: "//to_string(elapsed)//" seconds"
+      if (self%is_running) then
+         print *, "Currently elapsed time: "//to_string(elapsed)//" seconds"
+      else
+         print *, "Elapsed time: "//to_string(elapsed)//" seconds"
+      end if
    end subroutine timer_print_time
 
    function timer_get_elapsed_time(self) result(elapsed)
-      !! get the elapsed time in seconds, the function is aware if you're asking for the time while the timer is running or not
+      !! Returns the elapsed time as a real(dp) variable
+      !!
+      !! Usage: var = my_timer%get_elapsed_time()
+      !!
+      !! Needs my_timer to be declared previously as type(pic_timer_type) :: my_timer
+      !!
       class(pic_timer_type), intent(in) :: self
       real(dp) :: elapsed
-      integer :: current_count
+      integer(default_int) :: current_count
+      elapsed = 0.0_dp
 #ifdef _OPENMP
       if (self%is_running) then
          elapsed = omp_get_wtime() - self%start_time
@@ -81,12 +113,5 @@ contains
       end if
 #endif
    end function timer_get_elapsed_time
-
-   subroutine set(self, time)
-      !! set the walltime directly, useful for testing or when you want to set a specific time
-      class(pic_timer_type), intent(inout) :: self
-      real(dp), intent(in) :: time
-      self%walltime = time
-   end subroutine set
 
 end module pic_timers

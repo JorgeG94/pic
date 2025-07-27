@@ -25,7 +25,11 @@ module pic_flop_recorder
 contains
 
    subroutine add_flops(self, flops)
-    !! add the FLOPs!
+   !! Add an int64 variable which contains the FLOPs
+   !! we use int64 since we might reach very large FLOP counts
+   !!
+   !! Usage: call my_flop_recorder%add(flops)
+   !!
       class(flop_recorder_type), intent(inout) :: self
       integer(int64), intent(in) :: flops
       self%flop_count = self%flop_count + flops
@@ -33,7 +37,10 @@ contains
    end subroutine add_flops
 
    function get_flops(self) result(flops)
-    !! return the FLOPs at a given point in time
+    !! Get the int64 number of FLOPs we currently have in the counter
+    !!
+    !! Usage: flops = my_flop_recorder%get()
+    !!
       class(flop_recorder_type), intent(in) :: self
       integer(int64) :: flops
 
@@ -42,7 +49,10 @@ contains
    end function get_flops
 
    subroutine reset_flop_counter(self)
-    !! reset the FLOP the counter
+    !! Resets the flop counter to 0_int64
+    !!
+    !! Usage: call my_flop_recorder%reset()
+    !!
       class(flop_recorder_type), intent(inout) :: self
 
       self%flop_count = 0_int64
