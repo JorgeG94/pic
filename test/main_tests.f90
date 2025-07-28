@@ -26,7 +26,7 @@ program pic_tester
    ! here you add another test suite to the array
    testsuites(1) = new_testsuite("base_utils", collect_suite1)
    testsuites(2) = new_testsuite("pic_string_utils", collect_pic_string_utils_tests)
-   testsuites(3) = new_testsuite("pic_timer", collect_pic_timers_tests)
+   testsuites(3) = new_testsuite("pic_timers", collect_pic_timers_tests)
    testsuites(4) = new_testsuite("pic_logger", collect_pic_logger_tests)
    testsuites(5) = new_testsuite("pic_flop_recorder", collect_pic_flop_recorder_tests)
    testsuites(6) = new_testsuite("pic_flop_rate", collect_flop_rate_tests)

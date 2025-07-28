@@ -56,7 +56,7 @@ if(PIC_ENABLE_BLAS)
   target_include_directories("${project_name}-blas-tester"
                              PRIVATE "${CMAKE_BINARY_DIR}")
   target_link_libraries("${project_name}-blas-tester"
-                        PRIVATE "${core_lib}" test-drive::test-drive)
+                        PRIVATE "${main_lib}" test-drive::test-drive)
 endif()
 
 message(STATUS "Adding the following tests to ctests...")

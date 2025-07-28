@@ -1,1 +1,1 @@
-target_sources(${core_lib} PRIVATE pic_mpi.F90)
+target_sources(${mpi_lib} PRIVATE pic_mpi.F90)
