@@ -1,6 +1,6 @@
 !! timing routines in general
 
-module pic_timers
+module pic_timer
   !! contains a simple timer module to measure and record time
    use pic_types, only: dp, default_int
    use pic_string_utils, only: to_string
@@ -13,7 +13,9 @@ module pic_timers
 
    type :: pic_timer_type
     !! derived type for a timer, contains the start, stop, and count variables
-    !! can work with or without omp
+    !! can work with or without omp. If PIC is compiled with OpenMP the default
+    !! timer will be the omp time. This is mostly to minimize problems with threading
+    !! and system clock
       private
       real(dp) :: start_time = 0.0_dp
       real(dp) :: stop_time = 0.0_dp
@@ -114,4 +116,4 @@ contains
 #endif
    end function timer_get_elapsed_time
 
-end module pic_timers
+end module pic_timer
