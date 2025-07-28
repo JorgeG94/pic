@@ -113,14 +113,6 @@ if(PIC_ENABLE_BLAS)
 endif()
 
 target_link_libraries(${main_lib} ${core_lib} ${libraries_to_link})
-# target_link_libraries(${core_lib} ${libraries_to_link}) Install targets
-install(
-  TARGETS ${main_lib}
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  INCLUDES
-  DESTINATION include/pic
-  RUNTIME DESTINATION bin)
 
 # Install Fortran module files (assuming they are in the build directory)
 
