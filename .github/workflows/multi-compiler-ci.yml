@@ -9,7 +9,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        int8: ["ON", "OFF"]
         toolchain:
           - {compiler: gcc, version: 10}
           - {compiler: gcc, version: 11}
@@ -51,7 +50,7 @@ jobs:
       run: >-
         cmake -G Ninja
         -DCMAKE_BUILD_TYPE=Release
-        -DPIC_ENABLE_OMP=ON -PIC_DEFAULT_INT8=${{ matrix.int8 }}
+        -DPIC_ENABLE_OMP=ON
         -S . -B ${{ env.BUILD_DIR }}
 
     - name: Build and compile

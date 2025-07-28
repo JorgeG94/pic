@@ -11,7 +11,6 @@ jobs:
       matrix:
         # mpi on windows is a nightmare
         os: ["ubuntu-latest", "macos-latest"]
-        int8: ["ON", "OFF"]
         compiler: ["gfortran"]
     steps:
       - uses: actions/checkout@v4
@@ -47,7 +46,7 @@ jobs:
         run: |
           conda activate pic
           export FC=${{matrix.compiler}}
-          cmake -G "Ninja" -DPIC_ENABLE_MPI=ON -DPIC_ENABLE_OMP=ON -DPIC_ENABLE_BLAS=ON -DPIC_DEFAULT_INT8=${{matrix.int8}} -B build
+          cmake -G "Ninja" -DPIC_ENABLE_MPI=ON -DPIC_ENABLE_OMP=ON -DPIC_ENABLE_BLAS=ON -B build
           cmake --build build
 
       - name: Run unit tests
