@@ -1,6 +1,6 @@
-module test_pic_timers
+module test_pic_timer
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_timers, only: pic_timer_type
+   use pic_timer, only: pic_timer_type
    use pic_types, only: dp, default_int
    use pic_test_helpers, only: dummy_work
    implicit none
@@ -180,4 +180,4 @@ contains
 
    end subroutine test_timer_precision
 
-end module test_pic_timers
+end module test_pic_timer

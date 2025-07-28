@@ -2,7 +2,7 @@ program main
    use pic_string_utils, only: to_string
    use pic_blas_interfaces, only: pic_gemm
    use pic_types, only: dp, int64, default_int
-   use pic_timers, only: pic_timer
+   use pic_timer, only: pic_timer_type
    use pic_flop_recorder, only: flop_recorder_type
    use pic_flop_rate, only: flop_rate_type
    use mpi_f08, only: MPI_COMM_WORLD, MPI_Init, MPI_Finalize, &

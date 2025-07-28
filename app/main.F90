@@ -11,7 +11,7 @@ program main
    use pic_string_utils, only: to_string, set_precision
    implicit none
    !use pic_mpi
-   !use pic_timers
+   !use pic_timer
    !implicit none
    !type(pic_comm) :: comm
    !class(json_value), allocatable :: val

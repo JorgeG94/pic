@@ -1,2 +1,2 @@
-target_sources(${core_lib} PRIVATE pic.f90)
+target_sources(${main_lib} PRIVATE pic.f90)
 add_subdirectory(lib)

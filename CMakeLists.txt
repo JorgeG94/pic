@@ -9,13 +9,13 @@ set(project_name pic)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(GNUInstallDirs)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/modules")
 include(print_status)
 
 option(PIC_DEFAULT_INT8 "Use 8-byte integers as default" OFF)
 option(PIC_ENABLE_MPI "Enable the use of MPI in PIC" OFF)
 option(PIC_ENABLE_OMP "Enable the use of OpenMP in PIC" OFF)
-option(PIC_ENABLE_BLAS "Enable BLAS/LAPACK libraries in PIC" ON)
+option(PIC_ENABLE_BLAS "Enable BLAS/LAPACK libraries in PIC" OFF)
 option(PIC_ENABLE_TESTING "Enable testing for PIC" ON)
 option(PIC_ENABLE_JONQUIL "Enable Jonquil for json/toml handling" OFF)
 option(PIC_BUILD_STRESS "Build dgemm flop stress case" OFF)
@@ -37,15 +37,32 @@ if(NOT TARGET jonquil::jonquil AND PIC_ENABLE_JONQUIL)
   list(APPEND external_libraries_to_link jonquil::jonquil)
 endif()
 
-set(core_lib pic)
+set(pic_suffix)
+if(PIC_DEFAULT_INT8)
+  set(pic_suffix "_i8")
+endif()
+set(main_lib pic${pic_suffix})
+set(core_lib pic_core${pic_suffix})
+set(all_libs ${main_lib} ${core_lib})
+add_library(${main_lib} STATIC)
 add_library(${core_lib} STATIC)
+if(PIC_ENABLE_BLAS)
+  set(blas_lib pic_blas${pic_suffix})
+  list(APPEND all_libs ${blas_lib})
+  add_library(${blas_lib} STATIC)
+endif()
+if(PIC_ENABLE_MPI)
+  set(mpi_lib pic_mpi${pic_suffix})
+  list(APPEND all_libs ${mpi_lib})
+  add_library(${mpi_lib} STATIC)
+endif()
 
 # Enable position-independent code for shared-library linking support
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# Make sure Fortran modules are handled properly
-
 if(PIC_DEFAULT_INT8)
+  # only pic_types.F90 in the core lib needs this, the rest just inherit from
+  # there
   target_compile_definitions(${core_lib} PRIVATE USE_INT8)
   set(BLA_SIZEOF_INTEGER 8)
 else()
@@ -58,14 +75,18 @@ add_subdirectory(src)
 if(PIC_ENABLE_TESTING)
   add_subdirectory(test)
 endif()
-set_target_properties(${core_lib} PROPERTIES Fortran_MODULE_DIRECTORY
-                                             ${CMAKE_BINARY_DIR}/modules)
+
+foreach(lib ${all_libs})
+  set_target_properties(${lib} PROPERTIES Fortran_MODULE_DIRECTORY
+                                          ${CMAKE_BINARY_DIR}/modules)
+endforeach()
 if(PIC_ENABLE_OMP)
   find_package(
     OpenMP
     COMPONENTS Fortran
     REQUIRED)
   list(APPEND libraries_to_link OpenMP::OpenMP_Fortran)
+  target_link_libraries(${core_lib} OpenMP::OpenMP_Fortran)
 endif()
 
 if(PIC_ENABLE_MPI)
@@ -82,32 +103,26 @@ if(PIC_ENABLE_MPI)
     MPI
     COMPONENTS ${language_component}
     REQUIRED)
-  list(APPEND libraries_to_link MPI::MPI_${language_component})
-  target_compile_definitions(${core_lib} PRIVATE USE_MPI)
+  target_link_libraries(${mpi_lib} ${core_lib} MPI::MPI_${language_component})
+  list(APPEND libraries_to_link ${mpi_lib} MPI::MPI_${language_component})
+  # target_compile_definitions(${core_lib} PRIVATE USE_MPI)
 endif()
 
 if(PIC_ENABLE_BLAS)
   find_package(BLAS REQUIRED)
   find_package(LAPACK REQUIRED)
-  list(APPEND libraries_to_link LAPACK::LAPACK BLAS::BLAS)
+  target_link_libraries(${blas_lib} ${core_lib} LAPACK::LAPACK BLAS::BLAS)
+  list(APPEND libraries_to_link ${blas_lib} LAPACK::LAPACK BLAS::BLAS)
 endif()
 
-target_link_libraries(${core_lib} ${libraries_to_link})
-# Install targets
-install(
-  TARGETS ${core_lib}
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  INCLUDES
-  DESTINATION include/pic
-  RUNTIME DESTINATION bin)
+target_link_libraries(${main_lib} ${core_lib} ${libraries_to_link})
 
 # Install Fortran module files (assuming they are in the build directory)
 
 set(exe_name app)
 add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.F90)
 target_include_directories(${exe_name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
-target_link_libraries(${exe_name} PRIVATE ${core_lib}
+target_link_libraries(${exe_name} PRIVATE ${main_lib}
                                           ${external_libraries_to_link})
 if(PIC_BUILD_STRESS)
   set(exe_name_2 stress)
@@ -115,16 +130,19 @@ if(PIC_BUILD_STRESS)
                  ${PROJECT_SOURCE_DIR}/examples/stress_test/main.f90)
   target_include_directories(${exe_name_2}
                              PRIVATE "${CMAKE_BINARY_DIR}/modules")
-  target_link_libraries(${exe_name_2} PRIVATE ${core_lib}
+  target_link_libraries(${exe_name_2} PRIVATE ${main_lib}
                                               ${external_libraries_to_link})
 endif()
 
-install(
-  TARGETS pic
-  EXPORT picTargets
-  ARCHIVE DESTINATION lib
-  INCLUDES
-  DESTINATION include/pic)
+foreach(tgt ${all_libs})
+  message(STATUS "${tgt}")
+  install(
+    TARGETS ${tgt}
+    EXPORT picTargets
+    ARCHIVE DESTINATION lib
+    INCLUDES
+    DESTINATION include/pic)
+endforeach()
 
 install(
   DIRECTORY ${CMAKE_BINARY_DIR}/modules/

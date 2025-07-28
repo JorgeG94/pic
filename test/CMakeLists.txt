@@ -21,6 +21,7 @@ set(blas_tests
     "pic_blas_scal"
     "pic_blas_iamax")
 
+find_package(Threads REQUIRED)
 set(test-srcs "main_tests.f90")
 set(blas-test-srcs "blas_tests.f90")
 foreach(t IN LISTS tests)
@@ -42,9 +43,9 @@ endif()
 set_target_properties(
   "${project_name}-tester"
   PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-             Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/modules")
+             Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/tests/modules")
 target_include_directories("${project_name}-tester"
-                           PRIVATE "${CMAKE_BINARY_DIR}")
+                           PRIVATE "${CMAKE_BINARY_DIR}/modules")
 target_link_libraries("${project_name}-tester" PRIVATE "${core_lib}"
                                                        test-drive::test-drive)
 
@@ -52,11 +53,12 @@ if(PIC_ENABLE_BLAS)
   set_target_properties(
     "${project_name}-blas-tester"
     PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-               Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/modules")
+               Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/test/modules")
   target_include_directories("${project_name}-blas-tester"
-                             PRIVATE "${CMAKE_BINARY_DIR}")
-  target_link_libraries("${project_name}-blas-tester"
-                        PRIVATE "${core_lib}" test-drive::test-drive)
+                             PRIVATE "${CMAKE_BINARY_DIR}/modules")
+  target_link_libraries(
+    "${project_name}-blas-tester" PRIVATE "${main_lib}" test-drive::test-drive
+                                          Threads::Threads)
 endif()
 
 message(STATUS "Adding the following tests to ctests...")
