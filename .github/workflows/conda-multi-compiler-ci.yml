@@ -24,6 +24,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         compiler: [gfortran, ifx, flang-new]
+        int8: ["ON", "OFF"]
         include:
           - os: ubuntu-latest
             extra-packages: "openblas"
@@ -61,7 +62,7 @@ jobs:
 
   # Run CMake + Ninja build/tests across OS/compiler matrix
   test_cmake:
-    name: ${{ matrix.os }}_${{ matrix.compiler }}_cmake
+    name: ${{ matrix.os }}_${{ matrix.compiler }}_wint8${{ matrix.int8 }}_cmake
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -95,6 +96,6 @@ jobs:
 
       - name: cmake test (release)
         run: |
-          cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -DBLA_VENDOR=OpenBLAS -G Ninja
+          cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release -DPIC_DEFAULT_INT8=${{ matrix.int8 }} -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -DBLA_VENDOR=OpenBLAS -G Ninja
           cmake --build build/release
           ctest --test-dir build/release --output-on-failure
