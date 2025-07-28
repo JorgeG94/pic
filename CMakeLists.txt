@@ -76,7 +76,6 @@ foreach(lib ${all_libs})
   set_target_properties(${lib} PROPERTIES Fortran_MODULE_DIRECTORY
                                           ${CMAKE_BINARY_DIR}/modules)
 endforeach()
-
 if(PIC_ENABLE_OMP)
   find_package(
     OpenMP

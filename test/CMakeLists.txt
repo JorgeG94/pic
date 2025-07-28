@@ -21,6 +21,7 @@ set(blas_tests
     "pic_blas_scal"
     "pic_blas_iamax")
 
+find_package(Threads REQUIRED)
 set(test-srcs "main_tests.f90")
 set(blas-test-srcs "blas_tests.f90")
 foreach(t IN LISTS tests)
@@ -55,8 +56,9 @@ if(PIC_ENABLE_BLAS)
                Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/test/modules")
   target_include_directories("${project_name}-blas-tester"
                              PRIVATE "${CMAKE_BINARY_DIR}/modules")
-  target_link_libraries("${project_name}-blas-tester"
-                        PRIVATE "${main_lib}" test-drive::test-drive)
+  target_link_libraries(
+    "${project_name}-blas-tester" PRIVATE "${main_lib}" test-drive::test-drive
+                                          Threads::Threads)
 endif()
 
 message(STATUS "Adding the following tests to ctests...")
