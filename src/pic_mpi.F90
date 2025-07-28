@@ -4,11 +4,9 @@
 
 module pic_mpi
   !! General MPI interface module
-   use pic_types, only: int32, int32
-#ifdef USE_MPI
+   use pic_types, only: int32
    use mpi_f08, only: MPI_COMM, MPI_COMM_WORLD, MPI_Init, MPI_Finalize, &
                       MPI_Comm_size, MPI_Comm_rank
-#endif
    implicit none
    private
    public :: pic_comm_type
@@ -18,13 +16,8 @@ module pic_mpi
 
       private
 
-#ifdef USE_MPI
       type(MPI_COMM), public :: comm
         !! use the MPI_COMM from the mpi_f08 module interface
-#else
-      integer(int32), public :: dummy_comm
-        !! if we don't use MPI use an integer for a comm
-#endif
       integer(int32), public :: m_rank
         !! MPI rank
       integer(int32), public :: m_size
@@ -43,7 +36,6 @@ contains
    subroutine pic_comm_init(self)
     !! initilalize the MPI library and get the size and rank variables
       class(pic_comm_type), intent(inout) :: self
-#ifdef USE_MPI
       integer(int32) :: ierr, rank, size
       call MPI_Init(ierr)
       self%m_ierr = ierr
@@ -52,22 +44,14 @@ contains
       call MPI_Comm_rank(self%comm, rank, ierr)
       self%m_size = size
       self%m_rank = rank
-#else
-      self%m_size = 1
-      self%m_rank = 0
-#endif
    end subroutine pic_comm_init
 
    subroutine pic_comm_finalize(self)
     !! finalize the MPI library
       class(pic_comm_type), intent(inout) :: self
-#ifdef USE_MPI
       integer(int32) :: ierr
       call MPI_Finalize(ierr)
       self%m_ierr = ierr
-#else
-      self%m_ierr = 0
-#endif
    end subroutine pic_comm_finalize
 
 end module pic_mpi
