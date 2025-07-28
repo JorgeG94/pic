@@ -64,4 +64,4 @@ Install the FPM following the [instructions](https://fpm.fortran-lang.org/instal
 
 ## Contributing
 
-Please see the [contributing guidelines](docs/pages/contributing.md) for information on how to contribute to the project.
+Please see the [contributing guidelines](https://jorgeg94.github.io/pic/page/contributing.html) for information on how to contribute to the project.
