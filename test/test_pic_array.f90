@@ -2,7 +2,7 @@ module test_pic_array
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_types, only: sp, dp, int32, int64, default_int
    use pic_array, only: fill, set_threading_mode, get_threading_mode, &
-                        pic_transpose, pic_sum, copy
+                        pic_transpose, pic_sum, copy, is_sorted
    use pic_test_helpers, only: is_equal
    implicit none
    private
@@ -12,7 +12,7 @@ contains
 
    subroutine collect_pic_array_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: n_test = 56
+      integer(default_int), parameter :: n_test = 60
       allocate (testsuite(n_test))
       testsuite(1) = new_unittest("get_threading_mode", test_get_threading_mode)
       testsuite(2) = new_unittest("set_threading_mode", test_set_threading_mode)
@@ -70,6 +70,10 @@ contains
       testsuite(54) = new_unittest("pic_sum_vector_dp_threaded", test_pic_sum_vector_dp_threaded)
       testsuite(55) = new_unittest("pic_sum_matrix_int32_threaded", test_pic_sum_matrix_int32_threaded)
       testsuite(56) = new_unittest("pic_sum_matrix_int64_threaded", test_pic_sum_matrix_int64_threaded)
+      testsuite(57) = new_unittest("pic_is_sorted_int32", test_pic_is_sorted_int32)
+      testsuite(58) = new_unittest("pic_is_sorted_int64", test_pic_is_sorted_int64)
+      testsuite(59) = new_unittest("pic_is_sorted_sp", test_pic_is_sorted_sp)
+      testsuite(60) = new_unittest("pic_is_sorted_dp", test_pic_is_sorted_dp)
 
       ! Add more tests as needed
 
@@ -1040,4 +1044,91 @@ contains
 
    end subroutine test_pic_sum_matrix_dp_threaded
 
+   subroutine test_pic_is_sorted_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: vector(:)
+      integer(int32) :: i
+      integer(int32), parameter :: length = 20
+      logical :: sorted
+
+      allocate (vector(length))
+      vector = 0_int32
+
+      vector = [(i, i=1, size(vector))]
+
+      sorted = is_sorted(vector)
+      call check(error, sorted, .true., "Array should be sorted!")
+      if (allocated(error)) return
+
+      sorted = is_sorted(vector, reverse=.true.)
+      call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_is_sorted_int32
+
+   subroutine test_pic_is_sorted_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: vector(:)
+      integer(int64) :: i
+      integer(int64), parameter :: length = 20
+      logical :: sorted
+
+      allocate (vector(length))
+      vector = 0_int64
+
+      vector = [(i, i=1, size(vector))]
+
+      sorted = is_sorted(vector)
+      call check(error, sorted, .true., "Array should be sorted!")
+      if (allocated(error)) return
+
+      sorted = is_sorted(vector, reverse=.true.)
+      call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_is_sorted_int64
+
+   subroutine test_pic_is_sorted_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: vector(:)
+      integer(default_int) :: i
+      integer(default_int), parameter :: length = 20
+      logical :: sorted
+
+      allocate (vector(length))
+      vector = 0_sp
+
+      vector = [(real(i, sp), i=1, size(vector))]
+
+      sorted = is_sorted(vector)
+      call check(error, sorted, .true., "Array should be sorted!")
+      if (allocated(error)) return
+
+      sorted = is_sorted(vector, reverse=.true.)
+      call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_is_sorted_sp
+
+   subroutine test_pic_is_sorted_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: vector(:)
+      integer(default_int) :: i
+      integer(default_int), parameter :: length = 20
+      logical :: sorted
+
+      allocate (vector(length))
+      vector = 0_dp
+
+      vector = [(real(i, dp), i=1, size(vector))]
+
+      sorted = is_sorted(vector)
+      call check(error, sorted, .true., "Array should be sorted!")
+      if (allocated(error)) return
+
+      sorted = is_sorted(vector, reverse=.true.)
+      call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_is_sorted_dp
 end module test_pic_array

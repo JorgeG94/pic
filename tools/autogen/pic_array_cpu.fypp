@@ -16,6 +16,7 @@ module pic_array
   private
 
   public :: fill, copy, pic_transpose, pic_sum
+  public :: is_sorted
   public :: set_threading_mode, get_threading_mode
 
   logical :: use_threaded_default = .false.
@@ -108,7 +109,19 @@ module pic_array
   #: for T in TYPES
     module procedure sum_matrix_${T}$
   #:endfor
-  end interface pic_sum
+  end interface
+
+  interface is_sorted
+    !! is_sorted provides a simple way to checking if a 1d array is sorted
+    !! it is implemented for int32, int64, sp, and dp datatypes. The default
+    !! is to check if an array is sorted in ascending fashion, you can use
+    !! reverse = .true. to ask for it to be descending
+    !!
+    !! Usage: result = is_sorted(array, [optional] reverse = .false.)
+    #: for T in TYPES
+      module procedure is_sorted_${T}$
+    #:endfor
+    end interface
 
   ! potentially implement a shallow copy? nah?
   integer(default_int), parameter :: block_size = 32
@@ -367,4 +380,41 @@ contains
 
 #:endfor
 
+#:for T in TYPES
+  #:set FTYPE = FORTRAN_TYPES[T]
+   pure function is_sorted_${T}$(array, reverse) result(sorted)
+    ${FTYPE}$, intent(in) :: array(:)
+    logical, intent(in), optional :: reverse
+    logical :: is_reverse
+    logical :: sorted
+
+    sorted = .true.
+    is_reverse = .false.
+
+    if(present(reverse)) then
+      is_reverse = reverse
+    endif
+
+    block
+    integer(int32) :: i
+    if(is_reverse) then
+    do i = 1, size(array) - 1
+      if(array(i+1) > array(i)) then
+        sorted = .false.
+        return
+      endif
+    end do
+    else
+      do i = 1, size(array) - 1
+        if(array(i+1) < array(i)) then
+          sorted = .false.
+          return
+        end if
+      end do
+    end if
+    end block
+
+   end function is_sorted_${T}$
+
+#:endfor
 end module pic_array
