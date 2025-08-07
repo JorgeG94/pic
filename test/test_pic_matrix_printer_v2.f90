@@ -11,20 +11,21 @@ contains
 
    subroutine collect_pic_matrix_printer_v2_tests(tests)
       type(unittest_type), allocatable, intent(out) :: tests(:)
-      allocate (tests(12))
 
-      tests(1) = new_unittest("print_vector_plain", test_print_vector_plain)
-      tests(2) = new_unittest("print_vector_numpy", test_print_vector_numpy)
-      tests(3) = new_unittest("print_vector_mathematica", test_print_vector_mathematica)
-      tests(4) = new_unittest("print_packed_matrix_plain", test_print_packed_matrix_plain)
-      tests(5) = new_unittest("print_packed_matrix_numpy", test_print_packed_matrix_numpy)
-      tests(6) = new_unittest("print_packed_matrix_mathematica", test_print_packed_matrix_mathematica)
-      tests(7) = new_unittest("print_matrix_plain", test_print_matrix_plain)
-      tests(8) = new_unittest("print_matrix_numpy", test_print_matrix_numpy)
-      tests(9) = new_unittest("print_matrix_mathematica", test_print_matrix_mathematica)
-      tests(10) = new_unittest("print_3d_tensor_plain", test_print_3d_tensor_plain)
-      tests(11) = new_unittest("print_3d_tensor_numpy", test_print_3d_tensor_numpy)
-      tests(12) = new_unittest("print_3d_tensor_mathematica", test_print_3d_tensor_mathematica)
+      tests = [ &
+              new_unittest("print_vector_plain", test_print_vector_plain), &
+              new_unittest("print_vector_numpy", test_print_vector_numpy), &
+              new_unittest("print_vector_mathematica", test_print_vector_mathematica), &
+              new_unittest("print_packed_matrix_plain", test_print_packed_matrix_plain), &
+              new_unittest("print_packed_matrix_numpy", test_print_packed_matrix_numpy), &
+              new_unittest("print_packed_matrix_mathematica", test_print_packed_matrix_mathematica), &
+              new_unittest("print_matrix_plain", test_print_matrix_plain), &
+              new_unittest("print_matrix_numpy", test_print_matrix_numpy), &
+              new_unittest("print_matrix_mathematica", test_print_matrix_mathematica), &
+              new_unittest("print_3d_tensor_plain", test_print_3d_tensor_plain), &
+              new_unittest("print_3d_tensor_numpy", test_print_3d_tensor_numpy), &
+              new_unittest("print_3d_tensor_mathematica", test_print_3d_tensor_mathematica) &
+              ]
 
    end subroutine collect_pic_matrix_printer_v2_tests
 

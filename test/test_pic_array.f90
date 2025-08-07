@@ -12,64 +12,65 @@ contains
 
    subroutine collect_pic_array_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: n_test = 56
-      allocate (testsuite(n_test))
-      testsuite(1) = new_unittest("get_threading_mode", test_get_threading_mode)
-      testsuite(2) = new_unittest("set_threading_mode", test_set_threading_mode)
-      testsuite(3) = new_unittest("fill_vector_int32", test_fill_vector_int32)
-      testsuite(4) = new_unittest("fill_vector_int64", test_fill_vector_int64)
-      testsuite(5) = new_unittest("fill_vector_sp", test_fill_vector_sp)
-      testsuite(6) = new_unittest("fill_vector_dp", test_fill_vector_dp)
-      testsuite(7) = new_unittest("fill_matrix_int32", test_fill_matrix_int32)
-      testsuite(8) = new_unittest("fill_matrix_int64", test_fill_matrix_int64)
-      testsuite(9) = new_unittest("fill_matrix_sp", test_fill_matrix_sp)
-      testsuite(10) = new_unittest("fill_matrix_dp", test_fill_matrix_dp)
-      testsuite(11) = new_unittest("fill_vector_int32_threaded", test_fill_vector_int32_threaded)
-      testsuite(12) = new_unittest("fill_vector_int64_threaded", test_fill_vector_int64_threaded)
-      testsuite(13) = new_unittest("fill_vector_sp_threaded", test_fill_vector_sp_threaded)
-      testsuite(14) = new_unittest("fill_vector_dp_threaded", test_fill_vector_dp_threaded)
-      testsuite(15) = new_unittest("fill_matrix_int32_threaded", test_fill_matrix_int32_threaded)
-      testsuite(16) = new_unittest("fill_matrix_int64_threaded", test_fill_matrix_int64_threaded)
-      testsuite(17) = new_unittest("fill_matrix_sp_threaded", test_fill_matrix_sp_threaded)
-      testsuite(18) = new_unittest("fill_matrix_dp_threaded", test_fill_matrix_dp_threaded)
-      testsuite(19) = new_unittest("copy_vector_int32", test_copy_vector_int32)
-      testsuite(20) = new_unittest("copy_vector_int64", test_copy_vector_int64)
-      testsuite(21) = new_unittest("copy_vector_sp", test_copy_vector_sp)
-      testsuite(22) = new_unittest("copy_vector_dp", test_copy_vector_dp)
-      testsuite(23) = new_unittest("copy_matrix_int32", test_copy_matrix_int32)
-      testsuite(24) = new_unittest("copy_matrix_int64", test_copy_matrix_int64)
-      testsuite(25) = new_unittest("copy_matrix_sp", test_copy_matrix_sp)
-      testsuite(26) = new_unittest("copy_matrix_dp", test_copy_matrix_dp)
-      testsuite(27) = new_unittest("copy_vector_int32_threaded", test_copy_vector_int32_threaded)
-      testsuite(28) = new_unittest("copy_vector_int64_threaded", test_copy_vector_int64_threaded)
-      testsuite(29) = new_unittest("copy_vector_sp_threaded", test_copy_vector_sp_threaded)
-      testsuite(30) = new_unittest("copy_vector_dp_threaded", test_copy_vector_dp_threaded)
-      testsuite(31) = new_unittest("copy_matrix_int32_threaded", test_copy_matrix_int32_threaded)
-      testsuite(32) = new_unittest("copy_matrix_int64_threaded", test_copy_matrix_int64_threaded)
-      testsuite(33) = new_unittest("copy_matrix_sp_threaded", test_copy_matrix_sp_threaded)
-      testsuite(34) = new_unittest("copy_matrix_dp_threaded", test_copy_matrix_dp_threaded)
-      testsuite(35) = new_unittest("pic_transpose_matrix_int32", test_pic_transpose_matrix_int32)
-      testsuite(36) = new_unittest("pic_transpose_matrix_int64", test_pic_transpose_matrix_int64)
-      testsuite(37) = new_unittest("pic_transpose_matrix_sp", test_pic_transpose_matrix_sp)
-      testsuite(38) = new_unittest("pic_transpose_matrix_dp", test_pic_transpose_matrix_dp)
-      testsuite(39) = new_unittest("pic_transpose_matrix_int32_threaded", test_pic_transpose_matrix_int32_threaded)
-      testsuite(40) = new_unittest("pic_transpose_matrix_int64_threaded", test_pic_transpose_matrix_int64_threaded)
-      testsuite(41) = new_unittest("pic_transpose_matrix_sp_threaded", test_pic_transpose_matrix_sp_threaded)
-      testsuite(42) = new_unittest("pic_transpose_matrix_dp_threaded", test_pic_transpose_matrix_dp_threaded)
-      testsuite(43) = new_unittest("pic_sum_vector_int32", test_pic_sum_vector_int32)
-      testsuite(44) = new_unittest("pic_sum_vector_int64", test_pic_sum_vector_int64)
-      testsuite(45) = new_unittest("pic_sum_vector_sp", test_pic_sum_vector_sp)
-      testsuite(46) = new_unittest("pic_sum_vector_dp", test_pic_sum_vector_dp)
-      testsuite(47) = new_unittest("pic_sum_matrix_int32", test_pic_sum_matrix_int32)
-      testsuite(48) = new_unittest("pic_sum_matrix_int64", test_pic_sum_matrix_int64)
-      testsuite(49) = new_unittest("pic_sum_matrix_sp", test_pic_sum_matrix_sp)
-      testsuite(50) = new_unittest("pic_sum_matrix_dp", test_pic_sum_matrix_dp)
-      testsuite(51) = new_unittest("pic_sum_vector_int32_threaded", test_pic_sum_vector_int32_threaded)
-      testsuite(52) = new_unittest("pic_sum_vector_int64_threaded", test_pic_sum_vector_int64_threaded)
-      testsuite(53) = new_unittest("pic_sum_vector_sp_threaded", test_pic_sum_vector_sp_threaded)
-      testsuite(54) = new_unittest("pic_sum_vector_dp_threaded", test_pic_sum_vector_dp_threaded)
-      testsuite(55) = new_unittest("pic_sum_matrix_int32_threaded", test_pic_sum_matrix_int32_threaded)
-      testsuite(56) = new_unittest("pic_sum_matrix_int64_threaded", test_pic_sum_matrix_int64_threaded)
+
+      testsuite = [ &
+                  new_unittest("get_threading_mode", test_get_threading_mode), &
+                  new_unittest("set_threading_mode", test_set_threading_mode), &
+                  new_unittest("fill_vector_int32", test_fill_vector_int32), &
+                  new_unittest("fill_vector_int64", test_fill_vector_int64), &
+                  new_unittest("fill_vector_sp", test_fill_vector_sp), &
+                  new_unittest("fill_vector_dp", test_fill_vector_dp), &
+                  new_unittest("fill_matrix_int32", test_fill_matrix_int32), &
+                  new_unittest("fill_matrix_int64", test_fill_matrix_int64), &
+                  new_unittest("fill_matrix_sp", test_fill_matrix_sp), &
+                  new_unittest("fill_matrix_dp", test_fill_matrix_dp), &
+                  new_unittest("fill_vector_int32_threaded", test_fill_vector_int32_threaded), &
+                  new_unittest("fill_vector_int64_threaded", test_fill_vector_int64_threaded), &
+                  new_unittest("fill_vector_sp_threaded", test_fill_vector_sp_threaded), &
+                  new_unittest("fill_vector_dp_threaded", test_fill_vector_dp_threaded), &
+                  new_unittest("fill_matrix_int32_threaded", test_fill_matrix_int32_threaded), &
+                  new_unittest("fill_matrix_int64_threaded", test_fill_matrix_int64_threaded), &
+                  new_unittest("fill_matrix_sp_threaded", test_fill_matrix_sp_threaded), &
+                  new_unittest("fill_matrix_dp_threaded", test_fill_matrix_dp_threaded), &
+                  new_unittest("copy_vector_int32", test_copy_vector_int32), &
+                  new_unittest("copy_vector_int64", test_copy_vector_int64), &
+                  new_unittest("copy_vector_sp", test_copy_vector_sp), &
+                  new_unittest("copy_vector_dp", test_copy_vector_dp), &
+                  new_unittest("copy_matrix_int32", test_copy_matrix_int32), &
+                  new_unittest("copy_matrix_int64", test_copy_matrix_int64), &
+                  new_unittest("copy_matrix_sp", test_copy_matrix_sp), &
+                  new_unittest("copy_matrix_dp", test_copy_matrix_dp), &
+                  new_unittest("copy_vector_int32_threaded", test_copy_vector_int32_threaded), &
+                  new_unittest("copy_vector_int64_threaded", test_copy_vector_int64_threaded), &
+                  new_unittest("copy_vector_sp_threaded", test_copy_vector_sp_threaded), &
+                  new_unittest("copy_vector_dp_threaded", test_copy_vector_dp_threaded), &
+                  new_unittest("copy_matrix_int32_threaded", test_copy_matrix_int32_threaded), &
+                  new_unittest("copy_matrix_int64_threaded", test_copy_matrix_int64_threaded), &
+                  new_unittest("copy_matrix_sp_threaded", test_copy_matrix_sp_threaded), &
+                  new_unittest("copy_matrix_dp_threaded", test_copy_matrix_dp_threaded), &
+                  new_unittest("pic_transpose_matrix_int32", test_pic_transpose_matrix_int32), &
+                  new_unittest("pic_transpose_matrix_int64", test_pic_transpose_matrix_int64), &
+                  new_unittest("pic_transpose_matrix_sp", test_pic_transpose_matrix_sp), &
+                  new_unittest("pic_transpose_matrix_dp", test_pic_transpose_matrix_dp), &
+                  new_unittest("pic_transpose_matrix_int32_threaded", test_pic_transpose_matrix_int32_threaded), &
+                  new_unittest("pic_transpose_matrix_int64_threaded", test_pic_transpose_matrix_int64_threaded), &
+                  new_unittest("pic_transpose_matrix_sp_threaded", test_pic_transpose_matrix_sp_threaded), &
+                  new_unittest("pic_transpose_matrix_dp_threaded", test_pic_transpose_matrix_dp_threaded), &
+                  new_unittest("pic_sum_vector_int32", test_pic_sum_vector_int32), &
+                  new_unittest("pic_sum_vector_int64", test_pic_sum_vector_int64), &
+                  new_unittest("pic_sum_vector_sp", test_pic_sum_vector_sp), &
+                  new_unittest("pic_sum_vector_dp", test_pic_sum_vector_dp), &
+                  new_unittest("pic_sum_matrix_int32", test_pic_sum_matrix_int32), &
+                  new_unittest("pic_sum_matrix_int64", test_pic_sum_matrix_int64), &
+                  new_unittest("pic_sum_matrix_sp", test_pic_sum_matrix_sp), &
+                  new_unittest("pic_sum_matrix_dp", test_pic_sum_matrix_dp), &
+                  new_unittest("pic_sum_vector_int32_threaded", test_pic_sum_vector_int32_threaded), &
+                  new_unittest("pic_sum_vector_int64_threaded", test_pic_sum_vector_int64_threaded), &
+                  new_unittest("pic_sum_vector_sp_threaded", test_pic_sum_vector_sp_threaded), &
+                  new_unittest("pic_sum_vector_dp_threaded", test_pic_sum_vector_dp_threaded), &
+                  new_unittest("pic_sum_matrix_int32_threaded", test_pic_sum_matrix_int32_threaded), &
+                  new_unittest("pic_sum_matrix_int64_threaded", test_pic_sum_matrix_int64_threaded) &
+                  ]
 
       ! Add more tests as needed
 

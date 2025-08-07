@@ -12,19 +12,19 @@ contains
 
    subroutine collect_pic_string_utils_tests(testsuite2)
       type(unittest_type), allocatable, intent(out) :: testsuite2(:)
-      integer(default_int), parameter :: ntests = 11
-      allocate (testsuite2(ntests))
-      testsuite2(1) = new_unittest("test_to_string_int32", test_to_string_int32)
-      testsuite2(2) = new_unittest("test_to_string_int64", test_to_string_int64)
-      testsuite2(3) = new_unittest("test_to_string_dp", test_to_string_dp)
-      testsuite2(4) = new_unittest("test_to_string_char", test_to_string_char)
-      testsuite2(5) = new_unittest("test_to_string_logical", test_to_string_logical)
-      testsuite2(6) = new_unittest("test_to_string_sp", test_to_string_sp)
-      testsuite2(7) = new_unittest("test_set_get_precision", test_set_get_precision)
-      testsuite2(8) = new_unittest("test_write_with_precision_sp", test_write_with_precision_sp)
-      testsuite2(9) = new_unittest("test_write_with_precision_dp", test_write_with_precision_dp)
-      testsuite2(10) = new_unittest("test_padding", test_padding)
-      testsuite2(11) = new_unittest("test_to_upper", test_to_upper)
+      testsuite2 = [ &
+                   new_unittest("test_to_string_int32", test_to_string_int32), &
+                   new_unittest("test_to_string_int64", test_to_string_int64), &
+                   new_unittest("test_to_string_dp", test_to_string_dp), &
+                   new_unittest("test_to_string_char", test_to_string_char), &
+                   new_unittest("test_to_string_logical", test_to_string_logical), &
+                   new_unittest("test_to_string_sp", test_to_string_sp), &
+                   new_unittest("test_set_get_precision", test_set_get_precision), &
+                   new_unittest("test_write_with_precision_sp", test_write_with_precision_sp), &
+                   new_unittest("test_write_with_precision_dp", test_write_with_precision_dp), &
+                   new_unittest("test_padding", test_padding), &
+                   new_unittest("test_to_upper", test_to_upper) &
+                   ]
 
    end subroutine collect_pic_string_utils_tests
 

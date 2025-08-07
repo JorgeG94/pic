@@ -10,15 +10,15 @@ contains
 
    subroutine collect_flop_rate_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: ntests = 7
-      allocate (testsuite(ntests))
-      testsuite(1) = new_unittest("test_flop_rate_basic_calculation", test_flop_rate_basic_calculation)
-      testsuite(2) = new_unittest("test_flop_rate_multiple_flops", test_flop_rate_multiple_flops)
-      testsuite(3) = new_unittest("test_flop_rate_zero_flops", test_flop_rate_zero_flops)
-      testsuite(4) = new_unittest("test_flop_rate_accessors", test_flop_rate_accessors)
-      testsuite(5) = new_unittest("test_flop_rate_timing_order", test_flop_rate_timing_order)
-      testsuite(6) = new_unittest("test_flop_rate_reset_behavior", test_flop_rate_reset_behavior)
-      testsuite(7) = new_unittest("test_flop_rate_report", test_flop_rate_report)
+      testsuite = [ &
+                  new_unittest("test_flop_rate_basic_calculation", test_flop_rate_basic_calculation), &
+                  new_unittest("test_flop_rate_multiple_flops", test_flop_rate_multiple_flops), &
+                  new_unittest("test_flop_rate_zero_flops", test_flop_rate_zero_flops), &
+                  new_unittest("test_flop_rate_accessors", test_flop_rate_accessors), &
+                  new_unittest("test_flop_rate_timing_order", test_flop_rate_timing_order), &
+                  new_unittest("test_flop_rate_reset_behavior", test_flop_rate_reset_behavior), &
+                  new_unittest("test_flop_rate_report", test_flop_rate_report) &
+                  ]
    end subroutine collect_flop_rate_tests
 
    subroutine test_flop_rate_basic_calculation(error)

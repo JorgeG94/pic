@@ -10,10 +10,10 @@ contains
 
    subroutine collect_pic_blas_iamax_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: ntests = 2
-      allocate (testsuite(ntests))
-      testsuite(1) = new_unittest("test_siamax", test_siamax)
-      testsuite(2) = new_unittest("test_diamax", test_diamax)
+      testsuite = [ &
+                  new_unittest("test_siamax", test_siamax), &
+                  new_unittest("test_diamax", test_diamax) &
+                  ]
    end subroutine collect_pic_blas_iamax_tests
 
    subroutine test_siamax(error)
