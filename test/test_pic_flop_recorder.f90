@@ -10,16 +10,17 @@ contains
 
    subroutine collect_pic_flop_recorder_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: ntests = 8
-      allocate (testsuite(ntests))
-      testsuite(1) = new_unittest("test_flop_recorder_initialization", test_flop_recorder_initialization)
-      testsuite(2) = new_unittest("test_flop_recorder_add_single", test_flop_recorder_add_single)
-      testsuite(3) = new_unittest("test_flop_recorder_add_multiple", test_flop_recorder_add_multiple)
-      testsuite(4) = new_unittest("test_flop_recorder_reset", test_flop_recorder_reset)
-      testsuite(5) = new_unittest("test_flop_recorder_large_numbers", test_flop_recorder_large_numbers)
-      testsuite(6) = new_unittest("test_flop_recorder_zero_flops", test_flop_recorder_zero_flops)
-      testsuite(7) = new_unittest("test_flop_recorder_accumulation", test_flop_recorder_accumulation)
-      testsuite(8) = new_unittest("test_flop_recorder_multiple_instances", test_flop_recorder_multiple_instances)
+
+      testsuite = [ &
+                  new_unittest("test_flop_recorder_initialization", test_flop_recorder_initialization), &
+                  new_unittest("test_flop_recorder_add_single", test_flop_recorder_add_single), &
+                  new_unittest("test_flop_recorder_add_multiple", test_flop_recorder_add_multiple), &
+                  new_unittest("test_flop_recorder_reset", test_flop_recorder_reset), &
+                  new_unittest("test_flop_recorder_large_numbers", test_flop_recorder_large_numbers), &
+                  new_unittest("test_flop_recorder_zero_flops", test_flop_recorder_zero_flops), &
+                  new_unittest("test_flop_recorder_accumulation", test_flop_recorder_accumulation), &
+                  new_unittest("test_flop_recorder_multiple_instances", test_flop_recorder_multiple_instances) &
+                  ]
    end subroutine collect_pic_flop_recorder_tests
 
    subroutine test_flop_recorder_initialization(error)

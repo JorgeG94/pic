@@ -10,13 +10,13 @@ contains
 
    subroutine collect_pic_sgemv_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: ntests = 5
-      allocate (testsuite(ntests))
-      testsuite(1) = new_unittest("test_sgemv_basic", test_sgemv_basic)
-      testsuite(2) = new_unittest("test_sgemv_transpose", test_sgemv_transpose)
-      testsuite(3) = new_unittest("test_sgemv_alpha_beta", test_sgemv_alpha_beta)
-      testsuite(4) = new_unittest("test_sgemv_identity", test_sgemv_identity)
-      testsuite(5) = new_unittest("test_sgemv_beta_accumulate", test_sgemv_beta_accumulate)
+      testsuite = [ &
+                  new_unittest("test_sgemv_basic", test_sgemv_basic), &
+                  new_unittest("test_sgemv_transpose", test_sgemv_transpose), &
+                  new_unittest("test_sgemv_alpha_beta", test_sgemv_alpha_beta), &
+                  new_unittest("test_sgemv_identity", test_sgemv_identity), &
+                  new_unittest("test_sgemv_beta_accumulate", test_sgemv_beta_accumulate) &
+                  ]
    end subroutine collect_pic_sgemv_tests
 
    subroutine test_sgemv_basic(error)

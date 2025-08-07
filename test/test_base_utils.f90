@@ -13,11 +13,11 @@ contains
    subroutine collect_suite1(testsuite)
       !> Collection of tests
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: ntests = 2
 
-      allocate (testsuite(ntests))
-      testsuite(1) = new_unittest("valid", test_valid)
-      testsuite(2) = new_unittest("invalid", test_invalid, should_fail=.true.)
+      testsuite = [ &
+                  new_unittest("valid", test_valid), &
+                  new_unittest("invalid", test_invalid, should_fail=.true.) &
+                  ]
 
    end subroutine collect_suite1
 

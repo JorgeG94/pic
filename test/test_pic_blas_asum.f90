@@ -12,13 +12,13 @@ contains
 
    subroutine collect_pic_asum_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: ntests = 4
-      allocate (testsuite(ntests))
 
-      testsuite(1) = new_unittest("test_sasum", test_sasum)
-      testsuite(2) = new_unittest("test_dasum", test_dasum)
-      testsuite(3) = new_unittest("test_scasum", test_scasum)
-      testsuite(4) = new_unittest("test_dcasum", test_dcasum)
+      testsuite = [ &
+                  new_unittest("test_sasum", test_sasum), &
+                  new_unittest("test_dasum", test_dasum), &
+                  new_unittest("test_scasum", test_scasum), &
+                  new_unittest("test_dcasum", test_dcasum) &
+                  ]
 
    end subroutine collect_pic_asum_tests
 

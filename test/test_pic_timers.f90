@@ -11,14 +11,14 @@ contains
 
    subroutine collect_pic_timers_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: ntests = 6
-      allocate (testsuite(ntests))
-      testsuite(1) = new_unittest("test_timer_basic_functionality", test_timer_basic_functionality)
-      testsuite(2) = new_unittest("test_timer_zero_elapsed", test_timer_zero_elapsed)
-      testsuite(3) = new_unittest("test_timer_short_delay", test_timer_short_delay)
-      testsuite(4) = new_unittest("test_timer_multiple_measurements", test_timer_multiple_measurements)
-      testsuite(5) = new_unittest("test_timer_get_elapsed_time", test_timer_get_elapsed_time)
-      testsuite(6) = new_unittest("test_timer_precision", test_timer_precision)
+      testsuite = [ &
+                  new_unittest("test_timer_basic_functionality", test_timer_basic_functionality), &
+                  new_unittest("test_timer_zero_elapsed", test_timer_zero_elapsed), &
+                  new_unittest("test_timer_short_delay", test_timer_short_delay), &
+                  new_unittest("test_timer_multiple_measurements", test_timer_multiple_measurements), &
+                  new_unittest("test_timer_get_elapsed_time", test_timer_get_elapsed_time), &
+                  new_unittest("test_timer_precision", test_timer_precision) &
+                  ]
    end subroutine collect_pic_timers_tests
 
    subroutine test_timer_basic_functionality(error)
