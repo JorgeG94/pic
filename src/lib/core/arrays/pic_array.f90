@@ -15,10 +15,8 @@ module pic_array
    logical :: use_threaded_default = .false.
    public :: ASCENDING, DESCENDING
 
-   enum, bind(c)
-      enumerator :: ASCENDING = 1
-      enumerator :: DESCENDING = 2
-   end enum
+   integer(default_int), parameter :: ASCENDING = 1
+   integer(default_int), parameter :: DESCENDING = 2
 
    interface set_threading_mode
    !! set_threading sets the threading mode for the array routines
