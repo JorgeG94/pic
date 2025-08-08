@@ -2,7 +2,8 @@ module test_pic_array
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_types, only: sp, dp, int32, int64, default_int
    use pic_array, only: fill, set_threading_mode, get_threading_mode, &
-                        pic_transpose, pic_sum, copy, is_sorted
+                        pic_transpose, pic_sum, copy, is_sorted, ASCENDING, &
+                        DESCENDING
    use pic_test_helpers, only: is_equal
    implicit none
    private
@@ -1060,7 +1061,7 @@ contains
       call check(error, sorted, .true., "Array should be sorted!")
       if (allocated(error)) return
 
-      sorted = is_sorted(vector, reverse=.true.)
+      sorted = is_sorted(vector, DESCENDING)
       call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
       if (allocated(error)) return
 
@@ -1082,7 +1083,7 @@ contains
       call check(error, sorted, .true., "Array should be sorted!")
       if (allocated(error)) return
 
-      sorted = is_sorted(vector, reverse=.true.)
+      sorted = is_sorted(vector, DESCENDING)
       call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
       if (allocated(error)) return
 
@@ -1104,7 +1105,7 @@ contains
       call check(error, sorted, .true., "Array should be sorted!")
       if (allocated(error)) return
 
-      sorted = is_sorted(vector, reverse=.true.)
+      sorted = is_sorted(vector, DESCENDING)
       call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
       if (allocated(error)) return
 
@@ -1126,7 +1127,7 @@ contains
       call check(error, sorted, .true., "Array should be sorted!")
       if (allocated(error)) return
 
-      sorted = is_sorted(vector, reverse=.true.)
+      sorted = is_sorted(vector, DESCENDING)
       call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
       if (allocated(error)) return
 

@@ -20,6 +20,12 @@ module pic_array
   public :: set_threading_mode, get_threading_mode
 
   logical :: use_threaded_default = .false.
+  public :: ASCENDING, DESCENDING
+
+  enum, bind(c)
+    enumerator :: ASCENDING = 1
+    enumerator :: DESCENDING = 1
+  end enum
 
 
      interface set_threading_mode
@@ -114,10 +120,9 @@ module pic_array
   interface is_sorted
     !! is_sorted provides a simple way to checking if a 1d array is sorted
     !! it is implemented for int32, int64, sp, and dp datatypes. The default
-    !! is to check if an array is sorted in ascending fashion, you can use
-    !! reverse = .true. to ask for it to be descending
+    !! is to check if an array is sorted in ascending fashion.
     !!
-    !! Usage: result = is_sorted(array, [optional] reverse = .false.)
+    !! Usage: result = is_sorted(array, [optional] ASCENDING/DESCENDING)
     #: for T in TYPES
       module procedure is_sorted_${T}$
     #:endfor
@@ -382,37 +387,37 @@ contains
 
 #:for T in TYPES
   #:set FTYPE = FORTRAN_TYPES[T]
-   pure function is_sorted_${T}$(array, reverse) result(sorted)
+   pure function is_sorted_${T}$(array, order) result(sorted)
     ${FTYPE}$, intent(in) :: array(:)
-    logical, intent(in), optional :: reverse
-    logical :: is_reverse
+    integer(default_int), intent(in), optional :: order
+    integer(default_int):: sort_order
+    integer(default_int) :: i
     logical :: sorted
 
-    sorted = .true.
-    is_reverse = .false.
 
-    if(present(reverse)) then
-      is_reverse = reverse
+    sorted = .true.
+    sort_order = ASCENDING
+
+    if(present(order)) then
+      sort_order = order
     endif
 
-    block
-    integer(int32) :: i
-    if(is_reverse) then
-    do i = 1, size(array) - 1
-      if(array(i+1) > array(i)) then
-        sorted = .false.
-        return
-      endif
-    end do
-    else
-      do i = 1, size(array) - 1
-        if(array(i+1) < array(i)) then
-          sorted = .false.
-          return
-        end if
-      end do
-    end if
-    end block
+    select case (sort_order)
+    case (DESCENDING)
+       do i = 1, size(array) - 1
+          if (array(i + 1) > array(i)) then
+             sorted = .false.
+             return
+          end if
+       end do
+    case default  ! ASCENDING or any other value
+       do i = 1, size(array) - 1
+          if (array(i + 1) < array(i)) then
+             sorted = .false.
+             return
+          end if
+       end do
+    end select
 
    end function is_sorted_${T}$
 
