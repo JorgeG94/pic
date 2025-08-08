@@ -9,9 +9,14 @@ module pic_array
    private
 
    public :: fill, copy, pic_transpose, pic_sum
+   public :: is_sorted
    public :: set_threading_mode, get_threading_mode
 
    logical :: use_threaded_default = .false.
+   public :: ASCENDING, DESCENDING
+
+   integer(default_int), parameter :: ASCENDING = 1
+   integer(default_int), parameter :: DESCENDING = 2
 
    interface set_threading_mode
    !! set_threading sets the threading mode for the array routines
@@ -106,7 +111,19 @@ module pic_array
       module procedure sum_matrix_int64
       module procedure sum_matrix_sp
       module procedure sum_matrix_dp
-   end interface pic_sum
+   end interface
+
+   interface is_sorted
+    !! is_sorted provides a simple way to checking if a 1d array is sorted
+    !! it is implemented for int32, int64, sp, and dp datatypes. The default
+    !! is to check if an array is sorted in ascending fashion.
+    !!
+    !! Usage: result = is_sorted(array, [optional] ASCENDING/DESCENDING)
+      module procedure is_sorted_int32
+      module procedure is_sorted_int64
+      module procedure is_sorted_sp
+      module procedure is_sorted_dp
+   end interface
 
    ! potentially implement a shallow copy? nah?
    integer(default_int), parameter :: block_size = 32
@@ -958,5 +975,137 @@ contains
       end if
 
    end function sum_matrix_dp
+
+   pure function is_sorted_int32(array, order) result(sorted)
+      integer(int32), intent(in) :: array(:)
+      integer(default_int), intent(in), optional :: order
+      integer(default_int):: sort_order
+      integer(default_int) :: i
+      logical :: sorted
+
+      sorted = .true.
+      sort_order = ASCENDING
+
+      if (present(order)) then
+         sort_order = order
+      end if
+
+      select case (sort_order)
+      case (DESCENDING)
+         do i = 1, size(array) - 1
+            if (array(i + 1) > array(i)) then
+               sorted = .false.
+               return
+            end if
+         end do
+      case default
+         do i = 1, size(array) - 1
+            if (array(i + 1) < array(i)) then
+               sorted = .false.
+               return
+            end if
+         end do
+      end select
+
+   end function is_sorted_int32
+
+   pure function is_sorted_int64(array, order) result(sorted)
+      integer(int64), intent(in) :: array(:)
+      integer(default_int), intent(in), optional :: order
+      integer(default_int):: sort_order
+      integer(default_int) :: i
+      logical :: sorted
+
+      sorted = .true.
+      sort_order = ASCENDING
+
+      if (present(order)) then
+         sort_order = order
+      end if
+
+      select case (sort_order)
+      case (DESCENDING)
+         do i = 1, size(array) - 1
+            if (array(i + 1) > array(i)) then
+               sorted = .false.
+               return
+            end if
+         end do
+      case default  ! ASCENDING or any other value
+         do i = 1, size(array) - 1
+            if (array(i + 1) < array(i)) then
+               sorted = .false.
+               return
+            end if
+         end do
+      end select
+
+   end function is_sorted_int64
+
+   pure function is_sorted_sp(array, order) result(sorted)
+      real(sp), intent(in) :: array(:)
+      integer(default_int), intent(in), optional :: order
+      integer(default_int):: sort_order
+      integer(default_int) :: i
+      logical :: sorted
+
+      sorted = .true.
+      sort_order = ASCENDING
+
+      if (present(order)) then
+         sort_order = order
+      end if
+
+      select case (sort_order)
+      case (DESCENDING)
+         do i = 1, size(array) - 1
+            if (array(i + 1) > array(i)) then
+               sorted = .false.
+               return
+            end if
+         end do
+      case default  ! ASCENDING or any other value
+         do i = 1, size(array) - 1
+            if (array(i + 1) < array(i)) then
+               sorted = .false.
+               return
+            end if
+         end do
+      end select
+
+   end function is_sorted_sp
+
+   pure function is_sorted_dp(array, order) result(sorted)
+      real(dp), intent(in) :: array(:)
+      integer(default_int), intent(in), optional :: order
+      integer(default_int):: sort_order
+      integer(default_int) :: i
+      logical :: sorted
+
+      sorted = .true.
+      sort_order = ASCENDING
+
+      if (present(order)) then
+         sort_order = order
+      end if
+
+      select case (sort_order)
+      case (DESCENDING)
+         do i = 1, size(array) - 1
+            if (array(i + 1) > array(i)) then
+               sorted = .false.
+               return
+            end if
+         end do
+      case default  ! ASCENDING or any other value
+         do i = 1, size(array) - 1
+            if (array(i + 1) < array(i)) then
+               sorted = .false.
+               return
+            end if
+         end do
+      end select
+
+   end function is_sorted_dp
 
 end module pic_array
