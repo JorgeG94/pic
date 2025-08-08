@@ -1058,7 +1058,7 @@ contains
 
       vector = [(i, i=1, size(vector))]
 
-      sorted = is_sorted(vector)
+      sorted = is_sorted(vector, ASCENDING)
       call check(error, sorted, .true., "Array should be sorted!")
       if (allocated(error)) return
 
@@ -1080,7 +1080,7 @@ contains
 
       vector = [(i, i=1, size(vector))]
 
-      sorted = is_sorted(vector)
+      sorted = is_sorted(vector, ASCENDING)
       call check(error, sorted, .true., "Array should be sorted!")
       if (allocated(error)) return
 
@@ -1102,7 +1102,7 @@ contains
 
       vector = [(real(i, sp), i=1, size(vector))]
 
-      sorted = is_sorted(vector)
+      sorted = is_sorted(vector, ASCENDING)
       call check(error, sorted, .true., "Array should be sorted!")
       if (allocated(error)) return
 
@@ -1124,7 +1124,7 @@ contains
 
       vector = [(real(i, dp), i=1, size(vector))]
 
-      sorted = is_sorted(vector)
+      sorted = is_sorted(vector, ASCENDING)
       call check(error, sorted, .true., "Array should be sorted!")
       if (allocated(error)) return
 
