@@ -10,13 +10,14 @@ contains
 
    subroutine collect_pic_matrix_printer_tests(tests)
       type(unittest_type), allocatable, intent(out) :: tests(:)
-      allocate (tests(6))
-      tests(1) = new_unittest("print_vector_plain", test_print_vector_plain)
-      tests(2) = new_unittest("print_vector_numpy", test_print_vector_numpy)
-      tests(3) = new_unittest("print_matrix_plain", test_print_matrix_plain)
-      tests(4) = new_unittest("print_matrix_mathematica", test_print_matrix_mathematica)
-      tests(5) = new_unittest("print_vector_n", test_print_vector_n)
-      tests(6) = new_unittest("print_matrix_m_n", test_print_matrix_m_n)
+      tests = [ &
+              new_unittest("print_vector_plain", test_print_vector_plain), &
+              new_unittest("print_vector_numpy", test_print_vector_numpy), &
+              new_unittest("print_matrix_plain", test_print_matrix_plain), &
+              new_unittest("print_matrix_mathematica", test_print_matrix_mathematica), &
+              new_unittest("print_vector_n", test_print_vector_n), &
+              new_unittest("print_matrix_m_n", test_print_matrix_m_n) &
+              ]
    end subroutine collect_pic_matrix_printer_tests
 
    subroutine test_print_vector_plain(error)

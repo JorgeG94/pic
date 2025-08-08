@@ -10,10 +10,10 @@ contains
 
    subroutine collect_pic_blas_dot_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: ntests = 2
-      allocate (testsuite(ntests))
-      testsuite(1) = new_unittest("test_sdot", test_sdot)
-      testsuite(2) = new_unittest("test_ddot", test_ddot)
+      testsuite = [ &
+                  new_unittest("test_sdot", test_sdot), &
+                  new_unittest("test_ddot", test_ddot) &
+                  ]
    end subroutine collect_pic_blas_dot_tests
 
    subroutine test_sdot(error)

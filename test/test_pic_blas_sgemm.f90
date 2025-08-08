@@ -10,16 +10,18 @@ contains
 
    subroutine collect_pic_sgemm_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: ntests = 8
-      allocate (testsuite(ntests))
-      testsuite(1) = new_unittest("test_sgemm_basic", test_sgemm_basic)
-      testsuite(2) = new_unittest("test_sgemm_transpose_a", test_sgemm_transpose_a)
-      testsuite(3) = new_unittest("test_sgemm_transpose_b", test_sgemm_transpose_b)
-      testsuite(4) = new_unittest("test_sgemm_transpose_both", test_sgemm_transpose_both)
-      testsuite(5) = new_unittest("test_sgemm_alpha_beta", test_sgemm_alpha_beta)
-      testsuite(6) = new_unittest("test_sgemm_identity", test_sgemm_identity)
-      testsuite(7) = new_unittest("test_sgemm_rectangular", test_sgemm_rectangular)
-      testsuite(8) = new_unittest("test_sgemm_beta_accumulate", test_sgemm_beta_accumulate)
+
+      testsuite = [ &
+                  new_unittest("test_sgemm_basic", test_sgemm_basic), &
+                  new_unittest("test_sgemm_transpose_a", test_sgemm_transpose_a), &
+                  new_unittest("test_sgemm_transpose_b", test_sgemm_transpose_b), &
+                  new_unittest("test_sgemm_transpose_both", test_sgemm_transpose_both), &
+                  new_unittest("test_sgemm_alpha_beta", test_sgemm_alpha_beta), &
+                  new_unittest("test_sgemm_identity", test_sgemm_identity), &
+                  new_unittest("test_sgemm_rectangular", test_sgemm_rectangular), &
+                  new_unittest("test_sgemm_beta_accumulate", test_sgemm_beta_accumulate) &
+                  ]
+
    end subroutine collect_pic_sgemm_tests
 
    subroutine test_sgemm_basic(error)

@@ -10,12 +10,12 @@ contains
 
    subroutine collect_pic_scal_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: ntests = 4
-      allocate (testsuite(ntests))
-      testsuite(1) = new_unittest("test_sscal_alpha", test_sscal_alpha)
-      testsuite(2) = new_unittest("test_dscal_alpha", test_dscal_alpha)
-      testsuite(3) = new_unittest("test_sscal_default", test_sscal_default)
-      testsuite(4) = new_unittest("test_dscal_default", test_dscal_default)
+      testsuite = [ &
+                  new_unittest("test_sscal_alpha", test_sscal_alpha), &
+                  new_unittest("test_dscal_alpha", test_dscal_alpha), &
+                  new_unittest("test_sscal_default", test_sscal_default), &
+                  new_unittest("test_dscal_default", test_dscal_default) &
+                  ]
    end subroutine collect_pic_scal_tests
 
    subroutine test_sscal_alpha(error)

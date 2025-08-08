@@ -12,16 +12,17 @@ contains
 
    subroutine collect_pic_logger_tests(testsuite)
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
-      integer(default_int), parameter :: ntests = 8
-      allocate (testsuite(ntests))
-      testsuite(1) = new_unittest("test_logger_configuration", test_logger_configuration)
-      testsuite(2) = new_unittest("test_logger_configure", test_logger_configure)
-      testsuite(3) = new_unittest("test_logger_file_output", test_logger_file_output)
-      testsuite(4) = new_unittest("test_logger_log_levels", test_logger_log_levels)
-      testsuite(5) = new_unittest("test_logger_file_levels", test_logger_file_levels)
-      testsuite(6) = new_unittest("test_logger_close_file", test_logger_close_file)
-      testsuite(7) = new_unittest("test_logger_convenience_methods", test_logger_convenience_methods)
-      testsuite(8) = new_unittest("test_logger_file_content", test_logger_file_content)
+
+      testsuite = [ &
+                  new_unittest("test_logger_configuration", test_logger_configuration), &
+                  new_unittest("test_logger_configure", test_logger_configure), &
+                  new_unittest("test_logger_file_output", test_logger_file_output), &
+                  new_unittest("test_logger_log_levels", test_logger_log_levels), &
+                  new_unittest("test_logger_file_levels", test_logger_file_levels), &
+                  new_unittest("test_logger_close_file", test_logger_close_file), &
+                  new_unittest("test_logger_convenience_methods", test_logger_convenience_methods), &
+                  new_unittest("test_logger_file_content", test_logger_file_content) &
+                  ]
    end subroutine collect_pic_logger_tests
 
    subroutine test_logger_configuration(error)
