@@ -140,10 +140,10 @@ contains
       real(kind=sp), intent(in) :: r
       character(len=50) :: str
       character(len=:), allocatable :: trimmed_str
-      character(len=32) :: fmt
+      character(len=32) :: style
       !call write_with_precision(r, str)
-      write (fmt, '(A,I0,A)') '(F0.', dp_precision, ')'
-      write (str, fmt) r
+      write (style, '(A,I0,A)') '(F0.', dp_precision, ')'
+      write (str, style) r
       trimmed_str = trim(str)
    end function to_string_sp
 
@@ -152,10 +152,10 @@ contains
       real(kind=dp), intent(in) :: r
       character(len=50) :: str
       character(len=:), allocatable :: trimmed_str
-      character(len=32) :: fmt
+      character(len=32) :: style
       !call write_with_precision(r, str)
-      write (fmt, '(A,I0,A)') '(F0.', dp_precision, ')'
-      write (str, fmt) r
+      write (style, '(A,I0,A)') '(F0.', dp_precision, ')'
+      write (str, style) r
       trimmed_str = trim(str)
    end function to_string_dp
 
