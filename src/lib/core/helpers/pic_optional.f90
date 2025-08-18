@@ -16,7 +16,7 @@ module pic_optional_value
 
 contains
 
-   pure elemental function optional_int32(input_value, default_value) result(output)
+   pure function optional_int32(input_value, default_value) result(output)
       integer(int32), intent(in), optional :: input_value
       integer(int32), intent(in) :: default_value
       integer(int32) :: output
@@ -28,7 +28,7 @@ contains
       end if
    end function optional_int32
 
-   pure elemental function optional_int64(input_value, default_value) result(output)
+   pure function optional_int64(input_value, default_value) result(output)
       integer(int64), intent(in), optional :: input_value
       integer(int64), intent(in) :: default_value
       integer(int64) :: output
@@ -40,7 +40,7 @@ contains
       end if
    end function optional_int64
 
-   pure elemental function optional_sp(input_value, default_value) result(output)
+   pure function optional_sp(input_value, default_value) result(output)
       real(sp), intent(in), optional :: input_value
       real(sp), intent(in) :: default_value
       real(sp) :: output
@@ -52,7 +52,7 @@ contains
       end if
    end function optional_sp
 
-   pure elemental function optional_dp(input_value, default_value) result(output)
+   pure function optional_dp(input_value, default_value) result(output)
       real(dp), intent(in), optional :: input_value
       real(dp), intent(in) :: default_value
       real(dp) :: output
