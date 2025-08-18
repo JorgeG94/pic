@@ -20,7 +20,7 @@ program pic_tester
     !! number of tests, this number needs to be modified and equal to the number of files we have with unit tests
    character(len=:), allocatable :: suite_name, test_name
    type(testsuite_type), allocatable :: testsuites(:)
-   character(len=*), parameter :: fmt = '("#", *(1x, a))'
+   character(len=*), parameter :: style = '("#", *(1x, a))'
 
    stat = 0_int32
    !allocate (testsuites(ntest_suites))
@@ -45,25 +45,25 @@ program pic_tester
       is = select_suite(testsuites, suite_name)
       if (is > 0 .and. is <= size(testsuites)) then
          if (allocated(test_name)) then
-            write (error_unit, fmt) "Suite:", testsuites(is)%name
+            write (error_unit, style) "Suite:", testsuites(is)%name
             call run_selected(testsuites(is)%collect, test_name, error_unit, stat)
             if (stat < 0) then
                error stop 1
             end if
          else
-            write (error_unit, fmt) "Testing:", testsuites(is)%name
+            write (error_unit, style) "Testing:", testsuites(is)%name
             call run_testsuite(testsuites(is)%collect, error_unit, stat)
          end if
       else
-         write (error_unit, fmt) "Available testsuites"
+         write (error_unit, style) "Available testsuites"
          do is = 1, size(testsuites)
-            write (error_unit, fmt) "-", testsuites(is)%name
+            write (error_unit, style) "-", testsuites(is)%name
          end do
          error stop 1
       end if
    else
       do is = 1, size(testsuites)
-         write (error_unit, fmt) "Testing all:", testsuites(is)%name
+         write (error_unit, style) "Testing all:", testsuites(is)%name
          call run_testsuite(testsuites(is)%collect, error_unit, stat)
       end do
    end if
