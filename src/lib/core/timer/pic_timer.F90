@@ -25,10 +25,10 @@ module pic_timer
       integer(default_int) :: stop_count = 0_default_int
       integer(default_int) :: count_rate = 1_default_int
    contains
-      procedure :: start => timer_start
-      procedure :: stop => timer_stop
-      procedure :: print_time => timer_print_time
-      procedure :: get_elapsed_time => timer_get_elapsed_time
+      procedure, non_overridable :: start => timer_start
+      procedure, non_overridable :: stop => timer_stop
+      procedure, non_overridable :: print_time => timer_print_time
+      procedure, non_overridable :: get_elapsed_time => timer_get_elapsed_time
    end type pic_timer_type
 
 contains
