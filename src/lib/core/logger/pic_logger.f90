@@ -36,37 +36,37 @@ module pic_logger
 
    contains
 
-      procedure, public, pass(self) :: configuration
+      procedure, public, pass(self), non_overridable :: configuration
       !! Get the current logger verbosity configuration.
       !! Usage: call my_logger%configuration(level)
-      procedure, public, pass(self) :: configure
+      procedure, public, pass(self), non_overridable :: configure
       !! Configure the logger to be a certain verbosity level.
       !! Usage: call my_logger%configure(level)
-      procedure, public, pass(self) :: configure_file_output
+      procedure, public, pass(self), non_overridable :: configure_file_output
       !! Configure the logger to file to be a certain verbosity level.
       !! Usage: call my_logger%configure_file_output(filename, level)
-      procedure, public, pass(self) :: close_log_file
+      procedure, public, pass(self), non_overridable :: close_log_file
       !! Close the log file, needs to be called at the end of the program.
       !! Usage: call my_logger%close_log_file()
-      procedure, public, pass(self) :: debug
+      procedure, public, pass(self), non_overridable :: debug
       !! Log a message that will only be printed at the debug level of verbosity.
       !! Usage: call my_logger%debug("MESSAGE")
-      procedure, public, pass(self) :: verbose
+      procedure, public, pass(self), non_overridable :: verbose
       !! Log a message that will only be printed at the verbose level of verbosity.
       !! Usage: call my_logger%verbose("MESSAGE")
-      procedure, public, pass(self) :: info
+      procedure, public, pass(self), non_overridable :: info
       !! Log a message that will only be printed at the info level of verbosity.
       !! Usage: call my_logger%info("MESSAGE")
-      procedure, public, pass(self) :: performance
+      procedure, public, pass(self), non_overridable :: performance
       !! Log a message that will only be printed at the performance level of verbosity.
       !! Usage: call my_logger%performance("MESSAGE")
-      procedure, public, pass(self) :: warning
+      procedure, public, pass(self), non_overridable :: warning
       !! Log a message that will only be printed at the warning level of verbosity.
       !! Usage: call my_logger%warning("MESSAGE")
-      procedure, public, pass(self) :: error
+      procedure, public, pass(self), non_overridable :: error
       !! Log a message that will only be printed at the error level of verbosity.
       !! Usage: call my_logger%error("MESSAGE")
-      procedure, private, pass(self) :: log
+      procedure, private, pass(self), non_overridable :: log
       !! Processes the message and filters it according to the verbosity level set by the user or the default
 
    end type logger_type

@@ -21,14 +21,14 @@ module pic_flop_rate
       !! private by default so that people use the accessor functions
    contains
 
-      procedure :: start_time => flop_rate_start_time
-      procedure :: stop_time => flop_rate_stop_time
-      procedure :: add_flops => flop_rate_add_flops
-      procedure :: get_flops => flop_rate_get_flops
-      procedure :: get_time => flop_rate_get_time
-      procedure :: get_flop_rate => flop_rate_get_flop_rate
-      procedure :: report => flop_rate_report
-      procedure :: reset => flop_rate_reset
+      procedure, non_overridable :: start_time => flop_rate_start_time
+      procedure, non_overridable :: stop_time => flop_rate_stop_time
+      procedure, non_overridable :: add_flops => flop_rate_add_flops
+      procedure, non_overridable :: get_flops => flop_rate_get_flops
+      procedure, non_overridable :: get_time => flop_rate_get_time
+      procedure, non_overridable :: get_flop_rate => flop_rate_get_flop_rate
+      procedure, non_overridable :: report => flop_rate_report
+      procedure, non_overridable :: reset => flop_rate_reset
 
    end type flop_rate_type
 

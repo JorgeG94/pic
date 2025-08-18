@@ -16,9 +16,9 @@ module pic_flop_recorder
 
    contains
 
-      procedure :: add => add_flops
-      procedure :: get => get_flops
-      procedure :: reset => reset_flop_counter
+      procedure, non_overridable :: add => add_flops
+      procedure, non_overridable :: get => get_flops
+      procedure, non_overridable :: reset => reset_flop_counter
 
    end type flop_recorder_type
 
