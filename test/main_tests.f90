@@ -12,6 +12,7 @@ program pic_tester
    use test_pic_matrix_printer, only: collect_pic_matrix_printer_tests
    use test_pic_matrix_printer_v2, only: collect_pic_matrix_printer_v2_tests
    use test_pic_array, only: collect_pic_array_tests
+   use test_pic_optional, only: collect_pic_optional_tests
    ! add here the module you want to test
    implicit none
    integer(int32) :: stat, is
@@ -32,7 +33,8 @@ program pic_tester
                 new_testsuite("pic_flop_rate", collect_flop_rate_tests), &
                 new_testsuite("pic_matrix_printer", collect_pic_matrix_printer_tests), &
                 new_testsuite("pic_matrix_printer_v2", collect_pic_matrix_printer_v2_tests), &
-                new_testsuite("pic_array", collect_pic_array_tests) &
+                new_testsuite("pic_array", collect_pic_array_tests), &
+                new_testsuite("pic_optional", collect_pic_optional_tests) &
                 ]
    ! here you add another test suite to the array
 
