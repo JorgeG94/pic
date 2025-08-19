@@ -318,6 +318,40 @@ contains
          if (allocated(error)) return
       end block
 
+      block
+         character(len=1), allocatable :: medium_array(:)
+         character(len=1), allocatable :: pathological_array(:)
+         integer(int32) :: i
+
+         ! Test PARTITION path: medium size with good depth_limit
+         allocate (medium_array(100))
+         do i = 1, 100
+            medium_array(i) = char(iachar('z') - mod(i - 1, 26))  ! z,y,x,w,v,...
+         end do
+         call sort(medium_array)
+         call check(error, is_sorted(medium_array), .true., "Medium array not sorted!")
+         if (allocated(error)) return
+
+         ! Test HEAP_SORT path: force pathological quicksort behavior
+         allocate (pathological_array(1000))
+         pathological_array = 'a'  ! All identical except...
+         pathological_array(500) = 'b'  ! One different element
+         pathological_array(1) = 'z'    ! And one at the start
+         call sort(pathological_array)
+         call check(error, is_sorted(pathological_array), .true., "Pathological array not sorted!")
+         if (allocated(error)) return
+
+         ! Alternative: already sorted (bad for quicksort)
+         deallocate (pathological_array)
+         allocate (pathological_array(500))
+         do i = 1, 500
+            pathological_array(i) = char(iachar('a') + mod(i - 1, 26))
+         end do
+         call sort(pathological_array)  ! Already sorted = bad pivots
+         call check(error, is_sorted(pathological_array), .true., "Pre-sorted array not sorted!")
+         if (allocated(error)) return
+      end block
+
    end subroutine test_sort_char
 
    subroutine test_sort_int32(error)
