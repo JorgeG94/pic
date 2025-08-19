@@ -2,7 +2,7 @@ module test_pic_sorting
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_types, only: sp, dp, int32, int64, default_int
    use pic_sorting, only: sort, sort_index, radix_sort, ord_sort
-   use pic_array, only: is_sorted, ascending, DESCENDING
+   use pic_array, only: is_sorted, ascending, DESCENDING, fuck_my_array_up
    implicit none
    private
    public :: collect_pic_sorting_tests
@@ -48,10 +48,8 @@ contains
       integer(int32), parameter :: expected_reverse_index(5) = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
       integer(int32) :: index(5)
 
-      print *, "BEFORE SORT"
       array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
       call sort_index(array, index)
-      print *, "AFTER SORT"
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
@@ -311,6 +309,8 @@ contains
             char3 = mod((i - 1)/(26*26), 26) + iachar('a')
             large_char_array(i) = char(char1)//char(char2)//char(char3)
          end do
+
+         call fuck_my_array_up(large_char_array)
 
          call sort(large_char_array)
          call check(error, is_sorted(large_char_array), .true., "Char array not sorted!")
