@@ -10,6 +10,7 @@ module pic_array
 
    public :: fill, copy, pic_transpose, pic_sum
    public :: is_sorted
+   public :: fuck_my_array_up
    public :: set_threading_mode, get_threading_mode
 
    logical :: use_threaded_default = .false.
@@ -123,7 +124,16 @@ module pic_array
       module procedure is_sorted_int64
       module procedure is_sorted_sp
       module procedure is_sorted_dp
+      module procedure is_sorted_char
    end interface
+
+   interface fuck_my_array_up
+      module procedure scramble_int32_array
+      module procedure scramble_int64_array
+      module procedure scramble_sp_array
+      module procedure scramble_dp_array
+      module procedure scramble_character_array
+   end interface fuck_my_array_up
 
    ! potentially implement a shallow copy? nah?
    integer(default_int), parameter :: block_size = 32
@@ -1107,5 +1117,116 @@ contains
       end select
 
    end function is_sorted_dp
+
+   pure function is_sorted_char(array, order) result(sorted)
+      character(len=*), intent(in) :: array(:)
+      integer(default_int), intent(in), optional :: order
+      integer(default_int) :: sort_order
+      integer(default_int) :: i
+      logical :: sorted
+
+      sorted = .true.
+      sort_order = ASCENDING
+      if (present(order)) then
+         sort_order = order
+      end if
+
+      select case (sort_order)
+      case (DESCENDING)
+         do i = 1, size(array) - 1
+            if (array(i + 1) > array(i)) then
+               sorted = .false.
+               return
+            end if
+         end do
+      case default  ! ASCENDING or any other value
+         do i = 1, size(array) - 1
+            if (array(i + 1) < array(i)) then
+               sorted = .false.
+               return
+            end if
+         end do
+      end select
+   end function is_sorted_char
+
+   subroutine scramble_int32_array(array)
+      integer(int32), intent(inout) :: array(:)
+      integer(int32) :: i, j, n
+      integer(int32) :: temp
+      real(sp) :: rand_val
+
+      n = size(array)
+      do i = n, 2, -1
+         call random_number(rand_val)
+         j = int(rand_val*i) + 1
+         temp = array(i)
+         array(i) = array(j)
+         array(j) = temp
+      end do
+   end subroutine scramble_int32_array
+
+   subroutine scramble_int64_array(array)
+      integer(int64), intent(inout) :: array(:)
+      integer(int64) :: i, j, n
+      integer(int64) :: temp
+      real(sp) :: rand_val
+
+      n = size(array)
+      do i = n, 2, -1
+         call random_number(rand_val)
+         j = int(rand_val*i) + 1
+         temp = array(i)
+         array(i) = array(j)
+         array(j) = temp
+      end do
+   end subroutine scramble_int64_array
+
+   subroutine scramble_sp_array(array)
+      real(sp), intent(inout) :: array(:)
+      integer(int32) :: i, j, n
+      real(sp) :: temp
+      real(sp) :: rand_val
+
+      n = size(array)
+      do i = n, 2, -1
+         call random_number(rand_val)
+         j = int(rand_val*i) + 1
+         temp = array(i)
+         array(i) = array(j)
+         array(j) = temp
+      end do
+   end subroutine scramble_sp_array
+
+   subroutine scramble_dp_array(array)
+      real(dp), intent(inout) :: array(:)
+      integer(int32) :: i, j, n
+      real(dp) :: temp
+      real(sp) :: rand_val
+
+      n = size(array)
+      do i = n, 2, -1
+         call random_number(rand_val)
+         j = int(rand_val*i) + 1
+         temp = array(i)
+         array(i) = array(j)
+         array(j) = temp
+      end do
+   end subroutine scramble_dp_array
+
+   subroutine scramble_character_array(array)
+      character(len=*), intent(inout) :: array(:)
+      integer(int32) :: i, j, n
+      character(len=len(array)) :: temp
+      real(sp) :: rand_val
+
+      n = size(array)
+      do i = n, 2, -1
+         call random_number(rand_val)
+         j = int(rand_val*i) + 1
+         temp = array(i)
+         array(i) = array(j)
+         array(j) = temp
+      end do
+   end subroutine scramble_character_array
 
 end module pic_array
