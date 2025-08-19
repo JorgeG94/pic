@@ -444,7 +444,7 @@ contains
       integer(int32) :: integer_array(5)
       integer(int32) :: work_array(5)
 
-      integer_array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
+      integer_array = [5_int32, 4_int32, 3_int32, 2_int32, -1_int32]
       call radix_sort(integer_array)
 
       call check(error, is_sorted(integer_array), .true., "Array is not sorted!")
@@ -465,7 +465,7 @@ contains
       integer(int64) :: integer_array(5)
       integer(int64) :: work_array(5)
 
-      integer_array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
+      integer_array = [5_int64, 4_int64, 3_int64, 2_int64, -1_int64]
 
       call radix_sort(integer_array)
 
@@ -487,7 +487,7 @@ contains
       real(sp) :: real_array(5)
       real(sp) :: work_array(5)
 
-      real_array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
+      real_array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, -1.0_sp]
       call radix_sort(real_array)
 
       call check(error, is_sorted(real_array), .true., "Array is not sorted!")
@@ -508,7 +508,7 @@ contains
       real(dp) :: real_array(5)
       real(dp) :: work_array(5)
 
-      real_array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
+      real_array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, -1.0_dp]
 
       call radix_sort(real_array)
 
