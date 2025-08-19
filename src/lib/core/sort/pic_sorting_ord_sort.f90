@@ -50,6 +50,12 @@
 submodule(pic_sorting) pic_sorting_ord_sort
 
    implicit none
+   integer, parameter :: &
+      ! The maximum number of entries in a run stack, good for an array of
+      ! 2**64 elements see
+      ! https://svn.python.org/projects/python/trunk/Objects/listsort.txt
+      max_merge_stack = int(ceiling(log(2._dp**64)/ &
+                                    log(1.6180339887_dp)))
 
 contains
 
