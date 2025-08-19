@@ -353,6 +353,32 @@ contains
       call sort(integer_array, .true.)
       call check(error, is_sorted(integer_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      block
+         integer(int64), allocatable :: large_integer_array(:)
+         integer(int64), parameter :: n = 40000
+         integer(int64) :: i
+
+         allocate (large_integer_array(n))
+
+         do i = n, 1, -1
+            large_integer_array(i) = i
+         end do
+
+         call sort(large_integer_array)
+         call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+         if (allocated(error)) return
+
+         call sort(large_integer_array, .true.)
+         call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
+         if (allocated(error)) return
+
+         large_integer_array = 17_int64
+         call sort(large_integer_array)
+         call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+         if (allocated(error)) return
+
+      end block
    end subroutine test_sort_int64
 
    subroutine test_sort_sp(error)
@@ -368,6 +394,31 @@ contains
       call sort(real_array, .true.)
       call check(error, is_sorted(real_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
+      block
+         real(sp), allocatable :: large_integer_array(:)
+         integer(int64), parameter :: n = 40000
+         integer(int32) :: i
+
+         allocate (large_integer_array(n))
+
+         do i = n, 1, -1
+            large_integer_array(i) = i
+         end do
+
+         call sort(large_integer_array)
+         call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+         if (allocated(error)) return
+
+         call sort(large_integer_array, .true.)
+         call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
+         if (allocated(error)) return
+
+         large_integer_array = 17_sp
+         call sort(large_integer_array)
+         call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+         if (allocated(error)) return
+
+      end block
 
    end subroutine test_sort_sp
 
@@ -383,6 +434,31 @@ contains
       call sort(real_array, .true.)
       call check(error, is_sorted(real_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
+      block
+         real(dp), allocatable :: large_integer_array(:)
+         integer(int64), parameter :: n = 40000
+         integer(int32) :: i
+
+         allocate (large_integer_array(n))
+
+         do i = n, 1, -1
+            large_integer_array(i) = i
+         end do
+
+         call sort(large_integer_array)
+         call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+         if (allocated(error)) return
+
+         call sort(large_integer_array, .true.)
+         call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
+         if (allocated(error)) return
+
+         large_integer_array = 17_dp
+         call sort(large_integer_array)
+         call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+         if (allocated(error)) return
+
+      end block
 
    end subroutine test_sort_dp
 
