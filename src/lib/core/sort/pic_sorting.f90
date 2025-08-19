@@ -124,12 +124,12 @@ module pic_sorting
       max_merge_stack = int(ceiling(log(2._dp**64)/ &
                                     log(1.6180339887_dp)))
 
-   type run_type
-!! Used to pass state around in a stack among helper functions for the
-!! `ORD_SORT` and `SORT_INDEX` algorithms
-      integer(int_index) :: base = 0
-      integer(int_index) :: len = 0
-   end type run_type
+!   type run_type
+!!! Used to pass state around in a stack among helper functions for the
+!!! `ORD_SORT` and `SORT_INDEX` algorithms
+!      integer(int_index) :: base = 0
+!      integer(int_index) :: len = 0
+!   end type run_type
 
    public ord_sort
 !! The generic subroutine implementing the `ORD_SORT` algorithm to return
