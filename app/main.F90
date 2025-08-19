@@ -34,34 +34,6 @@ program main
 
    call pic_print_banner()
 
-   n = 150
-
-   block
-      integer(int32) :: i
-      allocate (work(n))
-      allocate (integer_array(n))
-      do i = 1, n
-         integer_array(i) = i
-      end do
-
-      call fuck_my_array_up(integer_array)
-
-      if (is_sorted(integer_array)) then
-         print *, "Array is sorted"
-      else
-         print *, "Array is not sorted"
-      end if
-
-      call sort_index(integer_array, work)
-
-      if (is_sorted(integer_array)) then
-         print *, "Array is sorted"
-      else
-         print *, "Array is not sorted"
-      end if
-
-   end block
-
    !call comm%init()
 
    !if (comm%m_rank == 0) then

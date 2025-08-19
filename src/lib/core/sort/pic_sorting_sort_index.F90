@@ -100,6 +100,7 @@ contains
       integer(int_index), allocatable :: ibuf(:)
       integer(int_index) :: array_size, i, stat
 
+      stat = 0
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
@@ -1756,6 +1757,7 @@ contains
       integer(int_index), allocatable :: ibuf(:)
       integer(int_index) :: array_size, i, stat
 
+      stat = 0_int_index
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
@@ -1792,7 +1794,14 @@ contains
       else
          allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
                    stat=stat)
-         if (stat /= 0) error stop "Allocation of array buffer failed."
+#ifdef __NVCOMPILER_LLVM__
+
+#else
+         if (stat /= 0) then
+            error stop "Allocation of array failed"
+         end if
+#endif
+
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
                error stop "iwork array is too small."
@@ -3827,6 +3836,7 @@ contains
       integer(int_index_low), allocatable :: ibuf(:)
       integer(int_index) :: array_size, i, stat
 
+      stat = 0_int_index
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
@@ -3863,7 +3873,13 @@ contains
       else
          allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
                    stat=stat)
-         if (stat /= 0) error stop "Allocation of array buffer failed."
+#ifdef __NVCOMPILER_LLVM__
+
+#else
+         if (stat /= 0) then
+            error stop "Allocation of array failed"
+         end if
+#endif
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
                error stop "iwork array is too small."

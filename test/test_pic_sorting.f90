@@ -13,8 +13,8 @@ contains
       type(unittest_type), allocatable, intent(out) :: testsuite(:)
 
       testsuite = [ &
-                  !new_unittest("test_index_sort_char_int32", test_index_sort_char_int32), &
-                  !new_unittest("test_index_sort_char_int64", test_index_sort_char_int64), &
+                  new_unittest("test_index_sort_char_int32", test_index_sort_char_int32), &
+                  new_unittest("test_index_sort_char_int64", test_index_sort_char_int64), &
                   new_unittest("test_index_sort_int32_int32", test_index_sort_int32_int32), &
                   new_unittest("test_index_sort_int64_int64", test_index_sort_int64_int64), &
                   new_unittest("test_index_sort_int32_int64", test_index_sort_int32_int64), &
