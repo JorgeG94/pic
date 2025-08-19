@@ -9,6 +9,8 @@ program main
    use pic_types, only: dp, default_int, sp, int32, int64
    use pic_matrix_printer_v2, only: print_array_v2
    use pic_string_utils, only: to_string, set_precision
+   use pic_array, only: fuck_my_array_up, is_sorted
+   use pic_sorting, only: sort, sort_index, radix_sort, ord_sort
    implicit none
    !use pic_mpi
    !use pic_timer
@@ -27,8 +29,38 @@ program main
    real(dp) :: sum_val
    !real(dp), dimension(:), allocatable :: C_flat
    integer(default_int) :: n, m, k
+   integer(int32), allocatable :: integer_array(:)
+   integer(int32), allocatable :: work(:)
 
    call pic_print_banner()
+
+   n = 150
+
+   block
+      integer(int32) :: i
+      allocate (work(n))
+      allocate (integer_array(n))
+      do i = 1, n
+         integer_array(i) = i
+      end do
+
+      call fuck_my_array_up(integer_array)
+
+      if (is_sorted(integer_array)) then
+         print *, "Array is sorted"
+      else
+         print *, "Array is not sorted"
+      end if
+
+      call sort_index(integer_array, work)
+
+      if (is_sorted(integer_array)) then
+         print *, "Array is sorted"
+      else
+         print *, "Array is not sorted"
+      end if
+
+   end block
 
    !call comm%init()
 

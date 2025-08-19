@@ -3,7 +3,7 @@ module test_pic_array
    use pic_types, only: sp, dp, int32, int64, default_int
    use pic_array, only: fill, set_threading_mode, get_threading_mode, &
                         pic_transpose, pic_sum, copy, is_sorted, ASCENDING, &
-                        DESCENDING
+                        DESCENDING, fuck_my_array_up
    use pic_test_helpers, only: is_equal
    implicit none
    private
@@ -74,7 +74,13 @@ contains
                   new_unittest("pic_is_sorted_int32", test_pic_is_sorted_int32), &
                   new_unittest("pic_is_sorted_int64", test_pic_is_sorted_int64), &
                   new_unittest("pic_is_sorted_sp", test_pic_is_sorted_sp), &
-                  new_unittest("pic_is_sorted_dp", test_pic_is_sorted_dp) &
+                  new_unittest("pic_is_sorted_dp", test_pic_is_sorted_dp), &
+                  new_unittest("pic_is_sorted_char", test_pic_is_sorted_char), &
+                  new_unittest("pic_fuck_my_array_up_int32", test_pic_fuck_my_array_up_int32), &
+                  new_unittest("pic_fuck_my_array_up_int64", test_pic_fuck_my_array_up_int64), &
+                  new_unittest("pic_fuck_my_array_up_sp", test_pic_fuck_my_array_up_sp), &
+                  new_unittest("pic_fuck_my_array_up_dp", test_pic_fuck_my_array_up_dp), &
+                  new_unittest("pic_fuck_my_array_up_char", test_pic_fuck_my_array_up_char) &
                   ]
 
       ! Add more tests as needed
@@ -1133,4 +1139,125 @@ contains
       if (allocated(error)) return
 
    end subroutine test_pic_is_sorted_dp
+
+   subroutine test_pic_is_sorted_char(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=10) :: array(5)
+      logical :: sorted
+
+      array = ["alpha     ", "beta      ", "delta     ", "epsilon   ", "gamma     "]
+
+      sorted = is_sorted(array, ASCENDING)
+      call check(error, sorted, .true., "Array should be sorted!")
+      if (allocated(error)) return
+
+      sorted = is_sorted(array, DESCENDING)
+      call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_is_sorted_char
+
+   subroutine test_pic_fuck_my_array_up_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: int32_arr(10)
+      integer(int32) :: arr_before(10)
+      integer :: sum_before
+      int32_arr = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32, 7_int32, 8_int32, 9_int32, 10_int32]
+      arr_before = int32_arr
+      call random_seed()
+      sum_before = 0_int32
+
+      sum_before = sum(int32_arr)
+
+      call fuck_my_array_up(int32_arr)
+
+      call check(error, sum(int32_arr) == sum_before, .true., "The arrays need to produce the same overall sum!")
+      if (allocated(error)) return
+
+      call check(error, all(int32_arr == arr_before), .false., "The arrays should not be equal!")
+      if (allocated(error)) return
+
+   end subroutine test_pic_fuck_my_array_up_int32
+
+   subroutine test_pic_fuck_my_array_up_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64) :: int64_arr(10)
+      integer(int64) :: arr_before(10)
+      integer :: sum_before
+      int64_arr = [1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64, 7_int64, 8_int64, 9_int64, 10_int64]
+      arr_before = int64_arr
+      call random_seed()
+      sum_before = 0_int64
+
+      sum_before = sum(int64_arr)
+
+      call fuck_my_array_up(int64_arr)
+
+      call check(error, sum(int64_arr) == sum_before, .true., "The arrays need to produce the same overall sum!")
+      if (allocated(error)) return
+
+      call check(error, all(int64_arr == arr_before), .false., "The arrays should not be equal!")
+      if (allocated(error)) return
+
+   end subroutine test_pic_fuck_my_array_up_int64
+
+   subroutine test_pic_fuck_my_array_up_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp) :: sp_arr(10)
+      real(sp) :: arr_before(10)
+      real(sp) :: sum_before
+      sp_arr = [1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp, 7.0_sp, 8.0_sp, 9.0_sp, 10.0_sp]
+      arr_before = sp_arr
+      call random_seed()
+      sum_before = 0.0_sp
+
+      sum_before = sum(sp_arr)
+
+      call fuck_my_array_up(sp_arr)
+
+      call check(error, is_equal(sum(sp_arr), sum_before), .true., "The arrays need to produce the same overall sum!")
+      if (allocated(error)) return
+
+      call check(error, all(is_equal(sp_arr, arr_before)), .false., "The arrays should not be equal!")
+      if (allocated(error)) return
+
+   end subroutine test_pic_fuck_my_array_up_sp
+
+   subroutine test_pic_fuck_my_array_up_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: dp_arr(10)
+      real(dp) :: arr_before(10)
+      real(dp) :: sum_before
+      dp_arr = [1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp, 7.0_dp, 8.0_dp, 9.0_dp, 10.0_dp]
+      arr_before = dp_arr
+      call random_seed()
+      sum_before = 0.0_dp
+
+      sum_before = sum(dp_arr)
+
+      call fuck_my_array_up(dp_arr)
+
+      call check(error, is_equal(sum(dp_arr), sum_before), .true., "The arrays need to produce the same overall sum!")
+      if (allocated(error)) return
+
+      call check(error, all(is_equal(dp_arr, arr_before)), .false., "The arrays should not be equal!")
+      if (allocated(error)) return
+
+   end subroutine test_pic_fuck_my_array_up_dp
+
+   subroutine test_pic_fuck_my_array_up_char(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=10) :: char_arr(5)
+      character(len=10) :: arr_before(5)
+      char_arr = ["apple     ", "banana    ", "cherry    ", "date      ", "elderberry"]
+      arr_before = char_arr
+      call random_seed()
+
+      call fuck_my_array_up(char_arr)
+
+      call check(error, all(char_arr == arr_before), .false., "The arrays should not be equal!")
+      if (allocated(error)) return
+
+   end subroutine test_pic_fuck_my_array_up_char
+
 end module test_pic_array
