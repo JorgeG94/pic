@@ -296,6 +296,28 @@ contains
       call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      block
+         character(len=1), allocatable :: large_char_array(:)
+         integer(int64), parameter :: n = 40000
+         integer(int32) :: i
+
+         allocate (large_char_array(n))
+
+         ! Reverse sorted - 'z' to 'a' repeated
+         do i = 1, n
+            large_char_array(i) = char(mod(25 - mod(i - 1, 26), 26) + iachar('a'))
+         end do
+         call sort(large_char_array)
+         call check(error, is_sorted(large_char_array), .true., "Char array not sorted!")
+         if (allocated(error)) return
+
+         ! All identical characters
+         large_char_array = 'x'
+         call sort(large_char_array)
+         call check(error, is_sorted(large_char_array), .true., "Identical chars not sorted!")
+         if (allocated(error)) return
+      end block
+
    end subroutine test_sort_char
 
    subroutine test_sort_int32(error)
