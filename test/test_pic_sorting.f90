@@ -298,7 +298,7 @@ contains
 
       block
          character(len=3), allocatable :: large_char_array(:)
-         integer(int64), parameter :: n = 40000
+         integer(int64), parameter :: n = 80000
          integer(int32) :: i
          integer(int32) :: char1, char2, char3
 
