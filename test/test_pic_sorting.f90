@@ -312,6 +312,27 @@ contains
       call check(error, is_sorted(integer_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      block
+         integer(int32), allocatable :: large_integer_array(:)
+         integer(int32), parameter :: n = 40000
+         integer(int32) :: i
+
+         allocate (large_integer_array(n))
+
+         do i = n, 1, -1
+            large_integer_array(i) = i
+         end do
+
+         call sort(large_integer_array)
+         call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+         if (allocated(error)) return
+
+         call sort(large_integer_array, .true.)
+         call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
+         if (allocated(error)) return
+
+      end block
+
    end subroutine test_sort_int32
 
    subroutine test_sort_int64(error)
