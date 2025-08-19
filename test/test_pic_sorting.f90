@@ -442,6 +442,7 @@ contains
    subroutine test_radix_sort_int32(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int32) :: integer_array(5)
+      integer(int32) :: work_array(5)
 
       integer_array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
       call radix_sort(integer_array)
@@ -453,11 +454,16 @@ contains
       call check(error, is_sorted(integer_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      call radix_sort(integer_array, work_array)
+      call check(error, is_sorted(integer_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
    end subroutine test_radix_sort_int32
 
    subroutine test_radix_sort_int64(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int64) :: integer_array(5)
+      integer(int64) :: work_array(5)
 
       integer_array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
 
@@ -469,11 +475,17 @@ contains
       call radix_sort(integer_array, reverse=.true.)
       call check(error, is_sorted(integer_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      call radix_sort(integer_array, work_array)
+      call check(error, is_sorted(integer_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
    end subroutine test_radix_sort_int64
 
    subroutine test_radix_sort_sp(error)
       type(error_type), allocatable, intent(out) :: error
       real(sp) :: real_array(5)
+      real(sp) :: work_array(5)
 
       real_array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
       call radix_sort(real_array)
@@ -485,11 +497,16 @@ contains
       call check(error, is_sorted(real_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      call radix_sort(real_array, work_array)
+      call check(error, is_sorted(real_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
    end subroutine test_radix_sort_sp
 
    subroutine test_radix_sort_dp(error)
       type(error_type), allocatable, intent(out) :: error
       real(dp) :: real_array(5)
+      real(dp) :: work_array(5)
 
       real_array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
 
@@ -500,6 +517,10 @@ contains
 
       call radix_sort(real_array, reverse=.true.)
       call check(error, is_sorted(real_array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      call radix_sort(real_array, work_array)
+      call check(error, is_sorted(real_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_radix_sort_dp
