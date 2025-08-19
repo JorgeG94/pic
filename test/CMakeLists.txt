@@ -9,7 +9,8 @@ set(tests
     "pic_matrix_printer"
     "pic_matrix_printer_v2"
     "pic_array"
-    "pic_optional")
+    "pic_optional"
+    "pic_sorting")
 set(blas_tests
     "pic_blas_sgemm"
     "pic_blas_dgemm"

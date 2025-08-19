@@ -9,6 +9,8 @@ program main
    use pic_types, only: dp, default_int, sp, int32, int64
    use pic_matrix_printer_v2, only: print_array_v2
    use pic_string_utils, only: to_string, set_precision
+   use pic_array, only: fuck_my_array_up, is_sorted
+   use pic_sorting, only: sort, sort_index, radix_sort, ord_sort
    implicit none
    !use pic_mpi
    !use pic_timer
@@ -27,6 +29,8 @@ program main
    real(dp) :: sum_val
    !real(dp), dimension(:), allocatable :: C_flat
    integer(default_int) :: n, m, k
+   integer(int32), allocatable :: integer_array(:)
+   integer(int32), allocatable :: work(:)
 
    call pic_print_banner()
 

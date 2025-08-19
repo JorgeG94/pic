@@ -12,6 +12,7 @@ module pic_optional_value
       module procedure :: optional_sp
       module procedure :: optional_dp
       module procedure :: optional_char
+      module procedure :: optional_logical
    end interface
 
 contains
@@ -75,5 +76,17 @@ contains
       end if
 
    end function optional_char
+
+   pure function optional_logical(input_value, default_value) result(output)
+      logical, intent(in), optional :: input_value
+      logical, intent(in) :: default_value
+      logical :: output
+
+      if (present(input_value)) then
+         output = input_value
+      else
+         output = default_value
+      end if
+   end function optional_logical
 
 end module pic_optional_value
