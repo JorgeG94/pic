@@ -331,6 +331,11 @@ contains
          call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
          if (allocated(error)) return
 
+         large_integer_array = 17_int32
+         call sort(large_integer_array)
+         call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+         if (allocated(error)) return
+
       end block
 
    end subroutine test_sort_int32

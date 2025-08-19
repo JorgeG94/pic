@@ -1247,9 +1247,9 @@ contains
 
    subroutine test_pic_fuck_my_array_up_char(error)
       type(error_type), allocatable, intent(out) :: error
-      character(len=10) :: char_arr(5)
-      character(len=10) :: arr_before(5)
-      char_arr = ["apple     ", "banana    ", "cherry    ", "date      ", "elderberry"]
+      character(len=1) :: char_arr(11)
+      character(len=1) :: arr_before(11)
+      char_arr = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"]
       arr_before = char_arr
       call random_seed()
 
