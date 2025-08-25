@@ -1,0 +1,56 @@
+# SPDX-FileCopyrightText: (c) 2025 Trailblaze Software, all rights reserved
+# SPDX-License-Identifier: LGPL-2.1-or-later
+#
+# This library is free software; you can redistribute it and/or modify it under
+# the terms of the GNU Lesser General Public License as published by the Free
+# Software Foundation; version 2.1.
+#
+# This library is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+# details.
+#
+# For LGPL2 incompatible licensing or development requests, please contact
+# trailblaze.software@gmail.com
+# Thanks Ryan
+
+name: Codecov
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: ["*"]
+  workflow_dispatch:
+jobs:
+  codecov:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set reusable strings
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> \
+          "$GITHUB_OUTPUT"
+      - name: Install lcov
+        run: sudo apt-get install lcov
+      - name: Install openblas
+        run: sudo apt install libopenblas-dev
+      - name: Configure CMake
+        run: >
+          cmake -B ${{ steps.strings.outputs.build-output-dir }}  -DCMAKE_Fortran_COMPILER=gfortran -DPIC_ENABLE_BLAS=ON -DCMAKE_BUILD_TYPE=Coverage -S ${{ github.workspace }}
+
+      - name: Build
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
+      - name: Test
+        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+        run: make coverage
+      - name: Upload coverage to codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage_filtered.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true

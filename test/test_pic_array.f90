@@ -1,0 +1,1263 @@
+module test_pic_array
+   use testdrive, only: new_unittest, unittest_type, error_type, check
+   use pic_types, only: sp, dp, int32, int64, default_int
+   use pic_array, only: fill, set_threading_mode, get_threading_mode, &
+                        pic_transpose, pic_sum, copy, is_sorted, ASCENDING, &
+                        DESCENDING, fuck_my_array_up
+   use pic_test_helpers, only: is_equal
+   implicit none
+   private
+   public :: collect_pic_array_tests
+
+contains
+
+   subroutine collect_pic_array_tests(testsuite)
+      type(unittest_type), allocatable, intent(out) :: testsuite(:)
+
+      testsuite = [ &
+                  new_unittest("get_threading_mode", test_get_threading_mode), &
+                  new_unittest("set_threading_mode", test_set_threading_mode), &
+                  new_unittest("fill_vector_int32", test_fill_vector_int32), &
+                  new_unittest("fill_vector_int64", test_fill_vector_int64), &
+                  new_unittest("fill_vector_sp", test_fill_vector_sp), &
+                  new_unittest("fill_vector_dp", test_fill_vector_dp), &
+                  new_unittest("fill_matrix_int32", test_fill_matrix_int32), &
+                  new_unittest("fill_matrix_int64", test_fill_matrix_int64), &
+                  new_unittest("fill_matrix_sp", test_fill_matrix_sp), &
+                  new_unittest("fill_matrix_dp", test_fill_matrix_dp), &
+                  new_unittest("fill_vector_int32_threaded", test_fill_vector_int32_threaded), &
+                  new_unittest("fill_vector_int64_threaded", test_fill_vector_int64_threaded), &
+                  new_unittest("fill_vector_sp_threaded", test_fill_vector_sp_threaded), &
+                  new_unittest("fill_vector_dp_threaded", test_fill_vector_dp_threaded), &
+                  new_unittest("fill_matrix_int32_threaded", test_fill_matrix_int32_threaded), &
+                  new_unittest("fill_matrix_int64_threaded", test_fill_matrix_int64_threaded), &
+                  new_unittest("fill_matrix_sp_threaded", test_fill_matrix_sp_threaded), &
+                  new_unittest("fill_matrix_dp_threaded", test_fill_matrix_dp_threaded), &
+                  new_unittest("copy_vector_int32", test_copy_vector_int32), &
+                  new_unittest("copy_vector_int64", test_copy_vector_int64), &
+                  new_unittest("copy_vector_sp", test_copy_vector_sp), &
+                  new_unittest("copy_vector_dp", test_copy_vector_dp), &
+                  new_unittest("copy_matrix_int32", test_copy_matrix_int32), &
+                  new_unittest("copy_matrix_int64", test_copy_matrix_int64), &
+                  new_unittest("copy_matrix_sp", test_copy_matrix_sp), &
+                  new_unittest("copy_matrix_dp", test_copy_matrix_dp), &
+                  new_unittest("copy_vector_int32_threaded", test_copy_vector_int32_threaded), &
+                  new_unittest("copy_vector_int64_threaded", test_copy_vector_int64_threaded), &
+                  new_unittest("copy_vector_sp_threaded", test_copy_vector_sp_threaded), &
+                  new_unittest("copy_vector_dp_threaded", test_copy_vector_dp_threaded), &
+                  new_unittest("copy_matrix_int32_threaded", test_copy_matrix_int32_threaded), &
+                  new_unittest("copy_matrix_int64_threaded", test_copy_matrix_int64_threaded), &
+                  new_unittest("copy_matrix_sp_threaded", test_copy_matrix_sp_threaded), &
+                  new_unittest("copy_matrix_dp_threaded", test_copy_matrix_dp_threaded), &
+                  new_unittest("pic_transpose_matrix_int32", test_pic_transpose_matrix_int32), &
+                  new_unittest("pic_transpose_matrix_int64", test_pic_transpose_matrix_int64), &
+                  new_unittest("pic_transpose_matrix_sp", test_pic_transpose_matrix_sp), &
+                  new_unittest("pic_transpose_matrix_dp", test_pic_transpose_matrix_dp), &
+                  new_unittest("pic_transpose_matrix_int32_threaded", test_pic_transpose_matrix_int32_threaded), &
+                  new_unittest("pic_transpose_matrix_int64_threaded", test_pic_transpose_matrix_int64_threaded), &
+                  new_unittest("pic_transpose_matrix_sp_threaded", test_pic_transpose_matrix_sp_threaded), &
+                  new_unittest("pic_transpose_matrix_dp_threaded", test_pic_transpose_matrix_dp_threaded), &
+                  new_unittest("pic_sum_vector_int32", test_pic_sum_vector_int32), &
+                  new_unittest("pic_sum_vector_int64", test_pic_sum_vector_int64), &
+                  new_unittest("pic_sum_vector_sp", test_pic_sum_vector_sp), &
+                  new_unittest("pic_sum_vector_dp", test_pic_sum_vector_dp), &
+                  new_unittest("pic_sum_matrix_int32", test_pic_sum_matrix_int32), &
+                  new_unittest("pic_sum_matrix_int64", test_pic_sum_matrix_int64), &
+                  new_unittest("pic_sum_matrix_sp", test_pic_sum_matrix_sp), &
+                  new_unittest("pic_sum_matrix_dp", test_pic_sum_matrix_dp), &
+                  new_unittest("pic_sum_vector_int32_threaded", test_pic_sum_vector_int32_threaded), &
+                  new_unittest("pic_sum_vector_int64_threaded", test_pic_sum_vector_int64_threaded), &
+                  new_unittest("pic_sum_vector_sp_threaded", test_pic_sum_vector_sp_threaded), &
+                  new_unittest("pic_sum_vector_dp_threaded", test_pic_sum_vector_dp_threaded), &
+                  new_unittest("pic_sum_matrix_int32_threaded", test_pic_sum_matrix_int32_threaded), &
+                  new_unittest("pic_sum_matrix_int64_threaded", test_pic_sum_matrix_int64_threaded), &
+                  new_unittest("pic_is_sorted_int32", test_pic_is_sorted_int32), &
+                  new_unittest("pic_is_sorted_int64", test_pic_is_sorted_int64), &
+                  new_unittest("pic_is_sorted_sp", test_pic_is_sorted_sp), &
+                  new_unittest("pic_is_sorted_dp", test_pic_is_sorted_dp), &
+                  new_unittest("pic_is_sorted_char", test_pic_is_sorted_char), &
+                  new_unittest("pic_fuck_my_array_up_int32", test_pic_fuck_my_array_up_int32), &
+                  new_unittest("pic_fuck_my_array_up_int64", test_pic_fuck_my_array_up_int64), &
+                  new_unittest("pic_fuck_my_array_up_sp", test_pic_fuck_my_array_up_sp), &
+                  new_unittest("pic_fuck_my_array_up_dp", test_pic_fuck_my_array_up_dp), &
+                  new_unittest("pic_fuck_my_array_up_char", test_pic_fuck_my_array_up_char) &
+                  ]
+
+      ! Add more tests as needed
+
+   end subroutine collect_pic_array_tests
+
+   subroutine test_get_threading_mode(error)
+      type(error_type), allocatable, intent(out) :: error
+      logical :: mode
+
+      mode = get_threading_mode()
+
+      call check(error, mode, .false., "get_threading_mode should return .false. by default")
+      if (allocated(error)) return
+
+   end subroutine test_get_threading_mode
+
+   subroutine test_set_threading_mode(error)
+      type(error_type), allocatable, intent(out) :: error
+      logical :: mode
+
+      call set_threading_mode(.true.)
+      mode = get_threading_mode()
+
+      call check(error, mode, .true., "get_threading_mode should return .true. after set_threading(.true.)")
+      if (allocated(error)) return
+
+      call set_threading_mode(.false.)
+      mode = get_threading_mode()
+
+      call check(error, mode, .false., "get_threading_mode should return .false. after set_threading(.false.)")
+      if (allocated(error)) return
+
+   end subroutine test_set_threading_mode
+
+   subroutine test_fill_vector_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: vector(:)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      call fill(vector, alpha)
+
+      call check(error, all(vector == alpha), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_vector_int32
+
+   subroutine test_fill_vector_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: vector(:)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      call fill(vector, alpha)
+
+      call check(error, all(vector == alpha), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_vector_int64
+
+   subroutine test_fill_vector_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: vector(:)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      call fill(vector, alpha)
+
+      call check(error, all(is_equal(vector, alpha)), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_vector_sp
+
+   subroutine test_fill_vector_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: vector(:)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      call fill(vector, alpha)
+
+      call check(error, all(is_equal(vector, alpha)), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_vector_dp
+
+   subroutine test_fill_matrix_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: matrix(:, :)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha)
+
+      call check(error, all(matrix == alpha), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_matrix_int32
+
+   subroutine test_fill_matrix_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: matrix(:, :)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha)
+
+      call check(error, all(matrix == alpha), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_matrix_int64
+
+   subroutine test_fill_matrix_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: matrix(:, :)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha)
+
+      call check(error, all(is_equal(matrix, alpha)), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_matrix_sp
+
+   subroutine test_fill_matrix_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: matrix(:, :)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha)
+
+      call check(error, all(is_equal(matrix, alpha)), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_matrix_dp
+
+   subroutine test_fill_vector_int32_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: vector(:)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      call fill(vector, alpha, .true.)
+
+      call check(error, all(vector == alpha), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_vector_int32_threaded
+
+   subroutine test_fill_vector_int64_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: vector(:)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      call fill(vector, alpha, .true.)
+
+      call check(error, all(vector == alpha), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_vector_int64_threaded
+
+   subroutine test_fill_vector_sp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: vector(:)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      call fill(vector, alpha, .true.)
+
+      call check(error, all(is_equal(vector, alpha)), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_vector_sp_threaded
+
+   subroutine test_fill_vector_dp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: vector(:)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      call fill(vector, alpha, .true.)
+
+      call check(error, all(is_equal(vector, alpha)), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_vector_dp_threaded
+
+   subroutine test_fill_matrix_int32_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: matrix(:, :)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha, .true.)
+
+      call check(error, all(matrix == alpha), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_matrix_int32_threaded
+
+   subroutine test_fill_matrix_int64_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: matrix(:, :)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha, .true.)
+
+      call check(error, all(matrix == alpha), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_matrix_int64_threaded
+
+   subroutine test_fill_matrix_sp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: matrix(:, :)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha, .true.)
+
+      call check(error, all(is_equal(matrix, alpha)), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_matrix_sp_threaded
+
+   subroutine test_fill_matrix_dp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: matrix(:, :)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha, .true.)
+
+      call check(error, all(is_equal(matrix, alpha)), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_matrix_dp_threaded
+
+   subroutine test_copy_vector_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: vector(:), vector_copy(:)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      allocate (vector_copy(n))
+
+      call fill(vector, alpha)
+      call copy(vector_copy, vector)
+
+      call check(error, all(vector_copy == alpha), .true., "copy should copy all elements from vector to vector_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_vector_int32
+
+   subroutine test_copy_vector_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: vector(:), vector_copy(:)
+      integer(int64), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      allocate (vector_copy(n))
+
+      call fill(vector, alpha)
+      call copy(vector_copy, vector)
+
+      call check(error, all(vector_copy == alpha), .true., "copy should copy all elements from vector to vector_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_vector_int64
+
+   subroutine test_copy_vector_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: vector(:), vector_copy(:)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      allocate (vector_copy(n))
+
+      call fill(vector, alpha)
+      call copy(vector_copy, vector)
+
+      call check(error, all(is_equal(vector_copy, alpha)), .true., "copy should copy all elements from vector to vector_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_vector_sp
+
+   subroutine test_copy_vector_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: vector(:), vector_copy(:)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      allocate (vector_copy(n))
+
+      call fill(vector, alpha)
+      call copy(vector_copy, vector)
+
+      call check(error, all(is_equal(vector_copy, alpha)), .true., "copy should copy all elements from vector to vector_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_vector_dp
+
+   subroutine test_copy_matrix_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: matrix(:, :), matrix_copy(:, :)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      allocate (matrix_copy(n, n))
+
+      call fill(matrix, alpha)
+      call copy(matrix_copy, matrix)
+
+      call check(error, all(matrix_copy == alpha), .true., "copy should copy all elements from matrix to matrix_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_matrix_int32
+
+   subroutine test_copy_matrix_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: matrix(:, :), matrix_copy(:, :)
+      integer(int64), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      allocate (matrix_copy(n, n))
+
+      call fill(matrix, alpha)
+      call copy(matrix_copy, matrix)
+
+      call check(error, all(matrix_copy == alpha), .true., "copy should copy all elements from matrix to matrix_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_matrix_int64
+
+   subroutine test_copy_matrix_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: matrix(:, :), matrix_copy(:, :)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      allocate (matrix_copy(n, n))
+
+      call fill(matrix, alpha)
+      call copy(matrix_copy, matrix)
+
+      call check(error, all(is_equal(matrix_copy, alpha)), .true., "copy should copy all elements from matrix to matrix_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_matrix_sp
+
+   subroutine test_copy_matrix_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: matrix(:, :), matrix_copy(:, :)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      allocate (matrix_copy(n, n))
+
+      call fill(matrix, alpha)
+      call copy(matrix_copy, matrix)
+
+      call check(error, all(is_equal(matrix_copy, alpha)), .true., "copy should copy all elements from matrix to matrix_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_matrix_dp
+
+   subroutine test_copy_vector_int32_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: vector(:), vector_copy(:)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      allocate (vector_copy(n))
+
+      call fill(vector, alpha)
+      call copy(vector_copy, vector, .true.)
+
+      call check(error, all(vector_copy == alpha), .true., "copy should copy all elements from vector to vector_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_vector_int32_threaded
+
+   subroutine test_copy_vector_int64_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: vector(:), vector_copy(:)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      allocate (vector_copy(n))
+
+      call fill(vector, alpha)
+      call copy(vector_copy, vector, .true.)
+
+      call check(error, all(vector_copy == alpha), .true., "copy should copy all elements from vector to vector_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_vector_int64_threaded
+
+   subroutine test_copy_vector_sp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: vector(:), vector_copy(:)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      allocate (vector_copy(n))
+
+      call fill(vector, alpha)
+      call copy(vector_copy, vector, .true.)
+
+      call check(error, all(is_equal(vector_copy, alpha)), .true., "copy should copy all elements from vector to vector_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_vector_sp_threaded
+
+   subroutine test_copy_vector_dp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: vector(:), vector_copy(:)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 10
+
+      allocate (vector(n))
+      allocate (vector_copy(n))
+
+      call fill(vector, alpha)
+      call copy(vector_copy, vector, .true.)
+
+      call check(error, all(is_equal(vector_copy, alpha)), .true., "copy should copy all elements from vector to vector_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_vector_dp_threaded
+
+   subroutine test_copy_matrix_int32_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: matrix(:, :), matrix_copy(:, :)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      allocate (matrix_copy(n, n))
+
+      call fill(matrix, alpha)
+      call copy(matrix_copy, matrix, .true.)
+
+      call check(error, all(matrix_copy == alpha), .true., "copy should copy all elements from matrix to matrix_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_matrix_int32_threaded
+
+   subroutine test_copy_matrix_int64_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: matrix(:, :), matrix_copy(:, :)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      allocate (matrix_copy(n, n))
+
+      call fill(matrix, alpha)
+      call copy(matrix_copy, matrix, .true.)
+
+      call check(error, all(matrix_copy == alpha), .true., "copy should copy all elements from matrix to matrix_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_matrix_int64_threaded
+
+   subroutine test_copy_matrix_sp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: matrix(:, :), matrix_copy(:, :)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      allocate (matrix_copy(n, n))
+
+      call fill(matrix, alpha)
+      call copy(matrix_copy, matrix, .true.)
+
+      call check(error, all(is_equal(matrix_copy, alpha)), .true., "copy should copy all elements from matrix to matrix_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_matrix_sp_threaded
+
+   subroutine test_copy_matrix_dp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: matrix(:, :), matrix_copy(:, :)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 10
+
+      allocate (matrix(n, n))
+      allocate (matrix_copy(n, n))
+
+      call fill(matrix, alpha)
+      call copy(matrix_copy, matrix, .true.)
+
+      call check(error, all(is_equal(matrix_copy, alpha)), .true., "copy should copy all elements from matrix to matrix_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_matrix_dp_threaded
+
+   subroutine test_pic_transpose_matrix_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), parameter :: dim = 2
+      integer(int32), parameter :: one = 1
+      integer(int32), parameter :: two = 2
+      integer(int32), parameter :: three = 3
+      integer(int32), parameter :: four = 4
+      integer(int32), parameter :: matrix(2, 2) = reshape([one, two, &
+                                                           three, four], [2, 2])
+      integer(int32) :: transposed_matrix(2, 2)
+      integer(int32), parameter :: expected(2, 2) = reshape([one, three, &
+                                                             two, four], [2, 2])
+
+      call pic_transpose(matrix, transposed_matrix)
+
+      call check(error, all(transposed_matrix == expected), &
+                 .true., "pic_transpose should transpose the matrix correctly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_transpose_matrix_int32
+
+   subroutine test_pic_transpose_matrix_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), parameter :: dim = 2
+      integer(int64), parameter :: one = 1_int64
+      integer(int64), parameter :: two = 2_int64
+      integer(int64), parameter :: three = 3_int64
+      integer(int64), parameter :: four = 4_int64
+      integer(int64), parameter :: matrix(2, 2) = reshape([one, two, &
+                                                           three, four], [2, 2])
+      integer(int64) :: transposed_matrix(2, 2)
+      integer(int64), parameter :: expected(2, 2) = reshape([one, three, &
+                                                             two, four], [2, 2])
+
+      call pic_transpose(matrix, transposed_matrix)
+
+      call check(error, all(transposed_matrix == expected), &
+                 .true., "pic_transpose should transpose the matrix correctly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_transpose_matrix_int64
+
+   subroutine test_pic_transpose_matrix_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), parameter :: dim = 2.0_sp
+      real(sp), parameter :: one = 1.0_sp
+      real(sp), parameter :: two = 2.0_sp
+      real(sp), parameter :: three = 3.0_sp
+      real(sp), parameter :: four = 4.0_sp
+      real(sp), parameter :: matrix(2, 2) = reshape([one, two, &
+                                                     three, four], [2, 2])
+      real(sp), parameter :: expected(2, 2) = reshape([one, three, &
+                                                       two, four], [2, 2])
+      real(sp) :: transposed_matrix(2, 2)
+      call pic_transpose(matrix, transposed_matrix)
+
+      call check(error, all(is_equal(transposed_matrix, expected)), &
+                 .true., "pic_transpose should transpose the matrix correctly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_transpose_matrix_sp
+
+   subroutine test_pic_transpose_matrix_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), parameter :: dim = 2.0_dp
+      real(dp), parameter :: one = 1.0_dp
+      real(dp), parameter :: two = 2.0_dp
+      real(dp), parameter :: three = 3.0_dp
+      real(dp), parameter :: four = 4.0_dp
+      real(dp), parameter :: matrix(2, 2) = reshape([one, two, &
+                                                     three, four], [2, 2])
+      real(dp), parameter :: expected(2, 2) = reshape([one, three, &
+                                                       two, four], [2, 2])
+      real(dp) :: transposed_matrix(2, 2)
+      call pic_transpose(matrix, transposed_matrix)
+
+      call check(error, all(is_equal(transposed_matrix, expected)), &
+                 .true., "pic_transpose should transpose the matrix correctly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_transpose_matrix_dp
+
+   subroutine test_pic_transpose_matrix_int32_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), parameter :: dim = 2
+      integer(int32), parameter :: one = 1
+      integer(int32), parameter :: two = 2
+      integer(int32), parameter :: three = 3
+      integer(int32), parameter :: four = 4
+      integer(int32), parameter :: matrix(2, 2) = reshape([one, two, &
+                                                           three, four], [2, 2])
+      integer(int32) :: transposed_matrix(2, 2)
+      integer(int32), parameter :: expected(2, 2) = reshape([one, three, &
+                                                             two, four], [2, 2])
+
+      call pic_transpose(matrix, transposed_matrix, .true.)
+
+      call check(error, all(transposed_matrix == expected), &
+                 .true., "pic_transpose should transpose the matrix correctly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_transpose_matrix_int32_threaded
+
+   subroutine test_pic_transpose_matrix_int64_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), parameter :: dim = 2
+      integer(int64), parameter :: one = 1_int64
+      integer(int64), parameter :: two = 2_int64
+      integer(int64), parameter :: three = 3_int64
+      integer(int64), parameter :: four = 4_int64
+      integer(int64), parameter :: matrix(2, 2) = reshape([one, two, &
+                                                           three, four], [2, 2])
+      integer(int64) :: transposed_matrix(2, 2)
+      integer(int64), parameter :: expected(2, 2) = reshape([one, three, &
+                                                             two, four], [2, 2])
+
+      call pic_transpose(matrix, transposed_matrix, .true.)
+
+      call check(error, all(transposed_matrix == expected), &
+                 .true., "pic_transpose should transpose the matrix correctly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_transpose_matrix_int64_threaded
+
+   subroutine test_pic_transpose_matrix_sp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), parameter :: dim = 2.0_sp
+      real(sp), parameter :: one = 1.0_sp
+      real(sp), parameter :: two = 2.0_sp
+      real(sp), parameter :: three = 3.0_sp
+      real(sp), parameter :: four = 4.0_sp
+      real(sp), parameter :: matrix(2, 2) = reshape([one, two, &
+                                                     three, four], [2, 2])
+      real(sp), parameter :: expected(2, 2) = reshape([one, three, &
+                                                       two, four], [2, 2])
+
+      real(sp) :: transposed_matrix(2, 2)
+      call pic_transpose(matrix, transposed_matrix, .true.)
+
+      call check(error, all(is_equal(transposed_matrix, expected)), &
+                 .true., "pic_transpose should transpose the matrix correctly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_transpose_matrix_sp_threaded
+
+   subroutine test_pic_transpose_matrix_dp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), parameter :: dim = 2.0_dp
+      real(dp), parameter :: one = 1.0_dp
+      real(dp), parameter :: two = 2.0_dp
+      real(dp), parameter :: three = 3.0_dp
+      real(dp), parameter :: four = 4.0_dp
+      real(dp), parameter :: matrix(2, 2) = reshape([one, two, &
+                                                     three, four], [2, 2])
+      real(dp), parameter :: expected(2, 2) = reshape([one, three, &
+                                                       two, four], [2, 2])
+
+      real(dp) :: transposed_matrix(2, 2)
+      call set_threading_mode(.true.)
+      call pic_transpose(matrix, transposed_matrix)
+      call set_threading_mode(.false.)
+
+      call check(error, all(is_equal(transposed_matrix, expected)), &
+                 .true., "pic_transpose should transpose the matrix correctly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_transpose_matrix_dp_threaded
+
+   subroutine test_pic_sum_vector_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: vector(:)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+      integer(int32) :: sum
+
+      allocate (vector(n))
+      call fill(vector, alpha)
+
+      sum = pic_sum(vector)
+
+      call check(error, sum == n*alpha, .true., "pic_sum should return the correct sum of the vector")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_vector_int32
+
+   subroutine test_pic_sum_vector_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: vector(:)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 10
+      integer(int64) :: sum
+
+      allocate (vector(n))
+      call fill(vector, alpha)
+
+      sum = pic_sum(vector)
+
+      call check(error, sum == n*alpha, .true., "pic_sum should return the correct sum of the vector")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_vector_int64
+
+   subroutine test_pic_sum_vector_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: vector(:)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 10
+      real(sp) :: sum
+
+      allocate (vector(n))
+      call fill(vector, alpha)
+
+      sum = pic_sum(vector)
+
+      call check(error, is_equal(sum, n*alpha), .true., "pic_sum should return the correct sum of the vector")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_vector_sp
+
+   subroutine test_pic_sum_vector_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: vector(:)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 10
+      real(dp) :: sum
+
+      allocate (vector(n))
+      call fill(vector, alpha)
+
+      sum = pic_sum(vector)
+
+      call check(error, is_equal(sum, n*alpha), .true., "pic_sum should return the correct sum of the vector")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_vector_dp
+
+   subroutine test_pic_sum_matrix_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: matrix(:, :)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+      integer(int32) :: sum
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha)
+
+      sum = pic_sum(matrix)
+
+      call check(error, sum == n*n*alpha, .true., "pic_sum should return the correct sum of the matrix")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_matrix_int32
+
+   subroutine test_pic_sum_matrix_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: matrix(:, :)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 10
+      integer(int64) :: sum
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha)
+
+      sum = pic_sum(matrix)
+
+      call check(error, sum == n*n*alpha, .true., "pic_sum should return the correct sum of the matrix")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_matrix_int64
+
+   subroutine test_pic_sum_matrix_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: matrix(:, :)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 10
+      real(sp) :: sum
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha)
+
+      sum = pic_sum(matrix)
+
+      call check(error, is_equal(sum, n*n*alpha), .true., "pic_sum should return the correct sum of the matrix")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_matrix_sp
+
+   subroutine test_pic_sum_matrix_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: matrix(:, :)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 10
+      real(dp) :: sum
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha)
+
+      sum = pic_sum(matrix)
+
+      call check(error, is_equal(sum, n*n*alpha), .true., "pic_sum should return the correct sum of the matrix")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_matrix_dp
+
+   subroutine test_pic_sum_vector_int32_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: vector(:)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+      integer(int32) :: sum
+
+      allocate (vector(n))
+      call fill(vector, alpha)
+
+      sum = pic_sum(vector, .true.)
+
+      call check(error, sum == n*alpha, .true., "pic_sum should return the correct sum of the vector")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_vector_int32_threaded
+
+   subroutine test_pic_sum_vector_int64_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: vector(:)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 10
+      integer(int64) :: sum
+
+      allocate (vector(n))
+      call fill(vector, alpha)
+
+      sum = pic_sum(vector, .true.)
+
+      call check(error, sum == n*alpha, .true., "pic_sum should return the correct sum of the vector")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_vector_int64_threaded
+
+   subroutine test_pic_sum_vector_sp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: vector(:)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 10
+      real(sp) :: sum
+
+      allocate (vector(n))
+      call fill(vector, alpha)
+
+      sum = pic_sum(vector, .true.)
+
+      call check(error, is_equal(sum, n*alpha), .true., "pic_sum should return the correct sum of the vector")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_vector_sp_threaded
+
+   subroutine test_pic_sum_vector_dp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: vector(:)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 10
+      real(dp) :: sum
+
+      allocate (vector(n))
+      call fill(vector, alpha)
+
+      sum = pic_sum(vector, .true.)
+
+      call check(error, is_equal(sum, n*alpha), .true., "pic_sum should return the correct sum of the vector")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_vector_dp_threaded
+
+   subroutine test_pic_sum_matrix_int32_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: matrix(:, :)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 10
+      integer(int32) :: sum
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha)
+
+      sum = pic_sum(matrix, .true.)
+
+      call check(error, sum == n*n*alpha, .true., "pic_sum should return the correct sum of the matrix")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_matrix_int32_threaded
+
+   subroutine test_pic_sum_matrix_int64_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: matrix(:, :)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 10
+      integer(int64) :: sum
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha)
+
+      sum = pic_sum(matrix, .true.)
+
+      call check(error, sum == n*n*alpha, .true., "pic_sum should return the correct sum of the matrix")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_matrix_int64_threaded
+
+   subroutine test_pic_sum_matrix_sp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: matrix(:, :)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 10
+      real(sp) :: sum
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha)
+
+      sum = pic_sum(matrix, .true.)
+
+      call check(error, is_equal(sum, n*n*alpha), .true., "pic_sum should return the correct sum of the matrix")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_matrix_sp_threaded
+
+   subroutine test_pic_sum_matrix_dp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: matrix(:, :)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 10
+      real(dp) :: sum
+
+      allocate (matrix(n, n))
+      call fill(matrix, alpha)
+
+      sum = pic_sum(matrix, .true.)
+
+      call check(error, is_equal(sum, n*n*alpha), .true., "pic_sum should return the correct sum of the matrix")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_matrix_dp_threaded
+
+   subroutine test_pic_is_sorted_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: vector(:)
+      integer(int32) :: i
+      integer(int32), parameter :: length = 20
+      logical :: sorted
+
+      allocate (vector(length))
+      vector = 0_int32
+
+      vector = [(i, i=1, size(vector))]
+
+      sorted = is_sorted(vector, ASCENDING)
+      call check(error, sorted, .true., "Array should be sorted!")
+      if (allocated(error)) return
+
+      sorted = is_sorted(vector, DESCENDING)
+      call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_is_sorted_int32
+
+   subroutine test_pic_is_sorted_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: vector(:)
+      integer(int64) :: i
+      integer(int64), parameter :: length = 20
+      logical :: sorted
+
+      allocate (vector(length))
+      vector = 0_int64
+
+      vector = [(i, i=1, size(vector))]
+
+      sorted = is_sorted(vector, ASCENDING)
+      call check(error, sorted, .true., "Array should be sorted!")
+      if (allocated(error)) return
+
+      sorted = is_sorted(vector, DESCENDING)
+      call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_is_sorted_int64
+
+   subroutine test_pic_is_sorted_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: vector(:)
+      integer(default_int) :: i
+      integer(default_int), parameter :: length = 20
+      logical :: sorted
+
+      allocate (vector(length))
+      vector = 0_sp
+
+      vector = [(real(i, sp), i=1, size(vector))]
+
+      sorted = is_sorted(vector, ASCENDING)
+      call check(error, sorted, .true., "Array should be sorted!")
+      if (allocated(error)) return
+
+      sorted = is_sorted(vector, DESCENDING)
+      call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_is_sorted_sp
+
+   subroutine test_pic_is_sorted_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: vector(:)
+      integer(default_int) :: i
+      integer(default_int), parameter :: length = 20
+      logical :: sorted
+
+      allocate (vector(length))
+      vector = 0_dp
+
+      vector = [(real(i, dp), i=1, size(vector))]
+
+      sorted = is_sorted(vector, ASCENDING)
+      call check(error, sorted, .true., "Array should be sorted!")
+      if (allocated(error)) return
+
+      sorted = is_sorted(vector, DESCENDING)
+      call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_is_sorted_dp
+
+   subroutine test_pic_is_sorted_char(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=10) :: array(5)
+      logical :: sorted
+
+      array = ["alpha     ", "beta      ", "delta     ", "epsilon   ", "gamma     "]
+
+      sorted = is_sorted(array, ASCENDING)
+      call check(error, sorted, .true., "Array should be sorted!")
+      if (allocated(error)) return
+
+      sorted = is_sorted(array, DESCENDING)
+      call check(error, sorted, .false., "Array is sorted ascendigly, not descendingly")
+      if (allocated(error)) return
+
+   end subroutine test_pic_is_sorted_char
+
+   subroutine test_pic_fuck_my_array_up_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: int32_arr(10)
+      integer(int32) :: arr_before(10)
+      integer :: sum_before
+      int32_arr = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32, 7_int32, 8_int32, 9_int32, 10_int32]
+      arr_before = int32_arr
+      call random_seed()
+      sum_before = 0_int32
+
+      sum_before = sum(int32_arr)
+
+      call fuck_my_array_up(int32_arr)
+
+      call check(error, sum(int32_arr) == sum_before, .true., "The arrays need to produce the same overall sum!")
+      if (allocated(error)) return
+
+      call check(error, all(int32_arr == arr_before), .false., "The arrays should not be equal!")
+      if (allocated(error)) return
+
+   end subroutine test_pic_fuck_my_array_up_int32
+
+   subroutine test_pic_fuck_my_array_up_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64) :: int64_arr(10)
+      integer(int64) :: arr_before(10)
+      integer :: sum_before
+      int64_arr = [1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64, 7_int64, 8_int64, 9_int64, 10_int64]
+      arr_before = int64_arr
+      call random_seed()
+      sum_before = 0_int64
+
+      sum_before = sum(int64_arr)
+
+      call fuck_my_array_up(int64_arr)
+
+      call check(error, sum(int64_arr) == sum_before, .true., "The arrays need to produce the same overall sum!")
+      if (allocated(error)) return
+
+      call check(error, all(int64_arr == arr_before), .false., "The arrays should not be equal!")
+      if (allocated(error)) return
+
+   end subroutine test_pic_fuck_my_array_up_int64
+
+   subroutine test_pic_fuck_my_array_up_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp) :: sp_arr(10)
+      real(sp) :: arr_before(10)
+      real(sp) :: sum_before
+      sp_arr = [1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp, 7.0_sp, 8.0_sp, 9.0_sp, 10.0_sp]
+      arr_before = sp_arr
+      call random_seed()
+      sum_before = 0.0_sp
+
+      sum_before = sum(sp_arr)
+
+      call fuck_my_array_up(sp_arr)
+
+      call check(error, is_equal(sum(sp_arr), sum_before), .true., "The arrays need to produce the same overall sum!")
+      if (allocated(error)) return
+
+      call check(error, all(is_equal(sp_arr, arr_before)), .false., "The arrays should not be equal!")
+      if (allocated(error)) return
+
+   end subroutine test_pic_fuck_my_array_up_sp
+
+   subroutine test_pic_fuck_my_array_up_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: dp_arr(10)
+      real(dp) :: arr_before(10)
+      real(dp) :: sum_before
+      dp_arr = [1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp, 7.0_dp, 8.0_dp, 9.0_dp, 10.0_dp]
+      arr_before = dp_arr
+      call random_seed()
+      sum_before = 0.0_dp
+
+      sum_before = sum(dp_arr)
+
+      call fuck_my_array_up(dp_arr)
+
+      call check(error, is_equal(sum(dp_arr), sum_before), .true., "The arrays need to produce the same overall sum!")
+      if (allocated(error)) return
+
+      call check(error, all(is_equal(dp_arr, arr_before)), .false., "The arrays should not be equal!")
+      if (allocated(error)) return
+
+   end subroutine test_pic_fuck_my_array_up_dp
+
+   subroutine test_pic_fuck_my_array_up_char(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=1) :: char_arr(11)
+      character(len=1) :: arr_before(11)
+      char_arr = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"]
+      arr_before = char_arr
+      call random_seed()
+
+      call fuck_my_array_up(char_arr)
+
+      call check(error, all(char_arr == arr_before), .false., "The arrays should not be equal!")
+      if (allocated(error)) return
+
+   end subroutine test_pic_fuck_my_array_up_char
+
+end module test_pic_array

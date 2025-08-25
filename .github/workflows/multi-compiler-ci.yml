@@ -1,0 +1,73 @@
+name: linux-multi-compiler-ci
+
+on: [pull_request, push]
+
+jobs:
+  Build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        toolchain:
+          - {compiler: gcc, version: 10}
+          - {compiler: gcc, version: 11}
+          - {compiler: gcc, version: 12}
+          - {compiler: gcc, version: 13}
+          - {compiler: gcc, version: 14}
+          - {compiler: intel, version: '2024.1'}
+          - {compiler: intel, version: '2025.0'}
+          - {compiler: nvidia-hpc, version: '25.1'}
+        build: [cmake]
+    env:
+      BUILD_DIR: ${{ matrix.build == 'cmake' && 'build' || '.' }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v5 # Use pip to install latest CMake, & FORD/Jin2For, etc.
+      with:
+        python-version: 3.x
+
+    - name: Install fypp
+      run: pip install --upgrade fypp ninja
+
+
+    - name: Setup Fortran compiler
+      uses: fortran-lang/setup-fortran@v1.6.2
+      id: setup-fortran
+      with:
+        compiler: ${{ matrix.toolchain.compiler }}
+        version: ${{ matrix.toolchain.version }}
+
+    - name: Install openblas
+      run: sudo apt install libopenblas-dev
+
+    - name: Configure with CMake
+      if: ${{ contains(matrix.build, 'cmake') }}
+      run: >-
+        cmake -G Ninja
+        -DCMAKE_BUILD_TYPE=Release
+        -DPIC_ENABLE_OMP=ON
+        -DPIC_ENABLE_BLAS=ON
+        -S . -B ${{ env.BUILD_DIR }}
+
+    - name: Build and compile
+      if: ${{ contains(matrix.build, 'cmake') }}
+      run: cmake --build ${{ env.BUILD_DIR }} --parallel
+
+    - name: catch build fail
+      if: ${{ failure() && contains(matrix.build, 'cmake') }}
+      run: cmake --build ${{ env.BUILD_DIR }} --verbose --parallel 1
+
+    - name: test
+      if: ${{ contains(matrix.build, 'cmake') }}
+      run: >-
+        ctest
+        -V
+        --test-dir ${{ env.BUILD_DIR }}
+        --parallel
+        --output-on-failure
+        --no-tests=error

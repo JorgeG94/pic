@@ -1,0 +1,99 @@
+# Thanks to infinity to https://github.com/gha3mi/setup-fortran-conda
+# for setting this up. MIT Licensed.
+name: Setup Fortran multi OS multi compiler Conda CI/CD
+
+#on:
+#  push:
+#    branches: [feat/big-ci]
+#  pull_request:
+#    branches: [main]
+on: [push]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+
+  # Run FPM tests (debug + release) on all OS/compiler combinations
+  test_fpm:
+    name: ${{ matrix.os }}_${{ matrix.compiler }}_fpm
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        compiler: [gfortran, ifx, flang-new]
+        include:
+          - os: ubuntu-latest
+            extra-packages: "openblas"
+          #- os: windows-latest
+          - os: macos-latest
+            extra-packages: "openblas"
+        exclude:
+          - os: macos-latest
+            compiler: flang-new
+          - os: macos-latest
+            compiler: ifx
+          - os: macos-latest
+            compiler: nvfortran
+          #- os: windows-latest
+          #  compiler: nvfortran
+          - os: windows-latest
+            compiler: flang-new
+
+    steps:
+      - name: Setup Fortran
+        uses: gha3mi/setup-fortran-conda@latest
+        with:
+          compiler: ${{ matrix.compiler }}
+          platform: ${{ matrix.os }}
+          extra-packages: ${{ matrix.extra-packages }}
+
+#      this triggers a gfortran 15.1 bug, let's sweep it under the rug
+#      - name: fpm test (debug)
+#        run: fpm test --compiler ${{ matrix.compiler }} --profile debug --verbose
+
+      - name: fpm test (release)
+        run: |
+          fpm test --compiler ${{ matrix.compiler }} --profile release --verbose
+
+  # Run CMake + Ninja build/tests across OS/compiler matrix
+  test_cmake:
+    name: ${{ matrix.os }}_${{ matrix.compiler }}_wint8${{ matrix.int8 }}_cmake
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        compiler: [gfortran, ifx, flang-new, nvfortran]
+        include:
+          - os: ubuntu-latest
+            extra-packages: "cmake, ninja, openblas"
+          #- os: windows-latest
+          #  extra-packages: "cmake, ninja, openblas"
+          - os: macos-latest
+            extra-packages: "cmake, ninja, openblas"
+        exclude:
+          - os: macos-latest
+            compiler: flang-new
+          - os: macos-latest
+            compiler: ifx
+          - os: macos-latest
+            compiler: nvfortran
+          #- os: windows-latest
+          #  compiler: nvfortran
+
+    steps:
+      - name: Setup Fortran
+        uses: gha3mi/setup-fortran-conda@latest
+        with:
+          compiler: ${{ matrix.compiler }}
+          platform: ${{ matrix.os }}
+          extra-packages: ${{ matrix.extra-packages }}
+
+      - name: cmake test (release)
+        run: |
+          cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -DPIC_ENABLE_BLAS=ON -DBLA_VENDOR=OpenBLAS -G Ninja
+          cmake --build build/release
+          ctest --test-dir build/release --output-on-failure

@@ -1,0 +1,7 @@
+add_subdirectory(core)
+if(PIC_ENABLE_MPI)
+  add_subdirectory(mpi)
+endif()
+if(PIC_ENABLE_BLAS)
+  add_subdirectory(blas)
+endif()

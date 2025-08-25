@@ -1,5 +1,2 @@
-add_subdirectory(types)
-add_subdirectory(print)
-add_subdirectory(logger)
-add_subdirectory(mpi)
-add_subdirectory(command_line)
+target_sources(${main_lib} PRIVATE pic.f90)
+add_subdirectory(lib)
