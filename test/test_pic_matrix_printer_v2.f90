@@ -267,8 +267,10 @@ contains
 
    subroutine test_print_3d_tensor_plain(error)
       type(error_type), allocatable, intent(out) :: error
-      integer(int32), parameter :: tensor_int32(2, 2, 2) = reshape([1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32, 7_int32, 8_int32], [2, 2, 2])
-      integer(int64), parameter :: tensor_int64(2, 2, 2) = reshape([1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64, 7_int64, 8_int64], [2, 2, 2] )
+      integer(int32), parameter :: tensor_int32(2, 2, 2) = &
+                                   reshape([1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32, 7_int32, 8_int32], [2, 2, 2])
+      integer(int64), parameter :: tensor_int64(2, 2, 2) = &
+                                   reshape([1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64, 7_int64, 8_int64], [2, 2, 2])
     real(sp), parameter :: tensor_sp(2, 2, 2) = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp, 7.0_sp, 8.0_sp], [2, 2, 2])
     real(dp), parameter :: tensor_dp(2, 2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp, 7.0_dp, 8.0_dp], [2, 2, 2])
 
@@ -297,8 +299,10 @@ contains
 
    subroutine test_print_3d_tensor_numpy(error)
       type(error_type), allocatable, intent(out) :: error
-      integer(int32), parameter :: tensor_int32(2, 2, 2) = reshape([1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32, 7_int32, 8_int32], [2, 2, 2])
-      integer(int64), parameter :: tensor_int64(2, 2, 2) = reshape([1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64, 7_int64, 8_int64], [2, 2, 2] )
+      integer(int32), parameter :: tensor_int32(2, 2, 2) = &
+                                   reshape([1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32, 7_int32, 8_int32], [2, 2, 2])
+      integer(int64), parameter :: tensor_int64(2, 2, 2) = &
+                                   reshape([1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64, 7_int64, 8_int64], [2, 2, 2])
     real(sp), parameter :: tensor_sp(2, 2, 2) = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp, 7.0_sp, 8.0_sp], [2, 2, 2])
     real(dp), parameter :: tensor_dp(2, 2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp, 7.0_dp, 8.0_dp], [2, 2, 2])
 
@@ -322,8 +326,10 @@ contains
 
    subroutine test_print_3d_tensor_mathematica(error)
       type(error_type), allocatable, intent(out) :: error
-      integer(int32), parameter :: tensor_int32(2, 2, 2) = reshape([1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32, 7_int32, 8_int32], [2, 2, 2])
-      integer(int64), parameter :: tensor_int64(2, 2, 2) = reshape([1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64, 7_int64, 8_int64], [2, 2, 2] )
+      integer(int32), parameter :: tensor_int32(2, 2, 2) = &
+                                   reshape([1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32, 7_int32, 8_int32], [2, 2, 2])
+      integer(int64), parameter :: tensor_int64(2, 2, 2) = &
+                                   reshape([1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64, 7_int64, 8_int64], [2, 2, 2])
     real(sp), parameter :: tensor_sp(2, 2, 2) = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp, 7.0_sp, 8.0_sp], [2, 2, 2])
     real(dp), parameter :: tensor_dp(2, 2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp, 7.0_dp, 8.0_dp], [2, 2, 2])
       call pic_print_array(tensor_int32, "MATHEMATICA")
