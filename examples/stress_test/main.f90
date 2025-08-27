@@ -1,5 +1,5 @@
 program main
-   use pic_string_utils, only: to_string
+   use pic_string, only: to_string
    use pic_blas_interfaces, only: pic_gemm
    use pic_types, only: dp, int64, default_int
    use pic_timer, only: pic_timer_type

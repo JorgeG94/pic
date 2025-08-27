@@ -1,7 +1,7 @@
 # Unit testing
 set(tests
     "base_utils"
-    "pic_string_utils"
+    "pic_string"
     "pic_timers"
     "pic_logger"
     "pic_flop_recorder"
