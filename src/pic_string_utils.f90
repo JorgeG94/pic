@@ -2,7 +2,7 @@
 !! contains the necessary routines to transform key data
 !! types into strings
 
-module pic_string_utils
+module pic_string
 !! General string utilities
    use pic_types, only: sp, dp, int32, int64, default_int
    implicit none
@@ -10,6 +10,8 @@ module pic_string_utils
    private
    integer(default_int), parameter :: default_dp_precision = 12
    integer(default_int) :: dp_precision = default_dp_precision
+   integer(default_int), parameter :: default_sp_precision = 6
+   integer(default_int) :: sp_precision = default_sp_precision
 
    public :: to_string, pad, to_upper
    public :: set_precision, get_precision
@@ -29,6 +31,14 @@ module pic_string_utils
       module procedure to_string_dp
       module procedure to_string_char
       module procedure to_string_logical
+      module procedure to_string_vector_int32
+      module procedure to_string_vector_int64
+      module procedure to_string_vector_sp
+      module procedure to_string_vector_dp
+      module procedure to_string_matrix_int32
+      module procedure to_string_matrix_int64
+      module procedure to_string_matrix_sp
+      module procedure to_string_matrix_dp
    end interface
 
    interface to_upper
@@ -181,4 +191,307 @@ contains
       trimmed_str = trim(str)
    end function to_string_logical
 
-end module pic_string_utils
+   function to_string_vector_dp(array) result(trimmed_str)
+      real(kind=dp), intent(in) :: array(:)
+      character(len=:), allocatable :: trimmed_str
+      character(len=50) :: temp_str
+      character(len=32) :: style
+      integer :: i, total_len
+
+      ! Set up format
+      write (style, '(A,I0,A)') '(F0.', dp_precision, ')'
+
+      ! Estimate total length needed
+      total_len = 2  ! for brackets
+      do i = 1, size(array)
+         write (temp_str, style) array(i)
+         total_len = total_len + len_trim(temp_str) + 2  ! +2 for ", "
+      end do
+
+      ! Allocate result string
+      allocate (character(len=total_len) :: trimmed_str)
+
+      ! Build the string
+      trimmed_str = "["
+      do i = 1, size(array)
+         write (temp_str, style) array(i)
+         if (i < size(array)) then
+            trimmed_str = trimmed_str//trim(temp_str)//", "
+         else
+            trimmed_str = trimmed_str//trim(temp_str)
+         end if
+      end do
+      trimmed_str = trimmed_str//"]"
+   end function to_string_vector_dp
+
+! Vector to_string functions
+
+   function to_string_vector_int32(array) result(trimmed_str)
+      integer(int32), intent(in) :: array(:)
+      character(len=:), allocatable :: trimmed_str
+      character(len=50) :: temp_str
+      integer :: i, total_len
+
+      ! Estimate total length needed
+      total_len = 2  ! for brackets
+      do i = 1, size(array)
+         write (temp_str, '(I0)') array(i)
+         total_len = total_len + len_trim(temp_str) + 2  ! +2 for ", "
+      end do
+
+      ! Allocate result string
+      allocate (character(len=total_len) :: trimmed_str)
+
+      ! Build the string
+      trimmed_str = "["
+      do i = 1, size(array)
+         write (temp_str, '(I0)') array(i)
+         if (i < size(array)) then
+            trimmed_str = trimmed_str//trim(temp_str)//", "
+         else
+            trimmed_str = trimmed_str//trim(temp_str)
+         end if
+      end do
+      trimmed_str = trimmed_str//"]"
+   end function to_string_vector_int32
+
+   function to_string_vector_int64(array) result(trimmed_str)
+      integer(int64), intent(in) :: array(:)
+      character(len=:), allocatable :: trimmed_str
+      character(len=50) :: temp_str
+      integer :: i, total_len
+
+      ! Estimate total length needed
+      total_len = 2  ! for brackets
+      do i = 1, size(array)
+         write (temp_str, '(I0)') array(i)
+         total_len = total_len + len_trim(temp_str) + 2  ! +2 for ", "
+      end do
+
+      ! Allocate result string
+      allocate (character(len=total_len) :: trimmed_str)
+
+      ! Build the string
+      trimmed_str = "["
+      do i = 1, size(array)
+         write (temp_str, '(I0)') array(i)
+         if (i < size(array)) then
+            trimmed_str = trimmed_str//trim(temp_str)//", "
+         else
+            trimmed_str = trimmed_str//trim(temp_str)
+         end if
+      end do
+      trimmed_str = trimmed_str//"]"
+   end function to_string_vector_int64
+
+   function to_string_vector_sp(array) result(trimmed_str)
+      real(kind=sp), intent(in) :: array(:)
+      character(len=:), allocatable :: trimmed_str
+      character(len=50) :: temp_str
+      character(len=32) :: style
+      integer :: i, total_len
+
+      ! Set up format
+      write (style, '(A,I0,A)') '(F0.', sp_precision, ')'
+
+      ! Estimate total length needed
+      total_len = 2  ! for brackets
+      do i = 1, size(array)
+         write (temp_str, style) array(i)
+         total_len = total_len + len_trim(temp_str) + 2  ! +2 for ", "
+      end do
+
+      ! Allocate result string
+      allocate (character(len=total_len) :: trimmed_str)
+
+      ! Build the string
+      trimmed_str = "["
+      do i = 1, size(array)
+         write (temp_str, style) array(i)
+         if (i < size(array)) then
+            trimmed_str = trimmed_str//trim(temp_str)//", "
+         else
+            trimmed_str = trimmed_str//trim(temp_str)
+         end if
+      end do
+      trimmed_str = trimmed_str//"]"
+   end function to_string_vector_sp
+
+   function to_string_matrix_dp(array) result(trimmed_str)
+      real(kind=dp), intent(in) :: array(:, :)
+      character(len=:), allocatable :: trimmed_str
+      character(len=50) :: temp_str
+      character(len=32) :: style
+      integer :: i, j, total_len, nrows, ncols
+
+      nrows = size(array, 1)
+      ncols = size(array, 2)
+
+      ! Set up format
+      write (style, '(A,I0,A)') '(F0.', dp_precision, ')'
+
+      ! Estimate total length needed (rough estimate)
+      total_len = 10 + nrows  ! for outer brackets and newlines
+      do i = 1, nrows
+         total_len = total_len + 3  ! for row brackets and comma
+         do j = 1, ncols
+            write (temp_str, style) array(i, j)
+            total_len = total_len + len_trim(temp_str) + 2  ! +2 for ", "
+         end do
+      end do
+
+      ! Allocate result string
+      allocate (character(len=total_len) :: trimmed_str)
+
+      ! Build the string with newlines
+      trimmed_str = "["//new_line('a')
+      do i = 1, nrows
+         trimmed_str = trimmed_str//" ["
+         do j = 1, ncols
+            write (temp_str, style) array(i, j)
+            if (j < ncols) then
+               trimmed_str = trimmed_str//trim(temp_str)//", "
+            else
+               trimmed_str = trimmed_str//trim(temp_str)
+            end if
+         end do
+         if (i < nrows) then
+            trimmed_str = trimmed_str//"],"//new_line('a')
+         else
+            trimmed_str = trimmed_str//"]"//new_line('a')
+         end if
+      end do
+      trimmed_str = trimmed_str//"]"
+   end function to_string_matrix_dp
+
+   function to_string_matrix_int32(array) result(trimmed_str)
+      integer(int32), intent(in) :: array(:, :)
+      character(len=:), allocatable :: trimmed_str
+      character(len=50) :: temp_str
+      integer :: i, j, total_len, nrows, ncols
+
+      nrows = size(array, 1)
+      ncols = size(array, 2)
+
+      ! Estimate total length needed
+      total_len = 10  ! for outer brackets and newlines
+      do i = 1, nrows
+         total_len = total_len + 3  ! for row brackets and comma
+         do j = 1, ncols
+            write (temp_str, '(I0)') array(i, j)
+            total_len = total_len + len_trim(temp_str) + 2  ! +2 for ", "
+         end do
+      end do
+
+      ! Allocate result string
+      allocate (character(len=total_len) :: trimmed_str)
+
+      ! Build the string
+      trimmed_str = "["
+      do i = 1, nrows
+         if (i > 1) trimmed_str = trimmed_str//", "
+         trimmed_str = trimmed_str//"["
+         do j = 1, ncols
+            write (temp_str, '(I0)') array(i, j)
+            if (j < ncols) then
+               trimmed_str = trimmed_str//trim(temp_str)//", "
+            else
+               trimmed_str = trimmed_str//trim(temp_str)
+            end if
+         end do
+         trimmed_str = trimmed_str//"]"
+      end do
+      trimmed_str = trimmed_str//"]"
+   end function to_string_matrix_int32
+
+   function to_string_matrix_int64(array) result(trimmed_str)
+      integer(int64), intent(in) :: array(:, :)
+      character(len=:), allocatable :: trimmed_str
+      character(len=50) :: temp_str
+      integer :: i, j, total_len, nrows, ncols
+
+      nrows = size(array, 1)
+      ncols = size(array, 2)
+
+      ! Estimate total length needed
+      total_len = 10 + nrows  ! for outer brackets and newlines
+      do i = 1, nrows
+         total_len = total_len + 3  ! for row brackets and comma
+         do j = 1, ncols
+            write (temp_str, '(I0)') array(i, j)
+            total_len = total_len + len_trim(temp_str) + 2  ! +2 for ", "
+         end do
+      end do
+
+      ! Allocate result string
+      allocate (character(len=total_len) :: trimmed_str)
+
+      ! Build the string with newlines
+      trimmed_str = "["//new_line('a')
+      do i = 1, nrows
+         trimmed_str = trimmed_str//" ["
+         do j = 1, ncols
+            write (temp_str, '(I0)') array(i, j)
+            if (j < ncols) then
+               trimmed_str = trimmed_str//trim(temp_str)//", "
+            else
+               trimmed_str = trimmed_str//trim(temp_str)
+            end if
+         end do
+         if (i < nrows) then
+            trimmed_str = trimmed_str//"],"//new_line('a')
+         else
+            trimmed_str = trimmed_str//"]"//new_line('a')
+         end if
+      end do
+      trimmed_str = trimmed_str//"]"
+   end function to_string_matrix_int64
+
+   function to_string_matrix_sp(array) result(trimmed_str)
+      real(kind=sp), intent(in) :: array(:, :)
+      character(len=:), allocatable :: trimmed_str
+      character(len=50) :: temp_str
+      character(len=32) :: style
+      integer :: i, j, total_len, nrows, ncols
+
+      nrows = size(array, 1)
+      ncols = size(array, 2)
+
+      ! Set up format
+      write (style, '(A,I0,A)') '(F0.', sp_precision, ')'
+
+      ! Estimate total length needed
+      total_len = 10 + nrows  ! for outer brackets and newlines
+      do i = 1, nrows
+         total_len = total_len + 3  ! for row brackets and comma
+         do j = 1, ncols
+            write (temp_str, style) array(i, j)
+            total_len = total_len + len_trim(temp_str) + 2  ! +2 for ", "
+         end do
+      end do
+
+      ! Allocate result string
+      allocate (character(len=total_len) :: trimmed_str)
+
+      ! Build the string with newlines
+      trimmed_str = "["//new_line('a')
+      do i = 1, nrows
+         trimmed_str = trimmed_str//" ["
+         do j = 1, ncols
+            write (temp_str, style) array(i, j)
+            if (j < ncols) then
+               trimmed_str = trimmed_str//trim(temp_str)//", "
+            else
+               trimmed_str = trimmed_str//trim(temp_str)
+            end if
+         end do
+         if (i < nrows) then
+            trimmed_str = trimmed_str//"],"//new_line('a')
+         else
+            trimmed_str = trimmed_str//"]"//new_line('a')
+         end if
+      end do
+      trimmed_str = trimmed_str//"]"
+   end function to_string_matrix_sp
+
+end module pic_string
