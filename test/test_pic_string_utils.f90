@@ -18,6 +18,14 @@ contains
                    new_unittest("test_to_string_dp", test_to_string_dp), &
                    new_unittest("test_to_string_char", test_to_string_char), &
                    new_unittest("test_to_string_logical", test_to_string_logical), &
+                   new_unittest("test_to_string_vector_int32", test_to_string_vector_int32), &
+                   new_unittest("test_to_string_vector_int64", test_to_string_vector_int64), &
+                   new_unittest("test_to_string_vector_sp", test_to_string_vector_sp), &
+                   new_unittest("test_to_string_vector_dp", test_to_string_vector_dp), &
+                   new_unittest("test_to_string_matrix_int32", test_to_string_matrix_int32), &
+                   new_unittest("test_to_string_matrix_int64", test_to_string_matrix_int64), &
+                   new_unittest("test_to_string_matrix_sp", test_to_string_matrix_sp), &
+                   new_unittest("test_to_string_matrix_dp", test_to_string_matrix_dp), &
                    new_unittest("test_to_string_sp", test_to_string_sp), &
                    new_unittest("test_set_get_precision", test_set_get_precision), &
                    new_unittest("test_write_with_precision_sp", test_write_with_precision_sp), &
@@ -85,6 +93,80 @@ contains
       call check(error, result == "FALSE")
       if (allocated(error)) return
    end subroutine test_to_string_logical
+
+   subroutine test_to_string_vector_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=500) :: result
+      integer(kind=int32), dimension(3) :: vec
+
+      vec = [int(1, kind=int32), int(2, kind=int32), int(3, kind=int32)]
+      result = to_string(vec)
+   end subroutine test_to_string_vector_int32
+
+   subroutine test_to_string_vector_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=500) :: result
+      integer(kind=int64), dimension(3) :: vec
+
+      vec = [int(1, kind=int64), int(2, kind=int64), int(3, kind=int64)]
+      result = to_string(vec)
+   end subroutine test_to_string_vector_int64
+
+   subroutine test_to_string_vector_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=500) :: result
+      real(kind=sp), dimension(3) :: vec
+
+      vec = [1.0_sp, 2.0_sp, 3.0_sp]
+      result = to_string(vec)
+   end subroutine test_to_string_vector_sp
+
+   subroutine test_to_string_vector_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=500) :: result
+      real(kind=dp), dimension(3) :: vec
+
+      vec = [1.0_dp, 2.0_dp, 3.0_dp]
+      result = to_string(vec)
+   end subroutine test_to_string_vector_dp
+
+   subroutine test_to_string_matrix_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=500) :: result
+      integer(kind=int32), dimension(2, 2) :: mat
+
+      mat = reshape([int(1, kind=int32), int(2, kind=int32), &
+                     int(3, kind=int32), int(4, kind=int32)], [2, 2])
+      result = to_string(mat)
+   end subroutine test_to_string_matrix_int32
+
+   subroutine test_to_string_matrix_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=500) :: result
+      integer(kind=int64), dimension(2, 2) :: mat
+
+      mat = reshape([int(1, kind=int64), int(2, kind=int64), &
+                     int(3, kind=int64), int(4, kind=int64)], [2, 2])
+      result = to_string(mat)
+   end subroutine test_to_string_matrix_int64
+
+   subroutine test_to_string_matrix_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=500) :: result
+      real(kind=sp), dimension(2, 2) :: mat
+
+      mat = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp], [2, 2])
+      result = to_string(mat)
+   end subroutine test_to_string_matrix_sp
+
+   subroutine test_to_string_matrix_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=500) :: result
+      real(kind=dp), dimension(2, 2) :: mat
+
+      mat = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp], [2, 2])
+      result = to_string(mat)
+   end subroutine test_to_string_matrix_dp
 
    subroutine test_set_get_precision(error)
       type(error_type), allocatable, intent(out) :: error
