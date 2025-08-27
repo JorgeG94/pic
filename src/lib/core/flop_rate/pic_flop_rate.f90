@@ -5,7 +5,7 @@ module pic_flop_rate
    use pic_types, only: dp, int64
    use pic_timer, only: pic_timer_type
    use pic_flop_recorder, only: flop_recorder_type
-   use pic_string_utils, only: to_string
+   use pic_string, only: to_string
    implicit none
    private
    public :: flop_rate_type

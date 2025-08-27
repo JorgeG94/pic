@@ -2,7 +2,7 @@
 !! contains the necessary routines to transform key data
 !! types into strings
 
-module pic_string_utils
+module pic_string
 !! General string utilities
    use pic_types, only: sp, dp, int32, int64, default_int
    implicit none
@@ -494,4 +494,4 @@ contains
       trimmed_str = trimmed_str//"]"
    end function to_string_matrix_sp
 
-end module pic_string_utils
+end module pic_string
