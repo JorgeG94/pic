@@ -2,7 +2,7 @@ module test_pic_sorting
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_types, only: sp, dp, int32, int64, default_int
    use pic_sorting, only: sort, sort_index, radix_sort, ord_sort
-   use pic_array, only: is_sorted, ascending, DESCENDING, fuck_my_array_up
+   use pic_array, only: is_sorted, ascending, DESCENDING, pic_scramble_array
    implicit none
    private
    public :: collect_pic_sorting_tests
@@ -310,7 +310,7 @@ contains
             large_char_array(i) = char(char1)//char(char2)//char(char3)
          end do
 
-         call fuck_my_array_up(large_char_array)
+         call pic_scramble_array(large_char_array)
 
          call sort(large_char_array)
          call check(error, is_sorted(large_char_array), .true., "Char array not sorted!")

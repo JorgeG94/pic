@@ -3,7 +3,7 @@ module test_pic_array
    use pic_types, only: sp, dp, int32, int64, default_int
    use pic_array, only: fill, set_threading_mode, get_threading_mode, &
                         pic_transpose, pic_sum, copy, is_sorted, ASCENDING, &
-                        DESCENDING, fuck_my_array_up
+                        DESCENDING, pic_scramble_array
    use pic_test_helpers, only: is_equal
    implicit none
    private
@@ -76,11 +76,11 @@ contains
                   new_unittest("pic_is_sorted_sp", test_pic_is_sorted_sp), &
                   new_unittest("pic_is_sorted_dp", test_pic_is_sorted_dp), &
                   new_unittest("pic_is_sorted_char", test_pic_is_sorted_char), &
-                  new_unittest("pic_fuck_my_array_up_int32", test_pic_fuck_my_array_up_int32), &
-                  new_unittest("pic_fuck_my_array_up_int64", test_pic_fuck_my_array_up_int64), &
-                  new_unittest("pic_fuck_my_array_up_sp", test_pic_fuck_my_array_up_sp), &
-                  new_unittest("pic_fuck_my_array_up_dp", test_pic_fuck_my_array_up_dp), &
-                  new_unittest("pic_fuck_my_array_up_char", test_pic_fuck_my_array_up_char) &
+                  new_unittest("pic_scramble_array_int32", test_pic_scramble_array_int32), &
+                  new_unittest("pic_scramble_array_int64", test_pic_scramble_array_int64), &
+                  new_unittest("pic_scramble_array_sp", test_pic_scramble_array_sp), &
+                  new_unittest("pic_scramble_array_dp", test_pic_scramble_array_dp), &
+                  new_unittest("pic_scramble_array_char", test_pic_scramble_array_char) &
                   ]
 
       ! Add more tests as needed
@@ -1157,7 +1157,7 @@ contains
 
    end subroutine test_pic_is_sorted_char
 
-   subroutine test_pic_fuck_my_array_up_int32(error)
+   subroutine test_pic_scramble_array_int32(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int32) :: int32_arr(10)
       integer(int32) :: arr_before(10)
@@ -1169,7 +1169,7 @@ contains
 
       sum_before = sum(int32_arr)
 
-      call fuck_my_array_up(int32_arr)
+      call pic_scramble_array(int32_arr)
 
       call check(error, sum(int32_arr) == sum_before, .true., "The arrays need to produce the same overall sum!")
       if (allocated(error)) return
@@ -1177,9 +1177,9 @@ contains
       call check(error, all(int32_arr == arr_before), .false., "The arrays should not be equal!")
       if (allocated(error)) return
 
-   end subroutine test_pic_fuck_my_array_up_int32
+   end subroutine test_pic_scramble_array_int32
 
-   subroutine test_pic_fuck_my_array_up_int64(error)
+   subroutine test_pic_scramble_array_int64(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int64) :: int64_arr(10)
       integer(int64) :: arr_before(10)
@@ -1191,7 +1191,7 @@ contains
 
       sum_before = sum(int64_arr)
 
-      call fuck_my_array_up(int64_arr)
+      call pic_scramble_array(int64_arr)
 
       call check(error, sum(int64_arr) == sum_before, .true., "The arrays need to produce the same overall sum!")
       if (allocated(error)) return
@@ -1199,9 +1199,9 @@ contains
       call check(error, all(int64_arr == arr_before), .false., "The arrays should not be equal!")
       if (allocated(error)) return
 
-   end subroutine test_pic_fuck_my_array_up_int64
+   end subroutine test_pic_scramble_array_int64
 
-   subroutine test_pic_fuck_my_array_up_sp(error)
+   subroutine test_pic_scramble_array_sp(error)
       type(error_type), allocatable, intent(out) :: error
       real(sp) :: sp_arr(10)
       real(sp) :: arr_before(10)
@@ -1213,7 +1213,7 @@ contains
 
       sum_before = sum(sp_arr)
 
-      call fuck_my_array_up(sp_arr)
+      call pic_scramble_array(sp_arr)
 
       call check(error, is_equal(sum(sp_arr), sum_before), .true., "The arrays need to produce the same overall sum!")
       if (allocated(error)) return
@@ -1221,9 +1221,9 @@ contains
       call check(error, all(is_equal(sp_arr, arr_before)), .false., "The arrays should not be equal!")
       if (allocated(error)) return
 
-   end subroutine test_pic_fuck_my_array_up_sp
+   end subroutine test_pic_scramble_array_sp
 
-   subroutine test_pic_fuck_my_array_up_dp(error)
+   subroutine test_pic_scramble_array_dp(error)
       type(error_type), allocatable, intent(out) :: error
       real(dp) :: dp_arr(10)
       real(dp) :: arr_before(10)
@@ -1235,7 +1235,7 @@ contains
 
       sum_before = sum(dp_arr)
 
-      call fuck_my_array_up(dp_arr)
+      call pic_scramble_array(dp_arr)
 
       call check(error, is_equal(sum(dp_arr), sum_before), .true., "The arrays need to produce the same overall sum!")
       if (allocated(error)) return
@@ -1243,9 +1243,9 @@ contains
       call check(error, all(is_equal(dp_arr, arr_before)), .false., "The arrays should not be equal!")
       if (allocated(error)) return
 
-   end subroutine test_pic_fuck_my_array_up_dp
+   end subroutine test_pic_scramble_array_dp
 
-   subroutine test_pic_fuck_my_array_up_char(error)
+   subroutine test_pic_scramble_array_char(error)
       type(error_type), allocatable, intent(out) :: error
       character(len=1) :: char_arr(11)
       character(len=1) :: arr_before(11)
@@ -1253,11 +1253,11 @@ contains
       arr_before = char_arr
       call random_seed()
 
-      call fuck_my_array_up(char_arr)
+      call pic_scramble_array(char_arr)
 
       call check(error, all(char_arr == arr_before), .false., "The arrays should not be equal!")
       if (allocated(error)) return
 
-   end subroutine test_pic_fuck_my_array_up_char
+   end subroutine test_pic_scramble_array_char
 
 end module test_pic_array
