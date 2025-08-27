@@ -5,12 +5,14 @@ module pic_array
 !! Please do not modify this file to implement new methods, please go look at tools/autogen/pic_array_cpu.fypp
 !! and edit the generator.
    use pic_types, only: sp, dp, int32, int64, default_int
+   use pic_string_utils, only: to_string, to_upper
    implicit none
    private
 
-   public :: fill, copy, pic_transpose, pic_sum
+   public :: fill, copy
+   public :: pic_transpose, pic_sum
+   public :: pic_scramble_array, pic_print_array
    public :: is_sorted
-   public :: fuck_my_array_up
    public :: set_threading_mode, get_threading_mode
 
    logical :: use_threaded_default = .false.
@@ -18,6 +20,11 @@ module pic_array
 
    integer(default_int), parameter :: ASCENDING = 1
    integer(default_int), parameter :: DESCENDING = 2
+   character(len=5), parameter :: default_format = "NUMPY"
+  !! supported formats: NUMPY, MATHEMATICA, and PLAIN which resembles numpy
+
+   character(len=*), parameter :: fmt_edge = "(A)"
+   character(len=*), parameter :: fmt_in = '(A, ", ")'
 
    interface set_threading_mode
    !! set_threading sets the threading mode for the array routines
@@ -127,13 +134,48 @@ module pic_array
       module procedure is_sorted_char
    end interface
 
-   interface fuck_my_array_up
-      module procedure scramble_int32_array
-      module procedure scramble_int64_array
-      module procedure scramble_sp_array
-      module procedure scramble_dp_array
-      module procedure scramble_character_array
-   end interface fuck_my_array_up
+   interface pic_print_array
+    !! Generic interface for printing arrays of different types
+    !!
+    !! Usage: call print_array_v2(array, [optional] format)
+    !! Where format can be: NUMPY, PLAIN, MATHEMATICA (can use lower caps)
+    !!
+    !! Implemented types are:
+    !!
+    !! array(:)   -> int32, int64, sp, dp
+    !!
+    !! array(:,:) -> int32, int64, sp, dp
+    !!
+    !! array(:) (packed matrix) -> sp, dp
+    !!
+    !! array(:,:,:) -> sp, dp
+    !!
+      module procedure print_vector_int32
+      module procedure print_vector_int64
+      module procedure print_vector_sp
+      module procedure print_vector_dp
+      module procedure print_matrix_int32
+      module procedure print_matrix_int64
+      module procedure print_matrix_sp
+      module procedure print_matrix_dp
+      module procedure print_packed_matrix_int32
+      module procedure print_packed_matrix_int64
+      module procedure print_packed_matrix_sp
+      module procedure print_packed_matrix_dp
+      module procedure print_3d_tensor_int32
+      module procedure print_3d_tensor_int64
+      module procedure print_3d_tensor_sp
+      module procedure print_3d_tensor_dp
+
+   end interface
+
+   interface pic_scramble_array
+      module procedure scramble_array_int32
+      module procedure scramble_array_int64
+      module procedure scramble_array_sp
+      module procedure scramble_array_dp
+      module procedure scramble_array_character
+   end interface pic_scramble_array
 
    ! potentially implement a shallow copy? nah?
    integer(default_int), parameter :: block_size = 32
@@ -156,6 +198,27 @@ contains
       logical :: mode
       mode = use_threaded_default
    end function get_threading_mode
+
+   subroutine set_brackets(format_type, open_bracket, close_bracket)
+   !! Set brackets based on output format type
+      character(len=*), intent(in) :: format_type
+      character(len=1), intent(out) :: open_bracket, close_bracket
+      select case (trim(to_upper(adjustl(format_type))))
+      case ("NUMPY")
+         open_bracket = "["
+         close_bracket = "]"
+      case ("MATHEMATICA")
+         open_bracket = "{"
+         close_bracket = "}"
+      case ("PLAIN")
+         open_bracket = "["
+         close_bracket = "]"
+      case default
+         print *, "Warning: Unsupported format type '"//trim(format_type)//"'. Defaulting to NumPy style."
+         open_bracket = "["
+         close_bracket = "]"
+      end select
+   end subroutine set_brackets
 
    subroutine fill_vector_int32(vector, alpha, threaded)
       integer(int32), intent(inout) :: vector(:)
@@ -1008,7 +1071,7 @@ contains
                return
             end if
          end do
-      case default
+      case default  ! ASCENDING or any other value
          do i = 1, size(array) - 1
             if (array(i + 1) < array(i)) then
                sorted = .false.
@@ -1149,7 +1212,607 @@ contains
       end select
    end function is_sorted_char
 
-   subroutine scramble_int32_array(array)
+   subroutine print_vector_int32(vector, format_type)
+     !! print a vector of ${T} values
+      integer(int32), intent(in) :: vector(:)
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+
+      if (present(format_type)) then
+         print_format = format_type
+      else
+         print_format = default_format
+      end if
+
+      print: block
+         character(len=1) :: open_bracket, close_bracket
+         integer(default_int) :: i, loop_bound_i
+         loop_bound_i = size(vector)
+         call set_brackets(print_format, open_bracket, close_bracket)
+         write (*, "(A)", advance="no") open_bracket
+         do i = 1, loop_bound_i
+            if (i == loop_bound_i) then  ! Last element in the vector
+               write (*, fmt_edge, advance="no") to_string(vector(i))
+            else  ! Elements in between
+               write (*, fmt_in, advance="no") to_string(vector(i))
+            end if
+         end do
+         print *, close_bracket
+
+      end block print
+
+   end subroutine print_vector_int32
+
+   subroutine print_vector_int64(vector, format_type)
+     !! print a vector of ${T} values
+      integer(int64), intent(in) :: vector(:)
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+
+      if (present(format_type)) then
+         print_format = format_type
+      else
+         print_format = default_format
+      end if
+
+      print: block
+         character(len=1) :: open_bracket, close_bracket
+         integer(default_int) :: i, loop_bound_i
+         loop_bound_i = size(vector)
+         call set_brackets(print_format, open_bracket, close_bracket)
+         write (*, "(A)", advance="no") open_bracket
+         do i = 1, loop_bound_i
+            if (i == loop_bound_i) then  ! Last element in the vector
+               write (*, fmt_edge, advance="no") to_string(vector(i))
+            else  ! Elements in between
+               write (*, fmt_in, advance="no") to_string(vector(i))
+            end if
+         end do
+         print *, close_bracket
+
+      end block print
+
+   end subroutine print_vector_int64
+
+   subroutine print_vector_sp(vector, format_type)
+     !! print a vector of ${T} values
+      real(sp), intent(in) :: vector(:)
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+
+      if (present(format_type)) then
+         print_format = format_type
+      else
+         print_format = default_format
+      end if
+
+      print: block
+         character(len=1) :: open_bracket, close_bracket
+         integer(default_int) :: i, loop_bound_i
+         loop_bound_i = size(vector)
+         call set_brackets(print_format, open_bracket, close_bracket)
+         write (*, "(A)", advance="no") open_bracket
+         do i = 1, loop_bound_i
+            if (i == loop_bound_i) then  ! Last element in the vector
+               write (*, fmt_edge, advance="no") to_string(vector(i))
+            else  ! Elements in between
+               write (*, fmt_in, advance="no") to_string(vector(i))
+            end if
+         end do
+         print *, close_bracket
+
+      end block print
+
+   end subroutine print_vector_sp
+
+   subroutine print_vector_dp(vector, format_type)
+     !! print a vector of ${T} values
+      real(dp), intent(in) :: vector(:)
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+
+      if (present(format_type)) then
+         print_format = format_type
+      else
+         print_format = default_format
+      end if
+
+      print: block
+         character(len=1) :: open_bracket, close_bracket
+         integer(default_int) :: i, loop_bound_i
+         loop_bound_i = size(vector)
+         call set_brackets(print_format, open_bracket, close_bracket)
+         write (*, "(A)", advance="no") open_bracket
+         do i = 1, loop_bound_i
+            if (i == loop_bound_i) then  ! Last element in the vector
+               write (*, fmt_edge, advance="no") to_string(vector(i))
+            else  ! Elements in between
+               write (*, fmt_in, advance="no") to_string(vector(i))
+            end if
+         end do
+         print *, close_bracket
+
+      end block print
+
+   end subroutine print_vector_dp
+
+   subroutine print_matrix_int32(matrix, format_type)
+    !! print a matrix of ${T} values
+      integer(int32), intent(in) :: matrix(:, :)
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+
+      if (present(format_type)) then
+         print_format = format_type
+      else
+         print_format = default_format
+      end if
+
+      print: block
+         character(len=1) :: open_bracket, close_bracket
+         integer(default_int) :: i, j, rows, cols
+         rows = size(matrix, 1)
+         cols = size(matrix, 2)
+         call set_brackets(print_format, open_bracket, close_bracket)
+         print *, open_bracket
+         do i = 1, rows
+            write (*, "(A)", advance="no") open_bracket
+            do j = 1, cols
+               if (j == cols) then  ! Last element in the row
+                  write (*, fmt_edge, advance="no") to_string(matrix(i, j))
+               else  ! Elements in between
+                  write (*, fmt_in, advance="no") to_string(matrix(i, j))
+               end if
+            end do
+            if (i == rows) then
+               print *, close_bracket
+            else
+               print *, close_bracket, ","
+            end if
+         end do
+         print *, close_bracket
+      end block print
+
+   end subroutine print_matrix_int32
+
+   subroutine print_matrix_int64(matrix, format_type)
+    !! print a matrix of ${T} values
+      integer(int64), intent(in) :: matrix(:, :)
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+
+      if (present(format_type)) then
+         print_format = format_type
+      else
+         print_format = default_format
+      end if
+
+      print: block
+         character(len=1) :: open_bracket, close_bracket
+         integer(default_int) :: i, j, rows, cols
+         rows = size(matrix, 1)
+         cols = size(matrix, 2)
+         call set_brackets(print_format, open_bracket, close_bracket)
+         print *, open_bracket
+         do i = 1, rows
+            write (*, "(A)", advance="no") open_bracket
+            do j = 1, cols
+               if (j == cols) then  ! Last element in the row
+                  write (*, fmt_edge, advance="no") to_string(matrix(i, j))
+               else  ! Elements in between
+                  write (*, fmt_in, advance="no") to_string(matrix(i, j))
+               end if
+            end do
+            if (i == rows) then
+               print *, close_bracket
+            else
+               print *, close_bracket, ","
+            end if
+         end do
+         print *, close_bracket
+      end block print
+
+   end subroutine print_matrix_int64
+
+   subroutine print_matrix_sp(matrix, format_type)
+    !! print a matrix of ${T} values
+      real(sp), intent(in) :: matrix(:, :)
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+
+      if (present(format_type)) then
+         print_format = format_type
+      else
+         print_format = default_format
+      end if
+
+      print: block
+         character(len=1) :: open_bracket, close_bracket
+         integer(default_int) :: i, j, rows, cols
+         rows = size(matrix, 1)
+         cols = size(matrix, 2)
+         call set_brackets(print_format, open_bracket, close_bracket)
+         print *, open_bracket
+         do i = 1, rows
+            write (*, "(A)", advance="no") open_bracket
+            do j = 1, cols
+               if (j == cols) then  ! Last element in the row
+                  write (*, fmt_edge, advance="no") to_string(matrix(i, j))
+               else  ! Elements in between
+                  write (*, fmt_in, advance="no") to_string(matrix(i, j))
+               end if
+            end do
+            if (i == rows) then
+               print *, close_bracket
+            else
+               print *, close_bracket, ","
+            end if
+         end do
+         print *, close_bracket
+      end block print
+
+   end subroutine print_matrix_sp
+
+   subroutine print_matrix_dp(matrix, format_type)
+    !! print a matrix of ${T} values
+      real(dp), intent(in) :: matrix(:, :)
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+
+      if (present(format_type)) then
+         print_format = format_type
+      else
+         print_format = default_format
+      end if
+
+      print: block
+         character(len=1) :: open_bracket, close_bracket
+         integer(default_int) :: i, j, rows, cols
+         rows = size(matrix, 1)
+         cols = size(matrix, 2)
+         call set_brackets(print_format, open_bracket, close_bracket)
+         print *, open_bracket
+         do i = 1, rows
+            write (*, "(A)", advance="no") open_bracket
+            do j = 1, cols
+               if (j == cols) then  ! Last element in the row
+                  write (*, fmt_edge, advance="no") to_string(matrix(i, j))
+               else  ! Elements in between
+                  write (*, fmt_in, advance="no") to_string(matrix(i, j))
+               end if
+            end do
+            if (i == rows) then
+               print *, close_bracket
+            else
+               print *, close_bracket, ","
+            end if
+         end do
+         print *, close_bracket
+      end block print
+
+   end subroutine print_matrix_dp
+
+   subroutine print_packed_matrix_int32(packed, n_elements, format_type)
+   !! Print a packed lower triangular matrix of ${T} values
+      integer(int32), intent(in) :: packed(:)
+      integer(default_int), intent(in) :: n_elements
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+      character(len=1) :: open_bracket, close_bracket
+      integer(default_int) :: i, j, idx, n
+      real(dp) :: n_real
+
+      ! Determine format
+      if (present(format_type)) then
+         print_format = trim(adjustl(format_type))
+      else
+         print_format = "NUMPY"
+      end if
+      call set_brackets(print_format, open_bracket, close_bracket)
+
+      ! Compute n from packed size using proper real arithmetic
+      n_real = (-1.0_dp + sqrt(1.0_dp + 8.0_dp*real(n_elements, dp)))/2.0_dp
+      n = int(n_real + 0.5_dp, default_int)
+
+      if (n*(n + 1)/2 /= n_elements) then
+         print *, "Error: n_elements does not form a valid packed triangle"
+         return
+      end if
+
+      ! Print lower triangle directly from packed array
+      print *, open_bracket
+      idx = 0
+      do i = 1, n
+         write (*, '(A)', advance="no") open_bracket
+         do j = 1, i
+            idx = idx + 1
+            if (j == i) then
+               write (*, '(A)', advance="no") to_string(packed(idx))
+            else
+               write (*, '(A)', advance="no") trim(to_string(packed(idx))//", ")
+            end if
+         end do
+         if (i == n) then
+            print *, close_bracket
+         else
+            print *, close_bracket, ","
+         end if
+      end do
+      print *, close_bracket
+   end subroutine print_packed_matrix_int32
+
+   subroutine print_packed_matrix_int64(packed, n_elements, format_type)
+   !! Print a packed lower triangular matrix of ${T} values
+      integer(int64), intent(in) :: packed(:)
+      integer(default_int), intent(in) :: n_elements
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+      character(len=1) :: open_bracket, close_bracket
+      integer(default_int) :: i, j, idx, n
+      real(dp) :: n_real
+
+      ! Determine format
+      if (present(format_type)) then
+         print_format = trim(adjustl(format_type))
+      else
+         print_format = "NUMPY"
+      end if
+      call set_brackets(print_format, open_bracket, close_bracket)
+
+      ! Compute n from packed size using proper real arithmetic
+      n_real = (-1.0_dp + sqrt(1.0_dp + 8.0_dp*real(n_elements, dp)))/2.0_dp
+      n = int(n_real + 0.5_dp, default_int)
+
+      if (n*(n + 1)/2 /= n_elements) then
+         print *, "Error: n_elements does not form a valid packed triangle"
+         return
+      end if
+
+      ! Print lower triangle directly from packed array
+      print *, open_bracket
+      idx = 0
+      do i = 1, n
+         write (*, '(A)', advance="no") open_bracket
+         do j = 1, i
+            idx = idx + 1
+            if (j == i) then
+               write (*, '(A)', advance="no") to_string(packed(idx))
+            else
+               write (*, '(A)', advance="no") trim(to_string(packed(idx))//", ")
+            end if
+         end do
+         if (i == n) then
+            print *, close_bracket
+         else
+            print *, close_bracket, ","
+         end if
+      end do
+      print *, close_bracket
+   end subroutine print_packed_matrix_int64
+
+   subroutine print_packed_matrix_sp(packed, n_elements, format_type)
+   !! Print a packed lower triangular matrix of ${T} values
+      real(sp), intent(in) :: packed(:)
+      integer(default_int), intent(in) :: n_elements
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+      character(len=1) :: open_bracket, close_bracket
+      integer(default_int) :: i, j, idx, n
+      real(dp) :: n_real
+
+      ! Determine format
+      if (present(format_type)) then
+         print_format = trim(adjustl(format_type))
+      else
+         print_format = "NUMPY"
+      end if
+      call set_brackets(print_format, open_bracket, close_bracket)
+
+      ! Compute n from packed size using proper real arithmetic
+      n_real = (-1.0_dp + sqrt(1.0_dp + 8.0_dp*real(n_elements, dp)))/2.0_dp
+      n = int(n_real + 0.5_dp, default_int)
+
+      if (n*(n + 1)/2 /= n_elements) then
+         print *, "Error: n_elements does not form a valid packed triangle"
+         return
+      end if
+
+      ! Print lower triangle directly from packed array
+      print *, open_bracket
+      idx = 0
+      do i = 1, n
+         write (*, '(A)', advance="no") open_bracket
+         do j = 1, i
+            idx = idx + 1
+            if (j == i) then
+               write (*, '(A)', advance="no") to_string(packed(idx))
+            else
+               write (*, '(A)', advance="no") trim(to_string(packed(idx))//", ")
+            end if
+         end do
+         if (i == n) then
+            print *, close_bracket
+         else
+            print *, close_bracket, ","
+         end if
+      end do
+      print *, close_bracket
+   end subroutine print_packed_matrix_sp
+
+   subroutine print_packed_matrix_dp(packed, n_elements, format_type)
+   !! Print a packed lower triangular matrix of ${T} values
+      real(dp), intent(in) :: packed(:)
+      integer(default_int), intent(in) :: n_elements
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+      character(len=1) :: open_bracket, close_bracket
+      integer(default_int) :: i, j, idx, n
+      real(dp) :: n_real
+
+      ! Determine format
+      if (present(format_type)) then
+         print_format = trim(adjustl(format_type))
+      else
+         print_format = "NUMPY"
+      end if
+      call set_brackets(print_format, open_bracket, close_bracket)
+
+      ! Compute n from packed size using proper real arithmetic
+      n_real = (-1.0_dp + sqrt(1.0_dp + 8.0_dp*real(n_elements, dp)))/2.0_dp
+      n = int(n_real + 0.5_dp, default_int)
+
+      if (n*(n + 1)/2 /= n_elements) then
+         print *, "Error: n_elements does not form a valid packed triangle"
+         return
+      end if
+
+      ! Print lower triangle directly from packed array
+      print *, open_bracket
+      idx = 0
+      do i = 1, n
+         write (*, '(A)', advance="no") open_bracket
+         do j = 1, i
+            idx = idx + 1
+            if (j == i) then
+               write (*, '(A)', advance="no") to_string(packed(idx))
+            else
+               write (*, '(A)', advance="no") trim(to_string(packed(idx))//", ")
+            end if
+         end do
+         if (i == n) then
+            print *, close_bracket
+         else
+            print *, close_bracket, ","
+         end if
+      end do
+      print *, close_bracket
+   end subroutine print_packed_matrix_dp
+
+   subroutine print_3d_tensor_int32(matrix, format_type)
+    !! Print a 3D tensor of ${T} values
+      integer(int32), intent(in) :: matrix(:, :, :)
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+
+      if (present(format_type)) then
+         print_format = format_type
+      else
+         print_format = default_format
+      end if
+
+      print: block
+         character(len=1) :: open_bracket, close_bracket
+         integer(int32) :: i, j, k, rows, cols, depth
+         rows = size(matrix, 1)
+         cols = size(matrix, 2)
+         depth = size(matrix, 3)
+         call set_brackets(print_format, open_bracket, close_bracket)
+         print *, open_bracket
+         do k = 1, depth
+            if (k > 1) print *, ","
+            print *, open_bracket
+            call pic_print_array(matrix(:, :, k), print_format)
+            print *, close_bracket
+         end do
+         print *, close_bracket
+      end block print
+
+   end subroutine print_3d_tensor_int32
+
+   subroutine print_3d_tensor_int64(matrix, format_type)
+    !! Print a 3D tensor of ${T} values
+      integer(int64), intent(in) :: matrix(:, :, :)
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+
+      if (present(format_type)) then
+         print_format = format_type
+      else
+         print_format = default_format
+      end if
+
+      print: block
+         character(len=1) :: open_bracket, close_bracket
+         integer(int32) :: i, j, k, rows, cols, depth
+         rows = size(matrix, 1)
+         cols = size(matrix, 2)
+         depth = size(matrix, 3)
+         call set_brackets(print_format, open_bracket, close_bracket)
+         print *, open_bracket
+         do k = 1, depth
+            if (k > 1) print *, ","
+            print *, open_bracket
+            call pic_print_array(matrix(:, :, k), print_format)
+            print *, close_bracket
+         end do
+         print *, close_bracket
+      end block print
+
+   end subroutine print_3d_tensor_int64
+
+   subroutine print_3d_tensor_sp(matrix, format_type)
+    !! Print a 3D tensor of ${T} values
+      real(sp), intent(in) :: matrix(:, :, :)
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+
+      if (present(format_type)) then
+         print_format = format_type
+      else
+         print_format = default_format
+      end if
+
+      print: block
+         character(len=1) :: open_bracket, close_bracket
+         integer(int32) :: i, j, k, rows, cols, depth
+         rows = size(matrix, 1)
+         cols = size(matrix, 2)
+         depth = size(matrix, 3)
+         call set_brackets(print_format, open_bracket, close_bracket)
+         print *, open_bracket
+         do k = 1, depth
+            if (k > 1) print *, ","
+            print *, open_bracket
+            call pic_print_array(matrix(:, :, k), print_format)
+            print *, close_bracket
+         end do
+         print *, close_bracket
+      end block print
+
+   end subroutine print_3d_tensor_sp
+
+   subroutine print_3d_tensor_dp(matrix, format_type)
+    !! Print a 3D tensor of ${T} values
+      real(dp), intent(in) :: matrix(:, :, :)
+      character(len=*), intent(in), optional :: format_type
+      character(len=20) :: print_format
+
+      if (present(format_type)) then
+         print_format = format_type
+      else
+         print_format = default_format
+      end if
+
+      print: block
+         character(len=1) :: open_bracket, close_bracket
+         integer(int32) :: i, j, k, rows, cols, depth
+         rows = size(matrix, 1)
+         cols = size(matrix, 2)
+         depth = size(matrix, 3)
+         call set_brackets(print_format, open_bracket, close_bracket)
+         print *, open_bracket
+         do k = 1, depth
+            if (k > 1) print *, ","
+            print *, open_bracket
+            call pic_print_array(matrix(:, :, k), print_format)
+            print *, close_bracket
+         end do
+         print *, close_bracket
+      end block print
+
+   end subroutine print_3d_tensor_dp
+
+   subroutine scramble_array_int32(array)
       integer(int32), intent(inout) :: array(:)
       integer(int32) :: i, j, n
       integer(int32) :: temp
@@ -1163,12 +1826,12 @@ contains
          array(i) = array(j)
          array(j) = temp
       end do
-   end subroutine scramble_int32_array
+   end subroutine scramble_array_int32
 
-   subroutine scramble_int64_array(array)
+   subroutine scramble_array_int64(array)
       integer(int64), intent(inout) :: array(:)
-      integer(int64) :: i, j, n
-      integer(int64) :: temp
+      integer(int32) :: i, j, n
+      integer(int32) :: temp
       real(sp) :: rand_val
 
       n = size(array)
@@ -1179,12 +1842,12 @@ contains
          array(i) = array(j)
          array(j) = temp
       end do
-   end subroutine scramble_int64_array
+   end subroutine scramble_array_int64
 
-   subroutine scramble_sp_array(array)
+   subroutine scramble_array_sp(array)
       real(sp), intent(inout) :: array(:)
       integer(int32) :: i, j, n
-      real(sp) :: temp
+      integer(int32) :: temp
       real(sp) :: rand_val
 
       n = size(array)
@@ -1195,12 +1858,12 @@ contains
          array(i) = array(j)
          array(j) = temp
       end do
-   end subroutine scramble_sp_array
+   end subroutine scramble_array_sp
 
-   subroutine scramble_dp_array(array)
+   subroutine scramble_array_dp(array)
       real(dp), intent(inout) :: array(:)
       integer(int32) :: i, j, n
-      real(dp) :: temp
+      integer(int32) :: temp
       real(sp) :: rand_val
 
       n = size(array)
@@ -1211,9 +1874,9 @@ contains
          array(i) = array(j)
          array(j) = temp
       end do
-   end subroutine scramble_dp_array
+   end subroutine scramble_array_dp
 
-   subroutine scramble_character_array(array)
+   subroutine scramble_array_character(array)
       character(len=*), intent(inout) :: array(:)
       integer(int32) :: i, j, n
       character(len=len(array)) :: temp
@@ -1227,6 +1890,5 @@ contains
          array(i) = array(j)
          array(j) = temp
       end do
-   end subroutine scramble_character_array
-
+   end subroutine scramble_array_character
 end module pic_array

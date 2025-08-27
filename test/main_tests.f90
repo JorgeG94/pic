@@ -9,7 +9,6 @@ program pic_tester
    use test_pic_logger, only: collect_pic_logger_tests
    use test_pic_flop_recorder, only: collect_pic_flop_recorder_tests
    use test_pic_flop_rate, only: collect_flop_rate_tests
-   use test_pic_matrix_printer, only: collect_pic_matrix_printer_tests
    use test_pic_matrix_printer_v2, only: collect_pic_matrix_printer_v2_tests
    use test_pic_array, only: collect_pic_array_tests
    use test_pic_optional, only: collect_pic_optional_tests
@@ -32,7 +31,6 @@ program pic_tester
                 new_testsuite("pic_logger", collect_pic_logger_tests), &
                 new_testsuite("pic_flop_recorder", collect_pic_flop_recorder_tests), &
                 new_testsuite("pic_flop_rate", collect_flop_rate_tests), &
-                new_testsuite("pic_matrix_printer", collect_pic_matrix_printer_tests), &
                 new_testsuite("pic_matrix_printer_v2", collect_pic_matrix_printer_v2_tests), &
                 new_testsuite("pic_array", collect_pic_array_tests), &
                 new_testsuite("pic_optional", collect_pic_optional_tests), &

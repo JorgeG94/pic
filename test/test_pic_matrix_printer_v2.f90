@@ -1,7 +1,7 @@
 
 module test_pic_matrix_printer_v2
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_matrix_printer_v2, only: print_array_v2
+   use pic_array, only: pic_print_array
    use pic_types, only: sp, dp, int32, int64, default_int
    implicit none
    private
@@ -36,23 +36,23 @@ contains
       integer(int32), parameter :: v_int32(3) = [1_int32, 2_int32, 3_int32]
       integer(int64), parameter :: v_int64(3) = [1_int64, 2_int64, 3_int64]
 
-      call print_array_v2(v_sp)
-      call print_array_v2(v_dp)
-      call print_array_v2(v_int32)
-      call print_array_v2(v_int64)
-      call print_array_v2(v_sp, "PLAIN")
+      call pic_print_array(v_sp)
+      call pic_print_array(v_dp)
+      call pic_print_array(v_int32)
+      call pic_print_array(v_int64)
+      call pic_print_array(v_sp, "PLAIN")
       call check(error, .true.)  ! Assuming the print is correct, no error expected
       if (allocated(error)) return
 
-      call print_array_v2(v_dp, "PLAIN")
+      call pic_print_array(v_dp, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int32, "PLAIN")
+      call pic_print_array(v_int32, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int64, "PLAIN")
+      call pic_print_array(v_int64, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
@@ -65,19 +65,19 @@ contains
       integer(int32), parameter :: v_int32(3) = [1_int32, 2_int32, 3_int32]
       integer(int64), parameter :: v_int64(3) = [1_int64, 2_int64, 3_int64]
 
-      call print_array_v2(v_sp, "NUMPY")
+      call pic_print_array(v_sp, "NUMPY")
       call check(error, .true.)  ! Assuming the print is correct, no error expected
       if (allocated(error)) return
 
-      call print_array_v2(v_dp, "NUMPY")
+      call pic_print_array(v_dp, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int32, "NUMPY")
+      call pic_print_array(v_int32, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int64, "NUMPY")
+      call pic_print_array(v_int64, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
@@ -90,19 +90,19 @@ contains
       integer(int32), parameter :: v_int32(3) = [1_int32, 2_int32, 3_int32]
       integer(int64), parameter :: v_int64(3) = [1_int64, 2_int64, 3_int64]
 
-      call print_array_v2(v_sp, "MATHEMATICA")
+      call pic_print_array(v_sp, "MATHEMATICA")
       call check(error, .true.)  ! Assuming the print is correct, no error expected
       if (allocated(error)) return
 
-      call print_array_v2(v_dp, "MATHEMATICA")
+      call pic_print_array(v_dp, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int32, "MATHEMATICA")
+      call pic_print_array(v_int32, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int64, "MATHEMATICA")
+      call pic_print_array(v_int64, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
 
@@ -116,23 +116,23 @@ contains
       integer(int32), parameter :: v_int32(6) = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32]
       integer(int64), parameter :: v_int64(6) = [1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64]
 
-      call print_array_v2(v_sp)
-      call print_array_v2(v_dp)
-      call print_array_v2(v_int32)
-      call print_array_v2(v_int64)
-      call print_array_v2(v_sp, six, "PLAIN")
+      call pic_print_array(v_sp)
+      call pic_print_array(v_dp)
+      call pic_print_array(v_int32)
+      call pic_print_array(v_int64)
+      call pic_print_array(v_sp, six, "PLAIN")
       call check(error, .true.)  ! Assuming the print is correct, no error expected
       if (allocated(error)) return
 
-      call print_array_v2(v_dp, six, "PLAIN")
+      call pic_print_array(v_dp, six, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int32, six, "PLAIN")
+      call pic_print_array(v_int32, six, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int64, six, "PLAIN")
+      call pic_print_array(v_int64, six, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
@@ -146,19 +146,19 @@ contains
       integer(int32), parameter :: v_int32(6) = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32]
       integer(int64), parameter :: v_int64(6) = [1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64]
 
-      call print_array_v2(v_sp, six, "NUMPY")
+      call pic_print_array(v_sp, six, "NUMPY")
       call check(error, .true.)  ! Assuming the print is correct, no error expected
       if (allocated(error)) return
 
-      call print_array_v2(v_dp, six, "NUMPY")
+      call pic_print_array(v_dp, six, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int32, six, "NUMPY")
+      call pic_print_array(v_int32, six, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int64, six, "NUMPY")
+      call pic_print_array(v_int64, six, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
@@ -172,19 +172,19 @@ contains
       integer(int32), parameter :: v_int32(6) = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32]
       integer(int64), parameter :: v_int64(6) = [1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64]
 
-      call print_array_v2(v_sp, six, "MATHEMATICA")
+      call pic_print_array(v_sp, six, "MATHEMATICA")
       call check(error, .true.)  ! Assuming the print is correct, no error expected
       if (allocated(error)) return
 
-      call print_array_v2(v_dp, six, "MATHEMATICA")
+      call pic_print_array(v_dp, six, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int32, six, "MATHEMATICA")
+      call pic_print_array(v_int32, six, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(v_int64, six, "MATHEMATICA")
+      call pic_print_array(v_int64, six, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
 
@@ -197,22 +197,22 @@ contains
       real(sp), parameter :: m_sp(2, 2) = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp], [2, 2])
       real(dp), parameter :: m_dp(2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp], [2, 2])
 
-      call print_array_v2(m_int32)
-      call print_array_v2(m_int64)
-      call print_array_v2(m_sp)
-      call print_array_v2(m_dp)
-      call print_array_v2(m_int32, "PLAIN")
+      call pic_print_array(m_int32)
+      call pic_print_array(m_int64)
+      call pic_print_array(m_sp)
+      call pic_print_array(m_dp)
+      call pic_print_array(m_int32, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(m_int64, "PLAIN")
+      call pic_print_array(m_int64, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
-      call print_array_v2(m_sp, "PLAIN")
+      call pic_print_array(m_sp, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(m_dp, "PLAIN")
+      call pic_print_array(m_dp, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
@@ -225,18 +225,18 @@ contains
       real(sp), parameter :: m_sp(2, 2) = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp], [2, 2])
       real(dp), parameter :: m_dp(2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp], [2, 2])
 
-      call print_array_v2(m_int32, "NUMPY")
+      call pic_print_array(m_int32, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(m_int64, "NUMPY")
+      call pic_print_array(m_int64, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
-      call print_array_v2(m_sp, "NUMPY")
+      call pic_print_array(m_sp, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(m_dp, "NUMPY")
+      call pic_print_array(m_dp, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
@@ -249,18 +249,18 @@ contains
       real(sp), parameter :: m_sp(2, 2) = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp], [2, 2])
       real(dp), parameter :: m_dp(2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp], [2, 2])
 
-      call print_array_v2(m_int32, "MATHEMATICA")
+      call pic_print_array(m_int32, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(m_int64, "MATHEMATICA")
+      call pic_print_array(m_int64, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
-      call print_array_v2(m_sp, "MATHEMATICA")
+      call pic_print_array(m_sp, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(m_dp, "MATHEMATICA")
+      call pic_print_array(m_dp, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
    end subroutine test_print_matrix_mathematica
@@ -270,13 +270,13 @@ contains
     real(sp), parameter :: tensor_sp(2, 2, 2) = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp, 7.0_sp, 8.0_sp], [2, 2, 2])
     real(dp), parameter :: tensor_dp(2, 2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp, 7.0_dp, 8.0_dp], [2, 2, 2])
 
-      call print_array_v2(tensor_sp)
-      call print_array_v2(tensor_dp)
-      call print_array_v2(tensor_sp, "PLAIN")
+      call pic_print_array(tensor_sp)
+      call pic_print_array(tensor_dp)
+      call pic_print_array(tensor_sp, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(tensor_dp, "PLAIN")
+      call pic_print_array(tensor_dp, "PLAIN")
       call check(error, .true.)
       if (allocated(error)) return
 
@@ -287,11 +287,11 @@ contains
     real(sp), parameter :: tensor_sp(2, 2, 2) = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp, 7.0_sp, 8.0_sp], [2, 2, 2])
     real(dp), parameter :: tensor_dp(2, 2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp, 7.0_dp, 8.0_dp], [2, 2, 2])
 
-      call print_array_v2(tensor_sp, "NUMPY")
+      call pic_print_array(tensor_sp, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
-      call print_array_v2(tensor_dp, "NUMPY")
+      call pic_print_array(tensor_dp, "NUMPY")
       call check(error, .true.)
       if (allocated(error)) return
 
@@ -302,10 +302,10 @@ contains
     real(sp), parameter :: tensor_sp(2, 2, 2) = reshape([1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp, 6.0_sp, 7.0_sp, 8.0_sp], [2, 2, 2])
     real(dp), parameter :: tensor_dp(2, 2, 2) = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp, 6.0_dp, 7.0_dp, 8.0_dp], [2, 2, 2])
 
-      call print_array_v2(tensor_sp, "MATHEMATICA")
+      call pic_print_array(tensor_sp, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
-      call print_array_v2(tensor_dp, "MATHEMATICA")
+      call pic_print_array(tensor_dp, "MATHEMATICA")
       call check(error, .true.)
       if (allocated(error)) return
 
