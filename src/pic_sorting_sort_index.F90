@@ -46,9 +46,122 @@
 !! of modified versions of the code in the Fortran Standard Library under
 !! the MIT license.
 
-submodule(pic_sorting) pic_sorting_sort_index
+!submodule(pic_sorting) pic_sorting_sort_index
+module pic_sorting_sort_index
+   use pic_types, only: int32, int64, int_index, sp, dp, int_index_low
+   use pic_optional_value, only: pic_optional
 
    implicit none
+   public :: sort_index
+!! The generic subroutine implementing the `SORT_INDEX` algorithm to
+!! return an index array whose elements would sort the input array in the
+!! desired direction. It is primarily intended to be used to sort a
+!! derived type array based on the values of a component of the array.
+!! Its use has the syntax:
+!!
+!!     call sort_index( array, index[, work, iwork, reverse ] )
+!!
+!! with the arguments:
+!!
+!! * array: the rank 1 array to be sorted. It is an `intent(inout)`
+!!   argument of any of the types `integer(int8)`, `integer(int16)`,
+!!   `integer(int32)`, `integer(int64)`, `real(real32)`, `real(real64)`,
+!!   `real(real128)`, `character(*)`, `type(string_type)`,
+!!   `type(bitset_64)`, `type(bitset_large)`. If both the
+!!   type of `array` is real and at least one of the elements is a `NaN`,
+!!   then the ordering of the `array` and `index` results is undefined.
+!!   Otherwise it is defined to be as specified by reverse.
+!!
+!! * index: a rank 1 array of sorting indices. It is an `intent(out)`
+!!   argument of the type `integer(int_index)`. Its size shall be the
+!!   same as `array`. On return, if defined, its elements would
+!!   sort the input `array` in the direction specified by `reverse`.
+!!
+!! * work (optional): shall be a rank 1 array of the same type as
+!!   `array`, and shall have at least `size(array)/2` elements. It is an
+!!   `intent(out)` argument to be used as "scratch" memory
+!!   for internal record keeping. If associated with an array in static
+!!   storage, its use can significantly reduce the stack memory requirements
+!!   for the code. Its value on return is undefined.
+!!
+!! * iwork (optional): shall be a rank 1 integer array of kind `int_index`,
+!!   and shall have at least `size(array)/2` elements. It is an
+!!   `intent(out)` argument to be used as "scratch" memory
+!!   for internal record keeping. If associated with an array in static
+!!   storage, its use can significantly reduce the stack memory requirements
+!!   for the code. Its value on return is undefined.
+!!
+!! * `reverse` (optional): shall be a scalar of type default logical. It
+!!   is an `intent(in)` argument. If present with a value of `.true.` then
+!!   `index` will sort `array` in order of non-increasing values in stable
+!!   order. Otherwise index will sort `array` in order of non-decreasing
+!!   values in stable order.
+!!
+!!#### Examples
+!!
+!! Sorting a related rank one array:
+!!
+!!```Fortran
+!!    subroutine sort_related_data( a, b, work, index, iwork )
+!!        ! Sort `b` in terms or its related array `a`
+!!        integer, intent(inout)         :: a(:)
+!!        integer(int32), intent(inout)  :: b(:) ! The same size as a
+!!        integer(int32), intent(out)    :: work(:)
+!!        integer(int_index), intent(out) :: index(:)
+!!        integer(int_index), intent(out) :: iwork(:)
+!!    ! Find the indices to sort a
+!!        call sort_index(a, index(1:size(a)),&
+!!            work(1:size(a)/2), iwork(1:size(a)/2))
+!!    ! Sort b based on the sorting of a
+!!        b(:) = b( index(1:size(a)) )
+!!    end subroutine sort_related_data
+!!```
+!!
+!! Sorting a rank 2 array based on the data in a column
+!!
+!!```Fortran
+!!    subroutine sort_related_data( array, column, work, index, iwork )
+!!    ! Sort `a_data` in terms or its component `a`
+!!        integer, intent(inout)         :: a(:,:)
+!!        integer(int32), intent(in)     :: column
+!!        integer(int32), intent(out)    :: work(:)
+!!        integer(int_index), intent(out) :: index(:)
+!!        integer(int_index), intent(out) :: iwork(:)
+!!        integer, allocatable           :: dummy(:)
+!!        integer :: i
+!!        allocate(dummy(size(a, dim=1)))
+!!    ! Extract a component of `a_data`
+!!        dummy(:) = a(:, column)
+!!    ! Find the indices to sort the column
+!!        call sort_index(dummy, index(1:size(dummy)),&
+!!                        work(1:size(dummy)/2), iwork(1:size(dummy)/2))
+!!    ! Sort a based on the sorting of its column
+!!        do i=1, size(a, dim=2)
+!!            a(:, i) = a(index(1:size(a, dim=1)), i)
+!!        end do
+!!    end subroutine sort_related_data
+!!```
+!!
+!! Sorting an array of a derived type based on the dsta in one component
+!!```fortran
+!!    subroutine sort_a_data( a_data, a, work, index, iwork )
+!!    ! Sort `a_data` in terms or its component `a`
+!!        type(a_type), intent(inout)    :: a_data(:)
+!!        integer(int32), intent(inout)  :: a(:)
+!!        integer(int32), intent(out)    :: work(:)
+!!        integer(int_index), intent(out) :: index(:)
+!!        integer(int_index), intent(out) :: iwork(:)
+!!    ! Extract a component of `a_data`
+!!        a(1:size(a_data)) = a_data(:) % a
+!!    ! Find the indices to sort the component
+!!        call sort_index(a(1:size(a_data)), index(1:size(a_data)),&
+!!                        work(1:size(a_data)/2), iwork(1:size(a_data)/2))
+!!    ! Sort a_data based on the sorting of that component
+!!        a_data(:) = a_data( index(1:size(a_data)) )
+!!    end subroutine sort_a_data
+!!```
+
+   private
    integer, parameter :: &
       ! The maximum number of entries in a run stack, good for an array of
       ! 2**64 elements see
@@ -62,6 +175,170 @@ submodule(pic_sorting) pic_sorting_sort_index
       integer(int_index) :: base = 0
       integer(int_index) :: len = 0
    end type run_type
+
+   interface sort_index
+!! The generic subroutine interface implementing the `SORT_INDEX` algorithm,
+!! based on the `"Rust" sort` algorithm found in `slice.rs`
+!! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
+!! but modified to return an array of indices that would provide a stable
+!! sort of the rank one `ARRAY` input.
+!!
+!! The indices by default correspond to a
+!! non-decreasing sort, but if the optional argument `REVERSE` is present
+!! with a value of `.TRUE.` the indices correspond to a non-increasing sort.
+
+      module subroutine int32_sort_index_default(array, index, work, iwork, &
+                                                 reverse)
+!! `int32_sort_index_default( array, index[, work, iwork, reverse] )` sorts
+!! an input `ARRAY` of type `integer(int32)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+!! and returns the sorted `ARRAY` and an array `INDEX` of indices in the
+!! order that would sort the input `ARRAY` in the desired direction.
+         implicit none
+         integer(int32), intent(inout)                     :: array(0:)
+         integer(int_index), intent(out)                      :: index(0:)
+         integer(int32), intent(out), optional             :: work(0:)
+         integer(int_index), intent(out), optional            :: iwork(0:)
+         logical, intent(in), optional             :: reverse
+      end subroutine int32_sort_index_default
+
+      module subroutine int64_sort_index_default(array, index, work, iwork, &
+                                                 reverse)
+!! `int64_sort_index_default( array, index[, work, iwork, reverse] )` sorts
+!! an input `ARRAY` of type `integer(int64)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+!! and returns the sorted `ARRAY` and an array `INDEX` of indices in the
+!! order that would sort the input `ARRAY` in the desired direction.
+         implicit none
+         integer(int64), intent(inout)                     :: array(0:)
+         integer(int_index), intent(out)                      :: index(0:)
+         integer(int64), intent(out), optional             :: work(0:)
+         integer(int_index), intent(out), optional            :: iwork(0:)
+         logical, intent(in), optional             :: reverse
+      end subroutine int64_sort_index_default
+
+      module subroutine sp_sort_index_default(array, index, work, iwork, &
+                                              reverse)
+!! `sp_sort_index_default( array, index[, work, iwork, reverse] )` sorts
+!! an input `ARRAY` of type `real(sp)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+!! and returns the sorted `ARRAY` and an array `INDEX` of indices in the
+!! order that would sort the input `ARRAY` in the desired direction.
+         implicit none
+         real(sp), intent(inout)                     :: array(0:)
+         integer(int_index), intent(out)                      :: index(0:)
+         real(sp), intent(out), optional             :: work(0:)
+         integer(int_index), intent(out), optional            :: iwork(0:)
+         logical, intent(in), optional             :: reverse
+      end subroutine sp_sort_index_default
+
+      module subroutine dp_sort_index_default(array, index, work, iwork, &
+                                              reverse)
+!! `dp_sort_index_default( array, index[, work, iwork, reverse] )` sorts
+!! an input `ARRAY` of type `real(dp)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+!! and returns the sorted `ARRAY` and an array `INDEX` of indices in the
+!! order that would sort the input `ARRAY` in the desired direction.
+         implicit none
+         real(dp), intent(inout)                     :: array(0:)
+         integer(int_index), intent(out)                      :: index(0:)
+         real(dp), intent(out), optional             :: work(0:)
+         integer(int_index), intent(out), optional            :: iwork(0:)
+         logical, intent(in), optional             :: reverse
+      end subroutine dp_sort_index_default
+
+      module subroutine char_sort_index_default(array, index, work, iwork, &
+                                                reverse)
+!! `char_sort_index_default( array, index[, work, iwork, reverse] )` sorts
+!! an input `ARRAY` of type `character(len=*)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+!! and returns the sorted `ARRAY` and an array `INDEX` of indices in the
+!! order that would sort the input `ARRAY` in the desired direction.
+         implicit none
+         character(len=*), intent(inout)                     :: array(0:)
+         integer(int_index), intent(out)                      :: index(0:)
+         character(len=len(array)), intent(out), optional             :: work(0:)
+         integer(int_index), intent(out), optional            :: iwork(0:)
+         logical, intent(in), optional             :: reverse
+      end subroutine char_sort_index_default
+
+      module subroutine int32_sort_index_low(array, index, work, iwork, &
+                                             reverse)
+!! `int32_sort_index_low( array, index[, work, iwork, reverse] )` sorts
+!! an input `ARRAY` of type `integer(int32)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+!! and returns the sorted `ARRAY` and an array `INDEX` of indices in the
+!! order that would sort the input `ARRAY` in the desired direction.
+         implicit none
+         integer(int32), intent(inout)                     :: array(0:)
+         integer(int_index_low), intent(out)                      :: index(0:)
+         integer(int32), intent(out), optional             :: work(0:)
+         integer(int_index_low), intent(out), optional            :: iwork(0:)
+         logical, intent(in), optional             :: reverse
+      end subroutine int32_sort_index_low
+
+      module subroutine int64_sort_index_low(array, index, work, iwork, &
+                                             reverse)
+!! `int64_sort_index_low( array, index[, work, iwork, reverse] )` sorts
+!! an input `ARRAY` of type `integer(int64)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+!! and returns the sorted `ARRAY` and an array `INDEX` of indices in the
+!! order that would sort the input `ARRAY` in the desired direction.
+         implicit none
+         integer(int64), intent(inout)                     :: array(0:)
+         integer(int_index_low), intent(out)                      :: index(0:)
+         integer(int64), intent(out), optional             :: work(0:)
+         integer(int_index_low), intent(out), optional            :: iwork(0:)
+         logical, intent(in), optional             :: reverse
+      end subroutine int64_sort_index_low
+
+      module subroutine sp_sort_index_low(array, index, work, iwork, &
+                                          reverse)
+!! `sp_sort_index_low( array, index[, work, iwork, reverse] )` sorts
+!! an input `ARRAY` of type `real(sp)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+!! and returns the sorted `ARRAY` and an array `INDEX` of indices in the
+!! order that would sort the input `ARRAY` in the desired direction.
+         implicit none
+         real(sp), intent(inout)                     :: array(0:)
+         integer(int_index_low), intent(out)                      :: index(0:)
+         real(sp), intent(out), optional             :: work(0:)
+         integer(int_index_low), intent(out), optional            :: iwork(0:)
+         logical, intent(in), optional             :: reverse
+      end subroutine sp_sort_index_low
+
+      module subroutine dp_sort_index_low(array, index, work, iwork, &
+                                          reverse)
+!! `dp_sort_index_low( array, index[, work, iwork, reverse] )` sorts
+!! an input `ARRAY` of type `real(dp)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+!! and returns the sorted `ARRAY` and an array `INDEX` of indices in the
+!! order that would sort the input `ARRAY` in the desired direction.
+         implicit none
+         real(dp), intent(inout)                     :: array(0:)
+         integer(int_index_low), intent(out)                      :: index(0:)
+         real(dp), intent(out), optional             :: work(0:)
+         integer(int_index_low), intent(out), optional            :: iwork(0:)
+         logical, intent(in), optional             :: reverse
+      end subroutine dp_sort_index_low
+
+      module subroutine char_sort_index_low(array, index, work, iwork, &
+                                            reverse)
+!! `char_sort_index_low( array, index[, work, iwork, reverse] )` sorts
+!! an input `ARRAY` of type `character(len=*)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+!! and returns the sorted `ARRAY` and an array `INDEX` of indices in the
+!! order that would sort the input `ARRAY` in the desired direction.
+         implicit none
+         character(len=*), intent(inout)                     :: array(0:)
+         integer(int_index_low), intent(out)                      :: index(0:)
+         character(len=len(array)), intent(out), optional             :: work(0:)
+         integer(int_index_low), intent(out), optional            :: iwork(0:)
+         logical, intent(in), optional             :: reverse
+      end subroutine char_sort_index_low
+
+   end interface sort_index
+
 contains
 
    module subroutine int32_sort_index_default(array, index, work, iwork, reverse)
@@ -4222,4 +4499,5 @@ contains
 
    end subroutine char_sort_index_low
 
-end submodule pic_sorting_sort_index
+!end submodule pic_sorting_sort_index
+end module pic_sorting_sort_index
