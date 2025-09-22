@@ -23,16 +23,22 @@ elseif(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "IntelLLVM")
   set(standard_compile_flags "-axAVX2 -traceback")
   set(fpe "-check all -fpe0")
-elseif("${CMAKE_Fortran_COMPILER_ID}" STREQUAL "NVHPC")
+elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
   set(standard_compile_flags " -traceback")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "LLVMFlang")
   set(standard_compile_flags "")
+elseif(CMAKE_Fortran_COMPILER_ID MATCHES "Cray")
+  set(standard_compiler_flags "")
+  set(debug "-g -O0 -m1 -Ktrap=fp -hbounds")
+else()
+  message(WARNING "The Fortran compiler ID ${CMAKE_Fortran_COMPILER_ID} is not in the list of known compilers, please add me!")
 endif()
 
 # Customize compiler flags
 set(CMAKE_Fortran_FLAGS_DEBUG
-    "${CMAKE_Fortran_FLAGS_DEBUG} ${fpe}"
+    "${CMAKE_Fortran_FLAGS_DEBUG} ${fpe} ${debug}"
     PARENT_SCOPE)
+
 set(CMAKE_Fortran_FLAGS
     "${CMAKE_Fortran_FLAGS} ${standard_compile_flags}"
     PARENT_SCOPE)
