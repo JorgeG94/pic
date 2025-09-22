@@ -4,7 +4,7 @@ program pic_tester
    & select_suite, run_selected, get_argument
    use pic_types, only: default_int, int32
    use test_suite1, only: collect_suite1
-   use test_pic_string_utils, only: collect_pic_string_utils_tests
+   use test_pic_string, only: collect_pic_string_tests
    use test_pic_timer, only: collect_pic_timers_tests
    use test_pic_logger, only: collect_pic_logger_tests
    use test_pic_flop_recorder, only: collect_pic_flop_recorder_tests
@@ -26,7 +26,7 @@ program pic_tester
    !allocate (testsuites(ntest_suites))
    testsuites = [ &
                 new_testsuite("base_utils", collect_suite1), &
-                new_testsuite("pic_string_utils", collect_pic_string_utils_tests), &
+                new_testsuite("pic_string", collect_pic_string_tests), &
                 new_testsuite("pic_timers", collect_pic_timers_tests), &
                 new_testsuite("pic_logger", collect_pic_logger_tests), &
                 new_testsuite("pic_flop_recorder", collect_pic_flop_recorder_tests), &

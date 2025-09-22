@@ -7,7 +7,7 @@ program main
    !use pic_logger, only: global => global_logger, warning_level, verbose_level
    !use testdrive, only: run_testsuite
    use pic_types, only: dp, default_int, sp, int32, int64
-   use pic_string_utils, only: to_string, set_precision
+   use pic_string, only: to_string, set_precision
    use pic_array, only: pic_scramble_array, is_sorted
    implicit none
    !use pic_mpi

@@ -5,7 +5,7 @@ module pic_array
 !! Please do not modify this file to implement new methods, please go look at tools/autogen/pic_array_cpu.fypp
 !! and edit the generator.
    use pic_types, only: sp, dp, int32, int64, default_int
-   use pic_string_utils, only: to_string, to_upper
+   use pic_string, only: to_string, to_upper
    implicit none
    private
 
