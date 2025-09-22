@@ -21,7 +21,6 @@ program main
    !integer(default_int) :: ierr, rank, size, ival
    integer(int64), parameter :: size_1 = 512*512*512
    integer(int64), parameter :: size_2 = 1024*1024*1024
-   integer(int64), parameter :: size_3 = 2048*2048*2048
    real(sp), dimension(:, :), allocatable :: A
    real(dp), dimension(:), allocatable :: symA
    real(dp) :: sum_val
