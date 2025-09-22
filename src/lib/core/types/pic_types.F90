@@ -34,4 +34,7 @@ module pic_types
    integer, parameter, public :: default_complex = dp
     !! default complex is double precision
 
+   integer, parameter, public :: int_index = int64  !! Integer kind for indexing
+   integer, parameter, public :: int_index_low = int32  !! Integer kind for indexing using less than `huge(1_int32)` values
+
 end module pic_types

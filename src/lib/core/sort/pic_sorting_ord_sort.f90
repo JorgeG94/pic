@@ -47,9 +47,63 @@
 !! of modified versions of the code in the Fortran Standard Library under
 !! the MIT license.
 
-submodule(pic_sorting) pic_sorting_ord_sort
+!submodule(pic_sorting) pic_sorting_ord_sort
+module pic_sorting_ord_sort
+   use pic_types, only: int32, int64, sp, dp, int_index
+   use pic_optional_value, only: pic_optional
 
    implicit none
+
+   public :: ord_sort
+   !! The generic subroutine implementing the `ORD_SORT` algorithm to return
+!! an input array with its elements sorted in order of (non-)decreasing
+!! value. Its use has the syntax:
+!!
+!!     call ord_sort( array[, work, reverse] )
+!!
+!! with the arguments:
+!!
+!! * array: the rank 1 array to be sorted. It is an `intent(inout)`
+!!   argument of any of the types `integer(int8)`, `integer(int16)`,
+!!   `integer(int32)`, `integer(int64)`, `real(real32)`, `real(real64)`,
+!!   `real(real128)`, `character(*)`, `type(string_type)`,
+!!   `type(bitset_64)`, `type(bitset_large)`. If both the
+!!   type of `array` is real and at least one of the elements is a
+!!   `NaN`, then the ordering of the result is undefined. Otherwise it
+!!   is defined to be the original elements in non-decreasing order.
+!!
+!! * work (optional): shall be a rank 1 array of the same type as
+!!   `array`, and shall have at least `size(array)/2` elements. It is an
+!!   `intent(out)` argument to be used as "scratch" memory
+!!   for internal record keeping. If associated with an array in static
+!!   storage, its use can significantly reduce the stack memory requirements
+!!   for the code. Its value on return is undefined.
+!!
+!! * `reverse` (optional): shall be a scalar of type default logical. It
+!!   is an `intent(in)` argument. If present with a value of `.true.` then
+!!   `array` will be sorted in order of non-increasing values in stable
+!!   order. Otherwise index will sort `array` in order of non-decreasing
+!!   values in stable order.
+!!
+!!#### Example
+!!
+!!```fortran
+!!    ...
+!!    ! Read arrays from sorted files
+!!    call read_sorted_file( 'dummy_file1', array1 )
+!!    call read_sorted_file( 'dummy_file2', array2 )
+!!    ! Concatenate the arrays
+!!    allocate( array( size(array1) + size(array2) ) )
+!!    array( 1:size(array1) ) = array1(:)
+!!    array( size(array1)+1:size(array1)+size(array2) ) = array2(:)
+!!    ! Sort the resulting array
+!!    call ord_sort( array, work )
+!!    ! Process the sorted array
+!!    call array_search( array, values )
+!!    ...
+!!```
+   private
+
    integer, parameter :: &
       ! The maximum number of entries in a run stack, good for an array of
       ! 2**64 elements see
@@ -63,6 +117,67 @@ submodule(pic_sorting) pic_sorting_ord_sort
       integer(int_index) :: base = 0
       integer(int_index) :: len = 0
    end type run_type
+
+   interface ord_sort
+!! The generic subroutine interface implementing the `ORD_SORT` algorithm,
+!! a translation to Fortran 2008, of the `"Rust" sort` algorithm found in
+!! `slice.rs`
+!! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
+!! `ORD_SORT` is a hybrid stable comparison algorithm combining `merge sort`,
+!! and `insertion sort`.
+!!
+!! It is always at worst O(N Ln(N)) in sorting random
+!! data, having a performance about 25% slower than `SORT` on such
+!! data, but has much better performance than `SORT` on partially
+!! sorted data, having O(N) performance on uniformly non-increasing or
+!! non-decreasing data.
+
+      module subroutine int32_ord_sort(array, work, reverse)
+         implicit none
+!! `int32_ord_sort( array )` sorts the input `ARRAY` of type `integer(int32)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+         integer(int32), intent(inout)         :: array(0:)
+         integer(int32), intent(out), optional :: work(0:)
+         logical, intent(in), optional :: reverse
+      end subroutine int32_ord_sort
+
+      module subroutine int64_ord_sort(array, work, reverse)
+         implicit none
+!! `int64_ord_sort( array )` sorts the input `ARRAY` of type `integer(int64)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+         integer(int64), intent(inout)         :: array(0:)
+         integer(int64), intent(out), optional :: work(0:)
+         logical, intent(in), optional :: reverse
+      end subroutine int64_ord_sort
+
+      module subroutine sp_ord_sort(array, work, reverse)
+         implicit none
+!! `sp_ord_sort( array )` sorts the input `ARRAY` of type `real(sp)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+         real(sp), intent(inout)         :: array(0:)
+         real(sp), intent(out), optional :: work(0:)
+         logical, intent(in), optional :: reverse
+      end subroutine sp_ord_sort
+
+      module subroutine dp_ord_sort(array, work, reverse)
+         implicit none
+!! `dp_ord_sort( array )` sorts the input `ARRAY` of type `real(dp)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+         real(dp), intent(inout)         :: array(0:)
+         real(dp), intent(out), optional :: work(0:)
+         logical, intent(in), optional :: reverse
+      end subroutine dp_ord_sort
+
+      module subroutine char_ord_sort(array, work, reverse)
+         implicit none
+!! `char_ord_sort( array )` sorts the input `ARRAY` of type `character(len=*)`
+!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
+         character(len=*), intent(inout)         :: array(0:)
+         character(len=len(array)), intent(out), optional :: work(0:)
+         logical, intent(in), optional :: reverse
+      end subroutine char_ord_sort
+
+   end interface ord_sort
 
 contains
 
@@ -3470,4 +3585,5 @@ contains
 
    end subroutine char_decrease_ord_sort
 
-end submodule pic_sorting_ord_sort
+!end submodule pic_sorting_ord_sort
+end module pic_sorting_ord_sort

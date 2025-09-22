@@ -9,7 +9,6 @@ program main
    use pic_types, only: dp, default_int, sp, int32, int64
    use pic_string_utils, only: to_string, set_precision
    use pic_array, only: pic_scramble_array, is_sorted
-   use pic_sorting, only: sort, sort_index, radix_sort, ord_sort
    implicit none
    !use pic_mpi
    !use pic_timer
@@ -23,15 +22,25 @@ program main
    integer(int64), parameter :: size_1 = 512*512*512
    integer(int64), parameter :: size_2 = 1024*1024*1024
    integer(int64), parameter :: size_3 = 2048*2048*2048
-   real(dp), dimension(:, :), allocatable :: A, B, C
+   real(sp), dimension(:, :), allocatable :: A
    real(dp), dimension(:), allocatable :: symA
    real(dp) :: sum_val
    !real(dp), dimension(:), allocatable :: C_flat
    integer(default_int) :: n, m, k
-   integer(int32), allocatable :: integer_array(:)
+   integer(int32) :: i, j
+   integer(int64), allocatable :: integer_array(:)
    integer(int32), allocatable :: work(:)
 
    call pic_print_banner()
+
+   allocate (A(5, 5))
+   do i = 1, 5
+      do j = 1, 5
+         A(i, j) = real(i + j, sp)
+      end do
+   end do
+
+   print *, to_string(A)
 
    !call comm%init()
 
