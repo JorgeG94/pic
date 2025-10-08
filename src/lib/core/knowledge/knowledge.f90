@@ -14,9 +14,9 @@ contains
       real(dp) :: r
 
       knowledge = [ &
-                  "The long line! (CS,2023)", &
+                  "The long line! (CS,2023)                                        ", &
                   "Maybe I have the Fortran brain-rot in Dijkstra's words (IP,2025)", &
-                  "Mojo, yes, do I approve it, no. (IP, 2025)" &
+                  "Mojo, yes, do I approve it, no. (IP, 2025)                      " &
                   ]
 
       n = size(knowledge)

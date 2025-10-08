@@ -1,7 +1,7 @@
 module pic_device
    use iso_c_binding, only: c_int, c_size_t
    use pic_types, only: dp, int32
-   use pic_gpu_runtime, only: gpugetdevicememinfo, gpugetdevice, gpugetdevicecount
+   use pic_gpu_runtime, only: gpugetmeminfo, gpugetdevice, gpugetdevicecount
    implicit none
 
    private
