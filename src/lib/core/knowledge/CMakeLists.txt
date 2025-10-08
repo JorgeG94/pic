@@ -1,1 +1,1 @@
-target_sources(${core_lib} PRIVATE knowledge.f90)
+target_sources(${core_lib} PRIVATE pic_knowledge.f90)
