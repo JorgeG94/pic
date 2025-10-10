@@ -449,6 +449,12 @@ number of flops and the elapsed time</p><a href="../proc/flop_rate_get_flop_rate
                  <td><p>Calls the stop method for the timer contained in the flop rate type</p><a href="../proc/flop_rate_stop_time.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
                </tr>
 			   <tr>
+                 <td><a href='../proc/get_device_id.html'>get_device_id</a></td>
+                 <td><a href='../module/pic_device.html'>pic_device</a></td>
+                 <td>Subroutine</td>
+                 <td><p>routine to get the device id for the device_type</p></td>
+               </tr>
+			   <tr>
                  <td><a href='../proc/get_first_arg_from_command_line.html'>get_first_arg_from_command_line</a></td>
                  <td><a href='../module/pic_command_line.html'>pic_command_line</a></td>
                  <td>Function</td>
@@ -459,6 +465,25 @@ number of flops and the elapsed time</p><a href="../proc/flop_rate_get_flop_rate
                  <td><a href='../module/pic_flop_recorder.html'>pic_flop_recorder</a></td>
                  <td>Function</td>
                  <td><p>Get the int64 number of FLOPs we currently have in the counter</p><a href="../proc/get_flops.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/get_gpu_information.html'>get_gpu_information</a></td>
+                 <td><a href='../module/pic_device.html'>pic_device</a></td>
+                 <td>Subroutine</td>
+                 <td><p>call my_device%get_gpu_informatio() style subroutine to populate the object</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/get_gpu_memory_info.html'>get_gpu_memory_info</a></td>
+                 <td><a href='../module/pic_device.html'>pic_device</a></td>
+                 <td>Subroutine</td>
+                 <td><p>routine to get the free and total memory for the device_type object
+can be used independently with call get_gpu_memory_info(device_object)</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/get_knowledge.html'>get_knowledge</a></td>
+                 <td><a href='../module/pic_knowledge.html'>pic_knowledge</a></td>
+                 <td>Subroutine</td>
+                 <td><p>I print random knowledge</p></td>
                </tr>
 			   <tr>
                  <td><a href='../proc/get_precision.html'>get_precision</a></td>
@@ -485,6 +510,24 @@ Usage: mode = get_threading_mode()</p></td>
                  <td>Interface</td>
                  <td><p>get_threading_mode returns the current threading mode for the array routines
 Usage: mode = get_threading_mode()</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/gpugetdevice.html'>gpugetdevice</a></td>
+                 <td><a href='../module/pic_gpu_runtime.html'>pic_gpu_runtime</a></td>
+                 <td>Subroutine</td>
+                 <td><p>get current device id from the GPU runtime</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/gpugetdevicecount.html'>gpugetdevicecount</a></td>
+                 <td><a href='../module/pic_gpu_runtime.html'>pic_gpu_runtime</a></td>
+                 <td>Subroutine</td>
+                 <td><p>get device count available from the GPU runtime</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/gpugetmeminfo.html'>gpugetmeminfo</a></td>
+                 <td><a href='../module/pic_gpu_runtime.html'>pic_gpu_runtime</a></td>
+                 <td>Subroutine</td>
+                 <td><p>get free and total memory from the GPU runtime</p></td>
                </tr>
 			   <tr>
                  <td><a href='../proc/info.html'>info</a></td>
@@ -1347,16 +1390,29 @@ if not, it will use Fortran&rsquo;s system_clock</p><a href="../proc/timer_stop.
                </tr>
 			   <tr>
                  <td><a href='../interface/to_string.html'>to_string</a></td>
+                 <td><a href='../module/pic_device.html'>pic_device</a></td>
+                 <td>Interface</td>
+                 <td><p>convenient way to print the pic_device_type using to_string(my_device)</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../interface/to_string~2.html'>to_string</a></td>
                  <td><a href='../module/pic_string.html'>pic_string</a></td>
                  <td>Interface</td>
                  <td><p>converts a variable of type (int32, int64, sp, dp, char, logical)
-to a &ldquo;string&rdquo; which is just a collecting of chars.</p><a href="../interface/to_string.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+to a &ldquo;string&rdquo; which is just a collecting of chars.</p><a href="../interface/to_string~2.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
                </tr>
 			   <tr>
                  <td><a href='../proc/to_string_char.html'>to_string_char</a></td>
                  <td><a href='../module/pic_string.html'>pic_string</a></td>
                  <td>Function</td>
                  <td><p>transform a character to a string</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/to_string_device.html'>to_string_device</a></td>
+                 <td><a href='../module/pic_device.html'>pic_device</a></td>
+                 <td>Function</td>
+                 <td><p>cute printing routine for the pic device type, transforms the contents into a
+string of chars</p></td>
                </tr>
 			   <tr>
                  <td><a href='../proc/to_string_dp.html'>to_string_dp</a></td>
@@ -1510,7 +1566,7 @@ no interface to the public</p></td>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-09-22 05:27 +0000             </p>
+ on 2025-10-10 05:59 +0000             </p>
           </div>
         </div>
         <br>
