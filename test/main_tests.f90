@@ -13,6 +13,7 @@ program pic_tester
    use test_pic_array, only: collect_pic_array_tests
    use test_pic_optional, only: collect_pic_optional_tests
    use test_pic_sorting, only: collect_pic_sorting_tests
+   use pic_knowledge, only: get_knowledge
    ! add here the module you want to test
    implicit none
    integer(int32) :: stat, is
@@ -72,5 +73,7 @@ program pic_tester
       write (error_unit, "(i0, 1x, a)") stat, "test(s) failed!"
       error stop 1
    end if
+
+   call get_knowledge
 
 end program pic_tester

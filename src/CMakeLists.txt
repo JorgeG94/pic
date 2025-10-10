@@ -1,2 +1,5 @@
 target_sources(${main_lib} PRIVATE pic.f90)
 add_subdirectory(lib)
+if(PIC_ENABLE_GPU)
+  add_subdirectory(gpu)
+endif()
