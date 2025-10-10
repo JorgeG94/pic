@@ -1,4 +1,6 @@
+!! General cuda/hip agnostic module to interface to GPU runtimes
 module pic_gpu_runtime
+  !! gpu runtime interfaces via iso_c
    use iso_c_binding, only: c_int, c_size_t
    implicit none
 
@@ -55,6 +57,7 @@ module pic_gpu_runtime
 contains
 
    subroutine gpugetmeminfo(freeMem, totalMem, ierr)
+    !! get free and total memory from the GPU runtime
       integer(c_size_t), intent(out) :: freeMem, totalMem
       integer(c_int), intent(out) :: ierr
 #ifdef HAVE_CUDA
@@ -69,6 +72,7 @@ contains
    end subroutine gpugetmeminfo
 
    subroutine gpugetdevice(device_id, ierr)
+    !! get current device id from the GPU runtime
       integer(c_int), intent(out) :: device_id, ierr
 #ifdef HAVE_CUDA
       ierr = cudaGetDevice(device_id)
@@ -81,6 +85,7 @@ contains
    end subroutine gpugetdevice
 
    subroutine gpugetdevicecount(device_count, ierr)
+    !! get device count available from the GPU runtime
       integer(c_int), intent(out) :: device_count, ierr
 #ifdef HAVE_CUDA
       ierr = cudaGetDeviceCount(device_count)

@@ -1,4 +1,6 @@
+!! the gathered knowledge of the species
 module pic_knowledge
+  !! a simple module that collects phrases and prints them out randomly, like fortune
    use pic_types, only: int32, dp
    implicit none
 
@@ -9,6 +11,7 @@ module pic_knowledge
 contains
 
    subroutine get_knowledge()
+    !! I print random knowledge
       character(len=:), allocatable :: knowledge(:)
       integer(int32) :: n, idx
       real(dp) :: r
