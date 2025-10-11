@@ -28,6 +28,15 @@ module pic_gpu_runtime
          integer(c_int) :: cudaGetDeviceCount
          integer(c_int), intent(out) :: count
       end function cudaGetDeviceCount
+      function cudaDeviceSynchronize() bind(c, name="cudaDeviceSynchronize")
+         use :: iso_c_binding, only:c_int
+         integer(c_int) :: cudaDeviceSynchronize
+      end function cudaDeviceSynchronize
+      function cudaDeviceReset() bind(C, name="cudaDeviceReset")
+         use iso_c_binding, only: c_int
+         integer(c_int) :: cudaDeviceReset
+         implicit none
+      end function cudaDeviceReset
    end interface
 
 #elif defined(HAVE_HIP)
@@ -50,6 +59,15 @@ module pic_gpu_runtime
          integer(c_int) :: hipGetDeviceCount
          integer(c_int), intent(out) :: count
       end function hipGetDeviceCount
+      function hipDeviceSynchronize() bind(c, name="hipDeviceSynchronize")
+         use :: iso_c_binding, only:c_int
+         integer(c_int) :: hipDeviceSynchronize
+      end function hipDeviceSynchronize
+      function hipDeviceReset() bind(C, name="hipDeviceReset")
+         use iso_c_binding, only: c_int
+         integer(c_int) :: hipDeviceReset
+         implicit none
+      end function hipDeviceReset
    end interface
 
 #endif
@@ -96,5 +114,29 @@ contains
       device_count = 0_c_int
 #endif
    end subroutine gpugetdevicecount
+
+   subroutine gpusynchronize(ierr)
+    !! synchronize
+      integer(c_int), intent(out) :: ierr
+#ifdef HAVE_CUDA
+      ierr = cudaDeviceSynchronize()
+#elif defined(HAVE_HIP)
+      ierr = hipDeviceSynchronize()
+#else
+      ierr = -1_c_int
+#endif
+   end subroutine gpusynchronize
+
+   subroutine gpudevicereset(ierr)
+    !! synchronize
+      integer(c_int), intent(out) :: ierr
+#ifdef HAVE_CUDA
+      ierr = cudaDeviceReset()
+#elif defined(HAVE_HIP)
+      ierr = hipDeviceReset()
+#else
+      ierr = -1_c_int
+#endif
+   end subroutine gpudevicereset
 
 end module pic_gpu_runtime
