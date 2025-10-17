@@ -316,6 +316,7 @@ contains
       integer(int64), intent(in) :: i
       if (i < 1_int64 .or. i > self%len) then
          ch = achar(0)      ! or stop/error; choose your policy
+         ! erorr stop "Index out of bounds in pic_string_get"
       else
          ch = self%buf(i:i)
       end if
@@ -325,7 +326,10 @@ contains
       class(pic_string_type), intent(inout) :: self
       integer(int64), intent(in)    :: i
       character(1), intent(in)    :: ch
-      if (i < 1_int64 .or. i > self%len) return   ! or stop/error
+      if (i < 1_int64 .or. i > self%len) then
+         !error stop "Index out of bounds in pic_string_set"
+         return
+      end if
       self%buf(i:i) = ch
    end subroutine pic_string_set
 

@@ -222,45 +222,45 @@ contains
    subroutine test_pic_string_type_find_basic(error)
       type(error_type), allocatable, intent(out) :: error
       type(pic_string_type) :: s
-      integer(kind=dp) :: p
+      integer(int64) :: p
       call s%assign("abracadabra")
       p = s%find("ra")
-      call check(error, p == 3_dp, "find('ra') should be 3")
+      call check(error, p == 3_int64, "find('ra') should be 3")
       if (allocated(error)) return
       p = s%find("abra")     ! first occurrence
-      call check(error, p == 1_dp, "find('abra') should be 1")
+      call check(error, p == 1_int64, "find('abra') should be 1")
    end subroutine test_pic_string_type_find_basic
 
    subroutine test_pic_string_type_find_with_from(error)
       type(error_type), allocatable, intent(out) :: error
       type(pic_string_type) :: s
-      integer(kind=dp) :: p
+      integer(int64) :: p
       call s%assign("abracadabra")
-      p = s%find("ra", from=4_dp)   ! next 'ra' after index 4
+      p = s%find("ra", from=4_int64)   ! next 'ra' after index 4
       print *, "DEBUG: p =", p
-      call check(error, p == 10_dp, "find('ra', from=4) should be 10")
+      call check(error, p == 10_int64, "find('ra', from=4) should be 10")
       if (allocated(error)) return
-      p = s%find("abra", from=2_dp)
-      call check(error, p == 8_dp, "find('abra', from=2) should be 8")
+      p = s%find("abra", from=2_int64)
+      call check(error, p == 8_int64, "find('abra', from=2) should be 8")
    end subroutine test_pic_string_type_find_with_from
 
    subroutine test_pic_string_type_find_not_found(error)
       type(error_type), allocatable, intent(out) :: error
       type(pic_string_type) :: s
-      integer(kind=dp) :: p
+      integer(int64) :: p
       call s%assign("hello")
       p = s%find("xyz")
-      call check(error, p == 0_dp, "not found should be 0")
+      call check(error, p == 0_int64, "not found should be 0")
       if (allocated(error)) return
-      p = s%find("", from=1_dp)     ! empty pattern => our API returns 0
-      call check(error, p == 0_dp, "empty pattern returns 0 by design")
+      p = s%find("", from=1_int64)     ! empty pattern => our API returns 0
+      call check(error, p == 0_int64, "empty pattern returns 0 by design")
    end subroutine test_pic_string_type_find_not_found
 
    subroutine test_pic_string_type_substr_basic(error)
       type(error_type), allocatable, intent(out) :: error
       type(pic_string_type) :: s, t
       call s%assign("abcdefg")
-      t = s%substr(4_dp, 3_dp)  ! 1-based: 'd','e','f'
+      t = s%substr(4_int64, 3_int64)  ! 1-based: 'd','e','f'
       call check(error, t%to_char() == "def", "substr(4,3) should be 'def'")
    end subroutine test_pic_string_type_substr_basic
 
@@ -268,13 +268,13 @@ contains
       type(error_type), allocatable, intent(out) :: error
       type(pic_string_type) :: s, t
       call s%assign("abcdefg")
-      t = s%substr(100_dp, 5_dp)
+      t = s%substr(100_int64, 5_int64)
       call check(error, t%size() == 0, "substr out-of-range should be empty")
       if (allocated(error)) return
-      t = s%substr(3_dp, 0_dp)
+      t = s%substr(3_int64, 0_int64)
       call check(error, t%size() == 0, "substr with length 0 should be empty")
       if (allocated(error)) return
-      t = s%substr(6_dp, 10_dp)
+      t = s%substr(6_int64, 10_int64)
       call check(error, t%to_char() == "fg", "substr clamps to end")
    end subroutine test_pic_string_type_substr_bounds
 
@@ -299,7 +299,7 @@ contains
       type(error_type), allocatable, intent(out) :: error
       type(pic_string_type) :: s
       integer :: cap_before
-      call s%reserve(100_dp)
+      call s%reserve(100_int64)
       cap_before = s%capacity()
       call check(error, cap_before >= 100, "reserve(100) should give >=100 capacity")
       if (allocated(error)) return
@@ -345,10 +345,10 @@ contains
       type(pic_string_type) :: s
       character(1) :: ch
       call s%assign("abc")
-      ch = s%get(2_dp)
+      ch = s%get(2_int64)
       call check(error, ch == 'b', "get(2) should be 'b'")
       if (allocated(error)) return
-      call s%set(2_dp, 'X')
+      call s%set(2_int64, 'X')
       call check(error, s%to_char() == "aXc", "set(2,'X') should modify in place")
    end subroutine test_pic_string_type_get_set_basic
 
@@ -357,10 +357,10 @@ contains
       type(pic_string_type) :: s
       character(1) :: ch
       call s%assign("hi")
-      ch = s%get(0_dp)
+      ch = s%get(0_int64)
       call check(error, ichar(ch) == 0, "get(0) returns NUL per policy")
       if (allocated(error)) return
-      ch = s%get(3_dp)
+      ch = s%get(3_int64)
       call check(error, ichar(ch) == 0, "get(>len) returns NUL per policy")
    end subroutine test_pic_string_type_get_oob_policy
 
