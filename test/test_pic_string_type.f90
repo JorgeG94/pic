@@ -235,7 +235,6 @@ contains
       integer(int64) :: p
       call s%assign("abracadabra")
       p = s%find("ra", from=4_int64)   ! next 'ra' after index 4
-      print *, "DEBUG: p =", p
       call check(error, p == 10_int64, "find('ra', from=4) should be 10")
       if (allocated(error)) return
       p = s%find("abra", from=2_int64)
@@ -259,7 +258,6 @@ contains
       type(pic_string_type) :: s, t
       call s%assign("abcdefg")
       t = s%substr(4_int64, 3_int64)  ! 1-based: 'd','e','f'
-      print *, t%to_char()
       call check(error, t%to_char() == "def", "substr(4,3) should be 'def'")
    end subroutine test_pic_string_type_substr_basic
 

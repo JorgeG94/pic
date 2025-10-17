@@ -44,13 +44,10 @@ module pic_string_mod
       final     :: pic_string_finalize
    end type pic_string_type
 
-   interface ensure_capacity_
-      module procedure :: ensure_capacity
-   end interface
    interface operator(==)
-      module procedure pic_string_eq_string    ! pic_string_type == pic_string_type
-      module procedure pic_string_eq_char      ! pic_string_type == character(*)
-      module procedure char_eq_pic_string      ! character(*)   == pic_string_type
+      module procedure pic_string_eq_string
+      module procedure pic_string_eq_char
+      module procedure char_eq_pic_string
    end interface
 
    interface operator(/=)
@@ -110,7 +107,7 @@ contains
    subroutine pic_string_reserve(self, n)
       class(pic_string_type), intent(inout) :: self
       integer(int64), intent(in)    :: n
-      call ensure_capacity_(self, n)
+      call ensure_capacity(self, n)
    end subroutine pic_string_reserve
 
    subroutine pic_string_assign(self, s)
@@ -118,9 +115,7 @@ contains
       character(*), intent(in)    :: s
       integer(int64) :: n
       n = int(len(s), int64)
-      print *, "n = ", n
-      print *, "string ", s
-      call ensure_capacity_(self, n)
+      call ensure_capacity(self, n)
       if (n > 0) self%buf(1:n) = s
       self%len = n
    end subroutine pic_string_assign
@@ -132,7 +127,7 @@ contains
       n = int(len(s), int64)
       i0 = self%len + 1_int64
       i1 = self%len + n
-      call ensure_capacity_(self, i1)
+      call ensure_capacity(self, i1)
       if (n > 0) self%buf(i0:i1) = s
       self%len = i1
    end subroutine pic_string_append
@@ -140,7 +135,7 @@ contains
    subroutine pic_string_push_back(self, ch)
       class(pic_string_type), intent(inout) :: self
       character(1), intent(in)    :: ch
-      call ensure_capacity_(self, self%len + 1_int64)
+      call ensure_capacity(self, self%len + 1_int64)
       self%len = self%len + 1_int64
       self%buf(self%len:self%len) = ch
    end subroutine pic_string_push_back
@@ -282,41 +277,6 @@ contains
       out%buf(1:nn) = tmp
       out%len = n2
    end function pic_string_substr
-
-!function pic_string_substr(self, i, n) result(out)
-!  class(pic_string_type), intent(in) :: self
-!  integer(int64),         intent(in) :: i      ! 1-based start
-!  integer(int64),         intent(in) :: n      ! requested length
-!  type(pic_string_type)               :: out
-!
-!  integer(int64) :: i2, n2, k
-!
-!  ! Empty result by default
-!  out%len = 0_int64
-!  out%cap = 0_int64
-!  ! out%buf stays unallocated unless we copy something
-!
-!  ! Guard source
-!  if (.not. allocated(self%buf)) return
-!  if (self%len == 0_int64) return
-!  if (n <= 0_int64) return
-!  if (i > self%len) return
-!
-!  ! Clamp start and length to valid range
-!  i2 = max(1_int64, i)
-!  n2 = min(self%len - i2 + 1_int64, n)
-!  print *, i2, " ", n2
-!  if (n2 <= 0_int64) return
-!
-!  ! Allocate destination and copy with scalar indexing to avoid section warnings
-!  call out%reserve(n2)
-!  out%len = n2
-!  do k = 1_int64, n2
-!    out%buf(k:k) = &
-!    self%buf(i2 + k - 1_int64 : i2 + k - 1_int64)
-!  end do
-!
-!end function pic_string_substr
 
    !----------------- equality operators -----------------
    pure logical function pic_string_eq_string(a, b) result(ok)
