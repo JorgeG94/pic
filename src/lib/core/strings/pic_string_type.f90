@@ -24,6 +24,10 @@ module pic_string_mod
       procedure :: append => pic_string_append
       procedure :: push_back => pic_string_push_back
       procedure :: to_char => pic_string_to_char
+      ! in type bindings:
+      procedure :: get => pic_string_get
+      procedure :: set => pic_string_set
+
       ! trimming
       procedure :: ltrim => pic_string_ltrim
       procedure :: rtrim => pic_string_rtrim
@@ -31,6 +35,10 @@ module pic_string_mod
       ! search & slicing
       procedure :: find => pic_string_find
       procedure :: substr => pic_string_substr
+      procedure :: shrink_to_fit => pic_string_shrink_to_fit
+      procedure :: release => pic_string_release
+      ! finalizer
+      final     :: pic_string_finalize
    end type pic_string_type
 
    interface ensure_capacity_
@@ -276,5 +284,49 @@ contains
       class(pic_string_type), intent(in) :: a
       ok = .not. (a == c)
    end function
+
+   subroutine pic_string_finalize(self)
+      type(pic_string_type), intent(inout) :: self
+      if (allocated(self%buf)) deallocate (self%buf)
+      self%len = 0_int64; self%cap = 0_int64
+   end subroutine
+
+   subroutine pic_string_shrink_to_fit(self)
+      class(pic_string_type), intent(inout) :: self
+      character(len=:), allocatable :: tmp
+      if (.not. allocated(self%buf)) return
+      if (self%len == 0_int64) then
+         deallocate (self%buf); self%cap = 0_int64
+      else
+         allocate (character(len=self%len) :: tmp)
+         tmp(1:self%len) = self%buf(1:self%len)
+         call move_alloc(tmp, self%buf)
+         self%cap = self%len
+      end if
+   end subroutine
+
+   subroutine pic_string_release(self)
+      class(pic_string_type), intent(inout) :: self
+      if (allocated(self%buf)) deallocate (self%buf)
+      self%len = 0_int64; self%cap = 0_int64
+   end subroutine
+
+   pure character(1) function pic_string_get(self, i) result(ch)
+      class(pic_string_type), intent(in) :: self
+      integer(int64), intent(in) :: i
+      if (i < 1_int64 .or. i > self%len) then
+         ch = achar(0)      ! or stop/error; choose your policy
+      else
+         ch = self%buf(i:i)
+      end if
+   end function
+
+   subroutine pic_string_set(self, i, ch)
+      class(pic_string_type), intent(inout) :: self
+      integer(int64), intent(in)    :: i
+      character(1), intent(in)    :: ch
+      if (i < 1_int64 .or. i > self%len) return   ! or stop/error
+      self%buf(i:i) = ch
+   end subroutine
 
 end module pic_string_mod

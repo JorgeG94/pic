@@ -29,7 +29,13 @@ contains
                    new_unittest("test_pic_string_type_find_not_found", test_pic_string_type_find_not_found), &
                    new_unittest("test_pic_string_type_substr_basic", test_pic_string_type_substr_basic), &
                    new_unittest("test_pic_string_type_substr_bounds", test_pic_string_type_substr_bounds), &
-                   new_unittest("test_pic_string_type_equality_ops", test_pic_string_type_equality_ops) &
+                   new_unittest("test_pic_string_type_equality_ops", test_pic_string_type_equality_ops), &
+                   new_unittest("test_pic_string_type_shrink_to_fit_basic", test_pic_string_type_shrink_to_fit_basic), &
+                   new_unittest("test_pic_string_type_shrink_to_fit_empty", test_pic_string_type_shrink_to_fit_empty), &
+                   new_unittest("test_pic_string_type_release_resets", test_pic_string_type_release_resets), &
+                   new_unittest("test_pic_string_type_get_set_basic", test_pic_string_type_get_set_basic), &
+                   new_unittest("test_pic_string_type_get_oob_policy", test_pic_string_type_get_oob_policy), &
+                   new_unittest("test_pic_string_type_clear_then_get_set", test_pic_string_type_clear_then_get_set) &
                    ]
    end subroutine collect_pic_string_type_tests
 
@@ -288,5 +294,88 @@ contains
       if (allocated(error)) return
       call check(error, a /= "foobar", "a /= 'foobar' should be true")
    end subroutine test_pic_string_type_equality_ops
+
+   subroutine test_pic_string_type_shrink_to_fit_basic(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(pic_string_type) :: s
+      integer :: cap_before
+      call s%reserve(100_dp)
+      cap_before = s%capacity()
+      call check(error, cap_before >= 100, "reserve(100) should give >=100 capacity")
+      if (allocated(error)) return
+
+      call s%assign("abcdefghij")  ! len = 10
+      call s%shrink_to_fit()
+      call check(error, s%capacity() == s%size(), "after shrink_to_fit, cap == size")
+      if (allocated(error)) return
+      call check(error, s%size() == 10, "size preserved after shrink_to_fit")
+      if (allocated(error)) return
+      call check(error, s%to_char() == "abcdefghij", "contents preserved after shrink_to_fit")
+   end subroutine test_pic_string_type_shrink_to_fit_basic
+
+   subroutine test_pic_string_type_shrink_to_fit_empty(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(pic_string_type) :: s
+      call s%reserve(64_int64)
+      call check(error, s%capacity() >= 64, "reserve established capacity")
+      if (allocated(error)) return
+      call s%clear()
+      call s%shrink_to_fit()
+      call check(error, s%capacity() == 0, "shrink_to_fit on empty should free buffer")
+      if (allocated(error)) return
+      call check(error, s%size() == 0, "size still zero after shrink_to_fit")
+   end subroutine test_pic_string_type_shrink_to_fit_empty
+
+   subroutine test_pic_string_type_release_resets(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(pic_string_type) :: s
+      call s%assign("hello world")
+      call s%reserve(256_int64)
+      call s%release()
+      call check(error, s%size() == 0, "release sets size to 0")
+      if (allocated(error)) return
+      call check(error, s%capacity() == 0, "release sets cap to 0")
+      if (allocated(error)) return
+      call s%append("x")
+      call check(error, s%to_char() == "x", "usable after release()")
+   end subroutine test_pic_string_type_release_resets
+
+   subroutine test_pic_string_type_get_set_basic(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(pic_string_type) :: s
+      character(1) :: ch
+      call s%assign("abc")
+      ch = s%get(2_dp)
+      call check(error, ch == 'b', "get(2) should be 'b'")
+      if (allocated(error)) return
+      call s%set(2_dp, 'X')
+      call check(error, s%to_char() == "aXc", "set(2,'X') should modify in place")
+   end subroutine test_pic_string_type_get_set_basic
+
+   subroutine test_pic_string_type_get_oob_policy(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(pic_string_type) :: s
+      character(1) :: ch
+      call s%assign("hi")
+      ch = s%get(0_dp)
+      call check(error, ichar(ch) == 0, "get(0) returns NUL per policy")
+      if (allocated(error)) return
+      ch = s%get(3_dp)
+      call check(error, ichar(ch) == 0, "get(>len) returns NUL per policy")
+   end subroutine test_pic_string_type_get_oob_policy
+
+   subroutine test_pic_string_type_clear_then_get_set(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(pic_string_type) :: s
+      call s%assign("zzz")
+      call s%clear()
+      call check(error, s%size() == 0, "clear -> size=0")
+      if (allocated(error)) return
+      call s%set(1_dp, 'A')  ! ignored (out of range)
+      call check(error, s%size() == 0, "set out of range should not change size")
+      if (allocated(error)) return
+      call s%append("A")
+      call check(error, s%to_char() == "A", "still usable after clear + set(oob)")
+   end subroutine test_pic_string_type_clear_then_get_set
 
 end module test_pic_string_type
