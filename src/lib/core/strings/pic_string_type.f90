@@ -1,4 +1,6 @@
+!! experimental pic string type, it is still in alpha
 module pic_string_mod
+   !! a simple string type with basic functionalities
    use pic_types, only: int64
    use pic_optional_value, only: pic_optional
    implicit none
@@ -7,6 +9,7 @@ module pic_string_mod
    public :: operator(==), operator(/=)
 
    type :: pic_string_type
+      !! pic_string_type holds a dynamic string, intends to be similar to std::string in C++
       character(len=:), allocatable :: buf
       integer(int64) :: len = 0_int64
       integer(int64) :: cap = 0_int64
