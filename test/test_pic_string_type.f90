@@ -76,7 +76,6 @@ contains
    subroutine test_pic_string_type_basic_ops_assign(error)
       type(error_type), allocatable, intent(out) :: error
       type(pic_string_type) :: s
-      character(len=:), allocatable :: c
 
       call check(error, s%empty(), "String should be empty initially")
       if (allocated(error)) return
@@ -93,7 +92,6 @@ contains
    subroutine test_pic_string_type_append_to_append(error)
       type(error_type), allocatable, intent(out) :: error
       type(pic_string_type) :: s
-      character(len=:), allocatable :: c
 
       call check(error, s%empty(), "String should be empty initially")
       if (allocated(error)) return
@@ -125,7 +123,7 @@ contains
    subroutine test_pic_string_type_reserve_growth(error)
       type(error_type), allocatable, intent(out) :: error
       type(pic_string_type) :: s
-      integer :: cap_before, cap_after
+      integer(int64) :: cap_before, cap_after
       call s%reserve(10_int64)
       cap_before = s%capacity()
       call check(error, cap_before >= 10_int64, "reserve(10) should give >=10 capacity")
@@ -145,7 +143,7 @@ contains
    subroutine test_pic_string_type_clear_keeps_cap(error)
       type(error_type), allocatable, intent(out) :: error
       type(pic_string_type) :: s
-      integer :: cap_before
+      integer(int64) :: cap_before
       call s%assign("some text")
       cap_before = s%capacity()
       call s%clear()
@@ -261,6 +259,7 @@ contains
       type(pic_string_type) :: s, t
       call s%assign("abcdefg")
       t = s%substr(4_int64, 3_int64)  ! 1-based: 'd','e','f'
+      print *, t%to_char()
       call check(error, t%to_char() == "def", "substr(4,3) should be 'def'")
    end subroutine test_pic_string_type_substr_basic
 
@@ -298,7 +297,7 @@ contains
    subroutine test_pic_string_type_shrink_to_fit_basic(error)
       type(error_type), allocatable, intent(out) :: error
       type(pic_string_type) :: s
-      integer :: cap_before
+      integer(int64) :: cap_before
       call s%reserve(100_int64)
       cap_before = s%capacity()
       call check(error, cap_before >= 100, "reserve(100) should give >=100 capacity")

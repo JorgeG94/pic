@@ -171,7 +171,6 @@ contains
    subroutine test_set_get_precision(error)
       type(error_type), allocatable, intent(out) :: error
       integer(default_int) :: old_precision, new_precision
-      integer(default_int), parameter :: ten = 10_default_int
 
       old_precision = get_precision()
       call check(error, old_precision > 0, "Initial precision should be positive")

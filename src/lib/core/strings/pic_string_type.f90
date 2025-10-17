@@ -118,6 +118,8 @@ contains
       character(*), intent(in)    :: s
       integer(int64) :: n
       n = int(len(s), int64)
+      print *, "n = ", n
+      print *, "string ", s
       call ensure_capacity_(self, n)
       if (n > 0) self%buf(1:n) = s
       self%len = n
@@ -150,26 +152,12 @@ contains
    end function pic_string_to_char
 
    !----------------- trimming -----------------
-   subroutine pic_string_rtrim(self)
-      class(pic_string_type), intent(inout) :: self
-      integer(int64) :: j
-      if (self%len == 0_int64) return
-      j = self%len
-      do
-         if (j < 1_int64) exit
-         if (self%buf(j:j) <= ' ') then
-            j = j - 1_int64
-         else
-            exit
-         end if
-      end do
-      self%len = max(0_int64, j)
-   end subroutine pic_string_rtrim
-
    subroutine pic_string_ltrim(self)
       class(pic_string_type), intent(inout) :: self
-      integer(int64) :: i, n
+      integer(int64) :: i, n, k
+      if (.not. allocated(self%buf)) return
       if (self%len == 0_int64) return
+
       i = 1_int64
       do
          if (i > self%len) exit
@@ -179,12 +167,35 @@ contains
             exit
          end if
       end do
+
       if (i > 1_int64) then
          n = self%len - (i - 1_int64)
-         if (n > 0_int64) self%buf(1:n) = self%buf(i:self%len)
+         if (n > 0_int64) then
+            do k = 1_int64, n
+               self%buf(k:k) = self%buf(i + k - 1_int64:i + k - 1_int64)
+            end do
+         end if
          self%len = max(0_int64, n)
       end if
    end subroutine pic_string_ltrim
+
+   subroutine pic_string_rtrim(self)
+      class(pic_string_type), intent(inout) :: self
+      integer(int64) :: j
+      if (.not. allocated(self%buf) .or. self%len == 0_int64) return
+
+      j = self%len
+      do
+         if (j < 1_int64) exit
+         if (self%buf(j:j) <= ' ') then
+            j = j - 1_int64
+         else
+            exit
+         end if
+      end do
+
+      self%len = max(0_int64, j)
+   end subroutine pic_string_rtrim
 
    subroutine pic_string_trim(self)
       class(pic_string_type), intent(inout) :: self
@@ -211,43 +222,101 @@ contains
 
    !----------------- search & slicing -----------------
    pure integer(int64) function pic_string_find(self, pat, from) result(pos)
+      use pic_optional_value, only: pic_optional
       class(pic_string_type), intent(in) :: self
       character(*), intent(in) :: pat
       integer(int64), optional, intent(in):: from
-      integer(int64) :: i0
-      integer        :: k
 
-      if (self%len == 0_int64 .or. len(pat) == 0) then
-         pos = 0_int64; return
-      end if
+      integer(int64) :: nlen, i0, j, j_end, m
+      character(len=:), allocatable :: s
 
-      i0 = pic_optional(from, 1_int64)   ! <- clean & safe
+      pos = 0_int64
 
-      if (i0 < 1_int64 .or. i0 > self%len) then
-         pos = 0_int64; return
-      end if
+      nlen = self%len
+      if (nlen == 0_int64) return
 
-      k = index(self%buf(i0:self%len), pat)
-      if (k > 0) then
-         pos = int(k, int64) + i0 - 1_int64
-      else
-         pos = 0_int64
-      end if
+      m = int(len(pat), int64)
+      if (m == 0_int64) return
+
+      i0 = pic_optional(from, 1_int64)
+      if (i0 < 1_int64 .or. i0 > nlen) return
+      if (m > nlen - i0 + 1_int64) return
+
+      allocate (character(len=nlen) :: s)
+      s = self%buf(1:nlen)
+
+      j_end = nlen - m + 1_int64
+      do j = i0, j_end
+         if (s(j:j + m - 1_int64) == pat) then
+            pos = j
+            return
+         end if
+      end do
    end function pic_string_find
-
    function pic_string_substr(self, i, n) result(out)
       class(pic_string_type), intent(in) :: self
-      integer(int64), intent(in) :: i      ! 1-based
-      integer(int64), intent(in) :: n      ! length requested
-      type(pic_string_type) :: out
+      integer(int64), intent(in) :: i, n
+      type(pic_string_type)               :: out
+
       integer(int64) :: i2, n2
-      if (n <= 0_int64 .or. i > self%len) return
+      integer        :: is, ie, nn   ! default INTEGER for substring bounds
+      character(len=:), allocatable :: tmp
+
+      out%len = 0_int64; out%cap = 0_int64
+      if (.not. allocated(self%buf)) return
+      if (self%len == 0_int64 .or. n <= 0_int64 .or. i > self%len) return
+
       i2 = max(1_int64, i)
       n2 = min(self%len - i2 + 1_int64, n)
+      if (n2 <= 0_int64) return
+
+      ! cast bounds to default INTEGER before slicing
+      is = int(i2)
+      ie = int(i2 + n2 - 1_int64)
+      nn = int(n2)
+
+      allocate (character(len=nn) :: tmp)
+      tmp = self%buf(is:ie)         ! <- exact-size RHS, default-int bounds
+
       call out%reserve(n2)
-      if (n2 > 0_int64) out%buf(1:n2) = self%buf(i2:i2 + n2 - 1_int64)
+      out%buf(1:nn) = tmp
       out%len = n2
    end function pic_string_substr
+
+!function pic_string_substr(self, i, n) result(out)
+!  class(pic_string_type), intent(in) :: self
+!  integer(int64),         intent(in) :: i      ! 1-based start
+!  integer(int64),         intent(in) :: n      ! requested length
+!  type(pic_string_type)               :: out
+!
+!  integer(int64) :: i2, n2, k
+!
+!  ! Empty result by default
+!  out%len = 0_int64
+!  out%cap = 0_int64
+!  ! out%buf stays unallocated unless we copy something
+!
+!  ! Guard source
+!  if (.not. allocated(self%buf)) return
+!  if (self%len == 0_int64) return
+!  if (n <= 0_int64) return
+!  if (i > self%len) return
+!
+!  ! Clamp start and length to valid range
+!  i2 = max(1_int64, i)
+!  n2 = min(self%len - i2 + 1_int64, n)
+!  print *, i2, " ", n2
+!  if (n2 <= 0_int64) return
+!
+!  ! Allocate destination and copy with scalar indexing to avoid section warnings
+!  call out%reserve(n2)
+!  out%len = n2
+!  do k = 1_int64, n2
+!    out%buf(k:k) = &
+!    self%buf(i2 + k - 1_int64 : i2 + k - 1_int64)
+!  end do
+!
+!end function pic_string_substr
 
    !----------------- equality operators -----------------
    pure logical function pic_string_eq_string(a, b) result(ok)

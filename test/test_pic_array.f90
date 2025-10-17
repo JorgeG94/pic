@@ -1183,7 +1183,7 @@ contains
       type(error_type), allocatable, intent(out) :: error
       integer(int64) :: int64_arr(10)
       integer(int64) :: arr_before(10)
-      integer :: sum_before
+      integer(int64) :: sum_before
       int64_arr = [1_int64, 2_int64, 3_int64, 4_int64, 5_int64, 6_int64, 7_int64, 8_int64, 9_int64, 10_int64]
       arr_before = int64_arr
       call random_seed()
