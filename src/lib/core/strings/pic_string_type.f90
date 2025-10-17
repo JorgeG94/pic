@@ -59,6 +59,8 @@ module pic_string_mod
 contains
 
    subroutine ensure_capacity(self, need)
+      !! helper routine to ensure that the string container has enough
+      !! capacity to hold a new size 'need'
       class(pic_string_type), intent(inout) :: self
       integer(int64), intent(in)    :: need
 
@@ -82,35 +84,41 @@ contains
    end subroutine ensure_capacity
 
    pure function pic_string_size(self) result(res)
+      !! return the current size of the string
       class(pic_string_type), intent(in) :: self
       integer(int64) :: res
       res = self%len
    end function pic_string_size
 
    pure function pic_string_capacity(self) result(res)
+      !! return the current capacity of the string
       class(pic_string_type), intent(in) :: self
       integer(int64) :: res
       res = self%cap
    end function pic_string_capacity
 
    pure function pic_string_empty(self) result(res)
+      !! return true if the string is empty
       class(pic_string_type), intent(in) :: self
       logical :: res
       res = (self%len == 0_int64)
    end function pic_string_empty
 
    subroutine pic_string_clear(self)
+      !! clear the string content
       class(pic_string_type), intent(inout) :: self
       self%len = 0_int64
    end subroutine pic_string_clear
 
    subroutine pic_string_reserve(self, n)
+      !! ensure the string has capacity for at least n characters
       class(pic_string_type), intent(inout) :: self
       integer(int64), intent(in)    :: n
       call ensure_capacity(self, n)
    end subroutine pic_string_reserve
 
    subroutine pic_string_assign(self, s)
+      !! assign a new value to the string
       class(pic_string_type), intent(inout) :: self
       character(*), intent(in)    :: s
       integer(int64) :: n
@@ -121,6 +129,7 @@ contains
    end subroutine pic_string_assign
 
    subroutine pic_string_append(self, s)
+      !! append a string to the current string
       class(pic_string_type), intent(inout) :: self
       character(*), intent(in)    :: s
       integer(int64) :: n, i0, i1
@@ -133,6 +142,7 @@ contains
    end subroutine pic_string_append
 
    subroutine pic_string_push_back(self, ch)
+      !! append a single character to the current string
       class(pic_string_type), intent(inout) :: self
       character(1), intent(in)    :: ch
       call ensure_capacity(self, self%len + 1_int64)
@@ -141,6 +151,7 @@ contains
    end subroutine pic_string_push_back
 
    function pic_string_to_char(self) result(out)
+      !! convert the pic_string_type to a standard Fortran character string
       class(pic_string_type), intent(in) :: self
       character(len=self%len) :: out
       if (self%len > 0) out = self%buf(1:self%len)
@@ -148,6 +159,7 @@ contains
 
    !----------------- trimming -----------------
    subroutine pic_string_ltrim(self)
+      !! trim leading whitespace characters
       class(pic_string_type), intent(inout) :: self
       integer(int64) :: i, n, k
       if (.not. allocated(self%buf)) return
@@ -175,6 +187,7 @@ contains
    end subroutine pic_string_ltrim
 
    subroutine pic_string_rtrim(self)
+      !! trim trailing whitespace characters
       class(pic_string_type), intent(inout) :: self
       integer(int64) :: j
       if (.not. allocated(self%buf) .or. self%len == 0_int64) return
@@ -193,6 +206,7 @@ contains
    end subroutine pic_string_rtrim
 
    subroutine pic_string_trim(self)
+      !! trim leading and trailing whitespace characters
       class(pic_string_type), intent(inout) :: self
       call self%rtrim()
       call self%ltrim()
@@ -200,6 +214,7 @@ contains
 
    !----------------- queries -----------------
    pure logical function pic_string_starts_with(self, pat) result(ok)
+      !! return true if the string starts with the given pattern
       class(pic_string_type), intent(in) :: self
       character(*), intent(in) :: pat
       integer :: m
@@ -208,6 +223,7 @@ contains
    end function pic_string_starts_with
 
    pure logical function pic_string_ends_with(self, pat) result(ok)
+      !! return true if the string ends with the given pattern
       class(pic_string_type), intent(in) :: self
       character(*), intent(in) :: pat
       integer :: m
@@ -217,6 +233,7 @@ contains
 
    !----------------- search & slicing -----------------
    pure integer(int64) function pic_string_find(self, pat, from) result(pos)
+      !! find the first occurrence of pattern 'pat' in the string
       use pic_optional_value, only: pic_optional
       class(pic_string_type), intent(in) :: self
       character(*), intent(in) :: pat
@@ -248,7 +265,9 @@ contains
          end if
       end do
    end function pic_string_find
+
    function pic_string_substr(self, i, n) result(out)
+      !! return a substring starting at index i (1-based) with length n
       class(pic_string_type), intent(in) :: self
       integer(int64), intent(in) :: i, n
       type(pic_string_type)               :: out
@@ -280,6 +299,7 @@ contains
 
    !----------------- equality operators -----------------
    pure logical function pic_string_eq_string(a, b) result(ok)
+      !! return true if the two strings are equal
       class(pic_string_type), intent(in) :: a
       class(pic_string_type), intent(in) :: b
       ok = (a%len == b%len)
@@ -287,6 +307,7 @@ contains
    end function pic_string_eq_string
 
    pure logical function pic_string_eq_char(a, c) result(ok)
+      !! return true if the pic_string_type is equal to the character string
       class(pic_string_type), intent(in) :: a
       character(*), intent(in) :: c
       ok = (a%len == len(c))
@@ -294,36 +315,42 @@ contains
    end function pic_string_eq_char
 
    pure logical function char_eq_pic_string(c, a) result(ok)
+      !! return true if the character string is equal to the pic_string_type
       character(*), intent(in) :: c
       class(pic_string_type), intent(in) :: a
       ok = (a == c)
    end function char_eq_pic_string
 
    pure logical function pic_string_ne_string(a, b) result(ok)
+      !! return true if the two strings are not equal
       class(pic_string_type), intent(in) :: a
       class(pic_string_type), intent(in) :: b
       ok = .not. (a == b)
    end function pic_string_ne_string
 
    pure logical function pic_string_ne_char(a, c) result(ok)
+      !! return true if the pic_string_type is not equal to the character string
       class(pic_string_type), intent(in) :: a
       character(*), intent(in) :: c
       ok = .not. (a == c)
    end function pic_string_ne_char
 
    pure logical function char_ne_pic_string(c, a) result(ok)
+      !! return true if the character string is not equal to the pic_string_type
       character(*), intent(in) :: c
       class(pic_string_type), intent(in) :: a
       ok = .not. (a == c)
    end function char_ne_pic_string
 
    subroutine pic_string_finalize(self)
+      !! finalizer to deallocate the string buffer type
       type(pic_string_type), intent(inout) :: self
       if (allocated(self%buf)) deallocate (self%buf)
       self%len = 0_int64; self%cap = 0_int64
    end subroutine pic_string_finalize
 
    subroutine pic_string_shrink_to_fit(self)
+      !! shrink the capacity to fit the current size
       class(pic_string_type), intent(inout) :: self
       character(len=:), allocatable :: tmp
       if (.not. allocated(self%buf)) return
@@ -338,12 +365,14 @@ contains
    end subroutine pic_string_shrink_to_fit
 
    subroutine pic_string_release(self)
+      !! release the internal buffer and reset the string
       class(pic_string_type), intent(inout) :: self
       if (allocated(self%buf)) deallocate (self%buf)
       self%len = 0_int64; self%cap = 0_int64
    end subroutine pic_string_release
 
    pure character(1) function pic_string_get(self, i) result(ch)
+      !! get the character at position i (1-based)
       class(pic_string_type), intent(in) :: self
       integer(int64), intent(in) :: i
       if (i < 1_int64 .or. i > self%len) then
@@ -355,6 +384,7 @@ contains
    end function pic_string_get
 
    subroutine pic_string_set(self, i, ch)
+      !! set the character at position i (1-based)
       class(pic_string_type), intent(inout) :: self
       integer(int64), intent(in)    :: i
       character(1), intent(in)    :: ch
