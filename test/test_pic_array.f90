@@ -71,6 +71,8 @@ contains
                   new_unittest("pic_sum_vector_dp_threaded", test_pic_sum_vector_dp_threaded), &
                   new_unittest("pic_sum_matrix_int32_threaded", test_pic_sum_matrix_int32_threaded), &
                   new_unittest("pic_sum_matrix_int64_threaded", test_pic_sum_matrix_int64_threaded), &
+                  new_unittest("pic_sum_matrix_sp_threaded", test_pic_sum_matrix_sp_threaded), &
+                  new_unittest("pic_sum_matrix_dp_threaded", test_pic_sum_matrix_dp_threaded), &
                   new_unittest("pic_is_sorted_int32", test_pic_is_sorted_int32), &
                   new_unittest("pic_is_sorted_int64", test_pic_is_sorted_int64), &
                   new_unittest("pic_is_sorted_sp", test_pic_is_sorted_sp), &
@@ -614,7 +616,6 @@ contains
 
    subroutine test_pic_transpose_matrix_int32(error)
       type(error_type), allocatable, intent(out) :: error
-      integer(int32), parameter :: dim = 2
       integer(int32), parameter :: one = 1
       integer(int32), parameter :: two = 2
       integer(int32), parameter :: three = 3
@@ -635,7 +636,6 @@ contains
 
    subroutine test_pic_transpose_matrix_int64(error)
       type(error_type), allocatable, intent(out) :: error
-      integer(int64), parameter :: dim = 2
       integer(int64), parameter :: one = 1_int64
       integer(int64), parameter :: two = 2_int64
       integer(int64), parameter :: three = 3_int64
@@ -656,7 +656,6 @@ contains
 
    subroutine test_pic_transpose_matrix_sp(error)
       type(error_type), allocatable, intent(out) :: error
-      real(sp), parameter :: dim = 2.0_sp
       real(sp), parameter :: one = 1.0_sp
       real(sp), parameter :: two = 2.0_sp
       real(sp), parameter :: three = 3.0_sp
@@ -676,7 +675,6 @@ contains
 
    subroutine test_pic_transpose_matrix_dp(error)
       type(error_type), allocatable, intent(out) :: error
-      real(dp), parameter :: dim = 2.0_dp
       real(dp), parameter :: one = 1.0_dp
       real(dp), parameter :: two = 2.0_dp
       real(dp), parameter :: three = 3.0_dp
@@ -696,7 +694,6 @@ contains
 
    subroutine test_pic_transpose_matrix_int32_threaded(error)
       type(error_type), allocatable, intent(out) :: error
-      integer(int32), parameter :: dim = 2
       integer(int32), parameter :: one = 1
       integer(int32), parameter :: two = 2
       integer(int32), parameter :: three = 3
@@ -717,7 +714,6 @@ contains
 
    subroutine test_pic_transpose_matrix_int64_threaded(error)
       type(error_type), allocatable, intent(out) :: error
-      integer(int64), parameter :: dim = 2
       integer(int64), parameter :: one = 1_int64
       integer(int64), parameter :: two = 2_int64
       integer(int64), parameter :: three = 3_int64
@@ -738,7 +734,6 @@ contains
 
    subroutine test_pic_transpose_matrix_sp_threaded(error)
       type(error_type), allocatable, intent(out) :: error
-      real(sp), parameter :: dim = 2.0_sp
       real(sp), parameter :: one = 1.0_sp
       real(sp), parameter :: two = 2.0_sp
       real(sp), parameter :: three = 3.0_sp
@@ -759,7 +754,6 @@ contains
 
    subroutine test_pic_transpose_matrix_dp_threaded(error)
       type(error_type), allocatable, intent(out) :: error
-      real(dp), parameter :: dim = 2.0_dp
       real(dp), parameter :: one = 1.0_dp
       real(dp), parameter :: two = 2.0_dp
       real(dp), parameter :: three = 3.0_dp
@@ -1249,7 +1243,7 @@ contains
       type(error_type), allocatable, intent(out) :: error
       character(len=1) :: char_arr(11)
       character(len=1) :: arr_before(11)
-      char_arr = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"]
+      char_arr = [character(len=1) :: "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"]
       arr_before = char_arr
       call random_seed()
 
