@@ -12,9 +12,10 @@ contains
 
    subroutine get_knowledge()
     !! I print random knowledge
-      character(len=:), allocatable :: knowledge(:)
+      character(len=64), allocatable :: knowledge(:)
       integer(int32) :: n, idx
       real(dp) :: r
+      allocate (knowledge(3))
 
       knowledge = [ &
                   "The long line! (CS,2023)                                        ", &
