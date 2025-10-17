@@ -161,7 +161,7 @@ contains
          end if
       end do
       self%len = max(0_int64, j)
-   end subroutine
+   end subroutine pic_string_rtrim
 
    subroutine pic_string_ltrim(self)
       class(pic_string_type), intent(inout) :: self
@@ -181,13 +181,13 @@ contains
          if (n > 0_int64) self%buf(1:n) = self%buf(i:self%len)
          self%len = max(0_int64, n)
       end if
-   end subroutine
+   end subroutine pic_string_ltrim
 
    subroutine pic_string_trim(self)
       class(pic_string_type), intent(inout) :: self
       call self%rtrim()
       call self%ltrim()
-   end subroutine
+   end subroutine pic_string_trim
 
    !----------------- queries -----------------
    pure logical function pic_string_starts_with(self, pat) result(ok)
@@ -196,7 +196,7 @@ contains
       integer :: m
       m = len(pat)
       ok = (self%len >= m .and. (m == 0 .or. self%buf(1:m) == pat))
-   end function
+   end function pic_string_starts_with
 
    pure logical function pic_string_ends_with(self, pat) result(ok)
       class(pic_string_type), intent(in) :: self
@@ -204,7 +204,7 @@ contains
       integer :: m
       m = len(pat)
       ok = (self%len >= m .and. (m == 0 .or. self%buf(self%len - m + 1:self%len) == pat))
-   end function
+   end function pic_string_ends_with
 
    !----------------- search & slicing -----------------
    pure integer(int64) function pic_string_find(self, pat, from) result(pos)
@@ -230,7 +230,7 @@ contains
       else
          pos = 0_int64
       end if
-   end function
+   end function pic_string_find
 
    function pic_string_substr(self, i, n) result(out)
       class(pic_string_type), intent(in) :: self
@@ -244,7 +244,7 @@ contains
       call out%reserve(n2)
       if (n2 > 0_int64) out%buf(1:n2) = self%buf(i2:i2 + n2 - 1_int64)
       out%len = n2
-   end function
+   end function pic_string_substr
 
    !----------------- equality operators -----------------
    pure logical function pic_string_eq_string(a, b) result(ok)
@@ -252,44 +252,44 @@ contains
       class(pic_string_type), intent(in) :: b
       ok = (a%len == b%len)
       if (ok .and. a%len > 0_int64) ok = (a%buf(1:a%len) == b%buf(1:b%len))
-   end function
+   end function pic_string_eq_string
 
    pure logical function pic_string_eq_char(a, c) result(ok)
       class(pic_string_type), intent(in) :: a
       character(*), intent(in) :: c
       ok = (a%len == len(c))
       if (ok .and. a%len > 0_int64) ok = (a%buf(1:a%len) == c)
-   end function
+   end function pic_string_eq_char
 
    pure logical function char_eq_pic_string(c, a) result(ok)
       character(*), intent(in) :: c
       class(pic_string_type), intent(in) :: a
       ok = (a == c)
-   end function
+   end function char_eq_pic_string
 
    pure logical function pic_string_ne_string(a, b) result(ok)
       class(pic_string_type), intent(in) :: a
       class(pic_string_type), intent(in) :: b
       ok = .not. (a == b)
-   end function
+   end function pic_string_ne_string
 
    pure logical function pic_string_ne_char(a, c) result(ok)
       class(pic_string_type), intent(in) :: a
       character(*), intent(in) :: c
       ok = .not. (a == c)
-   end function
+   end function pic_string_ne_char
 
    pure logical function char_ne_pic_string(c, a) result(ok)
       character(*), intent(in) :: c
       class(pic_string_type), intent(in) :: a
       ok = .not. (a == c)
-   end function
+   end function char_ne_pic_string
 
    subroutine pic_string_finalize(self)
       type(pic_string_type), intent(inout) :: self
       if (allocated(self%buf)) deallocate (self%buf)
       self%len = 0_int64; self%cap = 0_int64
-   end subroutine
+   end subroutine pic_string_finalize
 
    subroutine pic_string_shrink_to_fit(self)
       class(pic_string_type), intent(inout) :: self
@@ -303,13 +303,13 @@ contains
          call move_alloc(tmp, self%buf)
          self%cap = self%len
       end if
-   end subroutine
+   end subroutine pic_string_shrink_to_fit
 
    subroutine pic_string_release(self)
       class(pic_string_type), intent(inout) :: self
       if (allocated(self%buf)) deallocate (self%buf)
       self%len = 0_int64; self%cap = 0_int64
-   end subroutine
+   end subroutine pic_string_release
 
    pure character(1) function pic_string_get(self, i) result(ch)
       class(pic_string_type), intent(in) :: self
@@ -319,7 +319,7 @@ contains
       else
          ch = self%buf(i:i)
       end if
-   end function
+   end function pic_string_get
 
    subroutine pic_string_set(self, i, ch)
       class(pic_string_type), intent(inout) :: self
@@ -327,6 +327,6 @@ contains
       character(1), intent(in)    :: ch
       if (i < 1_int64 .or. i > self%len) return   ! or stop/error
       self%buf(i:i) = ch
-   end subroutine
+   end subroutine pic_string_set
 
 end module pic_string_mod
