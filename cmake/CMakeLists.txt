@@ -12,10 +12,12 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/modules/"
 
 # Compiler-specific configurations
 if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
-  set(standard_compile_flags "-ffree-line-length-none -fbacktrace")
-  set(warning_flags
-      "-Wall -Wextra -Wpedantic -Wsurprising -Waliasing -Wampersand -Warray-bounds -Wcharacter-truncation -Wconversion -Wline-truncation -Wintrinsics-std -Wno-tabs -Wunderflow -Wunused-parameter -Wintrinsic-shadow -Wno-align-commons -Wsurprising"
-  )
+  set(standard_compile_flags "-std=f2018 -ffree-line-length-none -fbacktrace")
+  if(CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 15.1)
+    set(warning_flags
+        "-Wall -Wextra -Wpedantic -Wsurprising -Waliasing -Wampersand -Wno-array-bounds -Wcharacter-truncation -Wconversion -Wline-truncation -Wintrinsics-std -Wno-tabs -Wunderflow -Wunused-parameter -Wintrinsic-shadow -Wno-align-commons -Wsurprising"
+    )
+  endif()
   set(fpe "-ffpe-check -ffpe-trap=invalid,zero,overflow")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
   set(standard_compile_flags "-traceback")
@@ -49,7 +51,7 @@ set(CMAKE_Fortran_FLAGS_DEBUG
     PARENT_SCOPE)
 
 set(CMAKE_Fortran_FLAGS
-    "${CMAKE_Fortran_FLAGS} ${standard_compile_flags}"
+    "${CMAKE_Fortran_FLAGS} ${standard_compile_flags} ${warning_flags}"
     PARENT_SCOPE)
 
 set(CMAKE_Fortran_FLAGS_COVERAGE

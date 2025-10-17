@@ -1602,7 +1602,6 @@ contains
       character(len=*), intent(inout)         :: array(0:)
       character(len=len(array)), intent(out), optional :: work(0:)
 
-      character(len=:), allocatable :: buf(:)
       integer(int_index) :: array_size
       integer :: stat
 
@@ -1614,11 +1613,14 @@ contains
 ! Use the work array as scratch memory
          call merge_sort(array, work)
       else
+         block
+            character(len=:), allocatable :: buf(:)
 ! Allocate a buffer to use as scratch memory.
-         allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
-                   stat=stat)
-         if (stat /= 0) error stop "char_increase_ord_sort: Allocation of buffer failed."
-         call merge_sort(array, buf)
+            allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
+                      stat=stat)
+            if (stat /= 0) error stop "char_increase_ord_sort: Allocation of buffer failed."
+            call merge_sort(array, buf)
+         end block
       end if
 
    contains
@@ -3273,7 +3275,6 @@ contains
       character(len=*), intent(inout)         :: array(0:)
       character(len=len(array)), intent(out), optional :: work(0:)
 
-      character(len=:), allocatable :: buf(:)
       integer(int_index) :: array_size
       integer :: stat
 
@@ -3285,11 +3286,14 @@ contains
 ! Use the work array as scratch memory
          call merge_sort(array, work)
       else
+         block
+            character(len=:), allocatable :: buf(:)
 ! Allocate a buffer to use as scratch memory.
-         allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
-                   stat=stat)
-         if (stat /= 0) error stop "char_decrease_ord_sort: Allocation of buffer failed."
-         call merge_sort(array, buf)
+            allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
+                      stat=stat)
+            if (stat /= 0) error stop "char_decrease_ord_sort: Allocation of buffer failed."
+            call merge_sort(array, buf)
+         end block
       end if
 
    contains

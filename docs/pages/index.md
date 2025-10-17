@@ -2,7 +2,7 @@
 title: About PIC
 ---
 
-@todo: I want a logo. If you are a graphics artist and want to help me design a logo, please reach out to me! I will pay you.
+![Otter coding logo](docs/images/pic_logo.png "Project logo")
 
 ## Reasoning behind PIC
 

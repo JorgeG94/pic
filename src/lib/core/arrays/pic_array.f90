@@ -1702,7 +1702,7 @@ contains
 
       print: block
          character(len=1) :: open_bracket, close_bracket
-         integer(int32) :: i, j, k, rows, cols, depth
+         integer(int32) ::  k, rows, cols, depth
          rows = size(matrix, 1)
          cols = size(matrix, 2)
          depth = size(matrix, 3)
@@ -1733,7 +1733,7 @@ contains
 
       print: block
          character(len=1) :: open_bracket, close_bracket
-         integer(int32) :: i, j, k, rows, cols, depth
+         integer(int32) ::  k, rows, cols, depth
          rows = size(matrix, 1)
          cols = size(matrix, 2)
          depth = size(matrix, 3)
@@ -1764,7 +1764,7 @@ contains
 
       print: block
          character(len=1) :: open_bracket, close_bracket
-         integer(int32) :: i, j, k, rows, cols, depth
+         integer(int32) ::  k, rows, cols, depth
          rows = size(matrix, 1)
          cols = size(matrix, 2)
          depth = size(matrix, 3)
@@ -1795,7 +1795,7 @@ contains
 
       print: block
          character(len=1) :: open_bracket, close_bracket
-         integer(int32) :: i, j, k, rows, cols, depth
+         integer(int32) :: k, rows, cols, depth
          rows = size(matrix, 1)
          cols = size(matrix, 2)
          depth = size(matrix, 3)
@@ -1831,7 +1831,7 @@ contains
    subroutine scramble_array_int64(array)
       integer(int64), intent(inout) :: array(:)
       integer(int32) :: i, j, n
-      integer(int32) :: temp
+      integer(int64) :: temp
       real(sp) :: rand_val
 
       n = size(array)
@@ -1847,7 +1847,7 @@ contains
    subroutine scramble_array_sp(array)
       real(sp), intent(inout) :: array(:)
       integer(int32) :: i, j, n
-      integer(int32) :: temp
+      real(sp) :: temp
       real(sp) :: rand_val
 
       n = size(array)
@@ -1863,7 +1863,7 @@ contains
    subroutine scramble_array_dp(array)
       real(dp), intent(inout) :: array(:)
       integer(int32) :: i, j, n
-      integer(int32) :: temp
+      real(dp) :: temp
       real(sp) :: rand_val
 
       n = size(array)

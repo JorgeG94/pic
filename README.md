@@ -8,6 +8,8 @@
 
 PIC is named after the Huastec word PIC which means otter.
 
+![Otter coding logo](docs/images/pic_logo.png "Project logo")
+
 A work in progress on writing a cool backend for Fortan applications focused on Quantum Chemistry software.
 
 ## Building and dependencies

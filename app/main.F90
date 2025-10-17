@@ -6,10 +6,12 @@ program main
    !                   cast_to_object, get_value, add_object
    !use pic_logger, only: global => global_logger, warning_level, verbose_level
    !use testdrive, only: run_testsuite
-   use pic_types, only: dp, default_int, sp, int32, int64
+   use pic_string_mod, only: pic_string_type
+   use pic_types, only: sp, int32, int64
    use pic_string, only: to_string, set_precision
    use pic_array, only: pic_scramble_array, is_sorted
    implicit none
+   type(pic_string_type) :: s, t
    !use pic_mpi
    !use pic_timer
    !implicit none
@@ -19,16 +21,9 @@ program main
    !type(json_array), pointer :: my_array, new_array
    !type(json_error), allocatable :: error
    !integer(default_int) :: ierr, rank, size, ival
-   integer(int64), parameter :: size_1 = 512*512*512
-   integer(int64), parameter :: size_2 = 1024*1024*1024
    real(sp), dimension(:, :), allocatable :: A
-   real(dp), dimension(:), allocatable :: symA
-   real(dp) :: sum_val
    !real(dp), dimension(:), allocatable :: C_flat
-   integer(default_int) :: n, m, k
    integer(int32) :: i, j
-   integer(int64), allocatable :: integer_array(:)
-   integer(int32), allocatable :: work(:)
 
    call pic_print_banner()
 
@@ -39,7 +34,16 @@ program main
       end do
    end do
 
-   print *, to_string(A)
+   !print *, to_string(A)
+
+   if (s%empty()) then
+      print *, "AAA"
+   end if
+   call s%assign("abcdefg")
+
+   print *, "s", s%to_char()
+   t = s%substr(4_int64, 3_int64)  ! 1-based: 'd','e','f'
+   print *, "t ", t%to_char()
 
    !call comm%init()
 
