@@ -2,7 +2,7 @@
 title: About PIC
 ---
 
-![Otter coding logo](docs/images/pic_logo.png "Project logo")
+<img src="../../images/pic_logo.png" alt="Otter coding logo" title="Project logo" width="200">
 
 ## Reasoning behind PIC
 
