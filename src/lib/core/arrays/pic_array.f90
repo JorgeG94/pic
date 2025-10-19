@@ -6,6 +6,7 @@ module pic_array
 !! and edit the generator.
    use pic_types, only: sp, dp, int32, int64, default_int
    use pic_string, only: to_string, to_upper
+   use pic_optional_value, only: pic_optional
    implicit none
    private
 
@@ -227,11 +228,7 @@ contains
       logical :: use_threads
       integer(default_int) :: i
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(vector, 1)
@@ -251,11 +248,7 @@ contains
       logical :: use_threads
       integer(default_int) :: i
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(vector, 1)
@@ -275,11 +268,7 @@ contains
       logical :: use_threads
       integer(default_int) :: i
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(vector, 1)
@@ -299,11 +288,7 @@ contains
       logical :: use_threads
       integer(default_int) :: i
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(vector, 1)
@@ -325,11 +310,7 @@ contains
       logical :: use_threads
       rows = size(matrix, 1)
       cols = size(matrix, 2)
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
@@ -356,11 +337,7 @@ contains
       logical :: use_threads
       rows = size(matrix, 1)
       cols = size(matrix, 2)
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
@@ -387,11 +364,7 @@ contains
       logical :: use_threads
       rows = size(matrix, 1)
       cols = size(matrix, 2)
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
@@ -418,11 +391,7 @@ contains
       logical :: use_threads
       rows = size(matrix, 1)
       cols = size(matrix, 2)
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
@@ -449,11 +418,7 @@ contains
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
@@ -474,11 +439,7 @@ contains
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
@@ -499,11 +460,7 @@ contains
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
@@ -524,11 +481,7 @@ contains
       if (size(dest, 1) /= size(source, 1)) then
          error stop "Vector size mismatch"
       end if
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(1) private(i)
          do i = 1, size(dest, 1)
@@ -552,11 +505,7 @@ contains
       end if
       rows = size(source, 1)
       cols = size(source, 2)
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
@@ -586,11 +535,7 @@ contains
       end if
       rows = size(source, 1)
       cols = size(source, 2)
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
@@ -620,11 +565,7 @@ contains
       end if
       rows = size(source, 1)
       cols = size(source, 2)
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
@@ -654,11 +595,7 @@ contains
       end if
       rows = size(source, 1)
       cols = size(source, 2)
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
          do jj = 1, cols, block_size
@@ -690,11 +627,7 @@ contains
          error stop "transpose: size mismatch"
       end if
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
 
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
@@ -727,11 +660,7 @@ contains
          error stop "transpose: size mismatch"
       end if
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
 
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
@@ -764,11 +693,7 @@ contains
          error stop "transpose: size mismatch"
       end if
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
 
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
@@ -801,11 +726,7 @@ contains
          error stop "transpose: size mismatch"
       end if
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
 
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj)
@@ -831,11 +752,7 @@ contains
       integer(int32) :: res
       integer(default_int) :: i
       res = 0_int32
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do private(i) collapse(1) reduction(+:res)
          do i = 1, size(vector, 1)
@@ -853,11 +770,7 @@ contains
       integer(int64) :: res
       integer(default_int) :: i
       res = 0_int64
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do private(i) collapse(1) reduction(+:res)
          do i = 1, size(vector, 1)
@@ -875,11 +788,7 @@ contains
       real(sp) :: res
       integer(default_int) :: i
       res = 0_sp
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do private(i) collapse(1) reduction(+:res)
          do i = 1, size(vector, 1)
@@ -897,11 +806,7 @@ contains
       real(dp) :: res
       integer(default_int) :: i
       res = 0_dp
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
          !$omp parallel do private(i) collapse(1) reduction(+:res)
          do i = 1, size(vector, 1)
@@ -923,11 +828,7 @@ contains
       rows = size(matrix, 1)
       cols = size(matrix, 2)
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       res = 0_int32
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
@@ -957,11 +858,7 @@ contains
       rows = size(matrix, 1)
       cols = size(matrix, 2)
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       res = 0_int64
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
@@ -991,11 +888,7 @@ contains
       rows = size(matrix, 1)
       cols = size(matrix, 2)
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       res = 0_sp
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
@@ -1025,11 +918,7 @@ contains
       rows = size(matrix, 1)
       cols = size(matrix, 2)
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
+      use_threads = pic_optional(threaded, use_threaded_default)
       res = 0_dp
       if (use_threads) then
          !$omp parallel do collapse(2) private(i,j,ii,jj) reduction(+: res)
@@ -1057,11 +946,7 @@ contains
       logical :: sorted
 
       sorted = .true.
-      sort_order = ASCENDING
-
-      if (present(order)) then
-         sort_order = order
-      end if
+      sort_order = pic_optional(order, ASCENDING)
 
       select case (sort_order)
       case (DESCENDING)
@@ -1090,11 +975,7 @@ contains
       logical :: sorted
 
       sorted = .true.
-      sort_order = ASCENDING
-
-      if (present(order)) then
-         sort_order = order
-      end if
+      sort_order = pic_optional(order, ASCENDING)
 
       select case (sort_order)
       case (DESCENDING)
@@ -1123,11 +1004,7 @@ contains
       logical :: sorted
 
       sorted = .true.
-      sort_order = ASCENDING
-
-      if (present(order)) then
-         sort_order = order
-      end if
+      sort_order = pic_optional(order, ASCENDING)
 
       select case (sort_order)
       case (DESCENDING)
@@ -1156,11 +1033,7 @@ contains
       logical :: sorted
 
       sorted = .true.
-      sort_order = ASCENDING
-
-      if (present(order)) then
-         sort_order = order
-      end if
+      sort_order = pic_optional(order, ASCENDING)
 
       select case (sort_order)
       case (DESCENDING)
@@ -1189,10 +1062,7 @@ contains
       logical :: sorted
 
       sorted = .true.
-      sort_order = ASCENDING
-      if (present(order)) then
-         sort_order = order
-      end if
+      sort_order = pic_optional(order, ASCENDING)
 
       select case (sort_order)
       case (DESCENDING)
@@ -1218,11 +1088,7 @@ contains
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: print_format
 
-      if (present(format_type)) then
-         print_format = format_type
-      else
-         print_format = default_format
-      end if
+      print_format = pic_optional(format_type, default_format)
 
       print: block
          character(len=1) :: open_bracket, close_bracket
@@ -1249,11 +1115,7 @@ contains
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: print_format
 
-      if (present(format_type)) then
-         print_format = format_type
-      else
-         print_format = default_format
-      end if
+      print_format = pic_optional(format_type, default_format)
 
       print: block
          character(len=1) :: open_bracket, close_bracket
@@ -1280,11 +1142,7 @@ contains
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: print_format
 
-      if (present(format_type)) then
-         print_format = format_type
-      else
-         print_format = default_format
-      end if
+      print_format = pic_optional(format_type, default_format)
 
       print: block
          character(len=1) :: open_bracket, close_bracket
@@ -1311,11 +1169,7 @@ contains
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: print_format
 
-      if (present(format_type)) then
-         print_format = format_type
-      else
-         print_format = default_format
-      end if
+      print_format = pic_optional(format_type, default_format)
 
       print: block
          character(len=1) :: open_bracket, close_bracket
@@ -1342,11 +1196,7 @@ contains
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: print_format
 
-      if (present(format_type)) then
-         print_format = format_type
-      else
-         print_format = default_format
-      end if
+      print_format = pic_optional(format_type, default_format)
 
       print: block
          character(len=1) :: open_bracket, close_bracket
@@ -1381,11 +1231,7 @@ contains
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: print_format
 
-      if (present(format_type)) then
-         print_format = format_type
-      else
-         print_format = default_format
-      end if
+      print_format = pic_optional(format_type, default_format)
 
       print: block
          character(len=1) :: open_bracket, close_bracket
@@ -1420,11 +1266,7 @@ contains
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: print_format
 
-      if (present(format_type)) then
-         print_format = format_type
-      else
-         print_format = default_format
-      end if
+      print_format = pic_optional(format_type, default_format)
 
       print: block
          character(len=1) :: open_bracket, close_bracket
@@ -1459,11 +1301,7 @@ contains
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: print_format
 
-      if (present(format_type)) then
-         print_format = format_type
-      else
-         print_format = default_format
-      end if
+      print_format = pic_optional(format_type, default_format)
 
       print: block
          character(len=1) :: open_bracket, close_bracket
@@ -1503,11 +1341,7 @@ contains
       real(dp) :: n_real
 
       ! Determine format
-      if (present(format_type)) then
-         print_format = trim(adjustl(format_type))
-      else
-         print_format = "NUMPY"
-      end if
+      print_format = pic_optional(format_type, default_format)
       call set_brackets(print_format, open_bracket, close_bracket)
 
       ! Compute n from packed size using proper real arithmetic
@@ -1552,11 +1386,7 @@ contains
       real(dp) :: n_real
 
       ! Determine format
-      if (present(format_type)) then
-         print_format = trim(adjustl(format_type))
-      else
-         print_format = "NUMPY"
-      end if
+      print_format = pic_optional(format_type, default_format)
       call set_brackets(print_format, open_bracket, close_bracket)
 
       ! Compute n from packed size using proper real arithmetic
@@ -1601,11 +1431,7 @@ contains
       real(dp) :: n_real
 
       ! Determine format
-      if (present(format_type)) then
-         print_format = trim(adjustl(format_type))
-      else
-         print_format = "NUMPY"
-      end if
+      print_format = pic_optional(format_type, default_format)
       call set_brackets(print_format, open_bracket, close_bracket)
 
       ! Compute n from packed size using proper real arithmetic
@@ -1650,11 +1476,7 @@ contains
       real(dp) :: n_real
 
       ! Determine format
-      if (present(format_type)) then
-         print_format = trim(adjustl(format_type))
-      else
-         print_format = "NUMPY"
-      end if
+      print_format = pic_optional(format_type, default_format)
       call set_brackets(print_format, open_bracket, close_bracket)
 
       ! Compute n from packed size using proper real arithmetic
@@ -1694,15 +1516,11 @@ contains
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: print_format
 
-      if (present(format_type)) then
-         print_format = format_type
-      else
-         print_format = default_format
-      end if
+      print_format = pic_optional(format_type, default_format)
 
       print: block
          character(len=1) :: open_bracket, close_bracket
-         integer(int32) ::  k, rows, cols, depth
+         integer(int32) :: i, j, k, rows, cols, depth
          rows = size(matrix, 1)
          cols = size(matrix, 2)
          depth = size(matrix, 3)
@@ -1725,15 +1543,11 @@ contains
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: print_format
 
-      if (present(format_type)) then
-         print_format = format_type
-      else
-         print_format = default_format
-      end if
+      print_format = pic_optional(format_type, default_format)
 
       print: block
          character(len=1) :: open_bracket, close_bracket
-         integer(int32) ::  k, rows, cols, depth
+         integer(int32) :: i, j, k, rows, cols, depth
          rows = size(matrix, 1)
          cols = size(matrix, 2)
          depth = size(matrix, 3)
@@ -1756,15 +1570,11 @@ contains
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: print_format
 
-      if (present(format_type)) then
-         print_format = format_type
-      else
-         print_format = default_format
-      end if
+      print_format = pic_optional(format_type, default_format)
 
       print: block
          character(len=1) :: open_bracket, close_bracket
-         integer(int32) ::  k, rows, cols, depth
+         integer(int32) :: i, j, k, rows, cols, depth
          rows = size(matrix, 1)
          cols = size(matrix, 2)
          depth = size(matrix, 3)
@@ -1787,15 +1597,11 @@ contains
       character(len=*), intent(in), optional :: format_type
       character(len=20) :: print_format
 
-      if (present(format_type)) then
-         print_format = format_type
-      else
-         print_format = default_format
-      end if
+      print_format = pic_optional(format_type, default_format)
 
       print: block
          character(len=1) :: open_bracket, close_bracket
-         integer(int32) :: k, rows, cols, depth
+         integer(int32) :: i, j, k, rows, cols, depth
          rows = size(matrix, 1)
          cols = size(matrix, 2)
          depth = size(matrix, 3)
@@ -1831,7 +1637,7 @@ contains
    subroutine scramble_array_int64(array)
       integer(int64), intent(inout) :: array(:)
       integer(int32) :: i, j, n
-      integer(int64) :: temp
+      integer(int32) :: temp
       real(sp) :: rand_val
 
       n = size(array)
@@ -1847,7 +1653,7 @@ contains
    subroutine scramble_array_sp(array)
       real(sp), intent(inout) :: array(:)
       integer(int32) :: i, j, n
-      real(sp) :: temp
+      integer(int32) :: temp
       real(sp) :: rand_val
 
       n = size(array)
@@ -1863,7 +1669,7 @@ contains
    subroutine scramble_array_dp(array)
       real(dp), intent(inout) :: array(:)
       integer(int32) :: i, j, n
-      real(dp) :: temp
+      integer(int32) :: temp
       real(sp) :: rand_val
 
       n = size(array)
