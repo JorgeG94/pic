@@ -25,14 +25,14 @@ works, nice, you go ahead and publish a paper on it. Is the code good? Most of t
 I was fortunate enough to be a part of the rewriting of the EXESS codebase. Lead by, hopefully soon to be, Dr. Ryan Stocks we rewrote
 the entire thing using some very cool features of the C++ language and tightly coupled it with MPI, CUDA/HIP, and ran some of the largest and and most performant simulations ever done.
 
-We even won a Gordon Bell prize in 2024 because of this!
+We even won a Gordon Bell prize in 2024 because of [this](https://dl.acm.org/doi/10.1109/SC41406.2024.00015)!
 
 In the end this was a gigantic team effort which wouldn't have been possible without the contributions done by the entire team and the money provided by Dr Barca's company QDX. Without this it would have been impossible to rewrite the entire code the way we did.
 
-After leaving my position as a postdoc at the Barca group I joined the National Computational Infrastructure (NCI) in Canberra where
+After leaving my position as a postdoc at the Barca group I joined the [National Computational Infrastructure](https://nci.org.au/) (NCI) in Canberra where
 I could put to use all of my HPC and software engineering knowledge to test in other domains outside of computational quanutm chemistry.
 
-In my last year or so of my postdoc I took up a big interest in the Fortran programming language. I had used it before during my undergrad and early PhD but the ECP project had pushed me to full C++ and CUDA for GPU support. I discovered the beautiful community that is the Fortran Discourse and the associated projects people associated to it have undertaken. Examples are the Fortran Package Manager, the Fortran Standard Library and the LFortran compiler.
+In my last year or so of my postdoc I took up a big interest in the [Fortran programming language](https://fortran-lang.org/). I had used it before during my undergrad and early PhD but the ECP project had pushed me to full C++ and CUDA for GPU support. I discovered the beautiful community that is the [Fortran Discourse](https://fortran-lang.discourse.group/) and the associated projects people associated to it have undertaken. Examples are the [Fortran Package Manager](https://fpm.fortran-lang.org/), the [Fortran Standard Library](https://stdlib.fortran-lang.org/) and the [LFortran](https://lfortran.org/) compiler.
 
 I found a community of people that I hadn't found in the C/C++ world and this drove me to start exploring the language a bit more.
 
@@ -75,7 +75,7 @@ from fixed to free format Fortran which lets one write code in whichever column 
 New Fortran looks quite differnt and I'd dare even say similar to other language, like Julia maybe. For example, this snippet of code from PIC itself:
 
 
-```
+```fortran
    subroutine fill_vector_int64(vector, alpha, threaded)
       integer(int64), intent(inout) :: vector(:)
       integer(int64), intent(in)    :: alpha
@@ -110,7 +110,7 @@ I see that comment a lot. HOWEVER. This is not the case anymore. I just did it l
 
 Fortran has introduced the concept of `blocks` which are used to determine scope in a program, very similar to the `{}` in C/C++. For example, the above code could be rewritten as:
 
-```
+```fortran
    subroutine fill_vector_int64(vector, alpha, threaded)
       integer(int64), intent(inout) :: vector(:)
       integer(int64), intent(in)    :: alpha
@@ -187,3 +187,5 @@ The aim is to maybe "look pythonic in nature", but probably closer to Julia.
 For example, being able to do `call pic_gemm(A,B,C)` and have PIC decide the bounds of the arrays and if the operations happens on the CPU or the GPU.
 
 PIC aims to provide a stable development platform for people that want to write high performance code for modern hardware architectures.
+
+However, the main goal of PIC is to provide portable code. Since, we all know the pain of imperfect Fortran compilers, PIC aims to compile and pass all tests across many compilers found in the literature. This is what drove me to implement my own versions of the sort functions from the standard library - they did not work with the NVIDIA or Cray compilers.

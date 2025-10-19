@@ -14,6 +14,8 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/modules/"
 if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
   set(standard_compile_flags "-std=f2018 -ffree-line-length-none -fbacktrace")
   if(CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 15.1)
+    # there's a bug with Wall in Gfortran 15.1 whcih is the default one in
+    # Github runners
     set(warning_flags
         "-Wall -Wextra -Wpedantic -Wsurprising -Waliasing -Wampersand -Wno-array-bounds -Wcharacter-truncation -Wconversion -Wline-truncation -Wintrinsics-std -Wno-tabs -Wunderflow -Wunused-parameter -Wintrinsic-shadow -Wno-align-commons -Wsurprising"
     )
