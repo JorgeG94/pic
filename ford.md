@@ -8,7 +8,7 @@ project_download: https://github.com/JorgeG94/pic/archive/refs/heads/main.zip
 author: Jorge Luis Galvez Vallejo
 github: https://github.com/JorgeG94
 page_dir: docs/pages
-media_dir: docs/images
+media_dir: images
 graph: true
 graph_maxnodes: 250
 graph_maxdepth: 5
@@ -30,7 +30,7 @@ md_extensions: markdown.extensions.toc
 
 PIC is named after the Huastec word PIC which means otter.
 
-![Otter coding logo](./images/pic_logo.png)
+![Otter coding logo](images/pic_logo.png)
 
 A work in progress on writing a cool backend for Fortan applications focused on Quantum Chemistry software.
 
