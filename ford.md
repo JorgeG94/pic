@@ -8,7 +8,7 @@ project_download: https://github.com/JorgeG94/pic/archive/refs/heads/main.zip
 author: Jorge Luis Galvez Vallejo
 github: https://github.com/JorgeG94
 page_dir: docs/pages
-media_dir: docs/images
+media_dir: images
 graph: true
 graph_maxnodes: 250
 graph_maxdepth: 5
@@ -19,7 +19,7 @@ display: public
 source: true
 proc_internals: true
 sort: permission-alpha
-favicon: docs/images/otter.png
+favicon: images/otter.png
 print_creation_date: true
 extra_mods: iso_fortran_env:https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html
             tomlf:https://toml-f.github.io/toml-f
@@ -31,7 +31,7 @@ md_extensions: markdown.extensions.toc
 PIC is named after the Huastec word PIC which means otter.
 
 <p align="center">
-  <img src="./images/pic_logo.png" alt="Otter coding logo" title="Project logo" width="250">
+  <img src="./media/pic_logo.png" alt="Otter coding logo" title="Project logo" width="250">
 </p>
 
 A work in progress on writing a cool backend for Fortan applications focused on Quantum Chemistry software.

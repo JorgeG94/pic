@@ -2,7 +2,9 @@
 title: About PIC
 ---
 
-<img src="./images/pic_logo.png" alt="Otter coding logo" title="Project logo" width="200">
+<p align="center">
+  <img src="../media/pic_logo.png" alt="Otter coding logo" title="Project logo" width="250">
+</p>
 
 ## Reasoning behind PIC
 
