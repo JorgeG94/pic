@@ -30,9 +30,7 @@ md_extensions: markdown.extensions.toc
 
 PIC is named after the Huastec word PIC which means otter.
 
-<p align="center">
-  <img src="./images/pic_logo.png" alt="Otter coding logo" title="Project logo" width="250">
-</p>
+![Otter coding logo](./images/pic_logo.png)
 
 A work in progress on writing a cool backend for Fortan applications focused on Quantum Chemistry software.
 
