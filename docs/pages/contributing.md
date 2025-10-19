@@ -90,7 +90,7 @@ We follow the convention that the `end module` statement should contain the name
 
 ### Derived type naming convention
 
-All derived types should be named using the `pic_` prefix, followed by the name of the type. For example, the type that represents a vector is called `pic_vector`, and the type that represents a matrix is called `pic_matrix`.
+All derived types should be named using the `pic_` prefix, followed by the name of the type. For example, the type that represents a vector is called `pic_vector_type`, and the type that represents a matrix is called `pic_matrix_type`.
 
 ### Function and subroutine naming convention
 
