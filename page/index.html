@@ -129,11 +129,11 @@ that I was John Snow, I didn&rsquo;t know anything.</p>
 works, nice, you go ahead and publish a paper on it. Is the code good? Most of the times the answer to this is: no.</p>
 <p>I was fortunate enough to be a part of the rewriting of the EXESS codebase. Lead by, hopefully soon to be, Dr. Ryan Stocks we rewrote
 the entire thing using some very cool features of the C++ language and tightly coupled it with MPI, CUDA/HIP, and ran some of the largest and and most performant simulations ever done.</p>
-<p>We even won a Gordon Bell prize in 2024 because of this!</p>
+<p>We even won a Gordon Bell prize in 2024 because of <a href="https://dl.acm.org/doi/10.1109/SC41406.2024.00015">this</a>!</p>
 <p>In the end this was a gigantic team effort which wouldn&rsquo;t have been possible without the contributions done by the entire team and the money provided by Dr Barca&rsquo;s company QDX. Without this it would have been impossible to rewrite the entire code the way we did.</p>
-<p>After leaving my position as a postdoc at the Barca group I joined the National Computational Infrastructure (NCI) in Canberra where
+<p>After leaving my position as a postdoc at the Barca group I joined the <a href="https://nci.org.au/">National Computational Infrastructure</a> (NCI) in Canberra where
 I could put to use all of my HPC and software engineering knowledge to test in other domains outside of computational quanutm chemistry.</p>
-<p>In my last year or so of my postdoc I took up a big interest in the Fortran programming language. I had used it before during my undergrad and early PhD but the ECP project had pushed me to full C++ and CUDA for GPU support. I discovered the beautiful community that is the Fortran Discourse and the associated projects people associated to it have undertaken. Examples are the Fortran Package Manager, the Fortran Standard Library and the LFortran compiler.</p>
+<p>In my last year or so of my postdoc I took up a big interest in the <a href="https://fortran-lang.org/">Fortran programming language</a>. I had used it before during my undergrad and early PhD but the ECP project had pushed me to full C++ and CUDA for GPU support. I discovered the beautiful community that is the <a href="https://fortran-lang.discourse.group/">Fortran Discourse</a> and the associated projects people associated to it have undertaken. Examples are the <a href="https://fpm.fortran-lang.org/">Fortran Package Manager</a>, the <a href="https://stdlib.fortran-lang.org/">Fortran Standard Library</a> and the <a href="https://lfortran.org/">LFortran</a> compiler.</p>
 <p>I found a community of people that I hadn&rsquo;t found in the C/C++ world and this drove me to start exploring the language a bit more.</p>
 <h3 id="why-fortran">Why Fortran</h3>
 <p>Fortran is an old language and with age comes lots of baggage. A lot of Fortran&rsquo;s perceived baggage is due to legacy codes that use
@@ -163,29 +163,29 @@ old language constructs that are no longer in the standard or just simply bad ac
 <p>There is a lot of code that looks like this yes, however, new Fortran does not look like this at all. This is the famed transition
 from fixed to free format Fortran which lets one write code in whichever column you want to write.</p>
 <p>New Fortran looks quite differnt and I&rsquo;d dare even say similar to other language, like Julia maybe. For example, this snippet of code from PIC itself:</p>
-<div class="codehilite"><pre><span></span><code>   subroutine fill_vector_int64(vector, alpha, threaded)
-      integer(int64), intent(inout) :: vector(:)
-      integer(int64), intent(in)    :: alpha
-      logical, intent(in), optional :: threaded
-      logical :: use_threads
-      integer(default_int) :: i
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="k">subroutine </span><span class="n">fill_vector_int64</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">threaded</span><span class="p">)</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">vector</span><span class="p">(:)</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">alpha</span>
+<span class="w">      </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">threaded</span>
+<span class="w">      </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">use_threads</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
-      if (use_threads) then
-         !$omp parallel do collapse(1) private(i)
-         do i = 1, size(vector, 1)
-            vector(i) = alpha
-         end do
-         !$omp end parallel do
-      else
-         vector = alpha
-      end if
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">threaded</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">use_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threaded</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         </span><span class="n">use_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">use_threaded_default</span>
+<span class="w">      </span><span class="k">end if</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">use_threads</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">         </span><span class="c">!$omp parallel do collapse(1) private(i)</span>
+<span class="w">         </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="n">vector</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alpha</span>
+<span class="w">         </span><span class="k">end do</span>
+<span class="w">         </span><span class="c">!$omp end parallel do</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         </span><span class="n">vector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alpha</span>
+<span class="w">      </span><span class="k">end if</span>
 
-   end subroutine fill_vector_int64
+<span class="k">   end subroutine </span><span class="n">fill_vector_int64</span>
 </code></pre></div>
 
 <p>There is nothing &ldquo;ugly&rdquo; to look at here. Everything is nice lower caps with nice spacing. Variable names mean something
@@ -193,31 +193,31 @@ to anyone that can speak english and I even showcase the use of OMP parallelism.
 <p>One thing that you might comment on here &ldquo;Oh, ew, you have to declare everything at the start like in C89&rdquo;. And yeah,
 I see that comment a lot. HOWEVER. This is not the case anymore. I just did it like this here because the subroutine is rather small.</p>
 <p>Fortran has introduced the concept of <code>blocks</code> which are used to determine scope in a program, very similar to the <code>{}</code> in C/C++. For example, the above code could be rewritten as:</p>
-<div class="codehilite"><pre><span></span><code>   subroutine fill_vector_int64(vector, alpha, threaded)
-      integer(int64), intent(inout) :: vector(:)
-      integer(int64), intent(in)    :: alpha
-      logical, intent(in), optional :: threaded
-      logical :: use_threads
+<div class="codehilite"><pre><span></span><code><span class="w">   </span><span class="k">subroutine </span><span class="n">fill_vector_int64</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span><span class="w"> </span><span class="n">alpha</span><span class="p">,</span><span class="w"> </span><span class="n">threaded</span><span class="p">)</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">vector</span><span class="p">(:)</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">alpha</span>
+<span class="w">      </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">threaded</span>
+<span class="w">      </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">use_threads</span>
 
-      if (present(threaded)) then
-         use_threads = threaded
-      else
-         use_threads = use_threaded_default
-      end if
-      if (use_threads) then
-      loop: block
-        integer(default_int) :: i
-         !$omp parallel do collapse(1) private(i)
-         do i = 1, size(vector, 1)
-            vector(i) = alpha
-         end do
-         !$omp end parallel do
-      end block loop
-      else
-         vector = alpha
-      end if
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">threaded</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">use_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threaded</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         </span><span class="n">use_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">use_threaded_default</span>
+<span class="w">      </span><span class="k">end if</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">use_threads</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">      </span><span class="n">loop</span><span class="p">:</span><span class="w"> </span><span class="k">block</span>
+<span class="k">        </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
+<span class="w">         </span><span class="c">!$omp parallel do collapse(1) private(i)</span>
+<span class="w">         </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="n">vector</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alpha</span>
+<span class="w">         </span><span class="k">end do</span>
+<span class="w">         </span><span class="c">!$omp end parallel do</span>
+<span class="w">      </span><span class="k">end block </span><span class="n">loop</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         </span><span class="n">vector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alpha</span>
+<span class="w">      </span><span class="k">end if</span>
 
-   end subroutine fill_vector_int64
+<span class="k">   end subroutine </span><span class="n">fill_vector_int64</span>
 </code></pre></div>
 
 <p>And now we&rsquo;ve limited the scope of the <code>i</code> variable in the program. Blocks <em>can</em> be named or also omitted. I.e. you could ommit the name <code>loop:</code> and you&rsquo;d still be fine. You can nest blocks in blocks, they just delimit the scope of variables.</p>
@@ -248,6 +248,7 @@ to create PIC.</p>
 <p>The aim is to maybe &ldquo;look pythonic in nature&rdquo;, but probably closer to Julia.</p>
 <p>For example, being able to do <code>call pic_gemm(A,B,C)</code> and have PIC decide the bounds of the arrays and if the operations happens on the CPU or the GPU.</p>
 <p>PIC aims to provide a stable development platform for people that want to write high performance code for modern hardware architectures.</p>
+<p>However, the main goal of PIC is to provide portable code. Since, we all know the pain of imperfect Fortran compilers, PIC aims to compile and pass all tests across many compilers found in the literature. This is what drove me to implement my own versions of the sort functions from the standard library - they did not work with the NVIDIA or Cray compilers.</p>
     </div>
   </div>
       <hr>
@@ -265,7 +266,7 @@ to create PIC.</p>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-10-19 10:36 +0000             </p>
+ on 2025-10-19 21:37 +0000             </p>
           </div>
         </div>
         <br>
