@@ -923,6 +923,7 @@ contains
       call check(error, is_sorted(large_char_array), .true., "Char array not sorted!")
       if (allocated(error)) return
 
+      call pic_scramble_array(large_char_array)
       call ord_sort(large_char_array, work, reverse=.true.)
       call check(error, is_sorted(large_char_array, DESCENDING), .true., "Char array not sorted!")
       if (allocated(error)) return
@@ -990,6 +991,7 @@ contains
       call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      call pic_scramble_array(large_integer_array)
       call ord_sort(large_integer_array, work, reverse=.true.)
       call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
@@ -1050,6 +1052,7 @@ contains
       call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      call pic_scramble_array(large_integer_array)
       call ord_sort(large_integer_array, work, reverse=.true.)
       call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
@@ -1110,6 +1113,7 @@ contains
       call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      call pic_scramble_array(large_real_array)
       call ord_sort(large_real_array, work, reverse=.true.)
       call check(error, is_sorted(large_real_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
@@ -1170,6 +1174,7 @@ contains
       call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      call pic_scramble_array(large_real_array)
       call ord_sort(large_real_array, work, reverse=.true.)
       call check(error, is_sorted(large_real_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
