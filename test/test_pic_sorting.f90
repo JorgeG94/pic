@@ -929,6 +929,18 @@ contains
       call check(error, is_sorted(large_char_array), .true., "Identical chars not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 11160
+         write (large_char_array(i), '(i4.4)') 42_int32
+      end do
+      do i = 11161, n
+         write (large_char_array(i), '(i4.4)') int(50*i, int32)
+      end do
+      call pic_scramble_array(large_char_array)
+
+      call ord_sort(large_char_array, work)
+      call check(error, is_sorted(large_char_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
    end subroutine test_ord_sort_char_large
 
    subroutine test_ord_sort_int32(error)
