@@ -974,6 +974,17 @@ contains
       call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 6000
+         large_integer_array(i) = i
+      end do
+      do i = 6001, n
+         large_integer_array(i) = 10*i
+      end do
+
+      call ord_sort(large_integer_array, work)
+      call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
    end subroutine test_ord_sort_int32_large
 
    subroutine test_ord_sort_int64(error)
