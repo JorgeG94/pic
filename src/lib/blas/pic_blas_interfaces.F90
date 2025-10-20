@@ -25,7 +25,7 @@ module pic_blas_interfaces
 
    ! tested
    interface pic_gemm
-      !! general interface of the BLAS GEMM routines, will call SGEMM, DGEMM, CGEMM, ZGEMM
+      !! general interface of the BLAS GEMM routines, will call SGEMM, DGEMM, CGEMM
       !!
       !! Usage: call pic_gemm(A, B, C, [optional] transa, [optional] transb, [optional] alpha, [optional] beta)
       !!
@@ -38,7 +38,6 @@ module pic_blas_interfaces
       !! The matrices A, B, C must be allocatable arrays, we deduce the shapes from them.
       module procedure :: pic_sgemm
       module procedure :: pic_dgemm
-      module procedure :: pic_zgemm
    end interface pic_gemm
 
    interface pic_gemv
@@ -87,8 +86,6 @@ module pic_blas_interfaces
       !!
       module procedure :: pic_saxpy
       module procedure :: pic_daxpy
-      module procedure :: pic_caxpy  ! not tested
-      module procedure :: pic_zaxpy  ! not tested
    end interface pic_axpy
 
    interface pic_copy
@@ -101,8 +98,6 @@ module pic_blas_interfaces
       !!
       module procedure :: pic_scopy
       module procedure :: pic_dcopy
-      module procedure :: pic_ccopy
-      module procedure :: pic_zcopy
    end interface pic_copy
 
    interface pic_dot
@@ -130,8 +125,6 @@ module pic_blas_interfaces
       !!
       module procedure :: pic_sscal
       module procedure :: pic_dscal
-      module procedure :: pic_cscal
-      module procedure :: pic_zscal
    end interface pic_scal
 
    interface pic_iamax
@@ -145,8 +138,6 @@ module pic_blas_interfaces
       !!
       module procedure :: pic_isamax
       module procedure :: pic_idamax
-      module procedure :: pic_icamax
-      module procedure :: pic_izamax
    end interface pic_iamax
 
    interface blas_asum
@@ -261,24 +252,6 @@ module pic_blas_interfaces
          integer(default_int), intent(in) :: incy
          integer(default_int), intent(in) :: n
       end subroutine dcopy
-      pure subroutine ccopy(n, x, incx, y, incy)
-         import :: sp, default_int
-         implicit none
-         complex(sp), intent(in) :: x(*)
-         complex(sp), intent(inout) :: y(*)
-         integer(default_int), intent(in) :: incx
-         integer(default_int), intent(in) :: incy
-         integer(default_int), intent(in) :: n
-      end subroutine ccopy
-      pure subroutine zcopy(n, x, incx, y, incy)
-         import :: dp, default_int
-         implicit none
-         complex(dp), intent(in) :: x(*)
-         complex(dp), intent(inout) :: y(*)
-         integer(default_int), intent(in) :: incx
-         integer(default_int), intent(in) :: incy
-         integer(default_int), intent(in) :: n
-      end subroutine zcopy
    end interface blas_copy
 
    interface blas_dot
@@ -351,22 +324,6 @@ module pic_blas_interfaces
          integer(default_int), intent(in) :: incx
          integer(default_int), intent(in) :: n
       end subroutine dscal
-      pure subroutine cscal(n, alpha, x, incx)
-         import :: sp, default_int
-         implicit none
-         complex(sp), intent(in) :: alpha
-         complex(sp), intent(inout) :: x(*)
-         integer(default_int), intent(in) :: incx
-         integer(default_int), intent(in) :: n
-      end subroutine cscal
-      pure subroutine zscal(n, alpha, x, incx)
-         import :: dp, default_int
-         implicit none
-         complex(dp), intent(in) :: alpha
-         complex(dp), intent(inout) :: x(*)
-         integer(default_int), intent(in) :: incx
-         integer(default_int), intent(in) :: n
-      end subroutine zscal
    end interface blas_scal
 
    interface blas_iamax
@@ -391,22 +348,6 @@ module pic_blas_interfaces
          integer(default_int), intent(in) :: incx
          integer(default_int), intent(in) :: n
       end function idamax
-      pure function icamax(n, x, incx) result(idx)
-         import :: sp, default_int
-         implicit none
-         integer(default_int) :: idx
-         complex(sp), intent(in) :: x(*)
-         integer(default_int), intent(in) :: incx
-         integer(default_int), intent(in) :: n
-      end function icamax
-      pure function izamax(n, x, incx) result(idx)
-         import :: dp, default_int
-         implicit none
-         integer(default_int) :: idx
-         complex(dp), intent(in) :: x(*)
-         integer(default_int), intent(in) :: incx
-         integer(default_int), intent(in) :: n
-      end function izamax
    end interface blas_iamax
 
    interface blas_gemv
@@ -922,28 +863,6 @@ contains
       call blas_copy(n, x, incx, y, incy)
    end subroutine pic_dcopy
 
-   subroutine pic_ccopy(x, y)
-      !! interface for single precision complex copy
-      complex(sp), intent(in) :: x(:)
-      complex(sp), intent(inout) :: y(:)
-      integer(default_int) :: n, incx, incy
-      n = size(x)
-      incx = 1
-      incy = 1
-      call blas_copy(n, x, incx, y, incy)
-   end subroutine pic_ccopy
-
-   subroutine pic_zcopy(x, y)
-      !! interface for double precision complex copy
-      complex(dp), intent(in) :: x(:)
-      complex(dp), intent(inout) :: y(:)
-      integer(default_int) :: n, incx, incy
-      n = size(x)
-      incx = 1
-      incy = 1
-      call blas_copy(n, x, incx, y, incy)
-   end subroutine pic_zcopy
-
    function pic_sdot(x, y) result(res)
       !! interface for single precision dot product
       real(sp), intent(in) :: x(:)
@@ -1024,38 +943,6 @@ contains
       call blas_scal(n, l_alpha, x, incx)
    end subroutine pic_dscal
 
-   subroutine pic_cscal(x, alpha)
-      !! interface for single precision complex scaling
-      complex(sp), intent(inout) :: x(:)
-      complex(sp), intent(in), optional :: alpha
-      complex(sp) :: l_alpha
-      integer(default_int) :: n, incx
-      n = size(x)
-      incx = 1
-      if (present(alpha)) then
-         l_alpha = alpha
-      else
-         l_alpha = 1.0_sp
-      end if
-      call blas_scal(n, l_alpha, x, incx)
-   end subroutine pic_cscal
-
-   subroutine pic_zscal(x, alpha)
-      !! interface for double precision complex scaling
-      complex(dp), intent(inout) :: x(:)
-      complex(dp), intent(in), optional :: alpha
-      complex(dp) :: l_alpha
-      integer(default_int) :: n, incx
-      n = size(x)
-      incx = 1
-      if (present(alpha)) then
-         l_alpha = alpha
-      else
-         l_alpha = 1.0_dp
-      end if
-      call blas_scal(n, l_alpha, x, incx)
-   end subroutine pic_zscal
-
    function pic_isamax(x) result(idx)
       !! interface for single precision index of maximum absolute value
       real(sp), intent(in) :: x(:)
@@ -1074,23 +961,4 @@ contains
       incx = 1
       idx = blas_iamax(n, x, incx)
    end function pic_idamax
-   function pic_icamax(x) result(idx)
-      !! interface for single precision complex index of maximum absolute value
-      complex(sp), intent(in) :: x(:)
-      integer(default_int) :: idx
-      integer(default_int) :: n, incx
-      n = size(x)
-      incx = 1
-      idx = blas_iamax(n, x, incx)
-   end function pic_icamax
-   function pic_izamax(x) result(idx)
-      !! interface for double precision complex index of maximum absolute value
-      complex(dp), intent(in) :: x(:)
-      integer(default_int) :: idx
-      integer(default_int) :: n, incx
-      n = size(x)
-      incx = 1
-      idx = blas_iamax(n, x, incx)
-   end function pic_izamax
-
 end module pic_blas_interfaces
