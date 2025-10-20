@@ -707,6 +707,13 @@ contains
          call check(error, is_sorted(large_char_array), .true., "Char array not sorted!")
          if (allocated(error)) return
 
+         call pic_scramble_array(large_char_array)
+
+         call sort(large_char_array, .true.)
+
+         call check(error, is_sorted(large_char_array, DESCENDING), .true., "Char array not sorted!")
+         if (allocated(error)) return
+
          ! All identical characters
          large_char_array = 'xyz'
          call sort(large_char_array)
@@ -907,7 +914,6 @@ contains
       character(len=10), allocatable :: work(:)
       integer(int32), parameter :: n = 12000_int32
       integer(int32) :: i
-      integer(int32) :: char1, char2, char3
 
       allocate (large_char_array(n))
       allocate (work(n))
