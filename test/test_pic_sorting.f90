@@ -89,6 +89,12 @@ contains
       array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
       call sort_index(array, index, work, iwork)
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
+      call sort_index(array, index, iwork=iwork)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
 
    end subroutine test_index_sort_char_int32
 
@@ -113,6 +119,30 @@ contains
 
       call sort_index(array, index)
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         write (array(i), '(i4.4)') 42_int32
+      end do
+      do i = 11161, n_elements
+         write (array(i), '(i4.4)') int(50*i, int32)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         write (array(i), '(i4.4)') 42_int32
+      end do
+      do i = 11161, n_elements
+         write (array(i), '(i4.4)') int(50*i, int32)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_index_sort_char_int32_large
@@ -145,11 +175,17 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
       array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
       call sort_index(array, index, work, iwork)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
    end subroutine test_index_sort_char_int64
 
    subroutine test_index_sort_char_int64_large(error)
@@ -173,6 +209,30 @@ contains
 
       call sort_index(array, index)
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         write (array(i), '(i4.4)') 42_int32
+      end do
+      do i = 11161, n_elements
+         write (array(i), '(i4.4)') int(50*i, int32)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         write (array(i), '(i4.4)') 42_int32
+      end do
+      do i = 11161, n_elements
+         write (array(i), '(i4.4)') int(50*i, int32)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_index_sort_char_int64_large
@@ -212,6 +272,12 @@ contains
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
    end subroutine test_index_sort_int32_int32
 
    subroutine test_index_sort_int32_int32_large(error)
@@ -235,6 +301,30 @@ contains
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42_int32
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int32)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42_int32
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int32)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_index_sort_int32_int32_large
@@ -275,6 +365,12 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_int32_int64
 
    subroutine test_index_sort_int32_int64_large(error)
@@ -298,6 +394,30 @@ contains
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42_int32
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int32)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42_int32
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int32)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_index_sort_int32_int64_large
@@ -337,6 +457,12 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_int64_int32
 
    subroutine test_index_sort_int64_int32_large(error)
@@ -360,6 +486,30 @@ contains
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42_int64
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int64)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42_int64
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int64)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_index_sort_int64_int32_large
@@ -400,6 +550,12 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_int64_int64
 
    subroutine test_index_sort_int64_int64_large(error)
@@ -423,6 +579,29 @@ contains
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+      do i = 1, 11160
+         array(i) = 42_int64
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int64)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42_int64
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int64)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_index_sort_int64_int64_large
@@ -461,6 +640,12 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_sp_int32
 
    subroutine test_index_sort_sp_int32_large(error)
@@ -484,6 +669,30 @@ contains
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42.0_sp
+      end do
+      do i = 11161, n_elements
+         array(i) = real(50*i, sp)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42.0_sp
+      end do
+      do i = 11161, n_elements
+         array(i) = real(50*i, sp)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_index_sort_sp_int32_large
@@ -522,6 +731,12 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_sp_int64
 
    subroutine test_index_sort_sp_int64_large(error)
@@ -545,6 +760,29 @@ contains
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+      do i = 1, 11160
+         array(i) = 42.0_sp
+      end do
+      do i = 11161, n_elements
+         array(i) = real(50*i, sp)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42.0_sp
+      end do
+      do i = 11161, n_elements
+         array(i) = real(50*i, sp)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_index_sort_sp_int64_large
@@ -583,6 +821,12 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_dp_int32
 
    subroutine test_index_sort_dp_int32_large(error)
@@ -606,6 +850,30 @@ contains
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42.0_dp
+      end do
+      do i = 11161, n_elements
+         array(i) = real(50*i, dp)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42.0_dp
+      end do
+      do i = 11161, n_elements
+         array(i) = real(50*i, dp)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_index_sort_dp_int32_large
@@ -644,6 +912,12 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_dp_int64
 
    subroutine test_index_sort_dp_int64_large(error)
@@ -667,6 +941,29 @@ contains
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+      do i = 1, 11160
+         array(i) = 42.0_dp
+      end do
+      do i = 11161, n_elements
+         array(i) = real(50*i, dp)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42.0_dp
+      end do
+      do i = 11161, n_elements
+         array(i) = real(50*i, dp)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_index_sort_dp_int64_large
@@ -702,6 +999,17 @@ contains
          end do
 
          call pic_scramble_array(large_char_array)
+
+         call sort(large_char_array)
+         call check(error, is_sorted(large_char_array), .true., "Char array not sorted!")
+         if (allocated(error)) return
+
+         call pic_scramble_array(large_char_array)
+
+         call sort(large_char_array, .true.)
+
+         call check(error, is_sorted(large_char_array, DESCENDING), .true., "Char array not sorted!")
+         if (allocated(error)) return
 
          call sort(large_char_array)
          call check(error, is_sorted(large_char_array), .true., "Char array not sorted!")
@@ -907,7 +1215,6 @@ contains
       character(len=10), allocatable :: work(:)
       integer(int32), parameter :: n = 12000_int32
       integer(int32) :: i
-      integer(int32) :: char1, char2, char3
 
       allocate (large_char_array(n))
       allocate (work(n))
@@ -946,6 +1253,17 @@ contains
       call check(error, is_sorted(large_char_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 11160
+         write (large_char_array(i), '(i4.4)') 42_int32
+      end do
+      do i = 11161, n
+         write (large_char_array(i), '(i4.4)') int(50*i, int32)
+      end do
+      call pic_scramble_array(large_char_array)
+
+      call ord_sort(large_char_array, work, reverse=.true.)
+      call check(error, is_sorted(large_char_array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_ord_sort_char_large
 
    subroutine test_ord_sort_int32(error)
@@ -1006,6 +1324,17 @@ contains
 
       call ord_sort(large_integer_array, work)
       call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+      do i = 1, 11160
+         large_integer_array(i) = 42_int32
+      end do
+      do i = 11161, n
+         large_integer_array(i) = int(50*i, int32)
+      end do
+      call pic_scramble_array(large_integer_array)
+
+      call ord_sort(large_integer_array, work, reverse=.true.)
+      call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_ord_sort_int32_large
@@ -1069,6 +1398,17 @@ contains
       call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 11160
+         large_integer_array(i) = 42_int64
+      end do
+      do i = 11161, n
+         large_integer_array(i) = int(50*i, int64)
+      end do
+      call pic_scramble_array(large_integer_array)
+
+      call ord_sort(large_integer_array, work, reverse=.true.)
+      call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_ord_sort_int64_large
 
    subroutine test_ord_sort_sp(error)
@@ -1130,6 +1470,17 @@ contains
       call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 11160
+         large_real_array(i) = 42.0_sp
+      end do
+      do i = 11161, n
+         large_real_array(i) = real(50*i, sp)
+      end do
+      call pic_scramble_array(large_real_array)
+
+      call ord_sort(large_real_array, work, reverse=.true.)
+      call check(error, is_sorted(large_real_array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_ord_sort_sp_large
 
    subroutine test_ord_sort_dp(error)
@@ -1191,6 +1542,17 @@ contains
       call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 11160
+         large_real_array(i) = 42.0_dp
+      end do
+      do i = 11161, n
+         large_real_array(i) = real(50*i, dp)
+      end do
+      call pic_scramble_array(large_real_array)
+
+      call ord_sort(large_real_array, work, reverse=.true.)
+      call check(error, is_sorted(large_real_array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_ord_sort_dp_large
 
    subroutine test_radix_sort_int32(error)

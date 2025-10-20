@@ -49,8 +49,9 @@ set_target_properties(
              Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/tests/modules")
 target_include_directories("${project_name}-tester"
                            PRIVATE "${CMAKE_BINARY_DIR}/modules")
-target_link_libraries("${project_name}-tester" PRIVATE "${core_lib}"
-                                                       test-drive::test-drive)
+target_link_libraries(
+  "${project_name}-tester" PRIVATE "${main_lib}" "${core_lib}"
+                                   test-drive::test-drive)
 
 if(PIC_ENABLE_BLAS)
   set_target_properties(
