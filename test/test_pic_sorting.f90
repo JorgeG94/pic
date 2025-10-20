@@ -300,6 +300,30 @@ contains
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 11160
+         array(i) = 42_int32
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int32)
+      end do
+      call pic_scramble_array(array)
+
+      call ord_sort(array, work)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42_int32
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int32)
+      end do
+      call pic_scramble_array(array)
+
+      call ord_sort(array, work, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
    end subroutine test_index_sort_int32_int64_large
 
    subroutine test_index_sort_int64_int32(error)
@@ -424,6 +448,29 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+      do i = 1, 11160
+         array(i) = 42_int64
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int64)
+      end do
+      call pic_scramble_array(array)
+
+      call ord_sort(array, work)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42_int64
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int64)
+      end do
+      call pic_scramble_array(array)
+
+      call ord_sort(array, work, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
 
    end subroutine test_index_sort_int64_int64_large
 
@@ -545,6 +592,29 @@ contains
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+      do i = 1, 11160
+         array(i) = 42.0_sp
+      end do
+      do i = 11161, n_elements
+         array(i) = real(50*i, sp)
+      end do
+      call pic_scramble_array(array)
+
+      call ord_sort(array, work)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42.0_sp
+      end do
+      do i = 11161, n_elements
+         array(i) = real(50*i, sp)
+      end do
+      call pic_scramble_array(array)
+
+      call ord_sort(array, work, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_index_sort_sp_int64_large
@@ -668,6 +738,29 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+      do i = 1, 11160
+         array(i) = 42.0_dp
+      end do
+      do i = 11161, n_elements
+         array(i) = real(50*i, dp)
+      end do
+      call pic_scramble_array(array)
+
+      call ord_sort(array, work)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42.0_dp
+      end do
+      do i = 11161, n_elements
+         array(i) = real(50*i, dp)
+      end do
+      call pic_scramble_array(array)
+
+      call ord_sort(array, work, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
 
    end subroutine test_index_sort_dp_int64_large
 
@@ -712,6 +805,10 @@ contains
          call sort(large_char_array, .true.)
 
          call check(error, is_sorted(large_char_array, DESCENDING), .true., "Char array not sorted!")
+         if (allocated(error)) return
+
+         call sort(large_char_array)
+         call check(error, is_sorted(large_char_array), .true., "Char array not sorted!")
          if (allocated(error)) return
 
          ! All identical characters
