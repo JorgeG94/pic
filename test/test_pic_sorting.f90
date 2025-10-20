@@ -226,6 +226,7 @@ contains
       allocate (index(n_elements))
       allocate (iwork(n_elements))
 
+      call pic_scramble_array(array)
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
@@ -288,6 +289,7 @@ contains
       allocate (index(n_elements))
       allocate (iwork(n_elements))
 
+      call pic_scramble_array(array)
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
@@ -349,6 +351,7 @@ contains
       allocate (index(n_elements))
       allocate (iwork(n_elements))
 
+      call pic_scramble_array(array)
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
@@ -411,6 +414,7 @@ contains
       allocate (index(n_elements))
       allocate (iwork(n_elements))
 
+      call pic_scramble_array(array)
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
@@ -471,6 +475,7 @@ contains
       allocate (index(n_elements))
       allocate (iwork(n_elements))
 
+      call pic_scramble_array(array)
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
@@ -531,6 +536,7 @@ contains
       allocate (index(n_elements))
       allocate (iwork(n_elements))
 
+      call pic_scramble_array(array)
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
@@ -591,6 +597,7 @@ contains
       allocate (index(n_elements))
       allocate (iwork(n_elements))
 
+      call pic_scramble_array(array)
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
@@ -651,6 +658,7 @@ contains
       allocate (index(n_elements))
       allocate (iwork(n_elements))
 
+      call pic_scramble_array(array)
       call sort_index(array, index)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
