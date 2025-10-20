@@ -952,6 +952,17 @@ contains
       call check(error, is_sorted(large_char_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 11160
+         write (large_char_array(i), '(i4.4)') 42_int32
+      end do
+      do i = 11161, n
+         write (large_char_array(i), '(i4.4)') int(50*i, int32)
+      end do
+      call pic_scramble_array(large_char_array)
+
+      call ord_sort(large_char_array, work, reverse=.true.)
+      call check(error, is_sorted(large_char_array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_ord_sort_char_large
 
    subroutine test_ord_sort_int32(error)
@@ -1012,6 +1023,17 @@ contains
 
       call ord_sort(large_integer_array, work)
       call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+      do i = 1, 11160
+         large_integer_array(i) = 42_int32
+      end do
+      do i = 11161, n
+         large_integer_array(i) = int(50*i, int32)
+      end do
+      call pic_scramble_array(large_integer_array)
+
+      call ord_sort(large_integer_array, work, reverse=.true.)
+      call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_ord_sort_int32_large
@@ -1075,6 +1097,17 @@ contains
       call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 11160
+         large_integer_array(i) = 42_int64
+      end do
+      do i = 11161, n
+         large_integer_array(i) = int(50*i, int64)
+      end do
+      call pic_scramble_array(large_integer_array)
+
+      call ord_sort(large_integer_array, work, reverse=.true.)
+      call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_ord_sort_int64_large
 
    subroutine test_ord_sort_sp(error)
@@ -1136,6 +1169,17 @@ contains
       call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 11160
+         large_real_array(i) = 42.0_sp
+      end do
+      do i = 11161, n
+         large_real_array(i) = real(50*i, sp)
+      end do
+      call pic_scramble_array(large_real_array)
+
+      call ord_sort(large_real_array, work, reverse=.true.)
+      call check(error, is_sorted(large_real_array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_ord_sort_sp_large
 
    subroutine test_ord_sort_dp(error)
@@ -1197,6 +1241,17 @@ contains
       call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 11160
+         large_real_array(i) = 42.0_dp
+      end do
+      do i = 11161, n
+         large_real_array(i) = real(50*i, dp)
+      end do
+      call pic_scramble_array(large_real_array)
+
+      call ord_sort(large_real_array, work, reverse=.true.)
+      call check(error, is_sorted(large_real_array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_ord_sort_dp_large
 
    subroutine test_radix_sort_int32(error)
