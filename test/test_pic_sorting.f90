@@ -16,15 +16,23 @@ contains
                   new_unittest("test_index_sort_char_int32", test_index_sort_char_int32), &
                   new_unittest("test_index_sort_char_int32_large", test_index_sort_char_int32_large), &
                   new_unittest("test_index_sort_char_int64", test_index_sort_char_int64), &
+                  new_unittest("test_index_sort_char_int64_large", test_index_sort_char_int64_large), &
                   new_unittest("test_index_sort_int32_int32", test_index_sort_int32_int32), &
                   new_unittest("test_index_sort_int32_int32_large", test_index_sort_int32_int32_large), &
                   new_unittest("test_index_sort_int64_int64", test_index_sort_int64_int64), &
+                  new_unittest("test_index_sort_int64_int64_large", test_index_sort_int64_int64_large), &
                   new_unittest("test_index_sort_int32_int64", test_index_sort_int32_int64), &
+                  new_unittest("test_index_sort_int32_int64_large", test_index_sort_int32_int64_large), &
                   new_unittest("test_index_sort_int64_int32", test_index_sort_int64_int32), &
+                  new_unittest("test_index_sort_int64_int32_large", test_index_sort_int64_int32_large), &
                   new_unittest("test_index_sort_sp_int32", test_index_sort_sp_int32), &
+                  new_unittest("test_index_sort_sp_int32_large", test_index_sort_sp_int32_large), &
                   new_unittest("test_index_sort_sp_int64", test_index_sort_sp_int64), &
+                  new_unittest("test_index_sort_sp_int64_large", test_index_sort_sp_int64_large), &
                   new_unittest("test_index_sort_dp_int32", test_index_sort_dp_int32), &
+                  new_unittest("test_index_sort_dp_int32_large", test_index_sort_dp_int32_large), &
                   new_unittest("test_index_sort_dp_int64", test_index_sort_dp_int64), &
+                  new_unittest("test_index_sort_dp_int64_large", test_index_sort_dp_int64_large), &
                   new_unittest("test_sort_char", test_sort_char), &
                   new_unittest("test_sort_int32", test_sort_int32), &
                   new_unittest("test_sort_int64", test_sort_int64), &
@@ -139,6 +147,31 @@ contains
       if (allocated(error)) return
    end subroutine test_index_sort_char_int64
 
+   subroutine test_index_sort_char_int64_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=10), allocatable :: array(:)
+      character(len=10), allocatable :: work(:)
+      integer(int64), allocatable :: index(:)
+      integer(int64), allocatable :: iwork(:)
+      integer(int32), parameter :: n_elements = 12000_int32
+      integer(int32) :: i
+
+      allocate (array(n_elements))
+      do i = 1, n_elements
+         write (array(i), '(i4.4)') i
+      end do
+      allocate (work(n_elements))
+      allocate (index(n_elements))
+      allocate (iwork(n_elements))
+
+      call pic_scramble_array(array)
+
+      call sort_index(array, index)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_index_sort_char_int64_large
+
    subroutine test_index_sort_int32_int32(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int32) :: array(5)
@@ -238,6 +271,30 @@ contains
       if (allocated(error)) return
    end subroutine test_index_sort_int32_int64
 
+   subroutine test_index_sort_int32_int64_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: array(:)
+      integer(int64), allocatable :: index(:)
+      integer(int32), allocatable :: work(:)
+      integer(int64), allocatable :: iwork(:)
+      integer(int32), parameter :: n_elements = 12000_int32
+      integer(int32) :: i
+
+      allocate (array(n_elements))
+      do i = 1, n_elements
+         array(i) = n_elements - i + 1
+      end do
+      allocate (work(n_elements))
+      allocate (index(n_elements))
+      allocate (iwork(n_elements))
+
+      call sort_index(array, index)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_index_sort_int32_int64_large
+
    subroutine test_index_sort_int64_int32(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int64) :: array(5)
@@ -274,6 +331,30 @@ contains
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
    end subroutine test_index_sort_int64_int32
+
+   subroutine test_index_sort_int64_int32_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: array(:)
+      integer(int32), allocatable :: index(:)
+      integer(int64), allocatable :: work(:)
+      integer(int32), allocatable :: iwork(:)
+      integer(int32), parameter :: n_elements = 12000_int32
+      integer(int32) :: i
+
+      allocate (array(n_elements))
+      do i = 1, n_elements
+         array(i) = n_elements - i + 1
+      end do
+      allocate (work(n_elements))
+      allocate (index(n_elements))
+      allocate (iwork(n_elements))
+
+      call sort_index(array, index)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_index_sort_int64_int32_large
 
    subroutine test_index_sort_int64_int64(error)
       type(error_type), allocatable, intent(out) :: error
@@ -313,6 +394,30 @@ contains
       if (allocated(error)) return
    end subroutine test_index_sort_int64_int64
 
+   subroutine test_index_sort_int64_int64_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: array(:)
+      integer(int64), allocatable :: index(:)
+      integer(int64), allocatable :: work(:)
+      integer(int64), allocatable :: iwork(:)
+      integer(int32), parameter :: n_elements = 12000_int32
+      integer(int32) :: i
+
+      allocate (array(n_elements))
+      do i = 1, n_elements
+         array(i) = n_elements - i + 1
+      end do
+      allocate (work(n_elements))
+      allocate (index(n_elements))
+      allocate (iwork(n_elements))
+
+      call sort_index(array, index)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_index_sort_int64_int64_large
+
    subroutine test_index_sort_sp_int32(error)
       type(error_type), allocatable, intent(out) :: error
       real(sp) :: array(5)
@@ -348,6 +453,30 @@ contains
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
    end subroutine test_index_sort_sp_int32
+
+   subroutine test_index_sort_sp_int32_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: array(:)
+      real(sp), allocatable :: work(:)
+      integer(int32), allocatable :: index(:)
+      integer(int32), allocatable :: iwork(:)
+      integer(int32), parameter :: n_elements = 12000_int32
+      integer(int32) :: i
+
+      allocate (array(n_elements))
+      do i = 1, n_elements
+         array(i) = real(n_elements - i + 1, sp)
+      end do
+      allocate (work(n_elements))
+      allocate (index(n_elements))
+      allocate (iwork(n_elements))
+
+      call sort_index(array, index)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_index_sort_sp_int32_large
 
    subroutine test_index_sort_sp_int64(error)
       type(error_type), allocatable, intent(out) :: error
@@ -385,6 +514,30 @@ contains
       if (allocated(error)) return
    end subroutine test_index_sort_sp_int64
 
+   subroutine test_index_sort_sp_int64_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: array(:)
+      real(sp), allocatable :: work(:)
+      integer(int64), allocatable :: index(:)
+      integer(int64), allocatable :: iwork(:)
+      integer(int32), parameter :: n_elements = 12000_int32
+      integer(int32) :: i
+
+      allocate (array(n_elements))
+      do i = 1, n_elements
+         array(i) = real(n_elements - i + 1, sp)
+      end do
+      allocate (work(n_elements))
+      allocate (index(n_elements))
+      allocate (iwork(n_elements))
+
+      call sort_index(array, index)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_index_sort_sp_int64_large
+
    subroutine test_index_sort_dp_int32(error)
       type(error_type), allocatable, intent(out) :: error
       real(dp) :: array(5)
@@ -421,6 +574,30 @@ contains
       if (allocated(error)) return
    end subroutine test_index_sort_dp_int32
 
+   subroutine test_index_sort_dp_int32_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: array(:)
+      real(dp), allocatable :: work(:)
+      integer(int32), allocatable :: index(:)
+      integer(int32), allocatable :: iwork(:)
+      integer(int32), parameter :: n_elements = 12000_int32
+      integer(int32) :: i
+
+      allocate (array(n_elements))
+      do i = 1, n_elements
+         array(i) = real(n_elements - i + 1, dp)
+      end do
+      allocate (work(n_elements))
+      allocate (index(n_elements))
+      allocate (iwork(n_elements))
+
+      call sort_index(array, index)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_index_sort_dp_int32_large
+
    subroutine test_index_sort_dp_int64(error)
       type(error_type), allocatable, intent(out) :: error
       real(dp) :: array(5)
@@ -456,6 +633,30 @@ contains
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
    end subroutine test_index_sort_dp_int64
+
+   subroutine test_index_sort_dp_int64_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: array(:)
+      real(dp), allocatable :: work(:)
+      integer(int64), allocatable :: index(:)
+      integer(int64), allocatable :: iwork(:)
+      integer(int32), parameter :: n_elements = 12000_int32
+      integer(int32) :: i
+
+      allocate (array(n_elements))
+      do i = 1, n_elements
+         array(i) = real(n_elements - i + 1, dp)
+      end do
+      allocate (work(n_elements))
+      allocate (index(n_elements))
+      allocate (iwork(n_elements))
+
+      call sort_index(array, index)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_index_sort_dp_int64_large
 
    subroutine test_sort_char(error)
       type(error_type), allocatable, intent(out) :: error
