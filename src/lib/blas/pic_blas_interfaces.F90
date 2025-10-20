@@ -110,8 +110,6 @@ module pic_blas_interfaces
       !!
       module procedure :: pic_sdot
       module procedure :: pic_ddot
-      module procedure :: pic_cdotc
-      module procedure :: pic_zdotc
    end interface pic_dot
 
    interface pic_scal
@@ -797,30 +795,6 @@ contains
       incy = 1
       res = blas_dot(n, x, incx, y, incy)
    end function pic_ddot
-
-   function pic_cdotc(x, y) result(res)
-      !! interface for single precision complex dot product
-      complex(sp), intent(in) :: x(:)
-      complex(sp), intent(in) :: y(:)
-      complex(sp) :: res
-      integer(default_int) :: n, incx, incy
-      n = size(x)
-      incx = 1
-      incy = 1
-      res = blas_dot(n, x, incx, y, incy)
-   end function pic_cdotc
-
-   function pic_zdotc(x, y) result(res)
-      !! interface for double precision complex dot product
-      complex(dp), intent(in) :: x(:)
-      complex(dp), intent(in) :: y(:)
-      complex(dp) :: res
-      integer(default_int) :: n, incx, incy
-      n = size(x)
-      incx = 1
-      incy = 1
-      res = blas_dot(n, x, incx, y, incy)
-   end function pic_zdotc
 
    subroutine pic_sscal(x, alpha)
       !! interface for single precision scaling
