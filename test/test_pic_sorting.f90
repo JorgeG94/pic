@@ -923,6 +923,10 @@ contains
       call check(error, is_sorted(large_char_array), .true., "Char array not sorted!")
       if (allocated(error)) return
 
+      call ord_sort(large_char_array, work, reverse=.true.)
+      call check(error, is_sorted(large_char_array, DESCENDING), .true., "Char array not sorted!")
+      if (allocated(error)) return
+
       ! All identical characters
       large_char_array = 'xyz'
       call ord_sort(large_char_array, work)
@@ -986,6 +990,10 @@ contains
       call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      call ord_sort(large_integer_array, work, reverse=.true.)
+      call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
       do i = 1, 11160
          large_integer_array(i) = 42_int32
       end do
@@ -1040,6 +1048,10 @@ contains
 
       call ord_sort(large_integer_array, work)
       call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      call ord_sort(large_integer_array, work, reverse=.true.)
+      call check(error, is_sorted(large_integer_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
       do i = 1, 11160
@@ -1098,6 +1110,10 @@ contains
       call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      call ord_sort(large_real_array, work, reverse=.true.)
+      call check(error, is_sorted(large_real_array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
       do i = 1, 11160
          large_real_array(i) = 42.0_sp
       end do
@@ -1152,6 +1168,10 @@ contains
 
       call ord_sort(large_real_array, work)
       call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      call ord_sort(large_real_array, work, reverse=.true.)
+      call check(error, is_sorted(large_real_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
       do i = 1, 11160
