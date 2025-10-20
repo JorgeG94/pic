@@ -974,12 +974,13 @@ contains
       call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
-      do i = 1, 6000
-         large_integer_array(i) = i
+      do i = 1, 11160
+         large_integer_array(i) = 42_int32
       end do
-      do i = 6001, n
-         large_integer_array(i) = 10*i
+      do i = 11161, n
+         large_integer_array(i) = int(50*i, int32)
       end do
+      call pic_scramble_array(large_integer_array)
 
       call ord_sort(large_integer_array, work)
       call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
@@ -1023,6 +1024,18 @@ contains
          large_integer_array(i) = i
       end do
 
+      call pic_scramble_array(large_integer_array)
+
+      call ord_sort(large_integer_array, work)
+      call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         large_integer_array(i) = 42_int64
+      end do
+      do i = 11161, n
+         large_integer_array(i) = int(50*i, int64)
+      end do
       call pic_scramble_array(large_integer_array)
 
       call ord_sort(large_integer_array, work)
@@ -1073,6 +1086,18 @@ contains
       call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 11160
+         large_real_array(i) = 42.0_sp
+      end do
+      do i = 11161, n
+         large_real_array(i) = real(50*i, sp)
+      end do
+      call pic_scramble_array(large_real_array)
+
+      call ord_sort(large_real_array, work)
+      call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
    end subroutine test_ord_sort_sp_large
 
    subroutine test_ord_sort_dp(error)
@@ -1111,6 +1136,18 @@ contains
          large_real_array(i) = real(i, dp)
       end do
 
+      call pic_scramble_array(large_real_array)
+
+      call ord_sort(large_real_array, work)
+      call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         large_real_array(i) = 42.0_dp
+      end do
+      do i = 11161, n
+         large_real_array(i) = real(50*i, dp)
+      end do
       call pic_scramble_array(large_real_array)
 
       call ord_sort(large_real_array, work)
