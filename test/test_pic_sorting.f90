@@ -39,10 +39,15 @@ contains
                   new_unittest("test_sort_sp", test_sort_sp), &
                   new_unittest("test_sort_dp", test_sort_dp), &
                   new_unittest("test_ord_sort_char", test_ord_sort_char), &
+                  new_unittest("test_ord_sort_char_large", test_ord_sort_char_large), &
                   new_unittest("test_ord_sort_int32", test_ord_sort_int32), &
+                  new_unittest("test_ord_sort_int32_large", test_ord_sort_int32_large), &
                   new_unittest("test_ord_sort_int64", test_ord_sort_int64), &
+                  new_unittest("test_ord_sort_int64_large", test_ord_sort_int64_large), &
                   new_unittest("test_ord_sort_sp", test_ord_sort_sp), &
+                  new_unittest("test_ord_sort_sp_large", test_ord_sort_sp_large), &
                   new_unittest("test_ord_sort_dp", test_ord_sort_dp), &
+                  new_unittest("test_ord_sort_dp_large", test_ord_sort_dp_large), &
                   new_unittest("test_radix_sort_int32", test_radix_sort_int32), &
                   new_unittest("test_radix_sort_int64", test_radix_sort_int64), &
                   new_unittest("test_radix_sort_sp", test_radix_sort_sp), &
@@ -878,10 +883,10 @@ contains
    subroutine test_ord_sort_char(error)
       type(error_type), allocatable, intent(out) :: error
       character(len=10) :: array(5)
+      character(len=10) :: work(5)
+
       array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
-
       call ord_sort(array)
-
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -889,11 +894,47 @@ contains
       call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
+      call ord_sort(array, work)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
    end subroutine test_ord_sort_char
+
+   subroutine test_ord_sort_char_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=10), allocatable :: large_char_array(:)
+      character(len=10), allocatable :: work(:)
+      integer(int32), parameter :: n = 12000_int32
+      integer(int32) :: i
+      integer(int32) :: char1, char2, char3
+
+      allocate (large_char_array(n))
+      allocate (work(n))
+
+      ! Reverse sorted - 'z' to 'a' repeated
+      do i = 1, n
+         write (large_char_array(i), '(i4.4)') i
+      end do
+
+      call pic_scramble_array(large_char_array)
+
+      call ord_sort(large_char_array, work)
+      call check(error, is_sorted(large_char_array), .true., "Char array not sorted!")
+      if (allocated(error)) return
+
+      ! All identical characters
+      large_char_array = 'xyz'
+      call ord_sort(large_char_array, work)
+      call check(error, is_sorted(large_char_array), .true., "Identical chars not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_ord_sort_char_large
 
    subroutine test_ord_sort_int32(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int32) :: integer_array(5)
+      integer(int32) :: work(5)
 
       integer_array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
       call ord_sort(integer_array)
@@ -905,11 +946,40 @@ contains
       call check(error, is_sorted(integer_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      integer_array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
+      call ord_sort(integer_array, work)
+
+      call check(error, is_sorted(integer_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
    end subroutine test_ord_sort_int32
+
+   subroutine test_ord_sort_int32_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: large_integer_array(:)
+      integer(int32), allocatable :: work(:)
+      integer(int32), parameter :: n = 12000_int32
+      integer(int32) :: i
+
+      allocate (large_integer_array(n))
+      allocate (work(n))
+
+      do i = n, 1, -1
+         large_integer_array(i) = i
+      end do
+
+      call pic_scramble_array(large_integer_array)
+
+      call ord_sort(large_integer_array, work)
+      call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_ord_sort_int32_large
 
    subroutine test_ord_sort_int64(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int64) :: integer_array(5)
+      integer(int64) :: work(5)
 
       integer_array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
       call ord_sort(integer_array)
@@ -920,11 +990,40 @@ contains
       call ord_sort(integer_array, reverse=.true.)
       call check(error, is_sorted(integer_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      integer_array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
+      call ord_sort(integer_array, work)
+
+      call check(error, is_sorted(integer_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_ord_sort_int64
+
+   subroutine test_ord_sort_int64_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: large_integer_array(:)
+      integer(int64), allocatable :: work(:)
+      integer(int32), parameter :: n = 12000_int32
+      integer(int32) :: i
+
+      allocate (large_integer_array(n))
+      allocate (work(n))
+
+      do i = n, 1, -1
+         large_integer_array(i) = i
+      end do
+
+      call pic_scramble_array(large_integer_array)
+
+      call ord_sort(large_integer_array, work)
+      call check(error, is_sorted(large_integer_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_ord_sort_int64_large
 
    subroutine test_ord_sort_sp(error)
       type(error_type), allocatable, intent(out) :: error
       real(sp) :: real_array(5)
+      real(sp) :: work(5)
 
       real_array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
       call ord_sort(real_array)
@@ -936,11 +1035,39 @@ contains
       call check(error, is_sorted(real_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      real_array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
+      call ord_sort(real_array, work)
+
+      call check(error, is_sorted(real_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_ord_sort_sp
+
+   subroutine test_ord_sort_sp_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: large_real_array(:)
+      real(sp), allocatable :: work(:)
+      integer(int32), parameter :: n = 12000_int32
+      integer(int32) :: i
+
+      allocate (large_real_array(n))
+      allocate (work(n))
+
+      do i = n, 1, -1
+         large_real_array(i) = real(i, sp)
+      end do
+
+      call pic_scramble_array(large_real_array)
+
+      call ord_sort(large_real_array, work)
+      call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_ord_sort_sp_large
 
    subroutine test_ord_sort_dp(error)
       type(error_type), allocatable, intent(out) :: error
       real(dp) :: real_array(5)
+      real(dp) :: work(5)
 
       real_array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
       call ord_sort(real_array)
@@ -952,7 +1079,34 @@ contains
       call check(error, is_sorted(real_array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      real_array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
+      call ord_sort(real_array, work)
+
+      call check(error, is_sorted(real_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_ord_sort_dp
+
+   subroutine test_ord_sort_dp_large(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: large_real_array(:)
+      real(dp), allocatable :: work(:)
+      integer(int32), parameter :: n = 12000_int32
+      integer(int32) :: i
+
+      allocate (large_real_array(n))
+      allocate (work(n))
+
+      do i = n, 1, -1
+         large_real_array(i) = real(i, dp)
+      end do
+
+      call pic_scramble_array(large_real_array)
+
+      call ord_sort(large_real_array, work)
+      call check(error, is_sorted(large_real_array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+   end subroutine test_ord_sort_dp_large
 
    subroutine test_radix_sort_int32(error)
       type(error_type), allocatable, intent(out) :: error
