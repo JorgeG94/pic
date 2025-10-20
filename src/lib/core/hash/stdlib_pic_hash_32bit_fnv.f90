@@ -64,30 +64,35 @@ module stdlib_pic_hash_32bit_fnv
 !! ([Specification](../page/specs/stdlib_hash_procedures.html#fnv_1_hash-calculates-a-hash-code-from-a-key))
       pure module function int8_fnv_1(key) result(hash_code)
 !! FNV_1 hash function for rank 1 array keys of kind int8
+         implicit none
          integer(int8), intent(in) :: key(:)
          integer(int_hash)           :: hash_code
       end function int8_fnv_1
 
       pure module function int16_fnv_1(key) result(hash_code)
 !! FNV_1 hash function for rank 1 array keys of kind int16
+         implicit none
          integer(int16), intent(in) :: key(:)
          integer(int_hash)           :: hash_code
       end function int16_fnv_1
 
       pure module function int32_fnv_1(key) result(hash_code)
 !! FNV_1 hash function for rank 1 array keys of kind int32
+         implicit none
          integer(int32), intent(in) :: key(:)
          integer(int_hash)           :: hash_code
       end function int32_fnv_1
 
       pure module function int64_fnv_1(key) result(hash_code)
 !! FNV_1 hash function for rank 1 array keys of kind int64
+         implicit none
          integer(int64), intent(in) :: key(:)
          integer(int_hash)           :: hash_code
       end function int64_fnv_1
 
       elemental module function character_fnv_1(key) result(hash_code)
 !! FNV_1 hash function for default character string keys
+         implicit none
          character(*), intent(in)      :: key
          integer(int_hash)             :: hash_code
       end function character_fnv_1
@@ -101,30 +106,35 @@ module stdlib_pic_hash_32bit_fnv
 !! ([Specification](../page/specs/stdlib_hash_procedures.html#fnv_1a_hash-calculates-a-hash-code-from-a-key))
       pure module function int8_fnv_1a(key) result(hash_value)
 !! FNV_1A hash function for rank 1 array keys of kind int8
+         implicit none
          integer(int8), intent(in)   :: key(:)
          integer(int_hash)             :: hash_value
       end function int8_fnv_1a
 
       pure module function int16_fnv_1a(key) result(hash_value)
 !! FNV_1A hash function for rank 1 array keys of kind int16
+         implicit none
          integer(int16), intent(in)   :: key(:)
          integer(int_hash)             :: hash_value
       end function int16_fnv_1a
 
       pure module function int32_fnv_1a(key) result(hash_value)
 !! FNV_1A hash function for rank 1 array keys of kind int32
+         implicit none
          integer(int32), intent(in)   :: key(:)
          integer(int_hash)             :: hash_value
       end function int32_fnv_1a
 
       pure module function int64_fnv_1a(key) result(hash_value)
 !! FNV_1A hash function for rank 1 array keys of kind int64
+         implicit none
          integer(int64), intent(in)   :: key(:)
          integer(int_hash)             :: hash_value
       end function int64_fnv_1a
 
       elemental module function character_fnv_1a(key) result(hash_value)
 !! FNV_1A hash function for default character string keys
+         implicit none
          character(*), intent(in)      :: key
          integer(int_hash)             :: hash_value
       end function character_fnv_1a
