@@ -44,6 +44,8 @@ contains
    subroutine test_index_sort_char_int32(error)
       type(error_type), allocatable, intent(out) :: error
       character(len=10) :: array(5)
+      character(len=10) :: work(5)
+      integer(int32) :: iwork(5)
       integer(int32), parameter :: expected_index(5) = [2_int32, 3_int32, 4_int32, 5_int32, 1_int32]
       integer(int32), parameter :: expected_reverse_index(5) = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
       integer(int32) :: index(0:4)
@@ -64,6 +66,14 @@ contains
 
       call check(error, all(index == expected_reverse_index), .true., "Reverse index is not correct!")
       if (allocated(error)) return
+
+      array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
+      call sort_index(array, index, work)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+
+      array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
+      call sort_index(array, index, work, iwork)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
 
    end subroutine test_index_sort_char_int32
 
