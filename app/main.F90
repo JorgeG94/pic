@@ -7,11 +7,8 @@ program main
    !use pic_logger, only: global => global_logger, warning_level, verbose_level
    !use testdrive, only: run_testsuite
    use pic_string_mod, only: pic_string_type
-   use pic_types, only: sp, int32, int64
-   use pic_string, only: to_string, set_precision
-   use pic_array, only: pic_scramble_array, is_sorted
+   use pic_types, only: sp, int32
    implicit none
-   type(pic_string_type) :: s, t
    !use pic_mpi
    !use pic_timer
    !implicit none
@@ -33,18 +30,6 @@ program main
          A(i, j) = real(i + j, sp)
       end do
    end do
-
-   !print *, to_string(A)
-
-   if (s%empty()) then
-      print *, "AAA"
-   end if
-   call s%assign("abcdefg")
-
-   print *, "s", s%to_char()
-   t = s%substr(4_int64, 3_int64)  ! 1-based: 'd','e','f'
-   print *, "t ", t%to_char()
-
    !call comm%init()
 
    !if (comm%m_rank == 0) then

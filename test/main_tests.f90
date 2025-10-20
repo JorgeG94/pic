@@ -14,6 +14,7 @@ program pic_tester
    use test_pic_array, only: collect_pic_array_tests
    use test_pic_optional, only: collect_pic_optional_tests
    use test_pic_sorting, only: collect_pic_sorting_tests
+   use test_pic_hash, only: collect_pic_hash_tests
    use pic_knowledge, only: get_knowledge
    ! add here the module you want to test
    implicit none
@@ -37,6 +38,7 @@ program pic_tester
                 new_testsuite("pic_matrix_printer_v2", collect_pic_matrix_printer_v2_tests), &
                 new_testsuite("pic_array", collect_pic_array_tests), &
                 new_testsuite("pic_optional", collect_pic_optional_tests), &
+                new_testsuite("pic_hash", collect_pic_hash_tests), &
                 new_testsuite("pic_sorting", collect_pic_sorting_tests) &
                 ]
    ! here you add another test suite to the array

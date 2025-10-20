@@ -1,4 +1,5 @@
 add_subdirectory(arrays)
+add_subdirectory(hash)
 add_subdirectory(types)
 add_subdirectory(constants)
 add_subdirectory(print)
