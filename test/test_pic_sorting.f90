@@ -89,6 +89,12 @@ contains
       array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
       call sort_index(array, index, work, iwork)
       call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
+      call sort_index(array, index, iwork=iwork)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
 
    end subroutine test_index_sort_char_int32
 
@@ -169,11 +175,17 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
       array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
       call sort_index(array, index, work, iwork)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
    end subroutine test_index_sort_char_int64
 
    subroutine test_index_sort_char_int64_large(error)
@@ -256,6 +268,12 @@ contains
 
       array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
       call sort_index(array, index, work=work, iwork=iwork, reverse=.false.)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
+      call sort_index(array, index, iwork=iwork)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
@@ -347,6 +365,12 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_int32_int64
 
    subroutine test_index_sort_int32_int64_large(error)
@@ -430,6 +454,12 @@ contains
 
       array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
       call sort_index(array, index, work, iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
+      call sort_index(array, index, iwork=iwork)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
@@ -520,6 +550,12 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_int64_int64
 
    subroutine test_index_sort_int64_int64_large(error)
@@ -601,6 +637,12 @@ contains
       if (allocated(error)) return
       array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
       call sort_index(array, index, work, iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
+      call sort_index(array, index, iwork=iwork)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
@@ -689,6 +731,12 @@ contains
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
+
+      array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
+      call sort_index(array, index, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_sp_int64
 
    subroutine test_index_sort_sp_int64_large(error)
@@ -770,6 +818,12 @@ contains
       if (allocated(error)) return
       array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
       call sort_index(array, index, work, iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
+      call sort_index(array, index, iwork=iwork)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
@@ -855,6 +909,12 @@ contains
       if (allocated(error)) return
       array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
       call sort_index(array, index, work, iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
+      call sort_index(array, index, iwork=iwork)
 
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
