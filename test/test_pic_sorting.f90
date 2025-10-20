@@ -285,6 +285,30 @@ contains
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
+      do i = 1, 11160
+         array(i) = 42_int32
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int32)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index)
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      do i = 1, 11160
+         array(i) = 42_int32
+      end do
+      do i = 11161, n_elements
+         array(i) = int(50*i, int32)
+      end do
+      call pic_scramble_array(array)
+
+      call sort_index(array, index, reverse=.true.)
+      call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
    end subroutine test_index_sort_int32_int32_large
 
    subroutine test_index_sort_int32_int64(error)
