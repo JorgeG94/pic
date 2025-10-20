@@ -752,42 +752,6 @@ contains
       call blas_axpy(n, l_alpha, x, incx, y, incy)
    end subroutine pic_daxpy
 
-   subroutine pic_caxpy(x, y, alpha)
-      !! interface for single precision complex AXPY
-      complex(sp), intent(in) :: x(:)
-      complex(sp), intent(inout) :: y(:)
-      complex(sp), intent(in), optional :: alpha
-      complex(sp) :: l_alpha
-      integer(default_int) :: n, incx, incy
-      n = size(x)
-      incx = 1
-      incy = 1
-      if (present(alpha)) then
-         l_alpha = alpha
-      else
-         l_alpha = 1.0_sp
-      end if
-      call blas_axpy(n, l_alpha, x, incx, y, incy)
-   end subroutine pic_caxpy
-
-   subroutine pic_zaxpy(x, y, alpha)
-      !! interface for double precision complex AXPY
-      complex(dp), intent(in) :: x(:)
-      complex(dp), intent(inout) :: y(:)
-      complex(dp), intent(in), optional :: alpha
-      complex(dp) :: l_alpha
-      integer(default_int) :: n, incx, incy
-      n = size(x)
-      incx = 1
-      incy = 1
-      if (present(alpha)) then
-         l_alpha = alpha
-      else
-         l_alpha = 1.0_dp
-      end if
-      call blas_axpy(n, l_alpha, x, incx, y, incy)
-   end subroutine pic_zaxpy
-
    subroutine pic_scopy(x, y)
       !! interface for single precision copy
       real(sp), intent(in) :: x(:)
