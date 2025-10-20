@@ -356,7 +356,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work)
+      call sort_index(array, index)
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -368,7 +368,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work, reverse=.true.)
+      call sort_index(array, index, reverse=.true.)
       call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -442,7 +442,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work)
+      call sort_index(array, index)
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -454,7 +454,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work, reverse=.true.)
+      call sort_index(array, index, reverse=.true.)
       call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -528,7 +528,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work)
+      call sort_index(array, index)
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -540,7 +540,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work, reverse=.true.)
+      call sort_index(array, index, reverse=.true.)
       call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -613,7 +613,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work)
+      call sort_index(array, index)
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -625,7 +625,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work, reverse=.true.)
+      call sort_index(array, index, reverse=.true.)
       call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -697,7 +697,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work)
+      call sort_index(array, index)
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -709,7 +709,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work, reverse=.true.)
+      call sort_index(array, index, reverse=.true.)
       call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -782,7 +782,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work)
+      call sort_index(array, index)
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -794,7 +794,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work, reverse=.true.)
+      call sort_index(array, index, reverse=.true.)
       call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -866,7 +866,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work)
+      call sort_index(array, index)
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -878,7 +878,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call ord_sort(array, work, reverse=.true.)
+      call sort_index(array, index, reverse=.true.)
       call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
