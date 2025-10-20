@@ -4,12 +4,12 @@
 
 module pic_types
    !! main module for defining types for integer and double precision
-   use, intrinsic :: iso_fortran_env, only: int32, int64
+   use, intrinsic :: iso_fortran_env, only: int8, int16, int32, int64
    implicit none
 
    private
 
-   public :: int32, int64
+   public :: int8, int16, int32, int64
    ! Define kinds for different data types
    ! int32 and int64 are defined in the iso_fortran_env, if you need to change things please do so here
    integer, parameter, public :: sp = SELECTED_REAL_KIND(6, 37)
