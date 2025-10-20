@@ -80,7 +80,9 @@ contains
    subroutine test_index_sort_char_int64(error)
       type(error_type), allocatable, intent(out) :: error
       character(len=10) :: array(5)
+      character(len=10) :: work(5)
       integer(int64) :: index(0:4)
+      integer(int64) :: iwork(0:4)
       integer(int64), parameter :: expected_index(5) = [2_int64, 3_int64, 4_int64, 5_int64, 1_int64]
       integer(int64), parameter :: expected_reverse_index(5) = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
 
@@ -98,11 +100,23 @@ contains
 
       call check(error, all(index == expected_reverse_index), .true., "Reverse index is not correct!")
       if (allocated(error)) return
+      array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
+      call sort_index(array, index, work)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+      array = ["gamma     ", "bravo     ", "charlie   ", "delta     ", "echo      "]
+      call sort_index(array, index, work, iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_char_int64
 
    subroutine test_index_sort_int32_int32(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int32) :: array(5)
+      integer(int32) :: work(0:4)
+      integer(int32) :: iwork(0:4)
       integer(int32) :: index(0:4)
       integer(int32), parameter :: expected_index(5) = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
       array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
@@ -119,6 +133,18 @@ contains
       if (allocated(error)) return
 
       call check(error, all(index == expected_index), .true., "Reverse index is not correct!")
+      if (allocated(error)) return
+
+      array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
+      call sort_index(array, index, work=work, reverse=.false.)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
+      call sort_index(array, index, work=work, iwork=iwork, reverse=.false.)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
    end subroutine test_index_sort_int32_int32
@@ -127,6 +153,8 @@ contains
       type(error_type), allocatable, intent(out) :: error
       integer(int32) :: array(5)
       integer(int64) :: index(0:4)
+      integer(int32) :: work(0:4)
+      integer(int64) :: iwork(0:4)
       integer(int64), parameter :: expected_index(5) = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
 
       array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
@@ -145,12 +173,26 @@ contains
 
       call check(error, all(index == expected_index), .true., "Reverse index is not correct!")
       if (allocated(error)) return
+
+      array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
+      call sort_index(array, index, work=work)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
+      call sort_index(array, index, work=work, iwork=iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_int32_int64
 
    subroutine test_index_sort_int64_int32(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int64) :: array(5)
+      integer(int64) :: work(0:4)
       integer(int32) :: index(0:4)
+      integer(int32) :: iwork(0:4)
       integer(int32), parameter :: expected_index(5) = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
       array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
       call sort_index(array, index)
@@ -167,13 +209,27 @@ contains
       if (allocated(error)) return
 
       call check(error, all(index == expected_index), .true., "Reverse index is not correct!")
+      if (allocated(error)) return
+
+      array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
+      call sort_index(array, index, work)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
+      call sort_index(array, index, work, iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
    end subroutine test_index_sort_int64_int32
 
    subroutine test_index_sort_int64_int64(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int64) :: array(5)
+      integer(int64) :: work(0:4)
       integer(int64) :: index(0:4)
+      integer(int64) :: iwork(0:4)
       integer(int64), parameter :: expected_index(5) = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
 
       array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
@@ -192,12 +248,26 @@ contains
 
       call check(error, all(index == expected_index), .true., "Reverse index is not correct!")
       if (allocated(error)) return
+
+      array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
+      call sort_index(array, index, work)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+
+      array = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
+      call sort_index(array, index, work, iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_int64_int64
 
    subroutine test_index_sort_sp_int32(error)
       type(error_type), allocatable, intent(out) :: error
       real(sp) :: array(5)
+      real(sp) :: work(0:4)
       integer(int32) :: index(0:4)
+      integer(int32) :: iwork(0:4)
       integer(int32), parameter :: expected_index(5) = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
 
       array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
@@ -215,13 +285,25 @@ contains
       if (allocated(error)) return
 
       call check(error, all(index == expected_index), .true., "Reverse index is not correct!")
+      if (allocated(error)) return
+      array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
+      call sort_index(array, index, work)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+      array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
+      call sort_index(array, index, work, iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
    end subroutine test_index_sort_sp_int32
 
    subroutine test_index_sort_sp_int64(error)
       type(error_type), allocatable, intent(out) :: error
       real(sp) :: array(5)
+      real(sp) :: work(0:4)
       integer(int64) :: index(0:4)
+      integer(int64) :: iwork(0:4)
       integer(int64), parameter :: expected_index(5) = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
 
       array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
@@ -240,12 +322,24 @@ contains
 
       call check(error, all(index == expected_index), .true., "Reverse index is not correct!")
       if (allocated(error)) return
+      array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
+      call sort_index(array, index, work)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+      array = [5.0_sp, 4.0_sp, 3.0_sp, 2.0_sp, 1.0_sp]
+      call sort_index(array, index, work, iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_sp_int64
 
    subroutine test_index_sort_dp_int32(error)
       type(error_type), allocatable, intent(out) :: error
       real(dp) :: array(5)
+      real(dp) :: work(0:4)
       integer(int32) :: index(0:4)
+      integer(int32) :: iwork(0:4)
       integer(int32), parameter :: expected_index(5) = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
 
       array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
@@ -264,12 +358,24 @@ contains
 
       call check(error, all(index == expected_index), .true., "Reverse index is not correct!")
       if (allocated(error)) return
+      array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
+      call sort_index(array, index, work)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+      array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
+      call sort_index(array, index, work, iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
    end subroutine test_index_sort_dp_int32
 
    subroutine test_index_sort_dp_int64(error)
       type(error_type), allocatable, intent(out) :: error
       real(dp) :: array(5)
+      real(dp) :: work(0:4)
       integer(int64) :: index(0:4)
+      integer(int64) :: iwork(0:4)
       integer(int64), parameter :: expected_index(5) = [5_int64, 4_int64, 3_int64, 2_int64, 1_int64]
 
       array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
@@ -287,6 +393,16 @@ contains
       if (allocated(error)) return
 
       call check(error, all(index == expected_index), .true., "Reverse index is not correct!")
+      if (allocated(error)) return
+      array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
+      call sort_index(array, index, work)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
+      if (allocated(error)) return
+      array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
+      call sort_index(array, index, work, iwork)
+
+      call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
    end subroutine test_index_sort_dp_int64
 
