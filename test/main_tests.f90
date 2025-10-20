@@ -2,6 +2,7 @@ program pic_tester
    use, intrinsic :: iso_fortran_env, only: error_unit
    use testdrive, only: run_testsuite, new_testsuite, testsuite_type, &
    & select_suite, run_selected, get_argument
+   use pic, only: pic_print_banner
    use pic_types, only: int32
    use test_suite1, only: collect_suite1
    use test_pic_string, only: collect_pic_string_tests
@@ -24,6 +25,8 @@ program pic_tester
    character(len=:), allocatable :: suite_name, test_name
    type(testsuite_type), allocatable :: testsuites(:)
    character(len=*), parameter :: style = '("#", *(1x, a))'
+
+   call pic_print_banner()
 
    stat = 0_int32
    allocate (testsuites(11))

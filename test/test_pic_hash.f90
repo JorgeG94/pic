@@ -35,8 +35,6 @@ contains
       hash1 = fnv_1_hash(data)
       hash2 = fnv_1a_hash(data)
 
-      print *, "int8 hash1: ", hash1
-      print *, "int8 hash2: ", hash2
       call check(error, hash1 == -1172398102, 'FNV-1 hash mismatch for int8')
       call check(error, hash2 == -1075497752, 'FNV-1a hash mismatch for int8')
 
