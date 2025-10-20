@@ -30,7 +30,6 @@ program main
          A(i, j) = real(i + j, sp)
       end do
    end do
-
    !call comm%init()
 
    !if (comm%m_rank == 0) then

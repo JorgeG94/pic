@@ -16,7 +16,8 @@ contains
               new_unittest("pic_hash_int8", test_pic_hash_int8), &
               new_unittest("pic_hash_int16", test_pic_hash_int16), &
               new_unittest("pic_hash_int32", test_pic_hash_int32), &
-              new_unittest("pic_hash_int64", test_pic_hash_int64) &
+              new_unittest("pic_hash_int64", test_pic_hash_int64), &
+              new_unittest("pic_hash_char", test_pic_hash_char) &
               ]
 
    end subroutine collect_pic_hash_tests
@@ -88,5 +89,18 @@ contains
       call check(error, hash2 == -1949181884, 'FNV-1a hash mismatch for int64')
 
    end subroutine test_pic_hash_int64
+
+   subroutine test_pic_hash_char(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=5) :: data
+      integer(int32) :: hash1, hash2
+      data = 'hello'
+      hash1 = fnv_1_hash(data)
+      hash2 = fnv_1a_hash(data)
+
+      call check(error, hash1 == -1225100953, 'FNV-1 hash mismatch for char')
+      call check(error, hash2 == 1335831723, 'FNV-1a hash mismatch for char')
+
+   end subroutine test_pic_hash_char
 
 end module test_pic_hash
