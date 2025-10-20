@@ -607,59 +607,6 @@ contains
       call blas_gemm(OP_A, OP_B, m, n, k, l_alpha, A, lda, B, ldb, l_beta, C, ldc)
 
    end subroutine pic_dgemm
-   pure subroutine pic_zgemm(A, B, C, transa, transb, alpha, beta)
-      !! interface for single precision matrix multiplication
-      complex(dp), intent(in) :: A(:, :)
-      complex(dp), intent(in) :: B(:, :)
-      complex(dp), intent(inout) :: C(:, :)
-      character(len=1), intent(in), optional :: transa
-      character(len=1), intent(in), optional :: transb
-      complex(dp), intent(in), optional :: alpha
-      complex(dp), intent(in), optional :: beta
-      character(len=1) :: OP_A, OP_B
-      complex(dp) :: l_alpha, l_beta
-      integer(default_int) :: m, n, k, lda, ldb, ldc
-
-      ! first check for the constants
-      if (present(alpha)) then
-         l_alpha = alpha
-      else
-         l_alpha = 1.0_sp
-      end if
-      if (present(beta)) then
-         l_beta = beta
-      else
-         l_beta = 0.0_sp
-      end if
-      ! check the OP options, maybe this should not be optional
-      if (present(transa)) then
-         OP_A = transa
-      else
-         OP_A = "N"
-      end if
-      if (present(transb)) then
-         OP_B = transb
-      else
-         OP_B = "N"
-      end if
-
-      ! check for the dimensions now
-      if ((OP_A == "N" .or. OP_A == "n")) then
-         k = size(A, 2)
-      else
-         k = size(A, 1)
-      end if
-
-      ! get LDA, LDB, and LDC
-      lda = max(1, size(A, 1))
-      ldb = max(1, size(B, 1))
-      ldc = max(1, size(C, 1))
-      m = size(C, 1)
-      n = size(C, 2)
-
-      call blas_gemm(OP_A, OP_B, m, n, k, l_alpha, A, lda, B, ldb, l_beta, C, ldc)
-
-   end subroutine pic_zgemm
 
    pure subroutine pic_sgemv(A, x, y, trans_a, alpha, beta)
       !! interface for single precision matrix-vector multiplication
