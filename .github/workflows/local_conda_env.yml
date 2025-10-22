@@ -1,4 +1,4 @@
-name: Multi OS build with GNU using int8
+name: Build PIC using local conda env
 
 on: [push]
 
@@ -36,6 +36,25 @@ jobs:
           conda activate pic
           export FC=${{matrix.compiler}}
           cmake -G "Ninja" -DPIC_ENABLE_MPI=ON -DPIC_ENABLE_OMP=ON -DPIC_ENABLE_BLAS=ON -DPIC_DEFAULT_INT8=ON -DBLAS_LIBRARIES=$CONDA_PREFIX/lib/libopenblas64_.a -B build
+          cmake --build build
+
+      - name: Run unit tests
+        shell: bash -el {0}
+        run: |
+          conda activate pic
+          ctest --test-dir build -V
+
+      - name: Clean build dir
+        shell: bash -el {0}
+        run: |
+          rm -rf build
+
+      - name: Execute cmake and build
+        shell: bash -el {0}
+        run: |
+          conda activate pic
+          export FC=${{matrix.compiler}}
+          cmake -G "Ninja" -DPIC_ENABLE_MPI=ON -DPIC_ENABLE_OMP=ON -DPIC_ENABLE_BLAS=ON -B build
           cmake --build build
 
       - name: Run unit tests
