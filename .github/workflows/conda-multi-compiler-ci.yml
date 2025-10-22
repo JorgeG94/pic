@@ -50,10 +50,6 @@ jobs:
           platform: ${{ matrix.os }}
           extra-packages: ${{ matrix.extra-packages }}
 
-#      this triggers a gfortran 15.1 bug, let's sweep it under the rug
-#      - name: fpm test (debug)
-#        run: fpm test --compiler ${{ matrix.compiler }} --profile debug --verbose
-
       - name: fpm test (release)
         run: |
           fpm test --compiler ${{ matrix.compiler }} --profile release --verbose
@@ -70,8 +66,6 @@ jobs:
         include:
           - os: ubuntu-latest
             extra-packages: "cmake, ninja, openblas"
-          #- os: windows-latest
-          #  extra-packages: "cmake, ninja, openblas"
           - os: macos-latest
             extra-packages: "cmake, ninja, openblas"
         exclude:
@@ -81,8 +75,6 @@ jobs:
             compiler: ifx
           - os: macos-latest
             compiler: nvfortran
-          #- os: windows-latest
-          #  compiler: nvfortran
 
     steps:
       - name: Setup Fortran

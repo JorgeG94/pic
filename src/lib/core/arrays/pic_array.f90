@@ -31,13 +31,13 @@ module pic_array
    !! set_threading sets the threading mode for the array routines
    !! this will set the use_threaded variable to true or false depending on the input
    !! Usage: call set_threading_mode(.true.) or call set_threading_mode(.false.)
-      module procedure set_threading_mode
+      module procedure set_threading_mode_
    end interface
 
    interface get_threading_mode
    !! get_threading_mode returns the current threading mode for the array routines
    !! Usage: mode = get_threading_mode()
-      module procedure get_threading_mode
+      module procedure get_threading_mode_
    end interface get_threading_mode
 
    interface fill
@@ -184,21 +184,21 @@ module pic_array
 
 contains
 
-   subroutine set_threading_mode(threaded)
+   subroutine set_threading_mode_(threaded)
       !! set the threading mode for the array routines, this will set the use_threaded variable
       !! to true or false depending on the input
       !!
       !! Usage: call set_threading(.true.) or call set_threading(.false.)
       logical, intent(in) :: threaded
       use_threaded_default = threaded
-   end subroutine set_threading_mode
+   end subroutine set_threading_mode_
 
-   function get_threading_mode() result(mode)
+   function get_threading_mode_() result(mode)
       !! get the current threading mode for the array routines
       !! Usage: mode = get_threading_mode()
       logical :: mode
       mode = use_threaded_default
-   end function get_threading_mode
+   end function get_threading_mode_
 
    subroutine set_brackets(format_type, open_bracket, close_bracket)
    !! Set brackets based on output format type
