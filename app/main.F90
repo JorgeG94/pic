@@ -6,7 +6,6 @@ program main
    !                   cast_to_object, get_value, add_object
    !use pic_logger, only: global => global_logger, warning_level, verbose_level
    !use testdrive, only: run_testsuite
-   use pic_string_mod, only: pic_string_type
    use pic_types, only: sp, int32
    implicit none
    !use pic_mpi

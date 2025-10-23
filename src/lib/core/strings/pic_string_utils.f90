@@ -65,7 +65,7 @@ module pic_string
     !!
     !! Usage: call set_precision(variable) where variable is default_int
     !!
-      module procedure set_precision
+      module procedure set_precision_internal
    end interface
 
    interface get_precision
@@ -110,7 +110,7 @@ contains
       end if
    end function pad
 
-   subroutine set_precision(precision)
+   subroutine set_precision_internal(precision)
       !! Set the precision for real numbers
       integer(default_int), intent(in) :: precision
       if (precision > 0) then
@@ -119,7 +119,7 @@ contains
          print *, "Warning: Precision must be positive. Using default."
          dp_precision = default_dp_precision
       end if
-   end subroutine set_precision
+   end subroutine set_precision_internal
 
    function get_precision() result(precision)
       !! Get the current precision for real numbers

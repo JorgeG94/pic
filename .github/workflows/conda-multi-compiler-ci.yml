@@ -22,14 +22,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
+        #os: [ubuntu-latest, macos-latest]
         compiler: [gfortran, ifx, flang-new]
         include:
           - os: ubuntu-latest
             extra-packages: "openblas"
           #- os: windows-latest
-          - os: macos-latest
-            extra-packages: "openblas"
+          #- os: macos-latest
+          #  extra-packages: "openblas"
         exclude:
           - os: macos-latest
             compiler: flang-new
@@ -50,13 +51,9 @@ jobs:
           platform: ${{ matrix.os }}
           extra-packages: ${{ matrix.extra-packages }}
 
-#      this triggers a gfortran 15.1 bug, let's sweep it under the rug
-#      - name: fpm test (debug)
-#        run: fpm test --compiler ${{ matrix.compiler }} --profile debug --verbose
-
       - name: fpm test (release)
         run: |
-          fpm test --compiler ${{ matrix.compiler }} --profile release --verbose
+          fpm test --compiler ${{ matrix.compiler }} --profile release --verbose --flag "-DPIC_HAVE_BLAS"
 
   # Run CMake + Ninja build/tests across OS/compiler matrix
   test_cmake:
@@ -70,8 +67,6 @@ jobs:
         include:
           - os: ubuntu-latest
             extra-packages: "cmake, ninja, openblas"
-          #- os: windows-latest
-          #  extra-packages: "cmake, ninja, openblas"
           - os: macos-latest
             extra-packages: "cmake, ninja, openblas"
         exclude:
@@ -81,8 +76,6 @@ jobs:
             compiler: ifx
           - os: macos-latest
             compiler: nvfortran
-          #- os: windows-latest
-          #  compiler: nvfortran
 
     steps:
       - name: Setup Fortran

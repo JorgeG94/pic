@@ -1,3 +1,4 @@
+#ifdef PIC_HAVE_BLAS
 !! this file contains the interfaces for the BLAS routines of all levels
 !! I might consider splitting them up later but alas, I don't have the time now
 !! the idea of this file is to provide something akin to
@@ -847,3 +848,4 @@ contains
       idx = blas_iamax(n, x, incx)
    end function pic_idamax
 end module pic_blas_interfaces
+#endif
