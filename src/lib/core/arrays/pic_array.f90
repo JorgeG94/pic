@@ -138,7 +138,7 @@ module pic_array
    interface pic_print_array
     !! Generic interface for printing arrays of different types
     !!
-    !! Usage: call print_array_v2(array, [optional] format)
+    !! Usage: call print_array(array, [optional] format)
     !! Where format can be: NUMPY, PLAIN, MATHEMATICA (can use lower caps)
     !!
     !! Implemented types are:
