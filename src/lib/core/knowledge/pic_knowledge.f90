@@ -15,7 +15,6 @@ contains
    subroutine get_knowledge()
     !! I print random knowledge
       type(string_type), allocatable :: knowledge(:)
-      type(string_type) :: tmp
       integer(int32) :: n, idx
       real(dp) :: r
       allocate (knowledge(8))
