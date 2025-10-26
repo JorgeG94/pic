@@ -10,7 +10,6 @@
 !> to a string type. Generally, the string type behaves similar to a deferred
 !> length character in most regards but adds memory access safety.
 !>
-!> The specification of this module is available [here](../page/specs/stdlib_string_type.html).
 module pic_stdlib_string_type
    use pic_stdlib_ascii, only: to_lower_ => to_lower, to_upper_ => to_upper, &
       & to_title_ => to_title, to_sentence_ => to_sentence, reverse_ => reverse
@@ -26,7 +25,9 @@ module pic_stdlib_string_type
    public :: assignment(=)
    public :: operator(>), operator(>=), operator(<), operator(<=)
    public :: operator(==), operator(/=), operator(//)
+#ifndef __NVCOMPILER_LLVM__
    public :: write (formatted), write (unformatted)
+#endif
    public :: read (formatted), read (unformatted)
 
    integer, parameter :: long = selected_int_kind(18)
@@ -219,7 +220,6 @@ module pic_stdlib_string_type
    !> Version: experimental
    !>
    !> Moves the allocated character scalar from 'from' to 'to'
-   !> [Specifications](../page/specs/stdlib_string_type.html#move)
    interface move
       module procedure :: move_string_string
       module procedure :: move_string_char
@@ -352,6 +352,7 @@ module pic_stdlib_string_type
       module procedure :: concat_char_string
    end interface operator(//)
 
+#ifndef __NVCOMPILER_LLVM__
    !> Write the character sequence hold by the string to a connected formatted
    !> unit.
    interface write (formatted)
@@ -373,6 +374,7 @@ end interface
 interface read (unformatted)
 module procedure :: read_unformatted
 end interface
+#endif
 
 contains
 
@@ -1084,6 +1086,7 @@ elemental function concat_char_string(lhs, rhs) result(string)
 
 end function concat_char_string
 
+#ifndef __NVCOMPILER_LLVM__
 !> Write the character sequence hold by the string to a connected unformatted
 !> unit.
 subroutine write_unformatted(string, unit, iostat, iomsg)
@@ -1192,6 +1195,7 @@ contains
    end subroutine read_line
 
 end subroutine read_formatted
+#endif
 
 !> Do nothing but mark an unused dummy argument as such to acknowledge compile
 !> time warning like:

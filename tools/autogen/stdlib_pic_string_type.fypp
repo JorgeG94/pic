@@ -28,7 +28,9 @@ module pic_stdlib_string_type
     public :: assignment(=)
     public :: operator(>), operator(>=), operator(<), operator(<=)
     public :: operator(==), operator(/=), operator(//)
+#ifndef __NVCOMPILER_LLVM__
     public :: write(formatted), write(unformatted)
+#endif
     public :: read(formatted), read(unformatted)
 
 
@@ -354,6 +356,7 @@ module pic_stdlib_string_type
         module procedure :: concat_char_string
     end interface operator(//)
 
+#ifndef __NVCOMPILER_LLVM__
     !> Write the character sequence hold by the string to a connected formatted
     !> unit.
     interface write(formatted)
@@ -375,7 +378,7 @@ module pic_stdlib_string_type
     interface read(unformatted)
         module procedure :: read_unformatted
     end interface
-
+#endif
 
 contains
 
@@ -1115,6 +1118,7 @@ contains
     end function concat_char_string
 
 
+#ifndef __NVCOMPILER_LLVM__
     !> Write the character sequence hold by the string to a connected unformatted
     !> unit.
     subroutine write_unformatted(string, unit, iostat, iomsg)
@@ -1224,7 +1228,7 @@ contains
         end subroutine read_line
 
     end subroutine read_formatted
-
+#endif
 
     !> Do nothing but mark an unused dummy argument as such to acknowledge compile
     !> time warning like:
