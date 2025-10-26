@@ -1,6 +1,6 @@
 program main
    use pic, only: pic_print_banner
-   use pic_knowledge, only: get_knowledge
+   !use pic_knowledge, only: get_knowledge
    !use pic_stdlib_string_type, only: string_type
 
    !use jonquil, only: json_object, json_dump, json_error, json_array, &
@@ -26,7 +26,7 @@ program main
 
    call pic_print_banner()
 
-   call get_knowledge()
+   !call get_knowledge()
 
    !call comm%init()
 
