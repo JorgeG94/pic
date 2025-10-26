@@ -1,6 +1,7 @@
 program main
    use pic, only: pic_print_banner
    use pic_knowledge, only: get_knowledge
+   !use pic_stdlib_string_type, only: string_type
 
    !use jonquil, only: json_object, json_dump, json_error, json_array, &
    !                   set_value, add_array, json_serialize, json_value, json_loads, &
@@ -9,6 +10,7 @@ program main
    !use testdrive, only: run_testsuite
    use pic_types, only: sp, int32
    implicit none
+   !type(string_type) :: my_string
    !use pic_mpi
    !use pic_timer
    !implicit none

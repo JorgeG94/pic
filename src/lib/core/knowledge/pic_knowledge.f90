@@ -3,7 +3,7 @@ module pic_knowledge
   !! a simple module that collects phrases and prints them out randomly, like fortune
    use pic_types, only: int32, dp
    use pic_logger, only: logger => global_logger
-   use pic_string_mod, only: pic_string_type
+   use pic_stdlib_string_type, only: string_type, assignment(=), char
    implicit none
 
    private
@@ -14,19 +14,20 @@ contains
 
    subroutine get_knowledge()
     !! I print random knowledge
-      type(pic_string_type), allocatable :: knowledge(:)
+      type(string_type), allocatable :: knowledge(:)
+      type(string_type) :: tmp
       integer(int32) :: n, idx
       real(dp) :: r
       allocate (knowledge(8))
 
-      call knowledge(1)%assign("The long line! (CS,2023)")
-      call knowledge(2)%assign("Maybe I have the Fortran brain-rot in Dijkstra's words (IP,2025)")
-      call knowledge(3)%assign("Mojo, yes, do I approve it, no. (IP, 2025)")
-      call knowledge(4)%assign("No, rice does not contain gluten (EG, dawn of time)")
-      call knowledge(5)%assign("Yes, potatoes are gluten free (EG, dawn of time)")
-      call knowledge(6)%assign("Stonks (MS, 2019)")
-      call knowledge(7)%assign("Praise the machine god")
-      call knowledge(8)%assign("Maybe I WILL use a more efficient language: Fortran (Jorge, to CS)")
+      knowledge(1) = "The long line! (CS,2023)"
+      knowledge(2) = "Maybe I have the Fortran brain-rot in Dijkstra's words (IP,2025)"
+      knowledge(3) = "Mojo, yes, do I approve it, no. (IP, 2025)"
+      knowledge(4) = "No, rice does not contain gluten (EG, dawn of time)"
+      knowledge(5) = "Yes, potatoes are gluten free (EG, dawn of time)"
+      knowledge(6) = "Stonks (MS, 2019)"
+      knowledge(7) = "Praise the machine god"
+      knowledge(8) = "Maybe I WILL use a more efficient language: Fortran (Jorge, to CS)"
 
       n = size(knowledge)
 
@@ -34,7 +35,7 @@ contains
       idx = int(r*n) + 1
       if (idx > n) idx = n
 
-      call logger%knowledge(trim(knowledge(idx)%to_char()))
+      call logger%knowledge(trim(char(knowledge(idx))))
 
    end subroutine get_knowledge
 

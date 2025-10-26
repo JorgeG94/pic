@@ -7,6 +7,7 @@ module pic_string_mod
    private
    public :: pic_string_type
    public :: operator(==), operator(/=)
+   public :: assignment(=)
 
    type :: pic_string_type
       !! pic_string_type holds a dynamic string, intends to be similar to std::string in C++
@@ -55,6 +56,10 @@ module pic_string_mod
       module procedure pic_string_ne_char
       module procedure char_ne_pic_string
    end interface
+
+   interface assignment(=)
+      module procedure :: assign_string_char
+   end interface assignment(=)
 
 contains
 
@@ -157,7 +162,7 @@ contains
       if (self%len > 0) out = self%buf(1:self%len)
    end function pic_string_to_char
 
-   !----------------- trimming -----------------
+!----------------- trimming -----------------
    subroutine pic_string_ltrim(self)
       !! trim leading whitespace characters
       class(pic_string_type), intent(inout) :: self
@@ -212,7 +217,7 @@ contains
       call self%ltrim()
    end subroutine pic_string_trim
 
-   !----------------- queries -----------------
+!----------------- queries -----------------
    pure logical function pic_string_starts_with(self, pat) result(ok)
       !! return true if the string starts with the given pattern
       class(pic_string_type), intent(in) :: self
@@ -231,7 +236,7 @@ contains
       ok = (self%len >= m .and. (m == 0 .or. self%buf(self%len - m + 1:self%len) == pat))
    end function pic_string_ends_with
 
-   !----------------- search & slicing -----------------
+!----------------- search & slicing -----------------
    pure integer(int64) function pic_string_find(self, pat, from) result(pos)
       !! find the first occurrence of pattern 'pat' in the string
       use pic_optional_value, only: pic_optional
@@ -297,7 +302,7 @@ contains
       out%len = n2
    end function pic_string_substr
 
-   !----------------- equality operators -----------------
+!----------------- equality operators -----------------
    pure logical function pic_string_eq_string(a, b) result(ok)
       !! return true if the two strings are equal
       class(pic_string_type), intent(in) :: a
@@ -394,5 +399,11 @@ contains
       end if
       self%buf(i:i) = ch
    end subroutine pic_string_set
+
+   subroutine assign_string_char(lhs, rhs)
+      type(pic_string_type), intent(inout) :: lhs
+      character(len=*), intent(in) :: rhs
+      lhs%buf = rhs
+   end subroutine assign_string_char
 
 end module pic_string_mod

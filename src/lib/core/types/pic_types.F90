@@ -37,4 +37,6 @@ module pic_types
    integer, parameter, public :: int_index = int64  !! Integer kind for indexing
    integer, parameter, public :: int_index_low = int32  !! Integer kind for indexing using less than `huge(1_int32)` values
 
+   integer, parameter, public :: fbool = kind(.true.)
+
 end module pic_types
