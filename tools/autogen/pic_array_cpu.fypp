@@ -18,7 +18,7 @@ module pic_array
    implicit none
    private
 
-   public :: fill, copy
+   public :: pic_fill, pic_copy
    public :: pic_transpose, pic_sum
    public :: pic_scramble_array, pic_print_array
    public :: is_sorted
@@ -39,22 +39,22 @@ module pic_array
    !! set_threading sets the threading mode for the array routines
    !! this will set the use_threaded variable to true or false depending on the input
    !! Usage: call set_threading_mode(.true.) or call set_threading_mode(.false.)
-      module procedure set_threading_mode
+      module procedure set_threading_mode_
    end interface
 
    interface get_threading_mode
    !! get_threading_mode returns the current threading mode for the array routines
    !! Usage: mode = get_threading_mode()
-      module procedure get_threading_mode
+      module procedure get_threading_mode_
    end interface get_threading_mode
 
-   interface fill
+   interface pic_fill
   !! fill provides a generic interface to assing a value
   !! alpha of types (int32, int64, sp, dp) as defined in pic_types.F90
   !! The inteface supports filling 1d and 2d arrays of the specified
   !! variables
   !!
-  !! Usage: call fill(array, value, [optional] threaded)
+  !! Usage: call pic_fill(array, value, [optional] threaded)
   !!
   !! This subroutine is threaded for performance purposes if threaded is set to .true.
   !!
@@ -67,12 +67,12 @@ module pic_array
       #:endfor
    end interface
 
-   interface copy
+   interface pic_copy
   !! copy provides a blas-less implementation of xcopy where x is (i,s,d) icopy, scopy, dcopy
   !! if you built pic with BLAS use the copy interface provided there, I will not beat BLAS
   !! copy is implemented for (int32, int64, sp, dp) for 1 and 2d arrays of the same types
   !!
-  !! Usage: call copy(destination, source, [optional] threaded)
+  !! Usage: call pic_copy(destination, source, [optional] threaded)
   !!
   !! This subroutine is threaded for performance purposes if threaded is set to .true.
   !!
@@ -138,7 +138,7 @@ module pic_array
    interface pic_print_array
     !! Generic interface for printing arrays of different types
     !!
-    !! Usage: call print_array_v2(array, [optional] format)
+    !! Usage: call pic_print_array(array, [optional] format)
     !! Where format can be: NUMPY, PLAIN, MATHEMATICA (can use lower caps)
     !!
     !! Implemented types are:
@@ -179,21 +179,21 @@ module pic_array
 
    contains
 
-   subroutine set_threading_mode(threaded)
+   subroutine set_threading_mode_(threaded)
       !! set the threading mode for the array routines, this will set the use_threaded variable
       !! to true or false depending on the input
       !!
       !! Usage: call set_threading(.true.) or call set_threading(.false.)
       logical, intent(in) :: threaded
       use_threaded_default = threaded
-   end subroutine set_threading_mode
+   end subroutine set_threading_mode_
 
-   function get_threading_mode() result(mode)
+   function get_threading_mode_() result(mode)
       !! get the current threading mode for the array routines
       !! Usage: mode = get_threading_mode()
       logical :: mode
       mode = use_threaded_default
-   end function get_threading_mode
+   end function get_threading_mode_
 
    subroutine set_brackets(format_type, open_bracket, close_bracket)
    !! Set brackets based on output format type

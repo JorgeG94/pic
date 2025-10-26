@@ -10,7 +10,7 @@ module pic_array
    implicit none
    private
 
-   public :: fill, copy
+   public :: pic_fill, pic_copy
    public :: pic_transpose, pic_sum
    public :: pic_scramble_array, pic_print_array
    public :: is_sorted
@@ -40,13 +40,13 @@ module pic_array
       module procedure get_threading_mode_
    end interface get_threading_mode
 
-   interface fill
+   interface pic_fill
   !! fill provides a generic interface to assing a value
   !! alpha of types (int32, int64, sp, dp) as defined in pic_types.F90
   !! The inteface supports filling 1d and 2d arrays of the specified
   !! variables
   !!
-  !! Usage: call fill(array, value, [optional] threaded)
+  !! Usage: call pic_fill(array, value, [optional] threaded)
   !!
   !! This subroutine is threaded for performance purposes if threaded is set to .true.
   !!
@@ -61,12 +61,12 @@ module pic_array
       module procedure fill_matrix_dp
    end interface
 
-   interface copy
+   interface pic_copy
   !! copy provides a blas-less implementation of xcopy where x is (i,s,d) icopy, scopy, dcopy
   !! if you built pic with BLAS use the copy interface provided there, I will not beat BLAS
   !! copy is implemented for (int32, int64, sp, dp) for 1 and 2d arrays of the same types
   !!
-  !! Usage: call copy(destination, source, [optional] threaded)
+  !! Usage: call pic_copy(destination, source, [optional] threaded)
   !!
   !! This subroutine is threaded for performance purposes if threaded is set to .true.
   !!
@@ -138,7 +138,7 @@ module pic_array
    interface pic_print_array
     !! Generic interface for printing arrays of different types
     !!
-    !! Usage: call print_array(array, [optional] format)
+    !! Usage: call pic_print_array(array, [optional] format)
     !! Where format can be: NUMPY, PLAIN, MATHEMATICA (can use lower caps)
     !!
     !! Implemented types are:
