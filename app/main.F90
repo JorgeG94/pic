@@ -1,5 +1,6 @@
 program main
    use pic, only: pic_print_banner
+   use pic_knowledge, only: get_knowledge
 
    !use jonquil, only: json_object, json_dump, json_error, json_array, &
    !                   set_value, add_array, json_serialize, json_value, json_loads, &
@@ -23,12 +24,8 @@ program main
 
    call pic_print_banner()
 
-   allocate (A(5, 5))
-   do i = 1, 5
-      do j = 1, 5
-         A(i, j) = real(i + j, sp)
-      end do
-   end do
+   call get_knowledge()
+
    !call comm%init()
 
    !if (comm%m_rank == 0) then
