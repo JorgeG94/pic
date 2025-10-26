@@ -12,3 +12,5 @@ cp stdlib_pic_hash_32bit_fnv.f90 ../../src/lib/core/hash
 
 # cleanup
 rm *.f90
+
+pre-commit run --all

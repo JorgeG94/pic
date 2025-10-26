@@ -1,8 +1,8 @@
 module test_pic_array
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_types, only: sp, dp, int32, int64, default_int
-   use pic_array, only: fill, set_threading_mode, get_threading_mode, &
-                        pic_transpose, pic_sum, copy, is_sorted, ASCENDING, &
+   use pic_array, only: pic_fill, set_threading_mode, get_threading_mode, &
+                        pic_transpose, pic_sum, pic_copy, is_sorted, ASCENDING, &
                         DESCENDING, pic_scramble_array
    use pic_test_helpers, only: is_equal
    implicit none
@@ -125,7 +125,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (vector(n))
-      call fill(vector, alpha)
+      call pic_fill(vector, alpha)
 
       call check(error, all(vector == alpha), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -139,7 +139,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (vector(n))
-      call fill(vector, alpha)
+      call pic_fill(vector, alpha)
 
       call check(error, all(vector == alpha), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -153,7 +153,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (vector(n))
-      call fill(vector, alpha)
+      call pic_fill(vector, alpha)
 
       call check(error, all(is_equal(vector, alpha)), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -167,7 +167,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (vector(n))
-      call fill(vector, alpha)
+      call pic_fill(vector, alpha)
 
       call check(error, all(is_equal(vector, alpha)), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -181,7 +181,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha)
+      call pic_fill(matrix, alpha)
 
       call check(error, all(matrix == alpha), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -195,7 +195,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha)
+      call pic_fill(matrix, alpha)
 
       call check(error, all(matrix == alpha), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -209,7 +209,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha)
+      call pic_fill(matrix, alpha)
 
       call check(error, all(is_equal(matrix, alpha)), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -223,7 +223,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha)
+      call pic_fill(matrix, alpha)
 
       call check(error, all(is_equal(matrix, alpha)), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -237,7 +237,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (vector(n))
-      call fill(vector, alpha, .true.)
+      call pic_fill(vector, alpha, .true.)
 
       call check(error, all(vector == alpha), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -251,7 +251,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (vector(n))
-      call fill(vector, alpha, .true.)
+      call pic_fill(vector, alpha, .true.)
 
       call check(error, all(vector == alpha), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -265,7 +265,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (vector(n))
-      call fill(vector, alpha, .true.)
+      call pic_fill(vector, alpha, .true.)
 
       call check(error, all(is_equal(vector, alpha)), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -279,7 +279,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (vector(n))
-      call fill(vector, alpha, .true.)
+      call pic_fill(vector, alpha, .true.)
 
       call check(error, all(is_equal(vector, alpha)), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -293,7 +293,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha, .true.)
+      call pic_fill(matrix, alpha, .true.)
 
       call check(error, all(matrix == alpha), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -307,7 +307,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha, .true.)
+      call pic_fill(matrix, alpha, .true.)
 
       call check(error, all(matrix == alpha), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -321,7 +321,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha, .true.)
+      call pic_fill(matrix, alpha, .true.)
 
       call check(error, all(is_equal(matrix, alpha)), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -335,7 +335,7 @@ contains
       integer(default_int), parameter :: n = 10
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha, .true.)
+      call pic_fill(matrix, alpha, .true.)
 
       call check(error, all(is_equal(matrix, alpha)), .true., "fill should set all elements to the value of alpha")
       if (allocated(error)) return
@@ -351,8 +351,8 @@ contains
       allocate (vector(n))
       allocate (vector_copy(n))
 
-      call fill(vector, alpha)
-      call copy(vector_copy, vector)
+      call pic_fill(vector, alpha)
+      call pic_copy(vector_copy, vector)
 
       call check(error, all(vector_copy == alpha), .true., "copy should copy all elements from vector to vector_copy")
       if (allocated(error)) return
@@ -368,8 +368,8 @@ contains
       allocate (vector(n))
       allocate (vector_copy(n))
 
-      call fill(vector, alpha)
-      call copy(vector_copy, vector)
+      call pic_fill(vector, alpha)
+      call pic_copy(vector_copy, vector)
 
       call check(error, all(vector_copy == alpha), .true., "copy should copy all elements from vector to vector_copy")
       if (allocated(error)) return
@@ -385,8 +385,8 @@ contains
       allocate (vector(n))
       allocate (vector_copy(n))
 
-      call fill(vector, alpha)
-      call copy(vector_copy, vector)
+      call pic_fill(vector, alpha)
+      call pic_copy(vector_copy, vector)
 
       call check(error, all(is_equal(vector_copy, alpha)), .true., "copy should copy all elements from vector to vector_copy")
       if (allocated(error)) return
@@ -402,8 +402,8 @@ contains
       allocate (vector(n))
       allocate (vector_copy(n))
 
-      call fill(vector, alpha)
-      call copy(vector_copy, vector)
+      call pic_fill(vector, alpha)
+      call pic_copy(vector_copy, vector)
 
       call check(error, all(is_equal(vector_copy, alpha)), .true., "copy should copy all elements from vector to vector_copy")
       if (allocated(error)) return
@@ -419,8 +419,8 @@ contains
       allocate (matrix(n, n))
       allocate (matrix_copy(n, n))
 
-      call fill(matrix, alpha)
-      call copy(matrix_copy, matrix)
+      call pic_fill(matrix, alpha)
+      call pic_copy(matrix_copy, matrix)
 
       call check(error, all(matrix_copy == alpha), .true., "copy should copy all elements from matrix to matrix_copy")
       if (allocated(error)) return
@@ -436,8 +436,8 @@ contains
       allocate (matrix(n, n))
       allocate (matrix_copy(n, n))
 
-      call fill(matrix, alpha)
-      call copy(matrix_copy, matrix)
+      call pic_fill(matrix, alpha)
+      call pic_copy(matrix_copy, matrix)
 
       call check(error, all(matrix_copy == alpha), .true., "copy should copy all elements from matrix to matrix_copy")
       if (allocated(error)) return
@@ -453,8 +453,8 @@ contains
       allocate (matrix(n, n))
       allocate (matrix_copy(n, n))
 
-      call fill(matrix, alpha)
-      call copy(matrix_copy, matrix)
+      call pic_fill(matrix, alpha)
+      call pic_copy(matrix_copy, matrix)
 
       call check(error, all(is_equal(matrix_copy, alpha)), .true., "copy should copy all elements from matrix to matrix_copy")
       if (allocated(error)) return
@@ -470,8 +470,8 @@ contains
       allocate (matrix(n, n))
       allocate (matrix_copy(n, n))
 
-      call fill(matrix, alpha)
-      call copy(matrix_copy, matrix)
+      call pic_fill(matrix, alpha)
+      call pic_copy(matrix_copy, matrix)
 
       call check(error, all(is_equal(matrix_copy, alpha)), .true., "copy should copy all elements from matrix to matrix_copy")
       if (allocated(error)) return
@@ -487,8 +487,8 @@ contains
       allocate (vector(n))
       allocate (vector_copy(n))
 
-      call fill(vector, alpha)
-      call copy(vector_copy, vector, .true.)
+      call pic_fill(vector, alpha)
+      call pic_copy(vector_copy, vector, .true.)
 
       call check(error, all(vector_copy == alpha), .true., "copy should copy all elements from vector to vector_copy")
       if (allocated(error)) return
@@ -504,8 +504,8 @@ contains
       allocate (vector(n))
       allocate (vector_copy(n))
 
-      call fill(vector, alpha)
-      call copy(vector_copy, vector, .true.)
+      call pic_fill(vector, alpha)
+      call pic_copy(vector_copy, vector, .true.)
 
       call check(error, all(vector_copy == alpha), .true., "copy should copy all elements from vector to vector_copy")
       if (allocated(error)) return
@@ -521,8 +521,8 @@ contains
       allocate (vector(n))
       allocate (vector_copy(n))
 
-      call fill(vector, alpha)
-      call copy(vector_copy, vector, .true.)
+      call pic_fill(vector, alpha)
+      call pic_copy(vector_copy, vector, .true.)
 
       call check(error, all(is_equal(vector_copy, alpha)), .true., "copy should copy all elements from vector to vector_copy")
       if (allocated(error)) return
@@ -538,8 +538,8 @@ contains
       allocate (vector(n))
       allocate (vector_copy(n))
 
-      call fill(vector, alpha)
-      call copy(vector_copy, vector, .true.)
+      call pic_fill(vector, alpha)
+      call pic_copy(vector_copy, vector, .true.)
 
       call check(error, all(is_equal(vector_copy, alpha)), .true., "copy should copy all elements from vector to vector_copy")
       if (allocated(error)) return
@@ -555,8 +555,8 @@ contains
       allocate (matrix(n, n))
       allocate (matrix_copy(n, n))
 
-      call fill(matrix, alpha)
-      call copy(matrix_copy, matrix, .true.)
+      call pic_fill(matrix, alpha)
+      call pic_copy(matrix_copy, matrix, .true.)
 
       call check(error, all(matrix_copy == alpha), .true., "copy should copy all elements from matrix to matrix_copy")
       if (allocated(error)) return
@@ -572,8 +572,8 @@ contains
       allocate (matrix(n, n))
       allocate (matrix_copy(n, n))
 
-      call fill(matrix, alpha)
-      call copy(matrix_copy, matrix, .true.)
+      call pic_fill(matrix, alpha)
+      call pic_copy(matrix_copy, matrix, .true.)
 
       call check(error, all(matrix_copy == alpha), .true., "copy should copy all elements from matrix to matrix_copy")
       if (allocated(error)) return
@@ -589,8 +589,8 @@ contains
       allocate (matrix(n, n))
       allocate (matrix_copy(n, n))
 
-      call fill(matrix, alpha)
-      call copy(matrix_copy, matrix, .true.)
+      call pic_fill(matrix, alpha)
+      call pic_copy(matrix_copy, matrix, .true.)
 
       call check(error, all(is_equal(matrix_copy, alpha)), .true., "copy should copy all elements from matrix to matrix_copy")
       if (allocated(error)) return
@@ -606,8 +606,8 @@ contains
       allocate (matrix(n, n))
       allocate (matrix_copy(n, n))
 
-      call fill(matrix, alpha)
-      call copy(matrix_copy, matrix, .true.)
+      call pic_fill(matrix, alpha)
+      call pic_copy(matrix_copy, matrix, .true.)
 
       call check(error, all(is_equal(matrix_copy, alpha)), .true., "copy should copy all elements from matrix to matrix_copy")
       if (allocated(error)) return
@@ -782,7 +782,7 @@ contains
       integer(int32) :: sum
 
       allocate (vector(n))
-      call fill(vector, alpha)
+      call pic_fill(vector, alpha)
 
       sum = pic_sum(vector)
 
@@ -799,7 +799,7 @@ contains
       integer(int64) :: sum
 
       allocate (vector(n))
-      call fill(vector, alpha)
+      call pic_fill(vector, alpha)
 
       sum = pic_sum(vector)
 
@@ -816,7 +816,7 @@ contains
       real(sp) :: sum
 
       allocate (vector(n))
-      call fill(vector, alpha)
+      call pic_fill(vector, alpha)
 
       sum = pic_sum(vector)
 
@@ -833,7 +833,7 @@ contains
       real(dp) :: sum
 
       allocate (vector(n))
-      call fill(vector, alpha)
+      call pic_fill(vector, alpha)
 
       sum = pic_sum(vector)
 
@@ -850,7 +850,7 @@ contains
       integer(int32) :: sum
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha)
+      call pic_fill(matrix, alpha)
 
       sum = pic_sum(matrix)
 
@@ -867,7 +867,7 @@ contains
       integer(int64) :: sum
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha)
+      call pic_fill(matrix, alpha)
 
       sum = pic_sum(matrix)
 
@@ -884,7 +884,7 @@ contains
       real(sp) :: sum
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha)
+      call pic_fill(matrix, alpha)
 
       sum = pic_sum(matrix)
 
@@ -901,7 +901,7 @@ contains
       real(dp) :: sum
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha)
+      call pic_fill(matrix, alpha)
 
       sum = pic_sum(matrix)
 
@@ -918,7 +918,7 @@ contains
       integer(int32) :: sum
 
       allocate (vector(n))
-      call fill(vector, alpha)
+      call pic_fill(vector, alpha)
 
       sum = pic_sum(vector, .true.)
 
@@ -935,7 +935,7 @@ contains
       integer(int64) :: sum
 
       allocate (vector(n))
-      call fill(vector, alpha)
+      call pic_fill(vector, alpha)
 
       sum = pic_sum(vector, .true.)
 
@@ -952,7 +952,7 @@ contains
       real(sp) :: sum
 
       allocate (vector(n))
-      call fill(vector, alpha)
+      call pic_fill(vector, alpha)
 
       sum = pic_sum(vector, .true.)
 
@@ -969,7 +969,7 @@ contains
       real(dp) :: sum
 
       allocate (vector(n))
-      call fill(vector, alpha)
+      call pic_fill(vector, alpha)
 
       sum = pic_sum(vector, .true.)
 
@@ -986,7 +986,7 @@ contains
       integer(int32) :: sum
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha)
+      call pic_fill(matrix, alpha)
 
       sum = pic_sum(matrix, .true.)
 
@@ -1003,7 +1003,7 @@ contains
       integer(int64) :: sum
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha)
+      call pic_fill(matrix, alpha)
 
       sum = pic_sum(matrix, .true.)
 
@@ -1020,7 +1020,7 @@ contains
       real(sp) :: sum
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha)
+      call pic_fill(matrix, alpha)
 
       sum = pic_sum(matrix, .true.)
 
@@ -1037,7 +1037,7 @@ contains
       real(dp) :: sum
 
       allocate (matrix(n, n))
-      call fill(matrix, alpha)
+      call pic_fill(matrix, alpha)
 
       sum = pic_sum(matrix, .true.)
 
