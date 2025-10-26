@@ -154,10 +154,10 @@
       </a>
       <div id="inters-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../module/pic_array.html#interface-copy">copy</a>
-            <a class="list-group-item" href="../module/pic_array.html#interface-fill">fill</a>
             <a class="list-group-item" href="../module/pic_array.html#interface-get_threading_mode">get_threading_mode</a>
             <a class="list-group-item" href="../module/pic_array.html#interface-is_sorted">is_sorted</a>
+            <a class="list-group-item" href="../module/pic_array.html#interface-pic_copy">pic_copy</a>
+            <a class="list-group-item" href="../module/pic_array.html#interface-pic_fill">pic_fill</a>
             <a class="list-group-item" href="../module/pic_array.html#interface-pic_print_array">pic_print_array</a>
             <a class="list-group-item" href="../module/pic_array.html#interface-pic_scramble_array">pic_scramble_array</a>
             <a class="list-group-item" href="../module/pic_array.html#interface-pic_sum">pic_sum</a>
@@ -270,8 +270,8 @@ and edit the generator.</p>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='pic_string.html'>pic_string</a></li>
                   <li class="list-inline-item"><a href='pic_optional_value.html'>pic_optional_value</a></li>
+                  <li class="list-inline-item"><a href='pic_string.html'>pic_string</a></li>
                   <li class="list-inline-item"><a href='pic_types.html'>pic_types</a></li>
               </ul>
             </li>
@@ -590,15 +590,358 @@ parameter
           <h2>Interfaces</h2>
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-copy"></span>
-      <h3>public        interface <a href='../interface/copy.html'>copy</a> 
+      <span class="anchor" id="interface-get_threading_mode"></span>
+      <h3>public        interface <a href='../interface/get_threading_mode.html'>get_threading_mode</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>get_threading_mode returns the current threading mode for the array routines
+Usage: mode = get_threading_mode()</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/get_threading_mode_.html'>get_threading_mode_</a>() result(mode)  
+
+    </h3>
+    
+  <p>get the current threading mode for the array routines
+Usage: mode = get_threading_mode()</p>
+
+  <h4>Arguments</h4>
+    <em>None</em>
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-is_sorted"></span>
+      <h3>public        interface <a href='../interface/is_sorted.html'>is_sorted</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>is_sorted provides a simple way to checking if a 1d array is sorted
+it is implemented for int32, int64, sp, and dp datatypes. The default
+is to check if an array is sorted in ascending fashion.</p>
+<p>Usage: result = is_sorted(array, [optional] ASCENDING/DESCENDING)</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure function <a href='../proc/is_sorted_int32.html'>is_sorted_int32</a>(array, order) result(sorted)  
+
+    </h3>
+    
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-array~227"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>array</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-order"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>order</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure function <a href='../proc/is_sorted_int64.html'>is_sorted_int64</a>(array, order) result(sorted)  
+
+    </h3>
+    
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-array~228"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>array</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-order~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>order</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure function <a href='../proc/is_sorted_sp.html'>is_sorted_sp</a>(array, order) result(sorted)  
+
+    </h3>
+    
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-array~229"></span>
+              real(kind=sp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>array</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-order~3"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>order</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure function <a href='../proc/is_sorted_dp.html'>is_sorted_dp</a>(array, order) result(sorted)  
+
+    </h3>
+    
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-array~230"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>array</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-order~4"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>order</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure function <a href='../proc/is_sorted_char.html'>is_sorted_char</a>(array, order) result(sorted)  
+
+    </h3>
+    
+  
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-array~231"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>array</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-order~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>order</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-pic_copy"></span>
+      <h3>public        interface <a href='../interface/pic_copy.html'>pic_copy</a> 
       </h3>
     </div>
       <div class="card-body">
         <p>copy provides a blas-less implementation of xcopy where x is (i,s,d) icopy, scopy, dcopy
 if you built pic with BLAS use the copy interface provided there, I will not beat BLAS
 copy is implemented for (int32, int64, sp, dp) for 1 and 2d arrays of the same types</p>
-<p>Usage: call copy(destination, source, [optional] threaded)</p>
+<p>Usage: call pic_copy(destination, source, [optional] threaded)</p>
 <p>This subroutine is threaded for performance purposes if threaded is set to .true.</p>
 <div class="alert alert-info">
 <p class="alert-title h4">Note</p>
@@ -1163,8 +1506,8 @@ copy is implemented for (int32, int64, sp, dp) for 1 and 2d arrays of the same t
 
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-fill"></span>
-      <h3>public        interface <a href='../interface/fill.html'>fill</a> 
+      <span class="anchor" id="interface-pic_fill"></span>
+      <h3>public        interface <a href='../interface/pic_fill.html'>pic_fill</a> 
       </h3>
     </div>
       <div class="card-body">
@@ -1172,7 +1515,7 @@ copy is implemented for (int32, int64, sp, dp) for 1 and 2d arrays of the same t
 alpha of types (int32, int64, sp, dp) as defined in pic_types.F90
 The inteface supports filling 1d and 2d arrays of the specified
 variables</p>
-<p>Usage: call fill(array, value, [optional] threaded)</p>
+<p>Usage: call pic_fill(array, value, [optional] threaded)</p>
 <p>This subroutine is threaded for performance purposes if threaded is set to .true.</p>
 <div class="alert alert-info">
 <p class="alert-title h4">Note</p>
@@ -1737,356 +2080,13 @@ variables</p>
 
               <div class="card">
     <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-get_threading_mode"></span>
-      <h3>public        interface <a href='../interface/get_threading_mode.html'>get_threading_mode</a> 
-      </h3>
-    </div>
-      <div class="card-body">
-        <p>get_threading_mode returns the current threading mode for the array routines
-Usage: mode = get_threading_mode()</p>
-      </div>
-    <ul class="list-group">
-          <li class="list-group-item">
-                <h3>
-    private  function <a href='../proc/get_threading_mode_.html'>get_threading_mode_</a>() result(mode)  
-
-    </h3>
-    
-  <p>get the current threading mode for the array routines
-Usage: mode = get_threading_mode()</p>
-
-  <h4>Arguments</h4>
-    <em>None</em>
-    <h4>
-    Return Value
-    <small>logical</small>
-    </h4>
-    
-
-          </li>
-    </ul>
-  </div>
-
-              <div class="card">
-    <div class="card-header bg-light codesum">
-      <span class="anchor" id="interface-is_sorted"></span>
-      <h3>public        interface <a href='../interface/is_sorted.html'>is_sorted</a> 
-      </h3>
-    </div>
-      <div class="card-body">
-        <p>is_sorted provides a simple way to checking if a 1d array is sorted
-it is implemented for int32, int64, sp, and dp datatypes. The default
-is to check if an array is sorted in ascending fashion.</p>
-<p>Usage: result = is_sorted(array, [optional] ASCENDING/DESCENDING)</p>
-      </div>
-    <ul class="list-group">
-          <li class="list-group-item">
-                <h3>
-    private pure function <a href='../proc/is_sorted_int32.html'>is_sorted_int32</a>(array, order) result(sorted)  
-
-    </h3>
-    
-  
-
-  <h4>Arguments</h4>
-      <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
-        <th scope="col"></th>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-array~227"></span>
-              integer(kind=int32),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>array</strong>(:)</td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-order"></span>
-              integer(kind=default_int),
-            </td>
-<td>intent(in),</td>
-              <td>optional</td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>order</strong></td>
-            <td>
-
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-    <h4>
-    Return Value
-    <small>logical</small>
-    </h4>
-    
-
-          </li>
-          <li class="list-group-item">
-                <h3>
-    private pure function <a href='../proc/is_sorted_int64.html'>is_sorted_int64</a>(array, order) result(sorted)  
-
-    </h3>
-    
-  
-
-  <h4>Arguments</h4>
-      <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
-        <th scope="col"></th>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-array~228"></span>
-              integer(kind=int64),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>array</strong>(:)</td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-order~2"></span>
-              integer(kind=default_int),
-            </td>
-<td>intent(in),</td>
-              <td>optional</td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>order</strong></td>
-            <td>
-
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-    <h4>
-    Return Value
-    <small>logical</small>
-    </h4>
-    
-
-          </li>
-          <li class="list-group-item">
-                <h3>
-    private pure function <a href='../proc/is_sorted_sp.html'>is_sorted_sp</a>(array, order) result(sorted)  
-
-    </h3>
-    
-  
-
-  <h4>Arguments</h4>
-      <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
-        <th scope="col"></th>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-array~229"></span>
-              real(kind=sp),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>array</strong>(:)</td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-order~3"></span>
-              integer(kind=default_int),
-            </td>
-<td>intent(in),</td>
-              <td>optional</td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>order</strong></td>
-            <td>
-
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-    <h4>
-    Return Value
-    <small>logical</small>
-    </h4>
-    
-
-          </li>
-          <li class="list-group-item">
-                <h3>
-    private pure function <a href='../proc/is_sorted_dp.html'>is_sorted_dp</a>(array, order) result(sorted)  
-
-    </h3>
-    
-  
-
-  <h4>Arguments</h4>
-      <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
-        <th scope="col"></th>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-array~230"></span>
-              real(kind=dp),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>array</strong>(:)</td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-order~4"></span>
-              integer(kind=default_int),
-            </td>
-<td>intent(in),</td>
-              <td>optional</td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>order</strong></td>
-            <td>
-
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-    <h4>
-    Return Value
-    <small>logical</small>
-    </h4>
-    
-
-          </li>
-          <li class="list-group-item">
-                <h3>
-    private pure function <a href='../proc/is_sorted_char.html'>is_sorted_char</a>(array, order) result(sorted)  
-
-    </h3>
-    
-  
-
-  <h4>Arguments</h4>
-      <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
-        <th scope="col"></th>
-        <th scope="col">Name</th>
-        <th scope="col"></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-array~231"></span>
-              character(len=*),
-            </td>
-<td>intent(in)</td>
-              <td></td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>array</strong>(:)</td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-order~5"></span>
-              integer(kind=default_int),
-            </td>
-<td>intent(in),</td>
-              <td>optional</td>            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>order</strong></td>
-            <td>
-
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-    <h4>
-    Return Value
-    <small>logical</small>
-    </h4>
-    
-
-          </li>
-    </ul>
-  </div>
-
-              <div class="card">
-    <div class="card-header bg-light codesum">
       <span class="anchor" id="interface-pic_print_array"></span>
       <h3>public        interface <a href='../interface/pic_print_array.html'>pic_print_array</a> 
       </h3>
     </div>
       <div class="card-body">
         <p>Generic interface for printing arrays of different types</p>
-<p>Usage: call print_array_v2(array, [optional] format)
+<p>Usage: call pic_print_array(array, [optional] format)
 Where format can be: NUMPY, PLAIN, MATHEMATICA (can use lower caps)</p>
 <p>Implemented types are:</p>
 <p>array(:)   -&gt; int32, int64, sp, dp</p>
@@ -7559,7 +7559,7 @@ to true or false depending on the input</p><a href="../proc/set_threading_mode_.
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-10-24 23:52 +0000             </p>
+ on 2025-10-26 04:40 +0000             </p>
           </div>
         </div>
         <br>

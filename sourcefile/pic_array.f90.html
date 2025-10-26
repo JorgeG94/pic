@@ -311,7 +311,7 @@ large graphs.</div>
 <a id="ln-9" name="ln-9" href="#ln-9"></a><span class="w">   </span><span class="k">implicit none</span>
 <a id="ln-10" name="ln-10" href="#ln-10"></a><span class="k">   private</span>
 <a id="ln-11" name="ln-11" href="#ln-11"></a>
-<a id="ln-12" name="ln-12" href="#ln-12"></a><span class="k">   public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fill</span><span class="p">,</span><span class="w"> </span><span class="n">copy</span>
+<a id="ln-12" name="ln-12" href="#ln-12"></a><span class="k">   public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">pic_fill</span><span class="p">,</span><span class="w"> </span><span class="n">pic_copy</span>
 <a id="ln-13" name="ln-13" href="#ln-13"></a><span class="w">   </span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">pic_transpose</span><span class="p">,</span><span class="w"> </span><span class="n">pic_sum</span>
 <a id="ln-14" name="ln-14" href="#ln-14"></a><span class="w">   </span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">pic_scramble_array</span><span class="p">,</span><span class="w"> </span><span class="n">pic_print_array</span>
 <a id="ln-15" name="ln-15" href="#ln-15"></a><span class="w">   </span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">is_sorted</span>
@@ -341,13 +341,13 @@ large graphs.</div>
 <a id="ln-39" name="ln-39" href="#ln-39"></a><span class="w">      </span><span class="k">module procedure </span><span class="n">get_threading_mode_</span>
 <a id="ln-40" name="ln-40" href="#ln-40"></a><span class="w">   </span><span class="k">end interface </span><span class="n">get_threading_mode</span>
 <a id="ln-41" name="ln-41" href="#ln-41"></a>
-<a id="ln-42" name="ln-42" href="#ln-42"></a><span class="w">   </span><span class="k">interface </span><span class="n">fill</span>
+<a id="ln-42" name="ln-42" href="#ln-42"></a><span class="w">   </span><span class="k">interface </span><span class="n">pic_fill</span>
 <a id="ln-43" name="ln-43" href="#ln-43"></a><span class="w">  </span><span class="c">!! fill provides a generic interface to assing a value</span>
 <a id="ln-44" name="ln-44" href="#ln-44"></a><span class="w">  </span><span class="c">!! alpha of types (int32, int64, sp, dp) as defined in pic_types.F90</span>
 <a id="ln-45" name="ln-45" href="#ln-45"></a><span class="w">  </span><span class="c">!! The inteface supports filling 1d and 2d arrays of the specified</span>
 <a id="ln-46" name="ln-46" href="#ln-46"></a><span class="w">  </span><span class="c">!! variables</span>
 <a id="ln-47" name="ln-47" href="#ln-47"></a><span class="w">  </span><span class="c">!!</span>
-<a id="ln-48" name="ln-48" href="#ln-48"></a><span class="w">  </span><span class="c">!! Usage: call fill(array, value, [optional] threaded)</span>
+<a id="ln-48" name="ln-48" href="#ln-48"></a><span class="w">  </span><span class="c">!! Usage: call pic_fill(array, value, [optional] threaded)</span>
 <a id="ln-49" name="ln-49" href="#ln-49"></a><span class="w">  </span><span class="c">!!</span>
 <a id="ln-50" name="ln-50" href="#ln-50"></a><span class="w">  </span><span class="c">!! This subroutine is threaded for performance purposes if threaded is set to .true.</span>
 <a id="ln-51" name="ln-51" href="#ln-51"></a><span class="w">  </span><span class="c">!!</span>
@@ -362,12 +362,12 @@ large graphs.</div>
 <a id="ln-60" name="ln-60" href="#ln-60"></a><span class="w">      </span><span class="k">module procedure </span><span class="n">fill_matrix_dp</span>
 <a id="ln-61" name="ln-61" href="#ln-61"></a><span class="w">   </span><span class="k">end interface</span>
 <a id="ln-62" name="ln-62" href="#ln-62"></a>
-<a id="ln-63" name="ln-63" href="#ln-63"></a><span class="k">   interface </span><span class="n">copy</span>
+<a id="ln-63" name="ln-63" href="#ln-63"></a><span class="k">   interface </span><span class="n">pic_copy</span>
 <a id="ln-64" name="ln-64" href="#ln-64"></a><span class="w">  </span><span class="c">!! copy provides a blas-less implementation of xcopy where x is (i,s,d) icopy, scopy, dcopy</span>
 <a id="ln-65" name="ln-65" href="#ln-65"></a><span class="w">  </span><span class="c">!! if you built pic with BLAS use the copy interface provided there, I will not beat BLAS</span>
 <a id="ln-66" name="ln-66" href="#ln-66"></a><span class="w">  </span><span class="c">!! copy is implemented for (int32, int64, sp, dp) for 1 and 2d arrays of the same types</span>
 <a id="ln-67" name="ln-67" href="#ln-67"></a><span class="w">  </span><span class="c">!!</span>
-<a id="ln-68" name="ln-68" href="#ln-68"></a><span class="w">  </span><span class="c">!! Usage: call copy(destination, source, [optional] threaded)</span>
+<a id="ln-68" name="ln-68" href="#ln-68"></a><span class="w">  </span><span class="c">!! Usage: call pic_copy(destination, source, [optional] threaded)</span>
 <a id="ln-69" name="ln-69" href="#ln-69"></a><span class="w">  </span><span class="c">!!</span>
 <a id="ln-70" name="ln-70" href="#ln-70"></a><span class="w">  </span><span class="c">!! This subroutine is threaded for performance purposes if threaded is set to .true.</span>
 <a id="ln-71" name="ln-71" href="#ln-71"></a><span class="w">  </span><span class="c">!!</span>
@@ -439,7 +439,7 @@ large graphs.</div>
 <a id="ln-137" name="ln-137" href="#ln-137"></a><span class="k">   interface </span><span class="n">pic_print_array</span>
 <a id="ln-138" name="ln-138" href="#ln-138"></a><span class="w">    </span><span class="c">!! Generic interface for printing arrays of different types</span>
 <a id="ln-139" name="ln-139" href="#ln-139"></a><span class="w">    </span><span class="c">!!</span>
-<a id="ln-140" name="ln-140" href="#ln-140"></a><span class="w">    </span><span class="c">!! Usage: call print_array_v2(array, [optional] format)</span>
+<a id="ln-140" name="ln-140" href="#ln-140"></a><span class="w">    </span><span class="c">!! Usage: call pic_print_array(array, [optional] format)</span>
 <a id="ln-141" name="ln-141" href="#ln-141"></a><span class="w">    </span><span class="c">!! Where format can be: NUMPY, PLAIN, MATHEMATICA (can use lower caps)</span>
 <a id="ln-142" name="ln-142" href="#ln-142"></a><span class="w">    </span><span class="c">!!</span>
 <a id="ln-143" name="ln-143" href="#ln-143"></a><span class="w">    </span><span class="c">!! Implemented types are:</span>
@@ -2020,7 +2020,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-10-24 23:52 +0000             </p>
+ on 2025-10-26 04:40 +0000             </p>
           </div>
         </div>
         <br>
