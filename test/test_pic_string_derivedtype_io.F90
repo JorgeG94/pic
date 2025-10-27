@@ -1,11 +1,13 @@
 ! SPDX-Identifer: MIT
 module pic_test_string_derivedtype_io
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_stdlib_string_type, only: string_type, assignment(=), slen, &
 #ifndef __NVCOMPILER_LLVM__
+   use pic_stdlib_string_type, only: string_type, assignment(=), slen, &
                                      write (formatted), read (formatted), write (unformatted), read (unformatted), &
-#endif
                                      operator(==)
+#else
+   use pic_stdlib_string_type, only: string_type
+#endif
    implicit none
    private
    public :: collect_string_derivedtype_io_tests
