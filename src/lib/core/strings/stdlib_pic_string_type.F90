@@ -27,8 +27,8 @@ module pic_stdlib_string_type
    public :: operator(==), operator(/=), operator(//)
 #ifndef __NVCOMPILER_LLVM__
    public :: write (formatted), write (unformatted)
-#endif
    public :: read (formatted), read (unformatted)
+#endif
 
    integer, parameter :: long = selected_int_kind(18)
 
