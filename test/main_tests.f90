@@ -9,6 +9,11 @@ program pic_tester
    use pic_test_string_assignment, only: collect_string_assignment
    use pic_test_string_functions, only: collect_string_function_tests
    use pic_test_string_intrinsic, only: collect_string_intrinsic_tests
+   use pic_test_string_match, only: collect_string_match_tests
+   use pic_test_string_operator, only: collect_string_operator_tests
+   use pic_test_strip_chomp, only: collect_strip_chomp_tests
+   use pic_test_string_to_string, only: collect_string_to_string_tests
+   use pic_test_string_derivedtype_io, only: collect_string_derivedtype_io_tests
    use test_pic_timer, only: collect_pic_timers_tests
    use test_pic_logger, only: collect_pic_logger_tests
    use test_pic_flop_recorder, only: collect_pic_flop_recorder_tests
@@ -32,13 +37,20 @@ program pic_tester
    call pic_print_banner()
 
    stat = 0_int32
-   allocate (testsuites(14))
+   ! we allocate like this because some compilers will complain about doing on the fly allocation
+   ! looking at you lfortran
+   allocate (testsuites(20))
    testsuites = [ &
                 new_testsuite("base_utils", collect_suite1), &
                 new_testsuite("pic_string", collect_pic_string_tests), &
                 new_testsuite("pic_string_assignment", collect_string_assignment), &
                 new_testsuite("pic_string_functions", collect_string_function_tests), &
                 new_testsuite("pic_string_intrinsic", collect_string_intrinsic_tests), &
+                new_testsuite("pic_string_match", collect_string_match_tests), &
+                new_testsuite("pic_string_operator", collect_string_operator_tests), &
+                new_testsuite("pic_string_strip_chomp", collect_strip_chomp_tests), &
+                new_testsuite("pic_string_to_string", collect_string_to_string_tests), &
+                new_testsuite("pic_string_derivedtype_io", collect_string_derivedtype_io_tests), &
                 new_testsuite("pic_timers", collect_pic_timers_tests), &
                 new_testsuite("pic_logger", collect_pic_logger_tests), &
                 new_testsuite("pic_flop_recorder", collect_pic_flop_recorder_tests), &

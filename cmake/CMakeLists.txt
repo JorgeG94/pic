@@ -20,7 +20,7 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
         "-Wall -Wextra -Wpedantic -Wsurprising -Waliasing -Wampersand -Wno-array-bounds -Wcharacter-truncation -Wconversion -Wline-truncation -Wintrinsics-std -Wno-tabs -Wunderflow -Wunused-parameter -Wintrinsic-shadow -Wno-align-commons -Wsurprising"
     )
   endif()
-  set(fpe "-ffpe-check -ffpe-trap=invalid,zero,overflow")
+  set(fpe "-ffpe-trap=invalid,zero,overflow")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
   set(standard_compile_flags "-traceback")
   set(fpe "-check all -fpe0")
