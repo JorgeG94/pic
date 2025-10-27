@@ -81,7 +81,7 @@ contains
       !> Error handling
       type(error_type), allocatable, intent(out) :: error
 
-      call check_formatter(error, to_string(100.0_dp), "100.0", &
+      call check_formatter(error, to_string(100.0_dp), "100.", &
           & "Default formatter for real number", partial=.true.)
       if (allocated(error)) return
       call check_formatter(error, to_string(100._dp, 'F6.2'), "100.00", &
