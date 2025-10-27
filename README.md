@@ -74,3 +74,39 @@ ctest
 ### FPM
 
 Install the FPM following the [instructions](https://fpm.fortran-lang.org/install/index.html#install) and then simply: `fpm build`
+
+
+## Examples
+
+You can see some [WIP] examples in the [pic-examples](https://github.com/JorgeG94/pic_examples) repository.
+
+## Using PIC in your work
+
+### Fortran Package Manager
+
+Simply add:
+```
+
+[dependencies]
+pic = { git = "https://github.com/JorgeG94/pic.git", branch = "main"}
+```
+
+to your fpm.toml file and you'll be able to checkout and use pic.
+
+### CMake
+
+For CMake it is a bit more complex, since you'll need to pull the dependency. You can see this [template repo](https://github.com/JorgeG94/pic-app-sample), which
+serves as an example on pulling and using the code inside your build system.
+
+### Static/Shared linking via CMake
+
+pic is compiled with "CMake symbols", i.e. it will be findable by a CMake package provided you do the right things. Using
+`find_package(pic REQUIRED)` will use CMake intrinsics to try to find the necessary things to link to pic. pic comes with the
+target `pic::pic` that you can use for your `target_link_libraries(${my_target} PRIVATE pic::pic)`. This will import
+all includes, modules, libs, etc.
+
+How CMake finds `pic::pic` depends on the policy `CMP0074`, this controls if the variables `pic_DIR` or `pic_ROOT` are used
+to search for the package. If you have set the policy: `cmake_policy(SET CMP0074 NEW)`, then `pic_ROOT` will also be used,
+otherwise it is *IGNORED*. By setting `export pic_ROOT=/path/to/where/pic/is/installed` it will let CMake find the
+necessary files it needs to just link pic. Be careful that, as of now, pic needs to be in small letter. All caps will fail to
+find.
