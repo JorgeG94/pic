@@ -71,6 +71,9 @@ contains
       res = string < "cde"
       call check(error, res .eqv. .true.)
 
+      res = "cde" < string
+      call check(error, res .eqv. .false.)
+
       block
          type(string_type) :: string_2
          string_2 = "hamster"
@@ -97,6 +100,16 @@ contains
 
       res = string >= "cde"
       call check(error, res .eqv. .false.)
+
+      res = "cdee" >= string
+      call check(error, res .eqv. .true.)
+
+      block
+         type(string_type) :: string_2
+         string_2 = "hamster"
+         res = string_2 >= string
+         call check(error, res .eqv. .true.)
+      end block
    end subroutine test_ge
 
    subroutine test_le(error)
@@ -117,6 +130,13 @@ contains
 
       res = string <= "cde"
       call check(error, res .eqv. .true.)
+
+      block
+         type(string_type) :: string_2
+         string_2 = "hamster"
+         res = string_2 <= string
+         call check(error, res .eqv. .false.)
+      end block
    end subroutine test_le
 
    subroutine test_eq(error)
@@ -137,6 +157,10 @@ contains
 
       res = string == "cde"
       call check(error, res .eqv. .false.)
+
+      res = "cde" == string
+      call check(error, res .eqv. .false.)
+
    end subroutine test_eq
 
    subroutine test_ne(error)
@@ -160,6 +184,9 @@ contains
       res = string /= "cde"
       call check(error, res .eqv. .true.)
 
+      res = "cde" /= string
+      call check(error, res .eqv. .true.)
+
       res = string /= string_2
       call check(error, res .eqv. .true.)
    end subroutine test_ne
@@ -176,10 +203,15 @@ contains
       block
          type(string_type) :: string_2
          string_2 = "hamster, "
-         string = string//"string_2"
+         string = string//string_2
          print *, slen(string)
-         call check(error, slen(string) == 21)
+         call check(error, slen(string) == 22)
       end block
+
+      string = "HII, "
+      string = "THERE"//string
+      call check(error, slen(string) == 10)
+
    end subroutine test_concat
 
 end module pic_test_string_operator
