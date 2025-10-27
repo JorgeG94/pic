@@ -16,8 +16,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        #os: [ubuntu-latest, macos-latest, windows-latest]
+        #os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         compiler: [lfortran]
         include:
           - os: ubuntu-latest
@@ -32,6 +32,9 @@ jobs:
           compiler: ${{ matrix.compiler }}
           platform: ${{ matrix.os }}
           extra-packages: ${{ matrix.extra-packages }}
+
+      - name: fpm versioning
+        run: fpm --version
 
       - name: fpm build
         run: fpm build --compiler ${{ matrix.compiler }} --profile debug --verbose --flag "--cpp --std=f23"
