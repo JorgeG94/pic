@@ -44,6 +44,12 @@ contains
 
       res = string > "cde"
       call check(error, res .eqv. .false.)
+      block
+         type(string_type) :: string_2
+         string_2 = "hamster"
+         res = string > string_2
+         call check(error, res .eqv. .false.)
+      end block
    end subroutine test_gt
 
    subroutine test_lt(error)
@@ -64,6 +70,13 @@ contains
 
       res = string < "cde"
       call check(error, res .eqv. .true.)
+
+      block
+         type(string_type) :: string_2
+         string_2 = "hamster"
+         res = string < string_2
+         call check(error, res .eqv. .true.)
+      end block
    end subroutine test_lt
 
    subroutine test_ge(error)
@@ -131,9 +144,11 @@ contains
       type(error_type), allocatable, intent(out) :: error
 
       type(string_type) :: string
+      type(string_type) :: string_2
       logical :: res
 
       string = "bcd"
+      string_2 = "shasta"
       res = string /= "abc"
       call check(error, res .eqv. .true.)
       if (allocated(error)) return
@@ -143,6 +158,9 @@ contains
       if (allocated(error)) return
 
       res = string /= "cde"
+      call check(error, res .eqv. .true.)
+
+      res = string /= string_2
       call check(error, res .eqv. .true.)
    end subroutine test_ne
 
@@ -155,6 +173,13 @@ contains
       string = "Hello, "
       string = string//"World!"
       call check(error, slen(string) == 13)
+      block
+         type(string_type) :: string_2
+         string_2 = "hamster, "
+         string = string//"string_2"
+         print *, slen(string)
+         call check(error, slen(string) == 21)
+      end block
    end subroutine test_concat
 
 end module pic_test_string_operator

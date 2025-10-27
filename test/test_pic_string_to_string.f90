@@ -4,7 +4,7 @@ module pic_test_string_to_string
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_stdlib_strings, only: to_string, to_c_char, starts_with
    use pic_optional_value, only: pic_optional
-   use pic_types, only: dp
+   use pic_types, only: sp, dp, int64
 
    implicit none
    private
@@ -54,6 +54,12 @@ contains
       !> Error handling
       type(error_type), allocatable, intent(out) :: error
 
+      call check_formatter(error, to_string(100_int64), "100", &
+          & "Default formatter for integer number")
+      if (allocated(error)) return
+      call check_formatter(error, to_string(100_int64, 'I6'), "   100", &
+          & "Formatter for integer number")
+      if (allocated(error)) return
       call check_formatter(error, to_string(100), "100", &
           & "Default formatter for integer number")
       if (allocated(error)) return
@@ -80,6 +86,13 @@ contains
    subroutine test_to_string_real(error)
       !> Error handling
       type(error_type), allocatable, intent(out) :: error
+
+      call check_formatter(error, to_string(100.0_sp), "100.", &
+          & "Default formatter for real number", partial=.true.)
+      if (allocated(error)) return
+      call check_formatter(error, to_string(100._sp, 'F6.2'), "100.00", &
+          & "Formatter for real number")
+      if (allocated(error)) return
 
       call check_formatter(error, to_string(100.0_dp), "100.", &
           & "Default formatter for real number", partial=.true.)
