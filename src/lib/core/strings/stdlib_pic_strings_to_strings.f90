@@ -82,18 +82,40 @@ contains
       integer(int32), intent(in) :: value
       character(len=*), intent(in) :: format
       character(len=:), allocatable :: string
-
       character(len=buffer_len) :: buffer
+      character(len=:), allocatable :: adjusted_format
       integer :: stat
 
-      write (buffer, "("//format//")", iostat=stat) value
+      ! Workaround for nvhpc bug: O0.w produces empty output
+      adjusted_format = fix_nvhpc_octal_format(format)
+
+      write (buffer, "("//adjusted_format//")", iostat=stat) value
       if (stat == 0) then
          string = trim(buffer)
       else
          string = err_sym
       end if
-
    end function to_string_2_i_int32
+
+   pure function fix_nvhpc_octal_format(fmt) result(fixed)
+      character(len=*), intent(in) :: fmt
+      character(len=:), allocatable :: fixed
+      integer :: pos, dot_pos
+      character(len=10) :: precision_str
+
+      ! Check if format contains "O0."
+      pos = index(fmt, 'O0.')
+      if (pos > 0) then
+         ! Extract precision after the dot
+         dot_pos = pos + 2  ! Position of '.'
+         precision_str = fmt(dot_pos + 1:)
+         ! Replace O0.w with Ow.w (where w is the precision)
+         fixed = fmt(1:pos - 1)//'O'//trim(precision_str)//'.'//trim(precision_str)
+      else
+         fixed = fmt
+      end if
+   end function fix_nvhpc_octal_format
+
    !> Represent an integer of kind int64 as character sequence.
    pure module function to_string_1_i_int64(value) result(string)
       integer, parameter :: ik = int64

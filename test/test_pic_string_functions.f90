@@ -385,7 +385,6 @@ contains
       integer, intent(in), optional :: stride
       character(len=:), allocatable :: sliced_string
       character(len=1), allocatable :: carray(:)
-
       integer :: first_, last_, stride_
 
       stride_ = 1
@@ -406,9 +405,32 @@ contains
       end if
 
       carray = string_to_carray(string)
-      carray = carray(first_:last_:stride_)
-      sliced_string = carray_to_string(carray)
 
+      ! Workaround for nvhpc segfault with stride notation
+      block
+         character(len=1), allocatable :: tmp(:)
+         integer :: i, j, n
+
+         ! Check if slice is empty
+         if ((stride_ > 0 .and. first_ > last_) .or. &
+             (stride_ < 0 .and. first_ < last_)) then
+            allocate (tmp(0))
+         else
+            ! Calculate size
+            n = abs((last_ - first_)/stride_) + 1
+            allocate (tmp(n))
+
+            j = 1
+            do i = first_, last_, stride_
+               tmp(j) = carray(i)
+               j = j + 1
+            end do
+         end if
+
+         call move_alloc(tmp, carray)
+      end block
+
+      sliced_string = carray_to_string(carray)
    end function reference_slice
 
    pure function string_to_carray(string) result(carray)
