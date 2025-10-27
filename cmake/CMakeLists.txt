@@ -32,6 +32,12 @@ elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "LLVMFlang")
   set(standard_compile_flags "")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "Cray")
+  if(NOT CMAKE_GENERATOR MATCHES "Ninja")
+    message(
+      FATAL_ERROR
+        "If you're using Cray compilers, please build with Ninja: cmake -G \"Ninja\""
+    )
+  endif()
   set(standard_compiler_flags "")
   set(debug "-g -O2 -hbounds")
   set(BUILD_TESTING
