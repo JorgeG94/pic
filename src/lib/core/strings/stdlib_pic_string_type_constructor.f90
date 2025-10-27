@@ -1,5 +1,6 @@
 
 submodule(pic_stdlib_string_type) pic_stdlib_string_type_constructor
+   implicit none
 
    use pic_stdlib_strings, only: to_string
 

@@ -35,6 +35,7 @@ module pic_stdlib_strings
         #:set IL_KINDS_TYPES = INT_KINDS_TYPES + LOG_KINDS_TYPES
         #:for k1, t1 in RC_KINDS_TYPES
         pure module function to_string_${t1[0]}$_${k1}$(value, format) result(string)
+            implicit none
             ${t1}$, intent(in) :: value
             character(len=*), intent(in), optional :: format
             character(len=:), allocatable :: string
@@ -42,10 +43,12 @@ module pic_stdlib_strings
         #:endfor
         #:for k1, t1 in IL_KINDS_TYPES
         pure module function to_string_1_${t1[0]}$_${k1}$(value) result(string)
+            implicit none
             ${t1}$, intent(in) :: value
             character(len=#{if t1[0]=="l"}#1)#{else}#:), allocatable#{endif}# :: string
         end function to_string_1_${t1[0]}$_${k1}$
         pure module function to_string_2_${t1[0]}$_${k1}$(value, format) result(string)
+            implicit none
             ${t1}$, intent(in) :: value
             character(len=*), intent(in) :: format
             character(len=:), allocatable :: string

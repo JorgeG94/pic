@@ -22,38 +22,46 @@ module pic_stdlib_strings
    !> Format or transfer other types as a string.
    interface to_string
       pure module function to_string_r_sp(value, format) result(string)
+         implicit none
          real(sp), intent(in) :: value
          character(len=*), intent(in), optional :: format
          character(len=:), allocatable :: string
       end function to_string_r_sp
       pure module function to_string_r_dp(value, format) result(string)
+         implicit none
          real(dp), intent(in) :: value
          character(len=*), intent(in), optional :: format
          character(len=:), allocatable :: string
       end function to_string_r_dp
       pure module function to_string_1_i_int32(value) result(string)
+         implicit none
          integer(int32), intent(in) :: value
          character(len=:), allocatable :: string
       end function to_string_1_i_int32
       pure module function to_string_2_i_int32(value, format) result(string)
+         implicit none
          integer(int32), intent(in) :: value
          character(len=*), intent(in) :: format
          character(len=:), allocatable :: string
       end function to_string_2_i_int32
       pure module function to_string_1_i_int64(value) result(string)
+         implicit none
          integer(int64), intent(in) :: value
          character(len=:), allocatable :: string
       end function to_string_1_i_int64
       pure module function to_string_2_i_int64(value, format) result(string)
+         implicit none
          integer(int64), intent(in) :: value
          character(len=*), intent(in) :: format
          character(len=:), allocatable :: string
       end function to_string_2_i_int64
       pure module function to_string_1_l_fbool(value) result(string)
+         implicit none
          logical(fbool), intent(in) :: value
          character(len=1) :: string
       end function to_string_1_l_fbool
       pure module function to_string_2_l_fbool(value, format) result(string)
+         implicit none
          logical(fbool), intent(in) :: value
          character(len=*), intent(in) :: format
          character(len=:), allocatable :: string
