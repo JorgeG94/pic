@@ -36,6 +36,10 @@ jobs:
       - name: fpm versioning
         run: fpm --version
 
+      - name: Set linker if macOS
+        if: matrix.os == 'macos-latest'
+        run: echo "LFORTRAN_LINKER=clang" >> $GITHUB_ENV
+
       - name: fpm build
         run: fpm build --compiler ${{ matrix.compiler }} --profile debug --verbose --flag "--cpp --std=f23"
 
