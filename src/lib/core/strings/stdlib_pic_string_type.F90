@@ -27,8 +27,8 @@ module pic_stdlib_string_type
    public :: operator(==), operator(/=), operator(//)
 #ifndef __NVCOMPILER_LLVM__
    public :: write (formatted), write (unformatted)
-   public :: read (formatted), read (unformatted)
 #endif
+   public :: read (formatted), read (unformatted)
 
    integer, parameter :: long = selected_int_kind(18)
 
@@ -1218,5 +1218,14 @@ pure function maybe(string) result(maybe_string)
       maybe_string = ''
    end if
 end function maybe
+
+!> Constructor for new string instances from a scalar character value.
+elemental module function new_string(string) result(new)
+   character(len=*), intent(in), optional :: string
+   type(string_type) :: new
+   if (present(string)) then
+      new%raw = string
+   end if
+end function new_string
 
 end module pic_stdlib_string_type
