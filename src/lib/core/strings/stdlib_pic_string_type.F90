@@ -1219,13 +1219,4 @@ pure function maybe(string) result(maybe_string)
    end if
 end function maybe
 
-!> Constructor for new string instances from a scalar character value.
-elemental module function new_string(string) result(new)
-   character(len=*), intent(in), optional :: string
-   type(string_type) :: new
-   if (present(string)) then
-      new%raw = string
-   end if
-end function new_string
-
 end module pic_stdlib_string_type
