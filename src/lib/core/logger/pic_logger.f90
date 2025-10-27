@@ -20,7 +20,8 @@ module pic_logger
       info_level = 8, &
       performance_level = 7, &
       warning_level = 6, &
-      error_level = 5
+      error_level = 5, &
+      knowledge_level = 4
 
    type :: logger_type
     !! custom logger data type
@@ -66,6 +67,9 @@ module pic_logger
       procedure, public, pass(self), non_overridable :: error
       !! Log a message that will only be printed at the error level of verbosity.
       !! Usage: call my_logger%error("MESSAGE")
+      procedure, public, pass(self), non_overridable :: knowledge
+      !! Log a message that will only be printed at the knowledge level of verbosity.
+      !! Usage: call my_logger%knowledge("MESSAGE")
       procedure, private, pass(self), non_overridable :: log
       !! Processes the message and filters it according to the verbosity level set by the user or the default
 
@@ -104,7 +108,9 @@ contains
       !!
       !! warning_level = 6, &
       !!
-      !! error_level = 5
+      !! error_level = 5, &
+      !!
+      !! knowledge_level = 4
       !!
       class(logger_type), intent(inout) :: self
       integer(default_int), intent(in), optional :: level
@@ -129,7 +135,9 @@ contains
       !!
       !! warning_level = 6, &
       !!
-      !! error_level = 5
+      !! error_level = 5, &
+      !!
+      !! knowledge_level = 4
       !!
       class(logger_type), intent(inout) :: self
       character(*), intent(in) :: filename
@@ -230,6 +238,17 @@ contains
       call self%log("ERROR", message, module, procedure)
    end subroutine error
 
+   subroutine knowledge(self, message, module, procedure)
+      !! Log a message that will only be printed at the error of verbosity
+      !!
+      !! Usage: call my_logger%knowledge("MESSAGE")
+      !!
+      class(logger_type), intent(in) :: self
+      character(*), intent(in) :: message
+      character(*), intent(in), optional :: module, procedure
+      call self%log("LORE", message, module, procedure)
+   end subroutine knowledge
+
    subroutine write_log_line(unit, level, message, module, procedure)
       !! Internal subroutine that will write the message to the log
       !! no interface to the public
@@ -270,6 +289,8 @@ contains
          log_level_value = performance_level
       case ("ERROR")
          log_level_value = error_level
+      case ("LORE")
+         log_level_value = knowledge_level
       case default
          write (*, *) 'ERROR: Invalid log level "', trim(level), '"'
          return

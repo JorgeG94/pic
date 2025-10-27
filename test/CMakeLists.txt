@@ -2,7 +2,14 @@
 set(tests
     "base_utils"
     "pic_string"
-    "pic_string_type"
+    "pic_string_assignment"
+    "pic_string_functions"
+    "pic_string_intrinsic"
+    "pic_string_match"
+    "pic_string_operator"
+    "pic_string_strip_chomp"
+    "pic_string_to_string"
+    "pic_ascii"
     "pic_timers"
     "pic_logger"
     "pic_flop_recorder"
@@ -12,6 +19,7 @@ set(tests
     "pic_optional"
     "pic_hash"
     "pic_sorting")
+set(pre_proc_tests "pic_string_derivedtype_io")
 set(blas_tests
     "pic_blas_sgemm"
     "pic_blas_dgemm"
@@ -31,6 +39,11 @@ foreach(t IN LISTS tests)
   string(MAKE_C_IDENTIFIER ${t} t)
   list(APPEND test-srcs "test_${t}.f90")
 endforeach()
+foreach(t IN LISTS pre_proc_tests)
+  string(MAKE_C_IDENTIFIER ${t} t)
+  list(APPEND test-srcs "test_${t}.F90")
+endforeach()
+list(APPEND tests ${pre_proc_tests})
 if(PIC_ENABLE_BLAS)
   foreach(t IN LISTS blas_tests)
     string(MAKE_C_IDENTIFIER ${t} t)

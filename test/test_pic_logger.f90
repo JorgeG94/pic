@@ -1,7 +1,7 @@
 module test_pic_logger
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_logger, only: logger_type, debug_level, verbose_level, info_level, &
-                         performance_level, warning_level, error_level
+                         performance_level, warning_level, error_level, knowledge_level
    use pic_types, only: default_int
    use pic_global_definitions, only: logfile_unit
    implicit none
@@ -203,6 +203,7 @@ contains
       call logger%performance("Performance message")
       call logger%warning("Warning message")
       call logger%error("Error message")
+      call logger%knowledge("LORE")
 
       ! Test with module and procedure
       call logger%info("Test message", "test_module", "test_procedure")
