@@ -3,6 +3,8 @@ set(tests
     "base_utils"
     "pic_string"
     "pic_string_assignment"
+    "pic_string_functions"
+    "pic_string_intrinsic"
     "pic_ascii"
     "pic_timers"
     "pic_logger"
