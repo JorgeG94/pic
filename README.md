@@ -1,5 +1,6 @@
 [![GNU cross OS build](https://github.com/JorgeG94/pic/actions/workflows/local_conda_env.yml/badge.svg)](https://github.com/JorgeG94/pic/actions/workflows/local_conda_env.yml)
 [![Linux multi compiler setup](https://github.com/JorgeG94/pic/actions/workflows/multi-compiler-ci.yml/badge.svg)](https://github.com/JorgeG94/pic/actions/workflows/multi-compiler-ci.yml)
+[![LFortran build](https://github.com/JorgeG94/pic/actions/workflows/lfortran-ci.yml/badge.svg)](https://github.com/JorgeG94/pic/actions/workflows/lfortran-ci.yml)
 [![Deploy FORD Docs](https://github.com/JorgeG94/pic/actions/workflows/deploy-docs.yml/badge.svg)](https://github.com/JorgeG94/pic/actions/workflows/deploy-docs.yml)
 [![GitHub top language](https://img.shields.io/github/languages/top/JorgeG94/pic)](https://github.com/JorgeG94/pic)
 ![License](https://img.shields.io/github/license/JorgeG94/pic)
@@ -12,7 +13,16 @@ PIC is named after the Huastec word PIC which means otter.
   <img src="images/pic_logo.png" alt="Otter coding logo" title="Project logo" width="250">
 </p>
 
-A work in progress on writing a cool backend for Fortan applications focused on Quantum Chemistry software.
+A work in progress on writing a cool backend for Fortan applications focused on scientific computing software. Originally this was going
+to be for quantum chemistry but I ended up writing way more general routines than I expected.
+
+## Contributing
+
+Please see the [contributing guidelines](https://jorgeg94.github.io/pic/page/contributing.html) for information on how to contribute to the project.
+
+See our [code of conduct](CODE_OF_CONDUCT.md) for details on community standards. In short, PIC is a welcoming codebase that is open to contributions
+from anyone at any level of experience. Do you want to fix my thousands of typos, go ahead. Do you want to contribute code, go ahead. Just always
+be respectful of others.
 
 ## Building and dependencies
 
@@ -64,8 +74,3 @@ ctest
 ### FPM
 
 Install the FPM following the [instructions](https://fpm.fortran-lang.org/install/index.html#install) and then simply: `fpm build`
-
-
-## Contributing
-
-Please see the [contributing guidelines](https://jorgeg94.github.io/pic/page/contributing.html) for information on how to contribute to the project.
