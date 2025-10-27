@@ -19,7 +19,7 @@ module pic_stdlib_string_type
    private
 
    public :: string_type
-   public :: len, len_trim, trim, index, scan, verify, repeat, adjustr, adjustl
+   public :: slen, len_trim, trim, index, scan, verify, repeat, adjustr, adjustl
    public :: lgt, lge, llt, lle, char, ichar, iachar
    public :: to_lower, to_upper, to_title, to_sentence, reverse, move
    public :: assignment(=)
@@ -44,9 +44,9 @@ module pic_stdlib_string_type
    !> Returns the length of the character sequence represented by the string.
    !>
    !> This method is elemental and returns a default integer scalar value.
-   interface len
+   interface slen
       module procedure :: len_string
-   end interface len
+   end interface slen
 
    !> Constructor for new string instances
    interface string_type
@@ -413,7 +413,7 @@ elemental function ichar_string(string) result(ich)
    type(string_type), intent(in) :: string
    integer :: ich
 
-   if (allocated(string%raw) .and. len(string) > 0) then
+   if (allocated(string%raw) .and. slen(string) > 0) then
       ich = ichar(string%raw(1:1))
    else
       ich = 0
@@ -426,7 +426,7 @@ elemental function iachar_string(string) result(ich)
    type(string_type), intent(in) :: string
    integer :: ich
 
-   if (allocated(string%raw) .and. len(string) > 0) then
+   if (allocated(string%raw) .and. slen(string) > 0) then
       ich = iachar(string%raw(1:1))
    else
       ich = 0
@@ -437,7 +437,7 @@ end function iachar_string
 !> Return the character sequence represented by the string.
 pure function char_string(string) result(character_string)
    type(string_type), intent(in) :: string
-   character(len=len(string)) :: character_string
+   character(len=slen(string)) :: character_string
 
    character_string = maybe(string)
 
@@ -1095,7 +1095,7 @@ subroutine write_unformatted(string, unit, iostat, iomsg)
    integer, intent(out) :: iostat
    character(len=*), intent(inout) :: iomsg
 
-   write (unit, iostat=iostat, iomsg=iomsg) int(len(string), long)
+   write (unit, iostat=iostat, iomsg=iomsg) int(slen(string), long)
    if (iostat == 0) then
       write (unit, iostat=iostat, iomsg=iomsg) maybe(string)
    end if
@@ -1211,7 +1211,7 @@ end subroutine unused_dummy_argument
 !> Safely return the character sequences represented by the string
 pure function maybe(string) result(maybe_string)
    type(string_type), intent(in) :: string
-   character(len=len(string)) :: maybe_string
+   character(len=slen(string)) :: maybe_string
    if (allocated(string%raw)) then
       maybe_string = string%raw
    else

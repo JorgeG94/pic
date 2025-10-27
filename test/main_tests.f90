@@ -15,6 +15,8 @@ program pic_tester
    use test_pic_optional, only: collect_pic_optional_tests
    use test_pic_sorting, only: collect_pic_sorting_tests
    use test_pic_hash, only: collect_pic_hash_tests
+   use test_pic_ascii, only: collect_pic_ascii_tests
+   use pic_test_string_assignment, only: collect_string_assignment
    use pic_knowledge, only: get_knowledge
    ! add here the module you want to test
    implicit none
@@ -28,7 +30,7 @@ program pic_tester
    call pic_print_banner()
 
    stat = 0_int32
-   allocate (testsuites(11))
+   allocate (testsuites(13))
    testsuites = [ &
                 new_testsuite("base_utils", collect_suite1), &
                 new_testsuite("pic_string", collect_pic_string_tests), &
@@ -40,7 +42,9 @@ program pic_tester
                 new_testsuite("pic_array", collect_pic_array_tests), &
                 new_testsuite("pic_optional", collect_pic_optional_tests), &
                 new_testsuite("pic_hash", collect_pic_hash_tests), &
-                new_testsuite("pic_sorting", collect_pic_sorting_tests) &
+                new_testsuite("pic_ascii", collect_pic_ascii_tests), &
+                new_testsuite("pic_sorting", collect_pic_sorting_tests), &
+                new_testsuite("pic_string_assignment", collect_string_assignment) &
                 ]
    ! here you add another test suite to the array
 
