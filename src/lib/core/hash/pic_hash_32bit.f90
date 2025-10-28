@@ -1,7 +1,7 @@
 
-module stdlib_pic_hash_32bit
+module pic_hash_32bit
 
-   use stdlib_pic_hash_32bit_fnv, only: fnv_1_hash, fnv_1a_hash
+   use pic_hash_32bit_fnv, only: fnv_1_hash, fnv_1a_hash
    use pic_types, only: &
       dp, &
       int32, &
@@ -20,4 +20,4 @@ module stdlib_pic_hash_32bit
       fnv_1_hash, &
       fnv_1a_hash
 
-end module stdlib_pic_hash_32bit
+end module pic_hash_32bit

@@ -2,7 +2,7 @@
 !> The `stdlib_ascii` module provides procedures for handling and manipulating
 !> intrinsic character variables and constants.
 !>
-module pic_stdlib_ascii
+module pic_ascii
    use pic_types, only: int32, int64, fbool
 
    implicit none
@@ -352,4 +352,4 @@ contains
 
    end function reverse
 
-end module pic_stdlib_ascii
+end module pic_ascii

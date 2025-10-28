@@ -2,9 +2,9 @@
 
 !> This module implements basic string handling routines.
 !>
-module pic_stdlib_strings
-   use pic_stdlib_ascii, only: whitespace
-   use pic_stdlib_string_type, only: string_type, char, verify, repeat, slen, len_trim, move
+module pic_strings
+   use pic_ascii, only: whitespace
+   use pic_string_type, only: string_type, char, verify, repeat, slen, len_trim, move
    use pic_optional_value, only: pic_optional
    use pic_types, only: sp, dp, int32, int64, fbool
    use iso_c_binding, only: c_null_char, c_char
@@ -205,7 +205,7 @@ contains
    !> Remove leading and trailing whitespace characters.
    pure function strip_string(string) result(stripped_string)
       ! Avoid polluting the module scope and use the assignment only in this scope
-      use pic_stdlib_string_type, only: assignment(=)
+      use pic_string_type, only: assignment(=)
       type(string_type), intent(in) :: string
       type(string_type) :: stripped_string
 
@@ -232,7 +232,7 @@ contains
    !> Default character set variant where trailing whitespace is removed.
    pure function chomp_string(string) result(chomped_string)
       ! Avoid polluting the module scope and use the assignment only in this scope
-      use pic_stdlib_string_type, only: assignment(=)
+      use pic_string_type, only: assignment(=)
       type(string_type), intent(in) :: string
       type(string_type) :: chomped_string
       integer :: last
@@ -255,7 +255,7 @@ contains
    !> Remove trailing characters in set from string.
    pure function chomp_set_string_char(string, set) result(chomped_string)
       ! Avoid polluting the module scope and use the assignment only in this scope
-      use pic_stdlib_string_type, only: assignment(=)
+      use pic_string_type, only: assignment(=)
       type(string_type), intent(in) :: string
       character(len=1), intent(in) :: set(:)
       type(string_type) :: chomped_string
@@ -278,7 +278,7 @@ contains
    !> Remove trailing substrings from string.
    pure function chomp_substring_string_string(string, substring) result(chomped_string)
       ! Avoid polluting the module scope and use the assignment only in this scope
-      use pic_stdlib_string_type, only: assignment(=)
+      use pic_string_type, only: assignment(=)
       type(string_type), intent(in) :: string
       type(string_type), intent(in) :: substring
       type(string_type) :: chomped_string
@@ -289,7 +289,7 @@ contains
    !> Remove trailing substrings from string.
    pure function chomp_substring_string_char(string, substring) result(chomped_string)
       ! Avoid polluting the module scope and use the assignment only in this scope
-      use pic_stdlib_string_type, only: assignment(=)
+      use pic_string_type, only: assignment(=)
       type(string_type), intent(in) :: string
       character(len=*), intent(in) :: substring
       type(string_type) :: chomped_string
@@ -1077,4 +1077,4 @@ contains
       end do
    end function join_char
 
-end module pic_stdlib_strings
+end module pic_strings
