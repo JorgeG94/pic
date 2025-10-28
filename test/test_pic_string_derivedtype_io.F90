@@ -2,11 +2,11 @@
 module pic_test_string_derivedtype_io
    use testdrive, only: new_unittest, unittest_type, error_type, check
 #ifndef __NVCOMPILER_LLVM__
-   use pic_stdlib_string_type, only: string_type, assignment(=), slen, &
-                                     write (formatted), read (formatted), write (unformatted), read (unformatted), &
-                                     operator(==)
+   use pic_string_type, only: string_type, assignment(=), slen, &
+                              write (formatted), read (formatted), write (unformatted), read (unformatted), &
+                              operator(==)
 #else
-   use pic_stdlib_string_type, only: string_type
+   use pic_string_type, only: string_type
 #endif
    implicit none
    private

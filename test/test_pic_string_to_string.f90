@@ -2,7 +2,7 @@
 module pic_test_string_to_string
 
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_stdlib_strings, only: to_string, to_c_char, starts_with
+   use pic_strings, only: to_string, to_c_char, starts_with
    use pic_optional_value, only: pic_optional
    use pic_types, only: sp, dp, int64
 

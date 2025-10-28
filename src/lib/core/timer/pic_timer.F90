@@ -3,15 +3,15 @@
 module pic_timer
   !! contains a simple timer module to measure and record time
    use pic_types, only: dp, default_int
-   use pic_string, only: to_string
+   use pic_io, only: to_char
 #ifdef _OPENMP
    use omp_lib, only: omp_get_wtime
 #endif
    implicit none
    private
-   public :: pic_timer_type
+   public :: timer_type
 
-   type :: pic_timer_type
+   type :: timer_type
     !! derived type for a timer, contains the start, stop, and count variables
     !! can work with or without omp. If PIC is compiled with OpenMP the default
     !! timer will be the omp time. This is mostly to minimize problems with threading
@@ -29,7 +29,7 @@ module pic_timer
       procedure, non_overridable :: stop => timer_stop
       procedure, non_overridable :: print_time => timer_print_time
       procedure, non_overridable :: get_elapsed_time => timer_get_elapsed_time
-   end type pic_timer_type
+   end type timer_type
 
 contains
 
@@ -39,8 +39,8 @@ contains
       !!
       !! Usage: call my_timer%start()
       !!
-      !! Usage assumes a declaration of type(pic_timer_type) :: my_timer
-      class(pic_timer_type), intent(inout) :: self
+      !! Usage assumes a declaration of type(timer_type) :: my_timer
+      class(timer_type), intent(inout) :: self
       self%is_running = .true.
 #ifdef _OPENMP
       self%start_time = omp_get_wtime()
@@ -55,9 +55,9 @@ contains
       !!
       !! Usage: call my_timer%stop()
       !!
-      !! Usage assumes a declaration of type(pic_timer_type) :: my_timer
+      !! Usage assumes a declaration of type(timer_type) :: my_timer
       !! will fail if a timer has not been started!
-      class(pic_timer_type), intent(inout) :: self
+      class(timer_type), intent(inout) :: self
       if (.not. self%is_running) then
          error stop "Cannot stop a timer that has not been started!"
       end if
@@ -75,17 +75,17 @@ contains
       !!
       !! Usage: call my_timer%print_time()
       !!
-      !! Needs my_timer to be declared previously as type(pic_timer_type) :: my_timer
+      !! Needs my_timer to be declared previously as type(timer_type) :: my_timer
       !!
       !! This function does not stop the timer, it will get the current time elapsed stopped or not
-      class(pic_timer_type), intent(in) :: self
+      class(timer_type), intent(in) :: self
       real(dp) :: elapsed
 
       elapsed = self%get_elapsed_time()
       if (self%is_running) then
-         print *, "Currently elapsed time: "//to_string(elapsed)//" seconds"
+         print *, "Currently elapsed time: "//to_char(elapsed)//" seconds"
       else
-         print *, "Elapsed time: "//to_string(elapsed)//" seconds"
+         print *, "Elapsed time: "//to_char(elapsed)//" seconds"
       end if
    end subroutine timer_print_time
 
@@ -94,9 +94,9 @@ contains
       !!
       !! Usage: var = my_timer%get_elapsed_time()
       !!
-      !! Needs my_timer to be declared previously as type(pic_timer_type) :: my_timer
+      !! Needs my_timer to be declared previously as type(timer_type) :: my_timer
       !!
-      class(pic_timer_type), intent(in) :: self
+      class(timer_type), intent(in) :: self
       real(dp) :: elapsed
       integer(default_int) :: current_count
       elapsed = 0.0_dp

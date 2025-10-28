@@ -1,7 +1,7 @@
 ! SPDX-Identifer: MIT
 module pic_test_string_intrinsic
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_stdlib_string_type, only: string_type, assignment(=), operator(==), &
+   use pic_string_type, only: string_type, assignment(=), operator(==), &
        & lgt, llt, lge, lle, trim, slen, len_trim, adjustl, adjustr, scan, verify, &
        & repeat, index, char, ichar, iachar, move
    implicit none

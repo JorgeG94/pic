@@ -1,11 +1,11 @@
 module test_pic_ascii
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_stdlib_ascii, only: lowercase, uppercase, digits, &
-                               octal_digits, fullhex_digits, hex_digits, lowerhex_digits, &
-                               whitespace, letters, is_alphanum, is_alpha, is_lower, is_upper, &
-                               is_digit, is_octal_digit, is_hex_digit, is_white, is_blank, &
-                               is_control, is_punctuation, is_graphical, is_printable, is_ascii, &
-                               to_lower, to_upper, to_title, to_sentence, reverse, LF, TAB, NUL, DEL
+   use pic_ascii, only: lowercase, uppercase, digits, &
+                        octal_digits, fullhex_digits, hex_digits, lowerhex_digits, &
+                        whitespace, letters, is_alphanum, is_alpha, is_lower, is_upper, &
+                        is_digit, is_octal_digit, is_hex_digit, is_white, is_blank, &
+                        is_control, is_punctuation, is_graphical, is_printable, is_ascii, &
+                        to_lower, to_upper, to_title, to_sentence, reverse, LF, TAB, NUL, DEL
    use pic_types, only: int32, int64, fbool
    implicit none
    private

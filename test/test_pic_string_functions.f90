@@ -2,11 +2,11 @@
 module pic_test_string_functions
    use, intrinsic :: iso_fortran_env, only: error_unit
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_stdlib_string_type, only: string_type, assignment(=), operator(==), &
-                                     to_lower, to_upper, to_title, to_sentence, reverse
-   use pic_stdlib_strings, only: slice, find, replace_all, padl, padr, count, zfill
+   use pic_string_type, only: string_type, assignment(=), operator(==), &
+                              to_lower, to_upper, to_title, to_sentence, reverse
+   use pic_strings, only: slice, find, replace_all, padl, padr, count, zfill
    use pic_optional_value, only: pic_optional
-   use pic_stdlib_strings, only: to_string
+   use pic_strings, only: to_string
    implicit none
    private
    public :: collect_string_function_tests

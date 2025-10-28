@@ -10,7 +10,7 @@
 
 !#! Integer kinds to be considered during templating
 
-module stdlib_pic_hash_32bit_fnv
+module pic_hash_32bit_fnv
 !! An implementation of the FNV hashes 1 and 1a of Glenn Fowler, Landon Curt
 !! Noll, and Kiem-Phong-Vo,
 !! https://en.wikipedia.org/wiki/Fowler–Noll–Vo_hash_function
@@ -61,7 +61,6 @@ module stdlib_pic_hash_32bit_fnv
 !! Version: experimental
 !!
 !! FNV_1 interfaces
-!! ([Specification](../page/specs/stdlib_hash_procedures.html#fnv_1_hash-calculates-a-hash-code-from-a-key))
       pure module function int8_fnv_1(key) result(hash_code)
 !! FNV_1 hash function for rank 1 array keys of kind int8
          implicit none
@@ -103,7 +102,6 @@ module stdlib_pic_hash_32bit_fnv
 !! Version: experimental
 !!
 !! FNV_1A interfaces
-!! ([Specification](../page/specs/stdlib_hash_procedures.html#fnv_1a_hash-calculates-a-hash-code-from-a-key))
       pure module function int8_fnv_1a(key) result(hash_value)
 !! FNV_1A hash function for rank 1 array keys of kind int8
          implicit none
@@ -278,4 +276,4 @@ contains
 
    end function character_fnv_1a
 
-end module stdlib_pic_hash_32bit_fnv
+end module pic_hash_32bit_fnv
