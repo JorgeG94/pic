@@ -14,7 +14,7 @@
 !>
 module pic_stdlib_strings
     use pic_stdlib_ascii, only: whitespace
-    use pic_stdlib_string_type, only: string_type, char, verify, repeat, len, len_trim, move
+    use pic_stdlib_string_type, only: string_type, char, verify, repeat, slen, len_trim, move
     use pic_optional_value, only: pic_optional
     use pic_types, only: sp, dp, int32, int64, fbool
     use iso_c_binding, only: c_null_char, c_char
@@ -817,7 +817,7 @@ contains
     pure function padr_string_default(string, output_length) result(res)
         type(string_type), intent(in) :: string
         integer, intent(in) :: output_length
-        character(len=max(len(string), output_length)) :: char_output
+        character(len=max(slen(string), output_length)) :: char_output
         type(string_type) :: res
 
         ! We're taking advantage of `char_output` being longer than `string` and
@@ -997,9 +997,9 @@ contains
     !> Version: experimental
     pure function to_c_char_from_string(value) result(cstr)
        type(string_type), intent(in) :: value
-       character(kind=c_char) :: cstr(len(value)+1)
+       character(kind=c_char) :: cstr(slen(value)+1)
        integer :: i,lv
-       lv = len(value)
+       lv = slen(value)
        do concurrent (i=1:lv)
            cstr(i) = char(value,pos=i)
        end do
