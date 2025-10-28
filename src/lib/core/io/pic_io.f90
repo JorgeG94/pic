@@ -1,44 +1,45 @@
-!! Life is easier when we have strings. This file
-!! contains the necessary routines to transform key data
-!! types into strings
+!! this file contains "helper" routines, for example printing
+!! a set amount of x characters to creates tables, etc.
 
-module pic_string
-!! General string utilities
+module pic_io
+  !! Assorted output helper routines
    use pic_types, only: sp, dp, int32, int64, default_int
    implicit none
-   ! Generic interface for to_string to handle different types
    private
-   integer(default_int), parameter :: default_dp_precision = 12
-   integer(default_int) :: dp_precision = default_dp_precision
-   integer(default_int), parameter :: default_sp_precision = 6
-   integer(default_int) :: sp_precision = default_sp_precision
+   public :: print_asterisk_row
 
-   public :: to_string, pad, to_upper
+   public :: to_char, pad, to_upper
    public :: set_precision, get_precision
 
-   interface to_string
+   integer(default_int), parameter :: default_dp_precision = 12
+   integer(default_int), parameter :: default_sp_precision = 6
+
+   integer(default_int) :: dp_precision = default_dp_precision
+   integer(default_int) :: sp_precision = default_sp_precision
+
+   interface to_char
       !! converts a variable of type (int32, int64, sp, dp, char, logical)
-      !! to a "string" which is just a collecting of chars.
+      !! to a series of chars which is just a collecting of chars.
       !!
-      !! Usage result = to_string(variable)
+      !! Usage result = to_char(variable)
       !!
       !! @note the functions here are not elemental so they won't work for
       !! arrays. Please use pic_print_array_v2 module for this
       !!
-      module procedure to_string_int32
-      module procedure to_string_int64
-      module procedure to_string_sp
-      module procedure to_string_dp
-      module procedure to_string_char
-      module procedure to_string_logical
-      module procedure to_string_vector_int32
-      module procedure to_string_vector_int64
-      module procedure to_string_vector_sp
-      module procedure to_string_vector_dp
-      module procedure to_string_matrix_int32
-      module procedure to_string_matrix_int64
-      module procedure to_string_matrix_sp
-      module procedure to_string_matrix_dp
+      module procedure to_char_int32
+      module procedure to_char_int64
+      module procedure to_char_sp
+      module procedure to_char_dp
+      module procedure to_char_char
+      module procedure to_char_logical
+      module procedure to_char_vector_int32
+      module procedure to_char_vector_int64
+      module procedure to_char_vector_sp
+      module procedure to_char_vector_dp
+      module procedure to_char_matrix_int32
+      module procedure to_char_matrix_int64
+      module procedure to_char_matrix_sp
+      module procedure to_char_matrix_dp
    end interface
 
    interface to_upper
@@ -60,7 +61,7 @@ module pic_string
 
    interface set_precision
     !! This routine overrides the default dp precision used for
-    !! printing strings in the to_string function, the default
+    !! printing strings in the to_char function, the default
     !! is : integer(default_int), parameter :: default_dp_precision = 12
     !!
     !! Usage: call set_precision(variable) where variable is default_int
@@ -78,6 +79,17 @@ module pic_string
    end interface
 
 contains
+
+   subroutine print_asterisk_row(n)
+    !! prints a convenient row of asterisks of length n
+      integer(kind=default_int), intent(in) :: n
+      !! number of asterisks to print
+      integer(kind=default_int) :: i
+      do i = 1, n
+         write (*, "(A)", advance="no") "*"
+      end do
+      write (*, *)
+   end subroutine print_asterisk_row
 
    function to_upper(str) result(upper_str)
       character(len=*), intent(in) :: str
@@ -127,25 +139,25 @@ contains
       precision = dp_precision
    end function get_precision
 
-   function to_string_int32(i) result(trimmed_str)
+   function to_char_int32(i) result(trimmed_str)
       !! transform an int32 to a string
       integer(kind=int32), intent(in) :: i
       character(len=50) :: str
       character(len=:), allocatable :: trimmed_str
       write (str, "(I0)") i  ! Convert integer to string without leading spaces
       trimmed_str = trim(str)
-   end function to_string_int32
+   end function to_char_int32
 
-   function to_string_int64(i) result(trimmed_str)
+   function to_char_int64(i) result(trimmed_str)
       !! transform an int64 to a string
       integer(kind=int64), intent(in) :: i
       character(len=50) :: str
       character(len=:), allocatable :: trimmed_str
       write (str, "(I0)") i  ! Convert integer to string without leading spaces
       trimmed_str = trim(str)
-   end function to_string_int64
+   end function to_char_int64
 
-   function to_string_sp(r) result(trimmed_str)
+   function to_char_sp(r) result(trimmed_str)
       !! transform a real(sp) to a string
       real(kind=sp), intent(in) :: r
       character(len=50) :: str
@@ -155,9 +167,9 @@ contains
       write (style, '(A,I0,A)') '(F0.', dp_precision, ')'
       write (str, style) r
       trimmed_str = trim(str)
-   end function to_string_sp
+   end function to_char_sp
 
-   function to_string_dp(r) result(trimmed_str)
+   function to_char_dp(r) result(trimmed_str)
       !! transform a real(dp) to a string
       real(kind=dp), intent(in) :: r
       character(len=50) :: str
@@ -167,18 +179,18 @@ contains
       write (style, '(A,I0,A)') '(F0.', dp_precision, ')'
       write (str, style) r
       trimmed_str = trim(str)
-   end function to_string_dp
+   end function to_char_dp
 
-   function to_string_char(c) result(trimmed_str)
+   function to_char_char(c) result(trimmed_str)
       !! transform a character to a string
       character(len=*), intent(in) :: c
       character(len=500) :: str
       character(len=:), allocatable :: trimmed_str
       str = c
       trimmed_str = trim(str)
-   end function to_string_char
+   end function to_char_char
 
-   function to_string_logical(l) result(trimmed_str)
+   function to_char_logical(l) result(trimmed_str)
       !! tranform a logical to a string either true or false
       logical, intent(in) :: l
       character(len=5) :: str
@@ -189,9 +201,9 @@ contains
          str = "FALSE"
       end if
       trimmed_str = trim(str)
-   end function to_string_logical
+   end function to_char_logical
 
-   function to_string_vector_dp(array) result(trimmed_str)
+   function to_char_vector_dp(array) result(trimmed_str)
       real(kind=dp), intent(in) :: array(:)
       character(len=:), allocatable :: trimmed_str
       character(len=50) :: temp_str
@@ -222,11 +234,11 @@ contains
          end if
       end do
       trimmed_str = trimmed_str//"]"
-   end function to_string_vector_dp
+   end function to_char_vector_dp
 
-! Vector to_string functions
+! Vector to_char functions
 
-   function to_string_vector_int32(array) result(trimmed_str)
+   function to_char_vector_int32(array) result(trimmed_str)
       integer(int32), intent(in) :: array(:)
       character(len=:), allocatable :: trimmed_str
       character(len=50) :: temp_str
@@ -253,9 +265,9 @@ contains
          end if
       end do
       trimmed_str = trimmed_str//"]"
-   end function to_string_vector_int32
+   end function to_char_vector_int32
 
-   function to_string_vector_int64(array) result(trimmed_str)
+   function to_char_vector_int64(array) result(trimmed_str)
       integer(int64), intent(in) :: array(:)
       character(len=:), allocatable :: trimmed_str
       character(len=50) :: temp_str
@@ -282,9 +294,9 @@ contains
          end if
       end do
       trimmed_str = trimmed_str//"]"
-   end function to_string_vector_int64
+   end function to_char_vector_int64
 
-   function to_string_vector_sp(array) result(trimmed_str)
+   function to_char_vector_sp(array) result(trimmed_str)
       real(kind=sp), intent(in) :: array(:)
       character(len=:), allocatable :: trimmed_str
       character(len=50) :: temp_str
@@ -315,9 +327,9 @@ contains
          end if
       end do
       trimmed_str = trimmed_str//"]"
-   end function to_string_vector_sp
+   end function to_char_vector_sp
 
-   function to_string_matrix_dp(array) result(trimmed_str)
+   function to_char_matrix_dp(array) result(trimmed_str)
       real(kind=dp), intent(in) :: array(:, :)
       character(len=:), allocatable :: trimmed_str
       character(len=50) :: temp_str
@@ -362,9 +374,9 @@ contains
          end if
       end do
       trimmed_str = trimmed_str//"]"
-   end function to_string_matrix_dp
+   end function to_char_matrix_dp
 
-   function to_string_matrix_int32(array) result(trimmed_str)
+   function to_char_matrix_int32(array) result(trimmed_str)
       integer(int32), intent(in) :: array(:, :)
       character(len=:), allocatable :: trimmed_str
       character(len=50) :: temp_str
@@ -402,9 +414,9 @@ contains
          trimmed_str = trimmed_str//"]"
       end do
       trimmed_str = trimmed_str//"]"
-   end function to_string_matrix_int32
+   end function to_char_matrix_int32
 
-   function to_string_matrix_int64(array) result(trimmed_str)
+   function to_char_matrix_int64(array) result(trimmed_str)
       integer(int64), intent(in) :: array(:, :)
       character(len=:), allocatable :: trimmed_str
       character(len=50) :: temp_str
@@ -445,9 +457,9 @@ contains
          end if
       end do
       trimmed_str = trimmed_str//"]"
-   end function to_string_matrix_int64
+   end function to_char_matrix_int64
 
-   function to_string_matrix_sp(array) result(trimmed_str)
+   function to_char_matrix_sp(array) result(trimmed_str)
       real(kind=sp), intent(in) :: array(:, :)
       character(len=:), allocatable :: trimmed_str
       character(len=50) :: temp_str
@@ -492,6 +504,6 @@ contains
          end if
       end do
       trimmed_str = trimmed_str//"]"
-   end function to_string_matrix_sp
+   end function to_char_matrix_sp
 
-end module pic_string
+end module pic_io

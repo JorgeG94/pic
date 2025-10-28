@@ -1,9 +1,9 @@
 ! SPDX-Identifier: MIT
 module pic_test_strip_chomp
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_stdlib_ascii, only: TAB, VT, NUL, LF, CR, FF
-   use pic_stdlib_strings, only: strip, chomp
-   use pic_stdlib_string_type, only: string_type, operator(==), operator(//)
+   use pic_ascii, only: TAB, VT, NUL, LF, CR, FF
+   use pic_strings, only: strip, chomp
+   use pic_string_type, only: string_type, operator(==), operator(//)
    implicit none
    private
    public :: collect_strip_chomp_tests

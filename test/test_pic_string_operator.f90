@@ -1,9 +1,9 @@
 ! SPDX-Identifer: MIT
 module pic_test_string_operator
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_stdlib_string_type, only: string_type, assignment(=), slen, &
-                                     operator(>), operator(<), operator(>=), operator(<=), &
-                                     operator(/=), operator(==), operator(//)
+   use pic_string_type, only: string_type, assignment(=), slen, &
+                              operator(>), operator(<), operator(>=), operator(<=), &
+                              operator(/=), operator(==), operator(//)
    implicit none
    private
    public :: collect_string_operator_tests

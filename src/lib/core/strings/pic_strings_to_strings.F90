@@ -1,6 +1,6 @@
 
-submodule(pic_stdlib_strings) pic_stdlib_strings_to_string
-   use pic_stdlib_string_type, only: string_type
+submodule(pic_strings) pic_strings_to_string
+   use pic_string_type, only: string_type
    implicit none
 
    integer, parameter :: buffer_len = 128
@@ -143,12 +143,12 @@ contains
       character(len=buffer_len) :: buffer
       integer :: stat
 
-#ifndef __NVCOMPILER_LLVM__
+#ifdef __NVCOMPILER_LLVM__
       adjusted_format = fix_nvhpc_octal_format(format)
 #else
       adjusted_format = format
 #endif
-      write (buffer, "("//format//")", iostat=stat) value
+      write (buffer, "("//adjusted_format//")", iostat=stat) value
       if (stat == 0) then
          string = trim(buffer)
       else
@@ -201,4 +201,4 @@ contains
 
    end function to_string_2_l_fbool
 
-end submodule pic_stdlib_strings_to_string
+end submodule pic_strings_to_string

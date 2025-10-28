@@ -3,9 +3,9 @@ module pic_flop_rate
    !! pic_flop_rate is a convenient encapsulation of the flop_recorder and pic_timer
    !! it is used to measure the flop rate of a given operation, and report it
    use pic_types, only: dp, int64
-   use pic_timer, only: pic_timer_type
+   use pic_timer, only: timer_type
    use pic_flop_recorder, only: flop_recorder_type
-   use pic_string, only: to_string
+   use pic_io, only: to_char
    implicit none
    private
    public :: flop_rate_type
@@ -14,7 +14,7 @@ module pic_flop_rate
       !! derived type for flop rate, contains a timer and a flop recorder
 
       private
-      type(pic_timer_type) :: m_timer
+      type(timer_type) :: m_timer
       type(flop_recorder_type) :: m_flops
 
       real(dp) :: m_flop_rate
@@ -135,7 +135,7 @@ contains
       !!
       class(flop_rate_type), intent(inout) :: self
       self%m_flop_rate = self%get_flop_rate()
-      print *, "Flop rate is "//to_string(self%m_flop_rate)//" GFLOP/s"
+      print *, "Flop rate is "//to_char(self%m_flop_rate)//" GFLOP/s"
 
    end subroutine flop_rate_report
 

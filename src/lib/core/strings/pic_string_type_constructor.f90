@@ -1,6 +1,6 @@
 
-submodule(pic_stdlib_string_type) pic_stdlib_string_type_constructor
-   use pic_stdlib_strings, only: to_string
+submodule(pic_string_type) pic_string_type_constructor
+   use pic_strings, only: to_string
    implicit none
 
 contains
@@ -34,4 +34,4 @@ contains
       new%raw = to_string(val)
    end function new_string_from_logical_fbool
 
-end submodule pic_stdlib_string_type_constructor
+end submodule pic_string_type_constructor
