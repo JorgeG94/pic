@@ -3,7 +3,7 @@
 module pic_timer
   !! contains a simple timer module to measure and record time
    use pic_types, only: dp, default_int
-   use pic_string, only: to_string
+   use pic_io, only: to_char
 #ifdef _OPENMP
    use omp_lib, only: omp_get_wtime
 #endif
@@ -83,9 +83,9 @@ contains
 
       elapsed = self%get_elapsed_time()
       if (self%is_running) then
-         print *, "Currently elapsed time: "//to_string(elapsed)//" seconds"
+         print *, "Currently elapsed time: "//to_char(elapsed)//" seconds"
       else
-         print *, "Elapsed time: "//to_string(elapsed)//" seconds"
+         print *, "Elapsed time: "//to_char(elapsed)//" seconds"
       end if
    end subroutine timer_print_time
 

@@ -3,6 +3,7 @@ program pic_tester
    use testdrive, only: run_testsuite, new_testsuite, testsuite_type, &
    & select_suite, run_selected, get_argument
    use pic, only: pic_print_banner
+   use pic_io, only: print_asterisk_row
    use pic_types, only: int32
    use test_suite1, only: collect_suite1
    use test_pic_string, only: collect_pic_string_tests
@@ -99,6 +100,8 @@ program pic_tester
       error stop 1
    end if
 
+   call print_asterisk_row(50)
    call get_knowledge
+   call print_asterisk_row(50)
 
 end program pic_tester

@@ -5,7 +5,7 @@ module pic_array
 !! Please do not modify this file to implement new methods, please go look at tools/autogen/pic_array_cpu.fypp
 !! and edit the generator.
    use pic_types, only: sp, dp, int32, int64, default_int
-   use pic_string, only: to_string, to_upper
+   use pic_io, only: to_char, to_upper
    use pic_optional_value, only: pic_optional
    implicit none
    private
@@ -1582,9 +1582,9 @@ contains
          write (*, "(A)", advance="no") open_bracket
          do i = 1, loop_bound_i
             if (i == loop_bound_i) then  ! Last element in the vector
-               write (*, fmt_edge, advance="no") to_string(vector(i))
+               write (*, fmt_edge, advance="no") to_char(vector(i))
             else  ! Elements in between
-               write (*, fmt_in, advance="no") to_string(vector(i))
+               write (*, fmt_in, advance="no") to_char(vector(i))
             end if
          end do
          print *, close_bracket
@@ -1609,9 +1609,9 @@ contains
          write (*, "(A)", advance="no") open_bracket
          do i = 1, loop_bound_i
             if (i == loop_bound_i) then  ! Last element in the vector
-               write (*, fmt_edge, advance="no") to_string(vector(i))
+               write (*, fmt_edge, advance="no") to_char(vector(i))
             else  ! Elements in between
-               write (*, fmt_in, advance="no") to_string(vector(i))
+               write (*, fmt_in, advance="no") to_char(vector(i))
             end if
          end do
          print *, close_bracket
@@ -1636,9 +1636,9 @@ contains
          write (*, "(A)", advance="no") open_bracket
          do i = 1, loop_bound_i
             if (i == loop_bound_i) then  ! Last element in the vector
-               write (*, fmt_edge, advance="no") to_string(vector(i))
+               write (*, fmt_edge, advance="no") to_char(vector(i))
             else  ! Elements in between
-               write (*, fmt_in, advance="no") to_string(vector(i))
+               write (*, fmt_in, advance="no") to_char(vector(i))
             end if
          end do
          print *, close_bracket
@@ -1663,9 +1663,9 @@ contains
          write (*, "(A)", advance="no") open_bracket
          do i = 1, loop_bound_i
             if (i == loop_bound_i) then  ! Last element in the vector
-               write (*, fmt_edge, advance="no") to_string(vector(i))
+               write (*, fmt_edge, advance="no") to_char(vector(i))
             else  ! Elements in between
-               write (*, fmt_in, advance="no") to_string(vector(i))
+               write (*, fmt_in, advance="no") to_char(vector(i))
             end if
          end do
          print *, close_bracket
@@ -1693,9 +1693,9 @@ contains
             write (*, "(A)", advance="no") open_bracket
             do j = 1, cols
                if (j == cols) then  ! Last element in the row
-                  write (*, fmt_edge, advance="no") to_string(matrix(i, j))
+                  write (*, fmt_edge, advance="no") to_char(matrix(i, j))
                else  ! Elements in between
-                  write (*, fmt_in, advance="no") to_string(matrix(i, j))
+                  write (*, fmt_in, advance="no") to_char(matrix(i, j))
                end if
             end do
             if (i == rows) then
@@ -1728,9 +1728,9 @@ contains
             write (*, "(A)", advance="no") open_bracket
             do j = 1, cols
                if (j == cols) then  ! Last element in the row
-                  write (*, fmt_edge, advance="no") to_string(matrix(i, j))
+                  write (*, fmt_edge, advance="no") to_char(matrix(i, j))
                else  ! Elements in between
-                  write (*, fmt_in, advance="no") to_string(matrix(i, j))
+                  write (*, fmt_in, advance="no") to_char(matrix(i, j))
                end if
             end do
             if (i == rows) then
@@ -1763,9 +1763,9 @@ contains
             write (*, "(A)", advance="no") open_bracket
             do j = 1, cols
                if (j == cols) then  ! Last element in the row
-                  write (*, fmt_edge, advance="no") to_string(matrix(i, j))
+                  write (*, fmt_edge, advance="no") to_char(matrix(i, j))
                else  ! Elements in between
-                  write (*, fmt_in, advance="no") to_string(matrix(i, j))
+                  write (*, fmt_in, advance="no") to_char(matrix(i, j))
                end if
             end do
             if (i == rows) then
@@ -1798,9 +1798,9 @@ contains
             write (*, "(A)", advance="no") open_bracket
             do j = 1, cols
                if (j == cols) then  ! Last element in the row
-                  write (*, fmt_edge, advance="no") to_string(matrix(i, j))
+                  write (*, fmt_edge, advance="no") to_char(matrix(i, j))
                else  ! Elements in between
-                  write (*, fmt_in, advance="no") to_string(matrix(i, j))
+                  write (*, fmt_in, advance="no") to_char(matrix(i, j))
                end if
             end do
             if (i == rows) then
@@ -1845,9 +1845,9 @@ contains
          do j = 1, i
             idx = idx + 1
             if (j == i) then
-               write (*, '(A)', advance="no") to_string(packed(idx))
+               write (*, '(A)', advance="no") to_char(packed(idx))
             else
-               write (*, '(A)', advance="no") trim(to_string(packed(idx))//", ")
+               write (*, '(A)', advance="no") trim(to_char(packed(idx))//", ")
             end if
          end do
          if (i == n) then
@@ -1890,9 +1890,9 @@ contains
          do j = 1, i
             idx = idx + 1
             if (j == i) then
-               write (*, '(A)', advance="no") to_string(packed(idx))
+               write (*, '(A)', advance="no") to_char(packed(idx))
             else
-               write (*, '(A)', advance="no") trim(to_string(packed(idx))//", ")
+               write (*, '(A)', advance="no") trim(to_char(packed(idx))//", ")
             end if
          end do
          if (i == n) then
@@ -1935,9 +1935,9 @@ contains
          do j = 1, i
             idx = idx + 1
             if (j == i) then
-               write (*, '(A)', advance="no") to_string(packed(idx))
+               write (*, '(A)', advance="no") to_char(packed(idx))
             else
-               write (*, '(A)', advance="no") trim(to_string(packed(idx))//", ")
+               write (*, '(A)', advance="no") trim(to_char(packed(idx))//", ")
             end if
          end do
          if (i == n) then
@@ -1980,9 +1980,9 @@ contains
          do j = 1, i
             idx = idx + 1
             if (j == i) then
-               write (*, '(A)', advance="no") to_string(packed(idx))
+               write (*, '(A)', advance="no") to_char(packed(idx))
             else
-               write (*, '(A)', advance="no") trim(to_string(packed(idx))//", ")
+               write (*, '(A)', advance="no") trim(to_char(packed(idx))//", ")
             end if
          end do
          if (i == n) then

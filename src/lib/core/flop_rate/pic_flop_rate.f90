@@ -5,7 +5,7 @@ module pic_flop_rate
    use pic_types, only: dp, int64
    use pic_timer, only: pic_timer_type
    use pic_flop_recorder, only: flop_recorder_type
-   use pic_string, only: to_string
+   use pic_io, only: to_char
    implicit none
    private
    public :: flop_rate_type
@@ -135,7 +135,7 @@ contains
       !!
       class(flop_rate_type), intent(inout) :: self
       self%m_flop_rate = self%get_flop_rate()
-      print *, "Flop rate is "//to_string(self%m_flop_rate)//" GFLOP/s"
+      print *, "Flop rate is "//to_char(self%m_flop_rate)//" GFLOP/s"
 
    end subroutine flop_rate_report
 
