@@ -59,6 +59,10 @@ module pic_array
       module procedure fill_matrix_int64
       module procedure fill_matrix_sp
       module procedure fill_matrix_dp
+      module procedure fill_3d_tensor_int32
+      module procedure fill_3d_tensor_int64
+      module procedure fill_3d_tensor_sp
+      module procedure fill_3d_tensor_dp
    end interface
 
    interface pic_copy
@@ -79,6 +83,10 @@ module pic_array
       module procedure copy_matrix_int64
       module procedure copy_matrix_sp
       module procedure copy_matrix_dp
+      module procedure copy_3d_tensor_int32
+      module procedure copy_3d_tensor_int64
+      module procedure copy_3d_tensor_sp
+      module procedure copy_3d_tensor_dp
    end interface
 
    interface pic_transpose
@@ -120,6 +128,10 @@ module pic_array
       module procedure sum_matrix_int64
       module procedure sum_matrix_sp
       module procedure sum_matrix_dp
+      module procedure sum_3d_tensor_int32
+      module procedure sum_3d_tensor_int64
+      module procedure sum_3d_tensor_sp
+      module procedure sum_3d_tensor_dp
    end interface
 
    interface is_sorted
@@ -409,6 +421,154 @@ contains
       end if
    end subroutine fill_matrix_dp
 
+   subroutine fill_3d_tensor_int32(tensor, alpha, threaded)
+      integer(int32), intent(inout) :: tensor(:, :, :)
+      integer(int32), intent(in)    :: alpha
+      integer(default_int) :: i, j, k
+      integer(default_int) :: ii, jj, kk
+      integer(default_int) :: nx, ny, nz
+      logical, intent(in), optional :: threaded
+      logical :: use_threads
+
+      nx = size(tensor, 1)
+      ny = size(tensor, 2)
+      nz = size(tensor, 3)
+
+      use_threads = pic_optional(threaded, use_threaded_default)
+
+      if (use_threads) then
+         !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk)
+         do kk = 1, nz, block_size
+            do jj = 1, ny, block_size
+               do ii = 1, nx, block_size
+                  do k = kk, min(kk + block_size - 1, nz)
+                     do j = jj, min(jj + block_size - 1, ny)
+                        do i = ii, min(ii + block_size - 1, nx)
+                           tensor(i, j, k) = alpha
+                        end do
+                     end do
+                  end do
+               end do
+            end do
+         end do
+         !$omp end parallel do
+      else
+         tensor = alpha
+      end if
+
+   end subroutine fill_3d_tensor_int32
+
+   subroutine fill_3d_tensor_int64(tensor, alpha, threaded)
+      integer(int64), intent(inout) :: tensor(:, :, :)
+      integer(int64), intent(in)    :: alpha
+      integer(default_int) :: i, j, k
+      integer(default_int) :: ii, jj, kk
+      integer(default_int) :: nx, ny, nz
+      logical, intent(in), optional :: threaded
+      logical :: use_threads
+
+      nx = size(tensor, 1)
+      ny = size(tensor, 2)
+      nz = size(tensor, 3)
+
+      use_threads = pic_optional(threaded, use_threaded_default)
+
+      if (use_threads) then
+         !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk)
+         do kk = 1, nz, block_size
+            do jj = 1, ny, block_size
+               do ii = 1, nx, block_size
+                  do k = kk, min(kk + block_size - 1, nz)
+                     do j = jj, min(jj + block_size - 1, ny)
+                        do i = ii, min(ii + block_size - 1, nx)
+                           tensor(i, j, k) = alpha
+                        end do
+                     end do
+                  end do
+               end do
+            end do
+         end do
+         !$omp end parallel do
+      else
+         tensor = alpha
+      end if
+
+   end subroutine fill_3d_tensor_int64
+
+   subroutine fill_3d_tensor_sp(tensor, alpha, threaded)
+      real(sp), intent(inout) :: tensor(:, :, :)
+      real(sp), intent(in)    :: alpha
+      integer(default_int) :: i, j, k
+      integer(default_int) :: ii, jj, kk
+      integer(default_int) :: nx, ny, nz
+      logical, intent(in), optional :: threaded
+      logical :: use_threads
+
+      nx = size(tensor, 1)
+      ny = size(tensor, 2)
+      nz = size(tensor, 3)
+
+      use_threads = pic_optional(threaded, use_threaded_default)
+
+      if (use_threads) then
+         !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk)
+         do kk = 1, nz, block_size
+            do jj = 1, ny, block_size
+               do ii = 1, nx, block_size
+                  do k = kk, min(kk + block_size - 1, nz)
+                     do j = jj, min(jj + block_size - 1, ny)
+                        do i = ii, min(ii + block_size - 1, nx)
+                           tensor(i, j, k) = alpha
+                        end do
+                     end do
+                  end do
+               end do
+            end do
+         end do
+         !$omp end parallel do
+      else
+         tensor = alpha
+      end if
+
+   end subroutine fill_3d_tensor_sp
+
+   subroutine fill_3d_tensor_dp(tensor, alpha, threaded)
+      real(dp), intent(inout) :: tensor(:, :, :)
+      real(dp), intent(in)    :: alpha
+      integer(default_int) :: i, j, k
+      integer(default_int) :: ii, jj, kk
+      integer(default_int) :: nx, ny, nz
+      logical, intent(in), optional :: threaded
+      logical :: use_threads
+
+      nx = size(tensor, 1)
+      ny = size(tensor, 2)
+      nz = size(tensor, 3)
+
+      use_threads = pic_optional(threaded, use_threaded_default)
+
+      if (use_threads) then
+         !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk)
+         do kk = 1, nz, block_size
+            do jj = 1, ny, block_size
+               do ii = 1, nx, block_size
+                  do k = kk, min(kk + block_size - 1, nz)
+                     do j = jj, min(jj + block_size - 1, ny)
+                        do i = ii, min(ii + block_size - 1, nx)
+                           tensor(i, j, k) = alpha
+                        end do
+                     end do
+                  end do
+               end do
+            end do
+         end do
+         !$omp end parallel do
+      else
+         tensor = alpha
+      end if
+
+   end subroutine fill_3d_tensor_dp
+
    subroutine copy_vector_int32(dest, source, threaded)
       integer(int32), intent(inout) :: dest(:)
       integer(int32), intent(in)    :: source(:)
@@ -612,6 +772,182 @@ contains
          dest = source
       end if
    end subroutine copy_matrix_dp
+
+   subroutine copy_3d_tensor_int32(dest, source, threaded)
+      integer(int32), intent(inout) :: dest(:, :, :)
+      integer(int32), intent(in)    :: source(:, :, :)
+      logical, intent(in), optional :: threaded
+      logical :: use_threads
+      integer(default_int) :: i, j, k
+      integer(default_int) :: ii, jj, kk
+      integer(default_int) :: nx, ny, nz
+
+      ! --- Size checks ---
+      if (size(dest, 1) /= size(source, 1) &
+          .or. size(dest, 2) /= size(source, 2) &
+          .or. size(dest, 3) /= size(source, 3)) then
+         error stop "Tensor size mismatch"
+      end if
+
+      nx = size(source, 1)
+      ny = size(source, 2)
+      nz = size(source, 3)
+
+      use_threads = pic_optional(threaded, use_threaded_default)
+
+      if (use_threads) then
+         !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk)
+         do kk = 1, nz, block_size
+            do jj = 1, ny, block_size
+               do ii = 1, nx, block_size
+                  do k = kk, min(kk + block_size - 1, nz)
+                     do j = jj, min(jj + block_size - 1, ny)
+                        do i = ii, min(ii + block_size - 1, nx)
+                           dest(i, j, k) = source(i, j, k)
+                        end do
+                     end do
+                  end do
+               end do
+            end do
+         end do
+         !$omp end parallel do
+      else
+         dest = source
+      end if
+
+   end subroutine copy_3d_tensor_int32
+
+   subroutine copy_3d_tensor_int64(dest, source, threaded)
+      integer(int64), intent(inout) :: dest(:, :, :)
+      integer(int64), intent(in)    :: source(:, :, :)
+      logical, intent(in), optional :: threaded
+      logical :: use_threads
+      integer(default_int) :: i, j, k
+      integer(default_int) :: ii, jj, kk
+      integer(default_int) :: nx, ny, nz
+
+      ! --- Size checks ---
+      if (size(dest, 1) /= size(source, 1) &
+          .or. size(dest, 2) /= size(source, 2) &
+          .or. size(dest, 3) /= size(source, 3)) then
+         error stop "Tensor size mismatch"
+      end if
+
+      nx = size(source, 1)
+      ny = size(source, 2)
+      nz = size(source, 3)
+
+      use_threads = pic_optional(threaded, use_threaded_default)
+
+      if (use_threads) then
+         !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk)
+         do kk = 1, nz, block_size
+            do jj = 1, ny, block_size
+               do ii = 1, nx, block_size
+                  do k = kk, min(kk + block_size - 1, nz)
+                     do j = jj, min(jj + block_size - 1, ny)
+                        do i = ii, min(ii + block_size - 1, nx)
+                           dest(i, j, k) = source(i, j, k)
+                        end do
+                     end do
+                  end do
+               end do
+            end do
+         end do
+         !$omp end parallel do
+      else
+         dest = source
+      end if
+
+   end subroutine copy_3d_tensor_int64
+
+   subroutine copy_3d_tensor_sp(dest, source, threaded)
+      real(sp), intent(inout) :: dest(:, :, :)
+      real(sp), intent(in)    :: source(:, :, :)
+      logical, intent(in), optional :: threaded
+      logical :: use_threads
+      integer(default_int) :: i, j, k
+      integer(default_int) :: ii, jj, kk
+      integer(default_int) :: nx, ny, nz
+
+      ! --- Size checks ---
+      if (size(dest, 1) /= size(source, 1) &
+          .or. size(dest, 2) /= size(source, 2) &
+          .or. size(dest, 3) /= size(source, 3)) then
+         error stop "Tensor size mismatch"
+      end if
+
+      nx = size(source, 1)
+      ny = size(source, 2)
+      nz = size(source, 3)
+
+      use_threads = pic_optional(threaded, use_threaded_default)
+
+      if (use_threads) then
+         !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk)
+         do kk = 1, nz, block_size
+            do jj = 1, ny, block_size
+               do ii = 1, nx, block_size
+                  do k = kk, min(kk + block_size - 1, nz)
+                     do j = jj, min(jj + block_size - 1, ny)
+                        do i = ii, min(ii + block_size - 1, nx)
+                           dest(i, j, k) = source(i, j, k)
+                        end do
+                     end do
+                  end do
+               end do
+            end do
+         end do
+         !$omp end parallel do
+      else
+         dest = source
+      end if
+
+   end subroutine copy_3d_tensor_sp
+
+   subroutine copy_3d_tensor_dp(dest, source, threaded)
+      real(dp), intent(inout) :: dest(:, :, :)
+      real(dp), intent(in)    :: source(:, :, :)
+      logical, intent(in), optional :: threaded
+      logical :: use_threads
+      integer(default_int) :: i, j, k
+      integer(default_int) :: ii, jj, kk
+      integer(default_int) :: nx, ny, nz
+
+      ! --- Size checks ---
+      if (size(dest, 1) /= size(source, 1) &
+          .or. size(dest, 2) /= size(source, 2) &
+          .or. size(dest, 3) /= size(source, 3)) then
+         error stop "Tensor size mismatch"
+      end if
+
+      nx = size(source, 1)
+      ny = size(source, 2)
+      nz = size(source, 3)
+
+      use_threads = pic_optional(threaded, use_threaded_default)
+
+      if (use_threads) then
+         !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk)
+         do kk = 1, nz, block_size
+            do jj = 1, ny, block_size
+               do ii = 1, nx, block_size
+                  do k = kk, min(kk + block_size - 1, nz)
+                     do j = jj, min(jj + block_size - 1, ny)
+                        do i = ii, min(ii + block_size - 1, nx)
+                           dest(i, j, k) = source(i, j, k)
+                        end do
+                     end do
+                  end do
+               end do
+            end do
+         end do
+         !$omp end parallel do
+      else
+         dest = source
+      end if
+
+   end subroutine copy_3d_tensor_dp
 
    subroutine transpose_matrix_int32(A, B, threaded)
       integer(int32), intent(in)  :: A(:, :)
@@ -937,6 +1273,154 @@ contains
       end if
 
    end function sum_matrix_dp
+
+   function sum_3d_tensor_int32(tensor, threaded) result(res)
+      integer(int32), intent(in) :: tensor(:, :, :)
+      logical, intent(in), optional :: threaded
+      logical :: use_threads
+      integer(int32) :: res
+      integer(default_int) :: nx, ny, nz
+      integer(default_int) :: i, j, k, ii, jj, kk
+
+      nx = size(tensor, 1)
+      ny = size(tensor, 2)
+      nz = size(tensor, 3)
+
+      use_threads = pic_optional(threaded, use_threaded_default)
+      res = 0_int32
+
+      if (use_threads) then
+         !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk) reduction(+: res)
+         do kk = 1, nz, block_size
+            do jj = 1, ny, block_size
+               do ii = 1, nx, block_size
+                  do k = kk, min(kk + block_size - 1, nz)
+                     do j = jj, min(jj + block_size - 1, ny)
+                        do i = ii, min(ii + block_size - 1, nx)
+                           res = res + tensor(i, j, k)
+                        end do
+                     end do
+                  end do
+               end do
+            end do
+         end do
+         !$omp end parallel do
+      else
+         res = sum(tensor)
+      end if
+
+   end function sum_3d_tensor_int32
+
+   function sum_3d_tensor_int64(tensor, threaded) result(res)
+      integer(int64), intent(in) :: tensor(:, :, :)
+      logical, intent(in), optional :: threaded
+      logical :: use_threads
+      integer(int64) :: res
+      integer(default_int) :: nx, ny, nz
+      integer(default_int) :: i, j, k, ii, jj, kk
+
+      nx = size(tensor, 1)
+      ny = size(tensor, 2)
+      nz = size(tensor, 3)
+
+      use_threads = pic_optional(threaded, use_threaded_default)
+      res = 0_int64
+
+      if (use_threads) then
+         !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk) reduction(+: res)
+         do kk = 1, nz, block_size
+            do jj = 1, ny, block_size
+               do ii = 1, nx, block_size
+                  do k = kk, min(kk + block_size - 1, nz)
+                     do j = jj, min(jj + block_size - 1, ny)
+                        do i = ii, min(ii + block_size - 1, nx)
+                           res = res + tensor(i, j, k)
+                        end do
+                     end do
+                  end do
+               end do
+            end do
+         end do
+         !$omp end parallel do
+      else
+         res = sum(tensor)
+      end if
+
+   end function sum_3d_tensor_int64
+
+   function sum_3d_tensor_sp(tensor, threaded) result(res)
+      real(sp), intent(in) :: tensor(:, :, :)
+      logical, intent(in), optional :: threaded
+      logical :: use_threads
+      real(sp) :: res
+      integer(default_int) :: nx, ny, nz
+      integer(default_int) :: i, j, k, ii, jj, kk
+
+      nx = size(tensor, 1)
+      ny = size(tensor, 2)
+      nz = size(tensor, 3)
+
+      use_threads = pic_optional(threaded, use_threaded_default)
+      res = 0_sp
+
+      if (use_threads) then
+         !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk) reduction(+: res)
+         do kk = 1, nz, block_size
+            do jj = 1, ny, block_size
+               do ii = 1, nx, block_size
+                  do k = kk, min(kk + block_size - 1, nz)
+                     do j = jj, min(jj + block_size - 1, ny)
+                        do i = ii, min(ii + block_size - 1, nx)
+                           res = res + tensor(i, j, k)
+                        end do
+                     end do
+                  end do
+               end do
+            end do
+         end do
+         !$omp end parallel do
+      else
+         res = sum(tensor)
+      end if
+
+   end function sum_3d_tensor_sp
+
+   function sum_3d_tensor_dp(tensor, threaded) result(res)
+      real(dp), intent(in) :: tensor(:, :, :)
+      logical, intent(in), optional :: threaded
+      logical :: use_threads
+      real(dp) :: res
+      integer(default_int) :: nx, ny, nz
+      integer(default_int) :: i, j, k, ii, jj, kk
+
+      nx = size(tensor, 1)
+      ny = size(tensor, 2)
+      nz = size(tensor, 3)
+
+      use_threads = pic_optional(threaded, use_threaded_default)
+      res = 0_dp
+
+      if (use_threads) then
+         !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk) reduction(+: res)
+         do kk = 1, nz, block_size
+            do jj = 1, ny, block_size
+               do ii = 1, nx, block_size
+                  do k = kk, min(kk + block_size - 1, nz)
+                     do j = jj, min(jj + block_size - 1, ny)
+                        do i = ii, min(ii + block_size - 1, nx)
+                           res = res + tensor(i, j, k)
+                        end do
+                     end do
+                  end do
+               end do
+            end do
+         end do
+         !$omp end parallel do
+      else
+         res = sum(tensor)
+      end if
+
+   end function sum_3d_tensor_dp
 
    pure function is_sorted_int32(array, order) result(sorted)
       integer(int32), intent(in) :: array(:)
