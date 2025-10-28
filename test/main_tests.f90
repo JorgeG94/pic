@@ -4,7 +4,7 @@ program pic_tester
    & select_suite, run_selected, get_argument
    use pic, only: pic_print_banner
    use pic_io, only: print_asterisk_row
-   use pic_types, only: int32
+   use pic_types, only: default_int, int32
    use test_suite1, only: collect_suite1
    use test_pic_string, only: collect_pic_string_tests
    use pic_test_string_assignment, only: collect_string_assignment
@@ -100,8 +100,8 @@ program pic_tester
       error stop 1
    end if
 
-   call print_asterisk_row(50)
+   call print_asterisk_row(50_default_int)
    call get_knowledge
-   call print_asterisk_row(50)
+   call print_asterisk_row(50_default_int)
 
 end program pic_tester
