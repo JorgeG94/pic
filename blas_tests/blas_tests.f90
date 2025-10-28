@@ -1,6 +1,6 @@
 program pic_tester
    use, intrinsic :: iso_fortran_env, only: error_unit
-   use pic_types, only: default_int, int32
+   use pic_types, only: int32
    use testdrive, only: run_testsuite, new_testsuite, testsuite_type, &
    & select_suite, run_selected, get_argument
    use test_pic_blas_interfaces_sgemm, only: collect_pic_sgemm_tests
