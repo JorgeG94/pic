@@ -87,12 +87,12 @@ contains
       character(len=buffer_len) :: buffer
       integer :: stat
 
-#ifndef __NVCOMPILER_LLVM__
+#ifdef __NVCOMPILER_LLVM__
       adjusted_format = fix_nvhpc_octal_format(format)
 #else
       adjusted_format = format
 #endif
-      write (buffer, "("//format//")", iostat=stat) value
+      write (buffer, "("//adjusted_format//")", iostat=stat) value
       if (stat == 0) then
          string = trim(buffer)
       else
