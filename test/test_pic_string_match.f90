@@ -1,9 +1,9 @@
 ! SPDX-Identifier: MIT
 module pic_test_string_match
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_stdlib_ascii, only: reverse
-   use pic_stdlib_strings, only: starts_with, ends_with, join
-   use pic_stdlib_string_type, only: string_type
+   use pic_ascii, only: reverse
+   use pic_strings, only: starts_with, ends_with, join
+   use pic_string_type, only: string_type
    implicit none
    private
    public :: collect_string_match_tests

@@ -1,6 +1,6 @@
 module test_pic_hash
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use stdlib_pic_hash_32bit, only: fnv_1_hash, fnv_1a_hash
+   use pic_hash_32bit, only: fnv_1_hash, fnv_1a_hash
    use pic_types, only: int8, int16, int32, int64
    implicit none
    private

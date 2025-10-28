@@ -2,8 +2,8 @@
 module pic_test_string_assignment
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_types, only: int32, int64, fbool
-   use pic_stdlib_strings, only: to_string
-   use pic_stdlib_string_type, only: string_type, assignment(=), operator(==), slen
+   use pic_strings, only: to_string
+   use pic_string_type, only: string_type, assignment(=), operator(==), slen
    implicit none
 
    private

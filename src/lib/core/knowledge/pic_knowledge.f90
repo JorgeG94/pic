@@ -3,7 +3,7 @@ module pic_knowledge
   !! a simple module that collects phrases and prints them out randomly, like fortune
    use pic_types, only: int32, dp
    use pic_logger, only: logger => global_logger
-   use pic_stdlib_string_type, only: string_type, assignment(=), char
+   use pic_string_type, only: string_type, assignment(=), char
    implicit none
 
    private
