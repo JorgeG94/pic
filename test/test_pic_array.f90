@@ -25,6 +25,10 @@ contains
                   new_unittest("fill_matrix_int64", test_fill_matrix_int64), &
                   new_unittest("fill_matrix_sp", test_fill_matrix_sp), &
                   new_unittest("fill_matrix_dp", test_fill_matrix_dp), &
+                  new_unittest("fill_3d_tensor_int32", test_fill_3d_tensor_int32), &
+                  new_unittest("fill_3d_tensor_int64", test_fill_3d_tensor_int64), &
+                  new_unittest("fill_3d_tensor_sp", test_fill_3d_tensor_sp), &
+                  new_unittest("fill_3d_tensor_dp", test_fill_3d_tensor_dp), &
                   new_unittest("fill_vector_int32_threaded", test_fill_vector_int32_threaded), &
                   new_unittest("fill_vector_int64_threaded", test_fill_vector_int64_threaded), &
                   new_unittest("fill_vector_sp_threaded", test_fill_vector_sp_threaded), &
@@ -33,6 +37,10 @@ contains
                   new_unittest("fill_matrix_int64_threaded", test_fill_matrix_int64_threaded), &
                   new_unittest("fill_matrix_sp_threaded", test_fill_matrix_sp_threaded), &
                   new_unittest("fill_matrix_dp_threaded", test_fill_matrix_dp_threaded), &
+                  new_unittest("fill_3d_tensor_int32_threaded", test_fill_3d_tensor_int32_threaded), &
+                  new_unittest("fill_3d_tensor_int64_threaded", test_fill_3d_tensor_int64_threaded), &
+                  new_unittest("fill_3d_tensor_sp_threaded", test_fill_3d_tensor_sp_threaded), &
+                  new_unittest("fill_3d_tensor_dp_threaded", test_fill_3d_tensor_dp_threaded), &
                   new_unittest("copy_vector_int32", test_copy_vector_int32), &
                   new_unittest("copy_vector_int64", test_copy_vector_int64), &
                   new_unittest("copy_vector_sp", test_copy_vector_sp), &
@@ -41,6 +49,10 @@ contains
                   new_unittest("copy_matrix_int64", test_copy_matrix_int64), &
                   new_unittest("copy_matrix_sp", test_copy_matrix_sp), &
                   new_unittest("copy_matrix_dp", test_copy_matrix_dp), &
+                  new_unittest("copy_3d_tensor_int32", test_copy_3d_tensor_int32), &
+                  new_unittest("copy_3d_tensor_int64", test_copy_3d_tensor_int64), &
+                  new_unittest("copy_3d_tensor_sp", test_copy_3d_tensor_sp), &
+                  new_unittest("copy_3d_tensor_dp", test_copy_3d_tensor_dp), &
                   new_unittest("copy_vector_int32_threaded", test_copy_vector_int32_threaded), &
                   new_unittest("copy_vector_int64_threaded", test_copy_vector_int64_threaded), &
                   new_unittest("copy_vector_sp_threaded", test_copy_vector_sp_threaded), &
@@ -49,6 +61,10 @@ contains
                   new_unittest("copy_matrix_int64_threaded", test_copy_matrix_int64_threaded), &
                   new_unittest("copy_matrix_sp_threaded", test_copy_matrix_sp_threaded), &
                   new_unittest("copy_matrix_dp_threaded", test_copy_matrix_dp_threaded), &
+                  new_unittest("copy_3d_tensor_int32_threaded", test_copy_3d_tensor_int32_threaded), &
+                  new_unittest("copy_3d_tensor_int64_threaded", test_copy_3d_tensor_int64_threaded), &
+                  new_unittest("copy_3d_tensor_sp_threaded", test_copy_3d_tensor_sp_threaded), &
+                  new_unittest("copy_3d_tensor_dp_threaded", test_copy_3d_tensor_dp_threaded), &
                   new_unittest("pic_transpose_matrix_int32", test_pic_transpose_matrix_int32), &
                   new_unittest("pic_transpose_matrix_int64", test_pic_transpose_matrix_int64), &
                   new_unittest("pic_transpose_matrix_sp", test_pic_transpose_matrix_sp), &
@@ -65,6 +81,10 @@ contains
                   new_unittest("pic_sum_matrix_int64", test_pic_sum_matrix_int64), &
                   new_unittest("pic_sum_matrix_sp", test_pic_sum_matrix_sp), &
                   new_unittest("pic_sum_matrix_dp", test_pic_sum_matrix_dp), &
+                  new_unittest("pic_sum_3d_tensor_int32", test_pic_sum_3d_tensor_int32), &
+                  new_unittest("pic_sum_3d_tensor_int64", test_pic_sum_3d_tensor_int64), &
+                  new_unittest("pic_sum_3d_tensor_sp", test_pic_sum_3d_tensor_sp), &
+                  new_unittest("pic_sum_3d_tensor_dp", test_pic_sum_3d_tensor_dp), &
                   new_unittest("pic_sum_vector_int32_threaded", test_pic_sum_vector_int32_threaded), &
                   new_unittest("pic_sum_vector_int64_threaded", test_pic_sum_vector_int64_threaded), &
                   new_unittest("pic_sum_vector_sp_threaded", test_pic_sum_vector_sp_threaded), &
@@ -73,6 +93,10 @@ contains
                   new_unittest("pic_sum_matrix_int64_threaded", test_pic_sum_matrix_int64_threaded), &
                   new_unittest("pic_sum_matrix_sp_threaded", test_pic_sum_matrix_sp_threaded), &
                   new_unittest("pic_sum_matrix_dp_threaded", test_pic_sum_matrix_dp_threaded), &
+                  new_unittest("pic_sum_3d_tensor_int32_threaded", test_pic_sum_3d_tensor_int32_threaded), &
+                  new_unittest("pic_sum_3d_tensor_int64_threaded", test_pic_sum_3d_tensor_int64_threaded), &
+                  new_unittest("pic_sum_3d_tensor_sp_threaded", test_pic_sum_3d_tensor_sp_threaded), &
+                  new_unittest("pic_sum_3d_tensor_dp_threaded", test_pic_sum_3d_tensor_dp_threaded), &
                   new_unittest("pic_is_sorted_int32", test_pic_is_sorted_int32), &
                   new_unittest("pic_is_sorted_int64", test_pic_is_sorted_int64), &
                   new_unittest("pic_is_sorted_sp", test_pic_is_sorted_sp), &
@@ -230,6 +254,62 @@ contains
 
    end subroutine test_fill_matrix_dp
 
+   subroutine test_fill_3d_tensor_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: tensor(:, :, :)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha)
+
+      call check(error, all(tensor == alpha), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_3d_tensor_int32
+
+   subroutine test_fill_3d_tensor_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: tensor(:, :, :)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha)
+
+      call check(error, all(tensor == alpha), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_3d_tensor_int64
+
+   subroutine test_fill_3d_tensor_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: tensor(:, :, :)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha)
+
+      call check(error, all(is_equal(tensor, alpha)), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_3d_tensor_sp
+
+   subroutine test_fill_3d_tensor_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: tensor(:, :, :)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha)
+
+      call check(error, all(is_equal(tensor, alpha)), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_3d_tensor_dp
+
    subroutine test_fill_vector_int32_threaded(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int32), allocatable :: vector(:)
@@ -341,6 +421,62 @@ contains
       if (allocated(error)) return
 
    end subroutine test_fill_matrix_dp_threaded
+
+   subroutine test_fill_3d_tensor_int32_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: tensor(:, :, :)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha, .true.)
+
+      call check(error, all(tensor == alpha), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_3d_tensor_int32_threaded
+
+   subroutine test_fill_3d_tensor_int64_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: tensor(:, :, :)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha, .true.)
+
+      call check(error, all(tensor == alpha), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_3d_tensor_int64_threaded
+
+   subroutine test_fill_3d_tensor_sp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: tensor(:, :, :)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha, .true.)
+
+      call check(error, all(is_equal(tensor, alpha)), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_3d_tensor_sp_threaded
+
+   subroutine test_fill_3d_tensor_dp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: tensor(:, :, :)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha, .true.)
+
+      call check(error, all(is_equal(tensor, alpha)), .true., "fill should set all elements to the value of alpha")
+      if (allocated(error)) return
+
+   end subroutine test_fill_3d_tensor_dp_threaded
 
    subroutine test_copy_vector_int32(error)
       type(error_type), allocatable, intent(out) :: error
@@ -478,6 +614,74 @@ contains
 
    end subroutine test_copy_matrix_dp
 
+   subroutine test_copy_3d_tensor_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: tensor(:, :, :), tensor_copy(:, :, :)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      allocate (tensor_copy(n, n, n))
+
+      call pic_fill(tensor, alpha)
+      call pic_copy(tensor_copy, tensor)
+
+      call check(error, all(tensor_copy == alpha), .true., "copy should copy all elements from tensor to tensor_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_3d_tensor_int32
+
+   subroutine test_copy_3d_tensor_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: tensor(:, :, :), tensor_copy(:, :, :)
+      integer(int64), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      allocate (tensor_copy(n, n, n))
+
+      call pic_fill(tensor, alpha)
+      call pic_copy(tensor_copy, tensor)
+
+      call check(error, all(tensor_copy == alpha), .true., "copy should copy all elements from tensor to tensor_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_3d_tensor_int64
+
+   subroutine test_copy_3d_tensor_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: tensor(:, :, :), tensor_copy(:, :, :)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      allocate (tensor_copy(n, n, n))
+
+      call pic_fill(tensor, alpha)
+      call pic_copy(tensor_copy, tensor)
+
+      call check(error, all(is_equal(tensor_copy, alpha)), .true., "copy should copy all elements from tensor to tensor_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_3d_tensor_sp
+
+   subroutine test_copy_3d_tensor_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: tensor(:, :, :), tensor_copy(:, :, :)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      allocate (tensor_copy(n, n, n))
+
+      call pic_fill(tensor, alpha)
+      call pic_copy(tensor_copy, tensor)
+
+      call check(error, all(is_equal(tensor_copy, alpha)), .true., "copy should copy all elements from tensor to tensor_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_3d_tensor_dp
+
    subroutine test_copy_vector_int32_threaded(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int32), allocatable :: vector(:), vector_copy(:)
@@ -613,6 +817,74 @@ contains
       if (allocated(error)) return
 
    end subroutine test_copy_matrix_dp_threaded
+
+   subroutine test_copy_3d_tensor_int32_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: tensor(:, :, :), tensor_copy(:, :, :)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      allocate (tensor_copy(n, n, n))
+
+      call pic_fill(tensor, alpha)
+      call pic_copy(tensor_copy, tensor, .true.)
+
+      call check(error, all(tensor_copy == alpha), .true., "copy should copy all elements from tensor to tensor_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_3d_tensor_int32_threaded
+
+   subroutine test_copy_3d_tensor_int64_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: tensor(:, :, :), tensor_copy(:, :, :)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      allocate (tensor_copy(n, n, n))
+
+      call pic_fill(tensor, alpha)
+      call pic_copy(tensor_copy, tensor, .true.)
+
+      call check(error, all(tensor_copy == alpha), .true., "copy should copy all elements from tensor to tensor_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_3d_tensor_int64_threaded
+
+   subroutine test_copy_3d_tensor_sp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: tensor(:, :, :), tensor_copy(:, :, :)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      allocate (tensor_copy(n, n, n))
+
+      call pic_fill(tensor, alpha)
+      call pic_copy(tensor_copy, tensor, .true.)
+
+      call check(error, all(is_equal(tensor_copy, alpha)), .true., "copy should copy all elements from tensor to tensor_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_3d_tensor_sp_threaded
+
+   subroutine test_copy_3d_tensor_dp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: tensor(:, :, :), tensor_copy(:, :, :)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 5
+
+      allocate (tensor(n, n, n))
+      allocate (tensor_copy(n, n, n))
+
+      call pic_fill(tensor, alpha)
+      call pic_copy(tensor_copy, tensor, .true.)
+
+      call check(error, all(is_equal(tensor_copy, alpha)), .true., "copy should copy all elements from tensor to tensor_copy")
+      if (allocated(error)) return
+
+   end subroutine test_copy_3d_tensor_dp_threaded
 
    subroutine test_pic_transpose_matrix_int32(error)
       type(error_type), allocatable, intent(out) :: error
@@ -910,6 +1182,74 @@ contains
 
    end subroutine test_pic_sum_matrix_dp
 
+   subroutine test_pic_sum_3d_tensor_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: tensor(:, :, :)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 5
+      integer(int32) :: sum
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha)
+
+      sum = pic_sum(tensor)
+
+      call check(error, sum == n*n*n*alpha, .true., "pic_sum should return the correct sum of the tensor")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_3d_tensor_int32
+
+   subroutine test_pic_sum_3d_tensor_int64(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: tensor(:, :, :)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 5
+      integer(int64) :: sum
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha)
+
+      sum = pic_sum(tensor)
+
+      call check(error, sum == n*n*n*alpha, .true., "pic_sum should return the correct sum of the tensor")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_3d_tensor_int64
+
+   subroutine test_pic_sum_3d_tensor_sp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: tensor(:, :, :)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 5
+      real(sp) :: sum
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha)
+
+      sum = pic_sum(tensor)
+
+      call check(error, is_equal(sum, n*n*n*alpha), .true., "pic_sum should return the correct sum of the tensor")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_3d_tensor_sp
+
+   subroutine test_pic_sum_3d_tensor_dp(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: tensor(:, :, :)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 5
+      real(dp) :: sum
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha)
+
+      sum = pic_sum(tensor)
+
+      call check(error, is_equal(sum, n*n*n*alpha), .true., "pic_sum should return the correct sum of the tensor")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_3d_tensor_dp
+
    subroutine test_pic_sum_vector_int32_threaded(error)
       type(error_type), allocatable, intent(out) :: error
       integer(int32), allocatable :: vector(:)
@@ -1045,6 +1385,74 @@ contains
       if (allocated(error)) return
 
    end subroutine test_pic_sum_matrix_dp_threaded
+
+   subroutine test_pic_sum_3d_tensor_int32_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32), allocatable :: tensor(:, :, :)
+      integer(int32), parameter :: alpha = 42
+      integer(default_int), parameter :: n = 5
+      integer(int32) :: sum
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha)
+
+      sum = pic_sum(tensor, .true.)
+
+      call check(error, sum == n*n*n*alpha, .true., "pic_sum should return the correct sum of the tensor")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_3d_tensor_int32_threaded
+
+   subroutine test_pic_sum_3d_tensor_int64_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int64), allocatable :: tensor(:, :, :)
+      integer(int64), parameter :: alpha = 42_int64
+      integer(default_int), parameter :: n = 5
+      integer(int64) :: sum
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha)
+
+      sum = pic_sum(tensor, .true.)
+
+      call check(error, sum == n*n*n*alpha, .true., "pic_sum should return the correct sum of the tensor")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_3d_tensor_int64_threaded
+
+   subroutine test_pic_sum_3d_tensor_sp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(sp), allocatable :: tensor(:, :, :)
+      real(sp), parameter :: alpha = 42.0_sp
+      integer(default_int), parameter :: n = 5
+      real(sp) :: sum
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha)
+
+      sum = pic_sum(tensor, .true.)
+
+      call check(error, is_equal(sum, n*n*n*alpha), .true., "pic_sum should return the correct sum of the tensor")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_3d_tensor_sp_threaded
+
+   subroutine test_pic_sum_3d_tensor_dp_threaded(error)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp), allocatable :: tensor(:, :, :)
+      real(dp), parameter :: alpha = 42.0_dp
+      integer(default_int), parameter :: n = 5
+      real(dp) :: sum
+
+      allocate (tensor(n, n, n))
+      call pic_fill(tensor, alpha)
+
+      sum = pic_sum(tensor, .true.)
+
+      call check(error, is_equal(sum, n*n*n*alpha), .true., "pic_sum should return the correct sum of the tensor")
+      if (allocated(error)) return
+
+   end subroutine test_pic_sum_3d_tensor_dp_threaded
 
    subroutine test_pic_is_sorted_int32(error)
       type(error_type), allocatable, intent(out) :: error

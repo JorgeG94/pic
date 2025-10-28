@@ -65,6 +65,9 @@ module pic_array
       #:for T in TYPES
          module procedure fill_matrix_${T}$
       #:endfor
+      #:for T in TYPES
+         module procedure fill_3d_tensor_${T}$
+      #:endfor
    end interface
 
    interface pic_copy
@@ -82,6 +85,9 @@ module pic_array
       #:endfor
       #:for T in TYPES
          module procedure copy_matrix_${T}$
+      #:endfor
+      #:for T in TYPES
+         module procedure copy_3d_tensor_${T}$
       #:endfor
    end interface
 
@@ -120,6 +126,9 @@ module pic_array
       #:endfor
       #: for T in TYPES
       module procedure sum_matrix_${T}$
+      #:endfor
+      #: for T in TYPES
+      module procedure sum_3d_tensor_${T}$
       #:endfor
    end interface
 
@@ -270,6 +279,48 @@ module pic_array
          end if
       end subroutine fill_matrix_${T}$
    #:endfor
+#:for T in TYPES
+  #:set FTYPE = FORTRAN_TYPES[T]
+
+  subroutine fill_3d_tensor_${T}$ (tensor, alpha, threaded)
+     ${FTYPE}$, intent(inout) :: tensor(:, :, :)
+     ${FTYPE}$, intent(in)    :: alpha
+     integer(default_int) :: i, j, k
+     integer(default_int) :: ii, jj, kk
+     integer(default_int) :: nx, ny, nz
+     logical, intent(in), optional :: threaded
+     logical :: use_threads
+
+     nx = size(tensor, 1)
+     ny = size(tensor, 2)
+     nz = size(tensor, 3)
+
+     use_threads = pic_optional(threaded, use_threaded_default)
+
+     if (use_threads) then
+        !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk)
+        do kk = 1, nz, block_size
+           do jj = 1, ny, block_size
+              do ii = 1, nx, block_size
+                 do k = kk, min(kk + block_size - 1, nz)
+                    do j = jj, min(jj + block_size - 1, ny)
+                       do i = ii, min(ii + block_size - 1, nx)
+                          tensor(i, j, k) = alpha
+                       end do
+                    end do
+                 end do
+              end do
+           end do
+        end do
+        !$omp end parallel do
+     else
+        tensor = alpha
+     end if
+
+  end subroutine fill_3d_tensor_${T}$
+
+#:endfor
+
 
    #:for T in TYPES
       #:set FTYPE = FORTRAN_TYPES[T]
@@ -328,6 +379,55 @@ module pic_array
       end subroutine copy_matrix_${T}$
 
    #:endfor
+#:for T in TYPES
+  #:set FTYPE = FORTRAN_TYPES[T]
+
+  subroutine copy_3d_tensor_${T}$ (dest, source, threaded)
+     ${FTYPE}$, intent(inout) :: dest(:, :, :)
+     ${FTYPE}$, intent(in)    :: source(:, :, :)
+     logical, intent(in), optional :: threaded
+     logical :: use_threads
+     integer(default_int) :: i, j, k
+     integer(default_int) :: ii, jj, kk
+     integer(default_int) :: nx, ny, nz
+
+     ! --- Size checks ---
+     if (   size(dest, 1) /= size(source, 1)  &
+        .or. size(dest, 2) /= size(source, 2)  &
+        .or. size(dest, 3) /= size(source, 3)) then
+        error stop "Tensor size mismatch"
+     end if
+
+     nx = size(source, 1)
+     ny = size(source, 2)
+     nz = size(source, 3)
+
+     use_threads = pic_optional(threaded, use_threaded_default)
+
+     if (use_threads) then
+        !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk)
+        do kk = 1, nz, block_size
+           do jj = 1, ny, block_size
+              do ii = 1, nx, block_size
+                 do k = kk, min(kk + block_size - 1, nz)
+                    do j = jj, min(jj + block_size - 1, ny)
+                       do i = ii, min(ii + block_size - 1, nx)
+                          dest(i, j, k) = source(i, j, k)
+                       end do
+                    end do
+                 end do
+              end do
+           end do
+        end do
+        !$omp end parallel do
+     else
+        dest = source
+     end if
+
+  end subroutine copy_3d_tensor_${T}$
+
+#:endfor
+
 
    #:for T in TYPES
       #:set FTYPE = FORTRAN_TYPES[T]
@@ -421,6 +521,48 @@ module pic_array
       end function sum_matrix_${T}$
 
    #:endfor
+#:for T in TYPES
+  #:set FTYPE = FORTRAN_TYPES[T]
+
+  function sum_3d_tensor_${T}$ (tensor, threaded) result(res)
+     ${FTYPE}$, intent(in) :: tensor(:, :, :)
+     logical, intent(in), optional :: threaded
+     logical :: use_threads
+     ${FTYPE}$ :: res
+     integer(default_int) :: nx, ny, nz
+     integer(default_int) :: i, j, k, ii, jj, kk
+
+     nx = size(tensor, 1)
+     ny = size(tensor, 2)
+     nz = size(tensor, 3)
+
+     use_threads = pic_optional(threaded, use_threaded_default)
+     res = 0_${T}$
+
+     if (use_threads) then
+        !$omp parallel do collapse(3) private(i,j,k,ii,jj,kk) reduction(+: res)
+        do kk = 1, nz, block_size
+           do jj = 1, ny, block_size
+              do ii = 1, nx, block_size
+                 do k = kk, min(kk + block_size - 1, nz)
+                    do j = jj, min(jj + block_size - 1, ny)
+                       do i = ii, min(ii + block_size - 1, nx)
+                          res = res + tensor(i, j, k)
+                       end do
+                    end do
+                 end do
+              end do
+           end do
+        end do
+        !$omp end parallel do
+     else
+        res = sum(tensor)
+     end if
+
+  end function sum_3d_tensor_${T}$
+
+#:endfor
+
 
    #:for T in TYPES
       #:set FTYPE = FORTRAN_TYPES[T]
