@@ -3,9 +3,12 @@ cmake_minimum_required(VERSION 3.22)
 project(
   "PIC"
   LANGUAGES Fortran C
-  VERSION 1.0
+  VERSION 0.1.0
   DESCRIPTION "Jorge's cool stuff")
 set(project_name pic)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/.VERSION.in
+               ${CMAKE_CURRENT_SOURCE_DIR}/.VERSION)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(GNUInstallDirs)
