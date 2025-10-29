@@ -10,6 +10,8 @@ PIC is an open source project licensed under the MIT License, so you can use it 
 
 All code that you contribute to PIC will be licensed under the MIT license, so please make sure that you are comfortable with this before submitting your changes.
 
+I also do not mind if you look at my code and copy paste it into yours, that's what the MIT license is for, right? Just make sure to comply with the license terms and give the repo a star.
+
 
 ## How to contribute
 
@@ -90,7 +92,7 @@ We follow the convention that the `end module` statement should contain the name
 
 ### Derived type naming convention
 
-All derived types should be named using the `pic_` prefix, followed by the name of the type. For example, the type that represents a vector is called `pic_vector_type`, and the type that represents a matrix is called `pic_matrix_type`.
+All derived types should include the suffix `_type` in their naming.
 
 ### Function and subroutine naming convention
 
@@ -102,7 +104,7 @@ For example, in `pic_timer.F90` we have the following interface:
 
 
 ```fortran
-   type :: pic_timer_type
+   type :: timer_type
     !! derived type for a timer, contains the start, stop, and count variables
     !! can work with or without omp
       private
@@ -118,7 +120,7 @@ For example, in `pic_timer.F90` we have the following interface:
       procedure :: stop => timer_stop
       procedure :: print_time => timer_print_time
       procedure :: get_elapsed_time => timer_get_elapsed_time
-   end type pic_timer_type
+   end type timer_type
 ```
 
 

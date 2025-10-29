@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 
 !! pic array contains L0.5 BLAS level routines, as in things that could be use in
 !! lieu of blas if you don't have it but if you do, please don't use these routines
@@ -234,6 +236,7 @@ contains
    end subroutine set_brackets
 
    subroutine fill_vector_int32(vector, alpha, threaded)
+        !! fill a vector of datatype int32 with a value
       integer(int32), intent(inout) :: vector(:)
       integer(int32), intent(in)    :: alpha
       logical, intent(in), optional :: threaded
@@ -254,6 +257,7 @@ contains
    end subroutine fill_vector_int32
 
    subroutine fill_vector_int64(vector, alpha, threaded)
+        !! fill a vector of datatype int64 with a value
       integer(int64), intent(inout) :: vector(:)
       integer(int64), intent(in)    :: alpha
       logical, intent(in), optional :: threaded
@@ -274,6 +278,7 @@ contains
    end subroutine fill_vector_int64
 
    subroutine fill_vector_sp(vector, alpha, threaded)
+        !! fill a vector of datatype sp with a value
       real(sp), intent(inout) :: vector(:)
       real(sp), intent(in)    :: alpha
       logical, intent(in), optional :: threaded
@@ -294,6 +299,7 @@ contains
    end subroutine fill_vector_sp
 
    subroutine fill_vector_dp(vector, alpha, threaded)
+        !! fill a vector of datatype dp with a value
       real(dp), intent(inout) :: vector(:)
       real(dp), intent(in)    :: alpha
       logical, intent(in), optional :: threaded
@@ -314,6 +320,7 @@ contains
    end subroutine fill_vector_dp
 
    subroutine fill_matrix_int32(matrix, alpha, threaded)
+        !! fill a matrix of datatype int32 with a value
       integer(int32), intent(inout) :: matrix(:, :)
       integer(int32), intent(in)    :: alpha
       integer(default_int) :: i, j, rows, cols
@@ -341,6 +348,7 @@ contains
    end subroutine fill_matrix_int32
 
    subroutine fill_matrix_int64(matrix, alpha, threaded)
+        !! fill a matrix of datatype int64 with a value
       integer(int64), intent(inout) :: matrix(:, :)
       integer(int64), intent(in)    :: alpha
       integer(default_int) :: i, j, rows, cols
@@ -368,6 +376,7 @@ contains
    end subroutine fill_matrix_int64
 
    subroutine fill_matrix_sp(matrix, alpha, threaded)
+        !! fill a matrix of datatype sp with a value
       real(sp), intent(inout) :: matrix(:, :)
       real(sp), intent(in)    :: alpha
       integer(default_int) :: i, j, rows, cols
@@ -395,6 +404,7 @@ contains
    end subroutine fill_matrix_sp
 
    subroutine fill_matrix_dp(matrix, alpha, threaded)
+        !! fill a matrix of datatype dp with a value
       real(dp), intent(inout) :: matrix(:, :)
       real(dp), intent(in)    :: alpha
       integer(default_int) :: i, j, rows, cols
@@ -422,6 +432,7 @@ contains
    end subroutine fill_matrix_dp
 
    subroutine fill_3d_tensor_int32(tensor, alpha, threaded)
+     !! fill a tensor of datatype int32 with a value
       integer(int32), intent(inout) :: tensor(:, :, :)
       integer(int32), intent(in)    :: alpha
       integer(default_int) :: i, j, k
@@ -459,6 +470,7 @@ contains
    end subroutine fill_3d_tensor_int32
 
    subroutine fill_3d_tensor_int64(tensor, alpha, threaded)
+     !! fill a tensor of datatype int64 with a value
       integer(int64), intent(inout) :: tensor(:, :, :)
       integer(int64), intent(in)    :: alpha
       integer(default_int) :: i, j, k
@@ -496,6 +508,7 @@ contains
    end subroutine fill_3d_tensor_int64
 
    subroutine fill_3d_tensor_sp(tensor, alpha, threaded)
+     !! fill a tensor of datatype sp with a value
       real(sp), intent(inout) :: tensor(:, :, :)
       real(sp), intent(in)    :: alpha
       integer(default_int) :: i, j, k
@@ -533,6 +546,7 @@ contains
    end subroutine fill_3d_tensor_sp
 
    subroutine fill_3d_tensor_dp(tensor, alpha, threaded)
+     !! fill a tensor of datatype dp with a value
       real(dp), intent(inout) :: tensor(:, :, :)
       real(dp), intent(in)    :: alpha
       integer(default_int) :: i, j, k
@@ -570,6 +584,7 @@ contains
    end subroutine fill_3d_tensor_dp
 
    subroutine copy_vector_int32(dest, source, threaded)
+        !! copy a vector of datatype int32
       integer(int32), intent(inout) :: dest(:)
       integer(int32), intent(in)    :: source(:)
       logical, intent(in), optional :: threaded
@@ -591,6 +606,7 @@ contains
    end subroutine copy_vector_int32
 
    subroutine copy_vector_int64(dest, source, threaded)
+        !! copy a vector of datatype int64
       integer(int64), intent(inout) :: dest(:)
       integer(int64), intent(in)    :: source(:)
       logical, intent(in), optional :: threaded
@@ -612,6 +628,7 @@ contains
    end subroutine copy_vector_int64
 
    subroutine copy_vector_sp(dest, source, threaded)
+        !! copy a vector of datatype sp
       real(sp), intent(inout) :: dest(:)
       real(sp), intent(in)    :: source(:)
       logical, intent(in), optional :: threaded
@@ -633,6 +650,7 @@ contains
    end subroutine copy_vector_sp
 
    subroutine copy_vector_dp(dest, source, threaded)
+        !! copy a vector of datatype dp
       real(dp), intent(inout) :: dest(:)
       real(dp), intent(in)    :: source(:)
       logical, intent(in), optional :: threaded
@@ -654,6 +672,7 @@ contains
    end subroutine copy_vector_dp
 
    subroutine copy_matrix_int32(dest, source, threaded)
+        !! copy a matrix of datatype int32
       integer(int32), intent(inout) :: dest(:, :)
       integer(int32), intent(in)    :: source(:, :)
       logical, intent(in), optional :: threaded
@@ -684,6 +703,7 @@ contains
    end subroutine copy_matrix_int32
 
    subroutine copy_matrix_int64(dest, source, threaded)
+        !! copy a matrix of datatype int64
       integer(int64), intent(inout) :: dest(:, :)
       integer(int64), intent(in)    :: source(:, :)
       logical, intent(in), optional :: threaded
@@ -714,6 +734,7 @@ contains
    end subroutine copy_matrix_int64
 
    subroutine copy_matrix_sp(dest, source, threaded)
+        !! copy a matrix of datatype sp
       real(sp), intent(inout) :: dest(:, :)
       real(sp), intent(in)    :: source(:, :)
       logical, intent(in), optional :: threaded
@@ -744,6 +765,7 @@ contains
    end subroutine copy_matrix_sp
 
    subroutine copy_matrix_dp(dest, source, threaded)
+        !! copy a matrix of datatype dp
       real(dp), intent(inout) :: dest(:, :)
       real(dp), intent(in)    :: source(:, :)
       logical, intent(in), optional :: threaded
@@ -774,6 +796,7 @@ contains
    end subroutine copy_matrix_dp
 
    subroutine copy_3d_tensor_int32(dest, source, threaded)
+     !! copy a tensor of datatype int32
       integer(int32), intent(inout) :: dest(:, :, :)
       integer(int32), intent(in)    :: source(:, :, :)
       logical, intent(in), optional :: threaded
@@ -818,6 +841,7 @@ contains
    end subroutine copy_3d_tensor_int32
 
    subroutine copy_3d_tensor_int64(dest, source, threaded)
+     !! copy a tensor of datatype int64
       integer(int64), intent(inout) :: dest(:, :, :)
       integer(int64), intent(in)    :: source(:, :, :)
       logical, intent(in), optional :: threaded
@@ -862,6 +886,7 @@ contains
    end subroutine copy_3d_tensor_int64
 
    subroutine copy_3d_tensor_sp(dest, source, threaded)
+     !! copy a tensor of datatype sp
       real(sp), intent(inout) :: dest(:, :, :)
       real(sp), intent(in)    :: source(:, :, :)
       logical, intent(in), optional :: threaded
@@ -906,6 +931,7 @@ contains
    end subroutine copy_3d_tensor_sp
 
    subroutine copy_3d_tensor_dp(dest, source, threaded)
+     !! copy a tensor of datatype dp
       real(dp), intent(inout) :: dest(:, :, :)
       real(dp), intent(in)    :: source(:, :, :)
       logical, intent(in), optional :: threaded
@@ -950,6 +976,7 @@ contains
    end subroutine copy_3d_tensor_dp
 
    subroutine transpose_matrix_int32(A, B, threaded)
+         !! transpose a matrix of datatype int32
       integer(int32), intent(in)  :: A(:, :)
       integer(int32), intent(out) :: B(:, :)
       logical, intent(in), optional :: threaded
@@ -983,6 +1010,7 @@ contains
    end subroutine transpose_matrix_int32
 
    subroutine transpose_matrix_int64(A, B, threaded)
+         !! transpose a matrix of datatype int64
       integer(int64), intent(in)  :: A(:, :)
       integer(int64), intent(out) :: B(:, :)
       logical, intent(in), optional :: threaded
@@ -1016,6 +1044,7 @@ contains
    end subroutine transpose_matrix_int64
 
    subroutine transpose_matrix_sp(A, B, threaded)
+         !! transpose a matrix of datatype sp
       real(sp), intent(in)  :: A(:, :)
       real(sp), intent(out) :: B(:, :)
       logical, intent(in), optional :: threaded
@@ -1049,6 +1078,7 @@ contains
    end subroutine transpose_matrix_sp
 
    subroutine transpose_matrix_dp(A, B, threaded)
+         !! transpose a matrix of datatype dp
       real(dp), intent(in)  :: A(:, :)
       real(dp), intent(out) :: B(:, :)
       logical, intent(in), optional :: threaded
@@ -1082,6 +1112,7 @@ contains
    end subroutine transpose_matrix_dp
 
    function sum_vector_int32(vector, threaded) result(res)
+        !! perform the total sum of all components of type int32 in a vector
       integer(int32), intent(in)  :: vector(:)
       logical, intent(in), optional :: threaded
       logical :: use_threads
@@ -1100,6 +1131,7 @@ contains
       end if
    end function sum_vector_int32
    function sum_vector_int64(vector, threaded) result(res)
+        !! perform the total sum of all components of type int64 in a vector
       integer(int64), intent(in)  :: vector(:)
       logical, intent(in), optional :: threaded
       logical :: use_threads
@@ -1118,6 +1150,7 @@ contains
       end if
    end function sum_vector_int64
    function sum_vector_sp(vector, threaded) result(res)
+        !! perform the total sum of all components of type sp in a vector
       real(sp), intent(in)  :: vector(:)
       logical, intent(in), optional :: threaded
       logical :: use_threads
@@ -1136,6 +1169,7 @@ contains
       end if
    end function sum_vector_sp
    function sum_vector_dp(vector, threaded) result(res)
+        !! perform the total sum of all components of type dp in a vector
       real(dp), intent(in)  :: vector(:)
       logical, intent(in), optional :: threaded
       logical :: use_threads
@@ -1155,6 +1189,7 @@ contains
    end function sum_vector_dp
 
    function sum_matrix_int32(matrix, threaded) result(res)
+        !! perform the total sum of all components of type int32 in a matrix
       integer(int32), intent(in) :: matrix(:, :)
       logical, intent(in), optional :: threaded
       logical :: use_threads
@@ -1185,6 +1220,7 @@ contains
    end function sum_matrix_int32
 
    function sum_matrix_int64(matrix, threaded) result(res)
+        !! perform the total sum of all components of type int64 in a matrix
       integer(int64), intent(in) :: matrix(:, :)
       logical, intent(in), optional :: threaded
       logical :: use_threads
@@ -1215,6 +1251,7 @@ contains
    end function sum_matrix_int64
 
    function sum_matrix_sp(matrix, threaded) result(res)
+        !! perform the total sum of all components of type sp in a matrix
       real(sp), intent(in) :: matrix(:, :)
       logical, intent(in), optional :: threaded
       logical :: use_threads
@@ -1245,6 +1282,7 @@ contains
    end function sum_matrix_sp
 
    function sum_matrix_dp(matrix, threaded) result(res)
+        !! perform the total sum of all components of type dp in a matrix
       real(dp), intent(in) :: matrix(:, :)
       logical, intent(in), optional :: threaded
       logical :: use_threads
@@ -1275,6 +1313,7 @@ contains
    end function sum_matrix_dp
 
    function sum_3d_tensor_int32(tensor, threaded) result(res)
+    !! perform the total sum of all components of type int32 in a 3d tensor
       integer(int32), intent(in) :: tensor(:, :, :)
       logical, intent(in), optional :: threaded
       logical :: use_threads
@@ -1312,6 +1351,7 @@ contains
    end function sum_3d_tensor_int32
 
    function sum_3d_tensor_int64(tensor, threaded) result(res)
+    !! perform the total sum of all components of type int64 in a 3d tensor
       integer(int64), intent(in) :: tensor(:, :, :)
       logical, intent(in), optional :: threaded
       logical :: use_threads
@@ -1349,6 +1389,7 @@ contains
    end function sum_3d_tensor_int64
 
    function sum_3d_tensor_sp(tensor, threaded) result(res)
+    !! perform the total sum of all components of type sp in a 3d tensor
       real(sp), intent(in) :: tensor(:, :, :)
       logical, intent(in), optional :: threaded
       logical :: use_threads
@@ -1386,6 +1427,7 @@ contains
    end function sum_3d_tensor_sp
 
    function sum_3d_tensor_dp(tensor, threaded) result(res)
+    !! perform the total sum of all components of type dp in a 3d tensor
       real(dp), intent(in) :: tensor(:, :, :)
       logical, intent(in), optional :: threaded
       logical :: use_threads
@@ -1423,6 +1465,7 @@ contains
    end function sum_3d_tensor_dp
 
    pure function is_sorted_int32(array, order) result(sorted)
+        !! check if a 1d array of type int32 is sorted
       integer(int32), intent(in) :: array(:)
       integer(default_int), intent(in), optional :: order
       integer(default_int):: sort_order
@@ -1452,6 +1495,7 @@ contains
    end function is_sorted_int32
 
    pure function is_sorted_int64(array, order) result(sorted)
+        !! check if a 1d array of type int64 is sorted
       integer(int64), intent(in) :: array(:)
       integer(default_int), intent(in), optional :: order
       integer(default_int):: sort_order
@@ -1481,6 +1525,7 @@ contains
    end function is_sorted_int64
 
    pure function is_sorted_sp(array, order) result(sorted)
+        !! check if a 1d array of type sp is sorted
       real(sp), intent(in) :: array(:)
       integer(default_int), intent(in), optional :: order
       integer(default_int):: sort_order
@@ -1510,6 +1555,7 @@ contains
    end function is_sorted_sp
 
    pure function is_sorted_dp(array, order) result(sorted)
+        !! check if a 1d array of type dp is sorted
       real(dp), intent(in) :: array(:)
       integer(default_int), intent(in), optional :: order
       integer(default_int):: sort_order
@@ -1539,6 +1585,7 @@ contains
    end function is_sorted_dp
 
    pure function is_sorted_char(array, order) result(sorted)
+   !! check if a 1d array of type char is sorted
       character(len=*), intent(in) :: array(:)
       integer(default_int), intent(in), optional :: order
       integer(default_int) :: sort_order
@@ -2103,6 +2150,7 @@ contains
    end subroutine print_3d_tensor_dp
 
    subroutine scramble_array_int32(array)
+      !! should not be used, intended for testing purposes. randomizes an array of type int32
       integer(int32), intent(inout) :: array(:)
       integer(int32) :: i, j, n
       integer(int32) :: temp
@@ -2119,6 +2167,7 @@ contains
    end subroutine scramble_array_int32
 
    subroutine scramble_array_int64(array)
+      !! should not be used, intended for testing purposes. randomizes an array of type int64
       integer(int64), intent(inout) :: array(:)
       integer(int32) :: i, j, n
       integer(int64) :: temp
@@ -2135,6 +2184,7 @@ contains
    end subroutine scramble_array_int64
 
    subroutine scramble_array_sp(array)
+      !! should not be used, intended for testing purposes. randomizes an array of type sp
       real(sp), intent(inout) :: array(:)
       integer(int32) :: i, j, n
       real(sp) :: temp
@@ -2151,6 +2201,7 @@ contains
    end subroutine scramble_array_sp
 
    subroutine scramble_array_dp(array)
+      !! should not be used, intended for testing purposes. randomizes an array of type dp
       real(dp), intent(inout) :: array(:)
       integer(int32) :: i, j, n
       real(dp) :: temp
@@ -2167,6 +2218,7 @@ contains
    end subroutine scramble_array_dp
 
    subroutine scramble_array_character(array)
+      !! should not be used, intended for testing purposes. randomizes an array of type char
       character(len=*), intent(inout) :: array(:)
       integer(int32) :: i, j, n
       character(len=len(array)) :: temp

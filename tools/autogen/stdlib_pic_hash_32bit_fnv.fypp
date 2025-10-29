@@ -1,3 +1,6 @@
+! SPDX-License-Identifier: MIT
+! Integrated from the Fortran Standard Library licensed under MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 
 !!------------------------------------------------------------------------------
 !! `FNV_1_HASH` and  `FNV_1A_Hash` are translations to Fortran 2008 of the

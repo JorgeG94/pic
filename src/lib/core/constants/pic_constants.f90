@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 !! all things constants, physical, chemical, etc
 module pic_constants
   !! this will be the physical constants module

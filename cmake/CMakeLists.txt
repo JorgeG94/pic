@@ -63,7 +63,7 @@ set(CMAKE_Fortran_FLAGS
     PARENT_SCOPE)
 
 set(CMAKE_Fortran_FLAGS_COVERAGE
-    "-O0 -g -coverage -fprofile-arcs -ftest-coverage")
+    "-O0 -g -coverage -fprofile-arcs -ftest-coverage --free-line-length-none")
 if(CMAKE_BUILD_TYPE STREQUAL "Coverage")
   set(CMAKE_Fortran_FLAGS
       "${CMAKE_Fortran_FLAGS} ${CMAKE_Fortran_FLAGS_COVERAGE}"
