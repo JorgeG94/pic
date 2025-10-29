@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 !! General helpers
 module pic_test_helpers
   !! simple reusable helpers for random things

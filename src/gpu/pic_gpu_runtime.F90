@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 !! General cuda/hip agnostic module to interface to GPU runtimes
 module pic_gpu_runtime
   !! gpu runtime interfaces via iso_c

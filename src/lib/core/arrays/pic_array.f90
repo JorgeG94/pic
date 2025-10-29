@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 
 !! pic array contains L0.5 BLAS level routines, as in things that could be use in
 !! lieu of blas if you don't have it but if you do, please don't use these routines

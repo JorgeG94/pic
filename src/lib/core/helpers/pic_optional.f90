@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 !! Optional value handling module
 module pic_optional_value
    !! This module provides functions to handle optional arguments

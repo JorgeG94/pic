@@ -1,3 +1,6 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
+
 !! the main pic module interface: versions, banners, random quotes etc will go here
 module pic
  !! simple interface module that prints banner and other information about the library

@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 !! pic_types.F90 controls the standarized sizes for the datatypes across
 !! pic, this is key for interfacing with other codes specially those that
 !! use default sizes

@@ -16,13 +16,43 @@ PIC is named after the Huastec word PIC which means otter.
 A work in progress on writing a cool backend for Fortan applications focused on scientific computing software. Originally this was going
 to be for quantum chemistry but I ended up writing way more general routines than I expected.
 
-## Contributing
+## Building (TLDR) on Linux
 
-Please see the [contributing guidelines](https://jorgeg94.github.io/pic/page/contributing.html) for information on how to contribute to the project.
+I assume you have experience building things here. If you don't please go further down for a more verbose explanation.
 
-See our [code of conduct](CODE_OF_CONDUCT.md) for details on community standards. In short, PIC is a welcoming codebase that is open to contributions
-from anyone at any level of experience. Do you want to fix my thousands of typos, go ahead. Do you want to contribute code, go ahead. Just always
-be respectful of others.
+Briefly, for a minimal build (no BLAS, no MPI)  you need:
+
+- CMake (at least 3.22) or the Fortran Package Manager (at least 0.12.0)
+- A Fortran compiler
+- An internet connection to pull the `test-drive` dependency
+
+I don't have a Mac nor am I experienced with Windows development, however the CI routines test for the code to be built on both platforms. These instructions
+should work on either OS, but be mindful this is aimed at Linux.
+
+### Building with CMake
+
+The top level directory is `$PIC_BASE` which is the `pic/` directory that was cloned or unpacked. I assume you are here. And
+`$PIC_ROOT` is the path to where you'd like pic to be installed, for example `export PIC_ROOT=$HOME/install/pic/dev/`
+
+```
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=$PIC_ROOT ../
+make -j install
+```
+
+To run the tests, from the build directory simply run: `ctest`
+
+### Building with FPM
+
+The same `$PIC_BASE` and `$PIC_ROOT` will be used here. Simply:
+
+```
+fpm install --prefix $PIC_ROOT --profile release
+```
+
+To run the tests: `fpm test --profile release`
+
 
 ## Building and dependencies
 
@@ -61,20 +91,32 @@ personal fork which is pulled from here, and Jeff's [project](https://github.com
 Will update to use the orignal project at a later date.
 
 
-### Building:
+### Building (extended)
+
+To enable extended builds of PIC, i.e. using the BLAS interface and the dramatically underdeveloped MPI interface you can use the
+options provided above, simply:
 
 ```
-mkdir build
-cd build
-cmake ../
-make -j
-ctest
+cmake -DPIC_ENABLE_BLAS=ON -DPIC_ENABLE_MPI=ON ../
 ```
+
+This will build the necessary files and will add the BLAS related tests to the `ctest` suite.
 
 ### FPM
 
-Install the FPM following the [instructions](https://fpm.fortran-lang.org/install/index.html#install) and then simply: `fpm build`
+Install the FPM following the [instructions](https://fpm.fortran-lang.org/install/index.html#install) and then simply: `fpm install`
 
+The FPM will build the entire library, however the BLAS tests are not included in the default build. This is for simplicity for people
+that want to include `pic` as a dependency in their `fpm.toml` files. To compile PIC with BLAS support, make sure to pass the compile flag:
+`fpm install --flag "-DPIC_HAVE_BLAS"` so that the code gets compiled correctly.
+
+## Contributing
+
+Please see the [contributing guidelines](https://jorgeg94.github.io/pic/page/contributing.html) for information on how to contribute to the project.
+
+See our [code of conduct](CODE_OF_CONDUCT.md) for details on community standards. In short, PIC is a welcoming codebase that is open to contributions
+from anyone at any level of experience. Do you want to fix my thousands of typos, go ahead. Do you want to contribute code, go ahead. Just always
+be respectful of others.
 
 ## Examples
 

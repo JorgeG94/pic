@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 !! the pic_logger.f90 is the base file that defines the logger function
 !! this is heavily inspired by the logger from the standard library
 !! but with some key changes for my purposes.

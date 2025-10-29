@@ -1,3 +1,6 @@
+! SPDX-License-Identifier: MIT
+! Integrated from the Fortran Standard Library licensed under MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 
 submodule(pic_string_type) pic_string_type_constructor
    use pic_strings, only: to_string

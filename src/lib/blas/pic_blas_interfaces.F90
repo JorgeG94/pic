@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 #ifdef PIC_HAVE_BLAS
 !! this file contains the interfaces for the BLAS routines of all levels
 !! I might consider splitting them up later but alas, I don't have the time now

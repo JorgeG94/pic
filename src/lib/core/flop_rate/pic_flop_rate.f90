@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 !! flop rate handler modules
 module pic_flop_rate
    !! pic_flop_rate is a convenient encapsulation of the flop_recorder and pic_timer

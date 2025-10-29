@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 !! device handling routines
 module pic_device
   !! contains the general routines that interface to the pic_gpu_runtime module

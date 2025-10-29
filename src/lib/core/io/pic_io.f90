@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 !! this file contains "helper" routines, for example printing
 !! a set amount of x characters to creates tables, etc.
 

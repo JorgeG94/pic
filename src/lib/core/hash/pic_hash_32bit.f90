@@ -1,3 +1,6 @@
+! SPDX-License-Identifier: MIT
+! Integrated from the Fortran Standard Library licensed under MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 
 module pic_hash_32bit
 

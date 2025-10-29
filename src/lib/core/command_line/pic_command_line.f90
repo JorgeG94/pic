@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 !! The pic_command_line.f90 file will contain all routines that will interact with the command line
 
 module pic_command_line

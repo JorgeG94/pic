@@ -1,4 +1,6 @@
-! SPDX-Identifier: MIT
+! SPDX-License-Identifier: MIT
+! Integrated from the Fortran Standard Library licensed under MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 
 !> Implementation of a string type to hold an arbitrary sequence of characters.
 !>

@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 !! the gathered knowledge of the species
 module pic_knowledge
   !! a simple module that collects phrases and prints them out randomly, like fortune
