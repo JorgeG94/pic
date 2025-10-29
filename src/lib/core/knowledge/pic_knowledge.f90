@@ -31,7 +31,7 @@ contains
       knowledge(8) = "Maybe I WILL use a more efficient language: Fortran (Jorge, to CS)"
       knowledge(9) = "No one owns Makefiles!"
       knowledge(10) = "Why did you choose CMake over any other build system? Jorge: Stockholm Syndrome?"
-      knowledge(11) = "That's exactly what Bjarne Sostrup intended when he created C++ - in response to RS doing an abomination in C++, by CS"
+      knowledge(11) = "That is exactly what Bjarne Sostrup intended when he created C++ - in response to RS doing an abomination in C++, by CS"
 
       n = size(knowledge)
 
