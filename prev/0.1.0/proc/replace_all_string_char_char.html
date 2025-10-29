@@ -1,0 +1,822 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used modules for HPC">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>replace_all_string_char_char &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC <small>v0.1.0-rc2</small></a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>replace_all_string_char_char
+      <small>Function</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.1% of total for procedures.">7 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_strings.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_strings.f90.html'>pic_strings.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_strings.html'>pic_strings</a></li>
+            <li class="breadcrumb-item active" aria-current="page">replace_all_string_char_char</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/replace_all_string_char_char.html#src">replace_all_string_char_char</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private pure function replace_all_string_char_char(string, pattern, replacement) result(res)  
+</h2>
+    
+
+    <p>Replaces all occurrences of substring &lsquo;pattern&rsquo; in the input &lsquo;string&rsquo;
+with the replacement &lsquo;replacement&rsquo;
+Returns a new string</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~86"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pattern~9"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>pattern</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-replacement~5"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>replacement</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <h3>Return Value
+        <small>
+          <span class="anchor" id="variable-res~23"></span>
+          type(<a href='../type/string_type.html'>string_type</a>)
+        </small>
+      </h3>
+      
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~replace_all_string_char_char~~CallsGraph Pages: 1 -->
+<svg id="procreplace_all_string_char_charCallsGraph" width="606pt" height="284pt"
+ viewBox="0.00 0.00 606.00 284.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~replace_all_string_char_char~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 280)">
+<title>proc~~replace_all_string_char_char~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-280 602,-280 602,4 -4,4"/>
+<!-- proc~replace_all_string_char_char -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_node1" class="node">
+<title>proc~replace_all_string_char_char</title>
+<polygon fill="none" stroke="black" points="164,-150 0,-150 0,-126 164,-126 164,-150"/>
+<text text-anchor="middle" x="82" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50">replace_all_string_char_char</text>
+</g>
+<!-- interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_node2" class="node">
+<title>interface~replace_all</title>
+<g id="a_proc~~replace_all_string_char_char~~CallsGraph_node2"><a xlink:href="../interface/replace_all.html" xlink:title="replace_all">
+<polygon fill="#a7506f" stroke="#a7506f" points="270,-150 200,-150 200,-126 270,-126 270,-150"/>
+<text text-anchor="middle" x="235" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all</text>
+</a>
+</g>
+</g>
+<!-- proc~replace_all_string_char_char&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge1" class="edge">
+<title>proc~replace_all_string_char_char&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M164.25,-131.27C172.98,-131.32 181.62,-131.49 189.67,-131.79"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="189.75,-135.3 199.9,-132.25 190.06,-128.3 189.75,-135.3"/>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_string_char_char -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge6" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_string_char_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M199.9,-143.75C192.1,-144.17 183.45,-144.46 174.48,-144.61"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="174.2,-141.12 164.25,-144.73 174.29,-148.12 174.2,-141.12"/>
+</g>
+<!-- proc~replace_all_char_char_char -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_node3" class="node">
+<title>proc~replace_all_char_char_char</title>
+<g id="a_proc~~replace_all_string_char_char~~CallsGraph_node3"><a xlink:href="../proc/replace_all_char_char_char.html" xlink:title="replace_all_char_char_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="473,-276 315,-276 315,-252 473,-252 473,-276"/>
+<text text-anchor="middle" x="394" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_char_char_char</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_char_char_char -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge2" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_char_char_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M240.61,-150.23C249.61,-172.38 271.7,-219.03 306,-243 308.39,-244.67 310.89,-246.21 313.49,-247.62"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="312.06,-250.82 322.59,-251.98 315.08,-244.5 312.06,-250.82"/>
+</g>
+<!-- proc~replace_all_char_char_string -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_node4" class="node">
+<title>proc~replace_all_char_char_string</title>
+<g id="a_proc~~replace_all_string_char_char~~CallsGraph_node4"><a xlink:href="../proc/replace_all_char_char_string.html" xlink:title="replace_all_char_char_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="476,-234 312,-234 312,-210 476,-210 476,-234"/>
+<text text-anchor="middle" x="394" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_char_char_string</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_char_char_string -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge3" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_char_char_string</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M252.78,-150.19C265.9,-162.72 285.31,-181.1 306,-192 319.63,-199.18 335.74,-203.95 350.38,-207.62"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="349.69,-211.05 360.23,-210 351.33,-204.25 349.69,-211.05"/>
+</g>
+<!-- proc~replace_all_char_string_char -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_node5" class="node">
+<title>proc~replace_all_char_string_char</title>
+<g id="a_proc~~replace_all_string_char_char~~CallsGraph_node5"><a xlink:href="../proc/replace_all_char_string_char.html" xlink:title="replace_all_char_string_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="476,-192 312,-192 312,-168 476,-168 476,-192"/>
+<text text-anchor="middle" x="394" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_char_string_char</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_char_string_char -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge4" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_char_string_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M270.07,-140.1C281.46,-143.07 294.24,-146.82 306,-150 324.38,-154.97 345.11,-160 361.71,-164.87"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="360.88,-168.28 371.46,-167.89 362.94,-161.59 360.88,-168.28"/>
+</g>
+<!-- proc~replace_all_char_string_string -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_node6" class="node">
+<title>proc~replace_all_char_string_string</title>
+<g id="a_proc~~replace_all_string_char_char~~CallsGraph_node6"><a xlink:href="../proc/replace_all_char_string_string.html" xlink:title="replace_all_char_string_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="479,-150 309,-150 309,-126 479,-126 479,-150"/>
+<text text-anchor="middle" x="394" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_char_string_string</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_char_string_string -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge5" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_char_string_string</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M270.07,-132.32C278.72,-131.85 288.46,-131.54 298.56,-131.38"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="298.79,-134.87 308.76,-131.27 298.72,-127.87 298.79,-134.87"/>
+</g>
+<!-- proc~replace_all_string_char_string -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_node7" class="node">
+<title>proc~replace_all_string_char_string</title>
+<g id="a_proc~~replace_all_string_char_char~~CallsGraph_node7"><a xlink:href="../proc/replace_all_string_char_string.html" xlink:title="replace_all_string_char_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="479,-108 309,-108 309,-84 479,-84 479,-108"/>
+<text text-anchor="middle" x="394" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_string_char_string</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_string_char_string -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge7" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_string_char_string</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M251.78,-125.92C263.71,-120.57 280.77,-115.1 298.69,-110.04"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="300.01,-113.3 308.72,-107.27 298.15,-106.56 300.01,-113.3"/>
+</g>
+<!-- proc~replace_all_string_string_char -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_node8" class="node">
+<title>proc~replace_all_string_string_char</title>
+<g id="a_proc~~replace_all_string_char_char~~CallsGraph_node8"><a xlink:href="../proc/replace_all_string_string_char.html" xlink:title="replace_all_string_string_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="479,-66 309,-66 309,-42 479,-42 479,-66"/>
+<text text-anchor="middle" x="394" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_string_string_char</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_string_string_char -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge8" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_string_string_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M241.56,-125.96C251.41,-110.7 273.22,-86.13 300.05,-69.58"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="301.97,-72.51 308.92,-64.52 298.5,-66.43 301.97,-72.51"/>
+</g>
+<!-- proc~replace_all_string_string_string -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_node9" class="node">
+<title>proc~replace_all_string_string_string</title>
+<g id="a_proc~~replace_all_string_char_char~~CallsGraph_node9"><a xlink:href="../proc/replace_all_string_string_string.html" xlink:title="replace_all_string_string_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="482,-24 306,-24 306,0 482,0 482,-24"/>
+<text text-anchor="middle" x="394" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_string_string_string</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_string_string_string -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge9" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_string_string_string</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M238.84,-125.84C245.88,-103.38 265.89,-57.27 298.34,-29.93"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="300.59,-32.61 306.38,-23.73 296.32,-27.06 300.59,-32.61"/>
+</g>
+<!-- proc~compute_lps -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_node10" class="node">
+<title>proc~compute_lps</title>
+<g id="a_proc~~replace_all_string_char_char~~CallsGraph_node10"><a xlink:href="../proc/compute_lps.html" xlink:title="compute_lps">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="598,-276 518,-276 518,-252 598,-252 598,-276"/>
+<text text-anchor="middle" x="558" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_lps</text>
+</a>
+</g>
+</g>
+<!-- proc~replace_all_char_char_char&#45;&gt;proc~compute_lps -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge10" class="edge">
+<title>proc~replace_all_char_char_char&#45;&gt;proc~compute_lps</title>
+<path fill="none" stroke="#ff0000" d="M473.15,-264C484.93,-264 496.78,-264 507.72,-264"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="507.89,-267.5 517.89,-264 507.89,-260.5 507.89,-267.5"/>
+</g>
+<!-- proc~replace_all_char_char_string&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge11" class="edge">
+<title>proc~replace_all_char_char_string&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ffda00" d="M311.91,-212.9C309.9,-211.98 307.92,-211.01 306,-210 282.23,-197.48 260.13,-175.07 247.35,-158.25"/>
+<polygon fill="#ffda00" stroke="#ffda00" points="250.18,-156.19 241.56,-150.04 244.47,-160.23 250.18,-156.19"/>
+</g>
+<!-- proc~replace_all_char_string_char&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge12" class="edge">
+<title>proc~replace_all_char_string_char&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#48ff00" d="M311.92,-169.58C309.93,-169.06 307.95,-168.53 306,-168 291.07,-163.96 274.48,-159.01 261.2,-153.95"/>
+<polygon fill="#48ff00" stroke="#48ff00" points="262.36,-150.64 251.78,-150.08 259.7,-157.12 262.36,-150.64"/>
+</g>
+<!-- proc~replace_all_char_string_string&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge13" class="edge">
+<title>proc~replace_all_char_string_string&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#00ff91" d="M308.76,-144.73C298.92,-144.68 289.2,-144.48 280.22,-144.14"/>
+<polygon fill="#00ff91" stroke="#00ff91" points="280.22,-140.64 270.07,-143.68 279.9,-147.63 280.22,-140.64"/>
+</g>
+<!-- proc~replace_all_string_char_string&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge14" class="edge">
+<title>proc~replace_all_string_char_string&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#0091ff" d="M371.46,-108.11C353.81,-113.92 328.2,-120 306,-126 297.55,-128.29 288.57,-130.86 279.96,-133.24"/>
+<polygon fill="#0091ff" stroke="#0091ff" points="278.82,-129.92 270.07,-135.9 280.64,-136.68 278.82,-129.92"/>
+</g>
+<!-- proc~replace_all_string_string_char&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge15" class="edge">
+<title>proc~replace_all_string_string_char&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#4800ff" d="M360.23,-66C343.32,-69.98 322.77,-75.17 306,-84 288.87,-93.02 272.61,-107.18 260.08,-118.9"/>
+<polygon fill="#4800ff" stroke="#4800ff" points="257.63,-116.39 252.78,-125.81 262.45,-121.47 257.63,-116.39"/>
+</g>
+<!-- proc~replace_all_string_string_string&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CallsGraph_edge16" class="edge">
+<title>proc~replace_all_string_string_string&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff00da" d="M351.42,-24.03C336.09,-27.54 319.25,-32.75 306,-42 278.62,-61.13 259.03,-94.71 247.66,-116.84"/>
+<polygon fill="#ff00da" stroke="#ff00da" points="244.5,-115.33 243.15,-125.84 250.76,-118.46 244.5,-115.33"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~replace_all_string_char_char~~CalledByGraph Pages: 1 -->
+<svg id="procreplace_all_string_char_charCalledByGraph" width="490pt" height="242pt"
+ viewBox="0.00 0.00 490.00 242.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~replace_all_string_char_char~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 238)">
+<title>proc~~replace_all_string_char_char~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-238 486,-238 486,4 -4,4"/>
+<!-- proc~replace_all_string_char_char -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_node1" class="node">
+<title>proc~replace_all_string_char_char</title>
+<polygon fill="none" stroke="black" points="164,-129 0,-129 0,-105 164,-105 164,-129"/>
+<text text-anchor="middle" x="82" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50">replace_all_string_char_char</text>
+</g>
+<!-- interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_node2" class="node">
+<title>interface~replace_all</title>
+<g id="a_proc~~replace_all_string_char_char~~CalledByGraph_node2"><a xlink:href="../interface/replace_all.html" xlink:title="replace_all">
+<polygon fill="#a7506f" stroke="#a7506f" points="270,-129 200,-129 200,-105 270,-105 270,-129"/>
+<text text-anchor="middle" x="235" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all</text>
+</a>
+</g>
+</g>
+<!-- proc~replace_all_string_char_char&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge5" class="edge">
+<title>proc~replace_all_string_char_char&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M164.25,-110.27C172.98,-110.32 181.62,-110.49 189.67,-110.79"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="189.75,-114.3 199.9,-111.25 190.06,-107.3 189.75,-114.3"/>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_string_char_char -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge1" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_string_char_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M199.9,-122.75C192.1,-123.17 183.45,-123.46 174.48,-123.61"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="174.2,-120.12 164.25,-123.73 174.29,-127.12 174.2,-120.12"/>
+</g>
+<!-- proc~replace_all_char_char_string -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_node3" class="node">
+<title>proc~replace_all_char_char_string</title>
+<g id="a_proc~~replace_all_string_char_char~~CalledByGraph_node3"><a xlink:href="../proc/replace_all_char_char_string.html" xlink:title="replace_all_char_char_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="476,-234 312,-234 312,-210 476,-210 476,-234"/>
+<text text-anchor="middle" x="394" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_char_char_string</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_char_char_string -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge9" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_char_char_string</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M246.6,-129.06C258.53,-146.07 279.73,-175.66 306,-192 317.67,-199.26 331.66,-204.01 344.98,-207.49"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="344.44,-210.96 354.98,-209.92 346.09,-204.16 344.44,-210.96"/>
+</g>
+<!-- proc~replace_all_char_string_char -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_node4" class="node">
+<title>proc~replace_all_char_string_char</title>
+<g id="a_proc~~replace_all_string_char_char~~CalledByGraph_node4"><a xlink:href="../proc/replace_all_char_string_char.html" xlink:title="replace_all_char_string_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="476,-192 312,-192 312,-168 476,-168 476,-192"/>
+<text text-anchor="middle" x="394" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_char_string_char</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_char_string_char -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge10" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_char_string_char</title>
+<path fill="none" stroke="#ffff00" stroke-dasharray="5,2" d="M265.62,-129.14C277.71,-136.13 292.1,-144.31 306,-150 321.81,-156.47 340.08,-161.26 355.79,-165.32"/>
+<polygon fill="#ffff00" stroke="#ffff00" points="355.13,-168.77 365.68,-167.9 356.89,-162 355.13,-168.77"/>
+</g>
+<!-- proc~replace_all_char_string_string -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_node5" class="node">
+<title>proc~replace_all_char_string_string</title>
+<g id="a_proc~~replace_all_string_char_char~~CalledByGraph_node5"><a xlink:href="../proc/replace_all_char_string_string.html" xlink:title="replace_all_char_string_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="479,-150 309,-150 309,-126 479,-126 479,-150"/>
+<text text-anchor="middle" x="394" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_char_string_string</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_char_string_string -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge11" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_char_string_string</title>
+<path fill="none" stroke="#00ff00" stroke-dasharray="5,2" d="M270.07,-115.88C290.18,-117.48 316.09,-120.68 338.94,-124.32"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="338.41,-127.78 348.85,-125.96 339.55,-120.87 338.41,-127.78"/>
+</g>
+<!-- proc~replace_all_string_char_string -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_node6" class="node">
+<title>proc~replace_all_string_char_string</title>
+<g id="a_proc~~replace_all_string_char_char~~CalledByGraph_node6"><a xlink:href="../proc/replace_all_string_char_string.html" xlink:title="replace_all_string_char_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="479,-108 309,-108 309,-84 479,-84 479,-108"/>
+<text text-anchor="middle" x="394" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_string_char_string</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_string_char_string -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge12" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_string_char_string</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M270.07,-106.76C278.72,-105.14 288.46,-103.52 298.56,-102.01"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="299.36,-105.43 308.76,-100.53 298.36,-98.5 299.36,-105.43"/>
+</g>
+<!-- proc~replace_all_string_string_char -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_node7" class="node">
+<title>proc~replace_all_string_string_char</title>
+<g id="a_proc~~replace_all_string_char_char~~CalledByGraph_node7"><a xlink:href="../proc/replace_all_string_string_char.html" xlink:title="replace_all_string_string_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="479,-66 309,-66 309,-42 479,-42 479,-66"/>
+<text text-anchor="middle" x="394" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_string_string_char</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_string_string_char -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge13" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_string_string_char</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M244.6,-104.78C255.83,-93.99 276.51,-79.68 299.16,-69.1"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="300.85,-72.17 308.61,-64.96 298.05,-65.76 300.85,-72.17"/>
+</g>
+<!-- proc~replace_all_string_string_string -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_node8" class="node">
+<title>proc~replace_all_string_string_string</title>
+<g id="a_proc~~replace_all_string_char_char~~CalledByGraph_node8"><a xlink:href="../proc/replace_all_string_string_string.html" xlink:title="replace_all_string_string_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="482,-24 306,-24 306,0 482,0 482,-24"/>
+<text text-anchor="middle" x="394" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_string_string_string</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_string_string_string -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge14" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_string_string_string</title>
+<path fill="none" stroke="#ff00ff" stroke-dasharray="5,2" d="M239.96,-104.87C248.31,-85.99 269.3,-51.36 297.17,-30.11"/>
+<polygon fill="#ff00ff" stroke="#ff00ff" points="299.41,-32.82 305.62,-24.24 295.41,-27.07 299.41,-32.82"/>
+</g>
+<!-- proc~replace_all_char_char_string&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge2" class="edge">
+<title>proc~replace_all_char_char_string&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M311.7,-213.26C309.75,-212.24 307.85,-211.15 306,-210 278.04,-192.61 255.84,-160.23 244.42,-138.35"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="247.47,-136.6 239.96,-129.13 241.17,-139.66 247.47,-136.6"/>
+</g>
+<!-- proc~replace_all_char_string_char&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge3" class="edge">
+<title>proc~replace_all_char_string_char&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M311.7,-170.22C309.77,-169.51 307.87,-168.77 306,-168 286.45,-159.99 265.93,-147.07 252.2,-135.9"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="254.43,-133.19 244.6,-129.22 249.81,-138.45 254.43,-133.19"/>
+</g>
+<!-- proc~replace_all_char_string_string&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge4" class="edge">
+<title>proc~replace_all_char_string_string&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M308.76,-133.47C298.81,-132.08 288.99,-130.56 279.93,-129.01"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="280.53,-125.56 270.07,-127.24 279.29,-132.45 280.53,-125.56"/>
+</g>
+<!-- proc~replace_all_string_char_string&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge6" class="edge">
+<title>proc~replace_all_string_char_string&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M348.85,-108.04C327.4,-111.73 301.68,-115.17 280.22,-117.23"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="279.72,-113.76 270.07,-118.12 280.34,-120.73 279.72,-113.76"/>
+</g>
+<!-- proc~replace_all_string_string_char&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge7" class="edge">
+<title>proc~replace_all_string_string_char&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M365.68,-66.1C348.2,-70.73 325.27,-76.11 306,-84 295.36,-88.36 284.43,-94.17 274.46,-99.8"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="272.55,-96.86 265.62,-104.86 276.03,-102.93 272.55,-96.86"/>
+</g>
+<!-- proc~replace_all_string_string_string&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_string_char_char~~CalledByGraph_edge8" class="edge">
+<title>proc~replace_all_string_string_string&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M354.98,-24.08C338.95,-27.73 320.65,-32.89 306,-42 283.63,-55.92 264.94,-79.44 252.51,-96.62"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="249.54,-94.77 246.6,-104.94 255.24,-98.82 249.54,-94.77"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">pure function </span><span class="n">replace_all_string_char_char</span><span class="p">(</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">pattern</span><span class="p">,</span><span class="w"> </span><span class="n">replacement</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">string_type</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">string</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">pattern</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">replacement</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">string_type</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">res</span>
+
+<span class="w">      </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">string_type</span><span class="p">(</span><span class="n">replace_all</span><span class="p">(</span><span class="nb">char</span><span class="p">(</span><span class="n">string</span><span class="p">),</span><span class="w"> </span><span class="n">pattern</span><span class="p">,</span><span class="w"> </span><span class="n">replacement</span><span class="p">))</span>
+
+<span class="w">   </span><span class="k">end function </span><span class="n">replace_all_string_char_char</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2025-10-29 16:00 +1100             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

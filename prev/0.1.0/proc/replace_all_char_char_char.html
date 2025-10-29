@@ -1,0 +1,841 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used modules for HPC">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>replace_all_char_char_char &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC <small>v0.1.0-rc2</small></a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>replace_all_char_char_char
+      <small>Function</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.3% of total for procedures.">33 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_strings.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_strings.f90.html'>pic_strings.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_strings.html'>pic_strings</a></li>
+            <li class="breadcrumb-item active" aria-current="page">replace_all_char_char_char</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../proc/replace_all_char_char_char.html#variable-last~10">last</a>
+            <a class="list-group-item" href="../proc/replace_all_char_char_char.html#variable-length_pattern~2">length_pattern</a>
+            <a class="list-group-item" href="../proc/replace_all_char_char_char.html#variable-length_string~4">length_string</a>
+            <a class="list-group-item" href="../proc/replace_all_char_char_char.html#variable-lps_array~3">lps_array</a>
+            <a class="list-group-item" href="../proc/replace_all_char_char_char.html#variable-p_i~2">p_i</a>
+            <a class="list-group-item" href="../proc/replace_all_char_char_char.html#variable-s_i~2">s_i</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/replace_all_char_char_char.html#src">replace_all_char_char_char</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private pure function replace_all_char_char_char(string, pattern, replacement) result(res)  
+</h2>
+    
+
+    <p>Replaces all the occurrences of substring &lsquo;pattern&rsquo; in the input &lsquo;string&rsquo;
+with the replacement &lsquo;replacement&rsquo;
+Returns a new string</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~89"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pattern~12"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>pattern</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-replacement~8"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>replacement</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <h3>Return Value
+        <small>
+          <span class="anchor" id="variable-res~26"></span>
+          character(len=:), allocatable
+        </small>
+      </h3>
+      
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~replace_all_char_char_char~~CallsGraph Pages: 1 -->
+<svg id="procreplace_all_char_char_charCallsGraph" width="282pt" height="32pt"
+ viewBox="0.00 0.00 282.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~replace_all_char_char_char~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~replace_all_char_char_char~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 278,-28 278,4 -4,4"/>
+<!-- proc~replace_all_char_char_char -->
+<g id="proc~~replace_all_char_char_char~~CallsGraph_node1" class="node">
+<title>proc~replace_all_char_char_char</title>
+<polygon fill="none" stroke="black" points="158,-24 0,-24 0,0 158,0 158,-24"/>
+<text text-anchor="middle" x="79" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">replace_all_char_char_char</text>
+</g>
+<!-- proc~compute_lps -->
+<g id="proc~~replace_all_char_char_char~~CallsGraph_node2" class="node">
+<title>proc~compute_lps</title>
+<g id="a_proc~~replace_all_char_char_char~~CallsGraph_node2"><a xlink:href="../proc/compute_lps.html" xlink:title="compute_lps">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="274,-24 194,-24 194,0 274,0 274,-24"/>
+<text text-anchor="middle" x="234" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_lps</text>
+</a>
+</g>
+</g>
+<!-- proc~replace_all_char_char_char&#45;&gt;proc~compute_lps -->
+<g id="proc~~replace_all_char_char_char~~CallsGraph_edge1" class="edge">
+<title>proc~replace_all_char_char_char&#45;&gt;proc~compute_lps</title>
+<path fill="none" stroke="#ff0000" d="M158.29,-12C166.98,-12 175.63,-12 183.81,-12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="183.87,-15.5 193.87,-12 183.87,-8.5 183.87,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~replace_all_char_char_char~~CalledByGraph Pages: 1 -->
+<svg id="procreplace_all_char_char_charCalledByGraph" width="290pt" height="326pt"
+ viewBox="0.00 0.00 290.00 326.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~replace_all_char_char_char~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 322)">
+<title>proc~~replace_all_char_char_char~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-322 286,-322 286,4 -4,4"/>
+<!-- proc~replace_all_char_char_char -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_node1" class="node">
+<title>proc~replace_all_char_char_char</title>
+<polygon fill="none" stroke="black" points="273,-318 115,-318 115,-294 273,-294 273,-318"/>
+<text text-anchor="middle" x="194" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50">replace_all_char_char_char</text>
+</g>
+<!-- interface~replace_all -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_node2" class="node">
+<title>interface~replace_all</title>
+<g id="a_proc~~replace_all_char_char_char~~CalledByGraph_node2"><a xlink:href="../interface/replace_all.html" xlink:title="replace_all">
+<polygon fill="#a7506f" stroke="#a7506f" points="70,-150 0,-150 0,-126 70,-126 70,-150"/>
+<text text-anchor="middle" x="35" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_char_char_char -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge1" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_char_char_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M38.11,-150.06C43.71,-178.3 61.66,-249.03 106,-285 107.76,-286.43 109.61,-287.77 111.53,-289.02"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="109.87,-292.1 120.3,-293.94 113.29,-285.99 109.87,-292.1"/>
+</g>
+<!-- proc~replace_all_char_char_string -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_node3" class="node">
+<title>proc~replace_all_char_char_string</title>
+<g id="a_proc~~replace_all_char_char_char~~CalledByGraph_node3"><a xlink:href="../proc/replace_all_char_char_string.html" xlink:title="replace_all_char_char_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="276,-276 112,-276 112,-252 276,-252 276,-276"/>
+<text text-anchor="middle" x="194" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_char_char_string</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_char_char_string -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge9" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_char_char_string</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M43.15,-150.16C53.4,-171.04 74.57,-212.04 106,-234 116.45,-241.3 129.14,-246.08 141.56,-249.5"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="140.87,-252.93 151.42,-251.97 142.57,-246.14 140.87,-252.93"/>
+</g>
+<!-- proc~replace_all_char_string_char -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_node4" class="node">
+<title>proc~replace_all_char_string_char</title>
+<g id="a_proc~~replace_all_char_char_char~~CalledByGraph_node4"><a xlink:href="../proc/replace_all_char_string_char.html" xlink:title="replace_all_char_string_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="276,-234 112,-234 112,-210 276,-210 276,-234"/>
+<text text-anchor="middle" x="194" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_char_string_char</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_char_string_char -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge10" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_char_string_char</title>
+<path fill="none" stroke="#ffda00" stroke-dasharray="5,2" d="M52.78,-150.19C65.9,-162.72 85.31,-181.1 106,-192 119.63,-199.18 135.74,-203.95 150.38,-207.62"/>
+<polygon fill="#ffda00" stroke="#ffda00" points="149.69,-211.05 160.23,-210 151.33,-204.25 149.69,-211.05"/>
+</g>
+<!-- proc~replace_all_char_string_string -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_node5" class="node">
+<title>proc~replace_all_char_string_string</title>
+<g id="a_proc~~replace_all_char_char_char~~CalledByGraph_node5"><a xlink:href="../proc/replace_all_char_string_string.html" xlink:title="replace_all_char_string_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="279,-192 109,-192 109,-168 279,-168 279,-192"/>
+<text text-anchor="middle" x="194" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_char_string_string</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_char_string_string -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge11" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_char_string_string</title>
+<path fill="none" stroke="#48ff00" stroke-dasharray="5,2" d="M70.07,-140.1C81.46,-143.07 94.24,-146.82 106,-150 124.38,-154.97 145.11,-160 161.71,-164.87"/>
+<polygon fill="#48ff00" stroke="#48ff00" points="160.88,-168.28 171.46,-167.89 162.94,-161.59 160.88,-168.28"/>
+</g>
+<!-- proc~replace_all_string_char_char -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_node6" class="node">
+<title>proc~replace_all_string_char_char</title>
+<g id="a_proc~~replace_all_char_char_char~~CalledByGraph_node6"><a xlink:href="../proc/replace_all_string_char_char.html" xlink:title="replace_all_string_char_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="276,-150 112,-150 112,-126 276,-126 276,-150"/>
+<text text-anchor="middle" x="194" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_string_char_char</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_string_char_char -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge12" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_string_char_char</title>
+<path fill="none" stroke="#00ff91" stroke-dasharray="5,2" d="M70.07,-132.32C79.69,-131.8 90.65,-131.47 101.96,-131.33"/>
+<polygon fill="#00ff91" stroke="#00ff91" points="101.99,-134.83 111.97,-131.25 101.94,-127.83 101.99,-134.83"/>
+</g>
+<!-- proc~replace_all_string_char_string -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_node7" class="node">
+<title>proc~replace_all_string_char_string</title>
+<g id="a_proc~~replace_all_char_char_char~~CalledByGraph_node7"><a xlink:href="../proc/replace_all_string_char_string.html" xlink:title="replace_all_string_char_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="279,-108 109,-108 109,-84 279,-84 279,-108"/>
+<text text-anchor="middle" x="194" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_string_char_string</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_string_char_string -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge13" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_string_char_string</title>
+<path fill="none" stroke="#0091ff" stroke-dasharray="5,2" d="M51.78,-125.92C63.71,-120.57 80.77,-115.1 98.69,-110.04"/>
+<polygon fill="#0091ff" stroke="#0091ff" points="100.01,-113.3 108.72,-107.27 98.15,-106.56 100.01,-113.3"/>
+</g>
+<!-- proc~replace_all_string_string_char -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_node8" class="node">
+<title>proc~replace_all_string_string_char</title>
+<g id="a_proc~~replace_all_char_char_char~~CalledByGraph_node8"><a xlink:href="../proc/replace_all_string_string_char.html" xlink:title="replace_all_string_string_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="279,-66 109,-66 109,-42 279,-42 279,-66"/>
+<text text-anchor="middle" x="194" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_string_string_char</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_string_string_char -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge14" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_string_string_char</title>
+<path fill="none" stroke="#4800ff" stroke-dasharray="5,2" d="M41.56,-125.96C51.41,-110.7 73.22,-86.13 100.05,-69.58"/>
+<polygon fill="#4800ff" stroke="#4800ff" points="101.97,-72.51 108.92,-64.52 98.5,-66.43 101.97,-72.51"/>
+</g>
+<!-- proc~replace_all_string_string_string -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_node9" class="node">
+<title>proc~replace_all_string_string_string</title>
+<g id="a_proc~~replace_all_char_char_char~~CalledByGraph_node9"><a xlink:href="../proc/replace_all_string_string_string.html" xlink:title="replace_all_string_string_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="282,-24 106,-24 106,0 282,0 282,-24"/>
+<text text-anchor="middle" x="194" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">replace_all_string_string_string</text>
+</a>
+</g>
+</g>
+<!-- interface~replace_all&#45;&gt;proc~replace_all_string_string_string -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge15" class="edge">
+<title>interface~replace_all&#45;&gt;proc~replace_all_string_string_string</title>
+<path fill="none" stroke="#ff00da" stroke-dasharray="5,2" d="M38.84,-125.84C45.85,-103.47 65.73,-57.63 97.66,-30.46"/>
+<polygon fill="#ff00da" stroke="#ff00da" points="99.83,-33.21 105.57,-24.3 95.53,-27.68 99.83,-33.21"/>
+</g>
+<!-- proc~replace_all_char_char_string&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge2" class="edge">
+<title>proc~replace_all_char_char_string&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M111.94,-255.76C109.9,-254.59 107.91,-253.33 106,-252 73.5,-229.29 51.97,-186.22 42.14,-159.74"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="45.41,-158.48 38.84,-150.16 38.79,-160.75 45.41,-158.48"/>
+</g>
+<!-- proc~replace_all_char_string_char&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge3" class="edge">
+<title>proc~replace_all_char_string_char&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M111.91,-212.9C109.9,-211.98 107.92,-211.01 106,-210 82.23,-197.48 60.13,-175.07 47.35,-158.25"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="50.18,-156.19 41.56,-150.04 44.47,-160.23 50.18,-156.19"/>
+</g>
+<!-- proc~replace_all_char_string_string&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge4" class="edge">
+<title>proc~replace_all_char_string_string&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M108.72,-168.73C107.81,-168.49 106.9,-168.24 106,-168 91.07,-163.96 74.48,-159.01 61.2,-153.95"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="62.36,-150.64 51.78,-150.08 59.7,-157.12 62.36,-150.64"/>
+</g>
+<!-- proc~replace_all_string_char_char&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge5" class="edge">
+<title>proc~replace_all_string_char_char&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M111.97,-144.75C100.99,-144.72 90.08,-144.52 80.1,-144.14"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="80.22,-140.64 70.07,-143.68 79.9,-147.63 80.22,-140.64"/>
+</g>
+<!-- proc~replace_all_string_char_string&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge6" class="edge">
+<title>proc~replace_all_string_char_string&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M171.46,-108.11C153.81,-113.92 128.2,-120 106,-126 97.55,-128.29 88.57,-130.86 79.96,-133.24"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="78.82,-129.92 70.07,-135.9 80.64,-136.68 78.82,-129.92"/>
+</g>
+<!-- proc~replace_all_string_string_char&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge7" class="edge">
+<title>proc~replace_all_string_string_char&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M160.23,-66C143.32,-69.98 122.77,-75.17 106,-84 88.87,-93.02 72.61,-107.18 60.08,-118.9"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="57.63,-116.39 52.78,-125.81 62.45,-121.47 57.63,-116.39"/>
+</g>
+<!-- proc~replace_all_string_string_string&#45;&gt;interface~replace_all -->
+<g id="proc~~replace_all_char_char_char~~CalledByGraph_edge8" class="edge">
+<title>proc~replace_all_string_string_string&#45;&gt;interface~replace_all</title>
+<path fill="none" stroke="#ff0000" d="M151.42,-24.03C136.09,-27.54 119.25,-32.75 106,-42 78.62,-61.13 59.03,-94.71 47.66,-116.84"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="44.5,-115.33 43.15,-125.84 50.76,-118.46 44.5,-115.33"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    <section>    
+      <h2>Variables</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-last~10"></span>
+              integer,
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>last</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-length_pattern~2"></span>
+              integer,
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>length_pattern</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-length_string~4"></span>
+              integer,
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>length_string</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lps_array~3"></span>
+              integer,
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lps_array</strong>(len(pattern))</td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-p_i~2"></span>
+              integer,
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>p_i</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-s_i~2"></span>
+              integer,
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>s_i</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">pure function </span><span class="n">replace_all_char_char_char</span><span class="p">(</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">pattern</span><span class="p">,</span><span class="w"> </span><span class="n">replacement</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">string</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">pattern</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">replacement</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">res</span>
+<span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">lps_array</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">))</span>
+<span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">s_i</span><span class="p">,</span><span class="w"> </span><span class="n">p_i</span><span class="p">,</span><span class="w"> </span><span class="n">last</span><span class="p">,</span><span class="w"> </span><span class="n">length_string</span><span class="p">,</span><span class="w"> </span><span class="n">length_pattern</span>
+
+<span class="w">      </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">      </span><span class="n">length_string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+<span class="w">      </span><span class="n">length_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+<span class="w">      </span><span class="n">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">length_pattern</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="n">length_pattern</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">length_string</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">lps_array</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compute_lps</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+
+<span class="w">         </span><span class="n">s_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="n">p_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="k">do while</span><span class="w"> </span><span class="p">(</span><span class="n">s_i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">length_string</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">s_i</span><span class="p">:</span><span class="n">s_i</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">pattern</span><span class="p">(</span><span class="n">p_i</span><span class="p">:</span><span class="n">p_i</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">               if</span><span class="w"> </span><span class="p">(</span><span class="n">p_i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">length_pattern</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                  </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="o">//</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                          </span><span class="p">&amp;</span><span class="w"> </span><span class="n">string</span><span class="p">(</span><span class="n">last</span><span class="p">:</span><span class="n">s_i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">length_pattern</span><span class="p">)</span><span class="o">//</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                          </span><span class="p">&amp;</span><span class="w"> </span><span class="n">replacement</span>
+<span class="w">                  </span><span class="n">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s_i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">                  </span><span class="n">p_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">               </span><span class="k">end if</span>
+<span class="k">               </span><span class="n">s_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s_i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">               </span><span class="n">p_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p_i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="k">else if</span><span class="w"> </span><span class="p">(</span><span class="n">p_i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">               </span><span class="n">p_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lps_array</span><span class="p">(</span><span class="n">p_i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="k">               </span><span class="n">s_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s_i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="k">end if</span>
+<span class="k">         end do</span>
+<span class="k">      end if</span>
+
+<span class="k">      </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="o">//</span><span class="n">string</span><span class="p">(</span><span class="n">last</span><span class="p">:</span><span class="n">length_string</span><span class="p">)</span>
+
+<span class="w">   </span><span class="k">end function </span><span class="n">replace_all_char_char_char</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2025-10-29 16:00 +1100             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>
