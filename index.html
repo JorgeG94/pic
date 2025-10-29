@@ -99,7 +99,34 @@
   <img src="./media/pic_logo.png" alt="Otter coding logo" title="Project logo" width="250">
 </p>
 
-<p>A work in progress on writing a cool backend for Fortan applications focused on Quantum Chemistry software.</p>
+<p>A work in progress on writing a cool backend for Fortan applications focused on scientific computing software. Originally this was going
+to be for quantum chemistry but I ended up writing way more general routines than I expected.</p>
+<h2 id="building-tldr-on-linux">Building (TLDR) on Linux</h2>
+<p>I assume you have experience building things here. If you don&rsquo;t please go further down for a more verbose explanation.</p>
+<p>Briefly, for a minimal build (no BLAS, no MPI)  you need:</p>
+<ul>
+<li>CMake (at least 3.22) or the Fortran Package Manager (at least 0.12.0)</li>
+<li>A Fortran compiler</li>
+<li>An internet connection to pull the <code>test-drive</code> dependency</li>
+</ul>
+<p>I don&rsquo;t have a Mac nor am I experienced with Windows development, however the CI routines test for the code to be built on both platforms. These instructions
+should work on either OS, but be mindful this is aimed at Linux.</p>
+<h3 id="building-with-cmake">Building with CMake</h3>
+<p>The top level directory is <code>$PIC_BASE</code> which is the <code>pic/</code> directory that was cloned or unpacked. I assume you are here. And
+<code>$PIC_ROOT</code> is the path to where you&rsquo;d like pic to be installed, for example <code>export PIC_ROOT=$HOME/install/pic/dev/</code></p>
+<div class="codehilite"><pre><span></span><code>mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=$PIC_ROOT ../
+make -j install
+</code></pre></div>
+
+<p>To run the tests, from the build directory simply run: <code>ctest</code></p>
+<h3 id="building-with-fpm">Building with FPM</h3>
+<p>The same <code>$PIC_BASE</code> and <code>$PIC_ROOT</code> will be used here. Simply:</p>
+<div class="codehilite"><pre><span></span><code>fpm install --prefix $PIC_ROOT --profile release
+</code></pre></div>
+
+<p>To run the tests: <code>fpm test --profile release</code></p>
 <h2 id="building-and-dependencies">Building and dependencies</h2>
 <p>There&rsquo;s two build systems included in the present version, CMake and the <a href="https://fpm.fortran-lang.org/index.html">Fortran Package Manager</a>.</p>
 <p>The dependencies of the project are, as of now, CMake (if using cmake), MPI, OpenMP, and a BLAS/LAPACK library.</p>
@@ -169,18 +196,46 @@
 <p>Information on vapaa see <a href="https://github.com/JorgeG94/vapaa/tree/main">here</a> which is my
 personal fork which is pulled from here, and Jeff&rsquo;s <a href="https://github.com/jeffhammond/vapaa">project</a>.</p>
 <p>Will update to use the orignal project at a later date.</p>
-<h3 id="building">Building:</h3>
-<div class="codehilite"><pre><span></span><code>mkdir build
-cd build
-cmake ../
-make -j
-ctest
+<h3 id="building-extended">Building (extended)</h3>
+<p>To enable extended builds of PIC, i.e. using the BLAS interface and the dramatically underdeveloped MPI interface you can use the
+options provided above, simply:</p>
+<div class="codehilite"><pre><span></span><code>cmake -DPIC_ENABLE_BLAS=ON -DPIC_ENABLE_MPI=ON ../
 </code></pre></div>
 
+<p>This will build the necessary files and will add the BLAS related tests to the <code>ctest</code> suite.</p>
 <h3 id="fpm">FPM</h3>
-<p>Install the FPM following the <a href="https://fpm.fortran-lang.org/install/index.html#install">instructions</a> and then simply: <code>fpm build</code></p>
+<p>Install the FPM following the <a href="https://fpm.fortran-lang.org/install/index.html#install">instructions</a> and then simply: <code>fpm install</code></p>
+<p>The FPM will build the entire library, however the BLAS tests are not included in the default build. This is for simplicity for people
+that want to include <code>pic</code> as a dependency in their <code>fpm.toml</code> files. To compile PIC with BLAS support, make sure to pass the compile flag:
+<code>fpm install --flag "-DPIC_HAVE_BLAS"</code> so that the code gets compiled correctly.</p>
 <h2 id="contributing">Contributing</h2>
-<h2 id="please-see-the-contributing-guidelines-for-information-on-how-to-contribute-to-the-project">Please see the <a href="https://jorgeg94.github.io/pic/page/contributing.html">contributing guidelines</a> for information on how to contribute to the project.</h2>
+<p>Please see the <a href="https://jorgeg94.github.io/pic/page/contributing.html">contributing guidelines</a> for information on how to contribute to the project.</p>
+<p>See our <a href="CODE_OF_CONDUCT.md">code of conduct</a> for details on community standards. In short, PIC is a welcoming codebase that is open to contributions
+from anyone at any level of experience. Do you want to fix my thousands of typos, go ahead. Do you want to contribute code, go ahead. Just always
+be respectful of others.</p>
+<h2 id="examples">Examples</h2>
+<p>You can see some [WIP] examples in the <a href="https://github.com/JorgeG94/pic_examples">pic-examples</a> repository.</p>
+<h2 id="using-pic-in-your-work">Using PIC in your work</h2>
+<h3 id="fortran-package-manager">Fortran Package Manager</h3>
+<p>Simply add:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">[dependencies]</span>
+<span class="na">pic = { git</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;https://github.com/JorgeG94/pic.git&quot;</span><span class="na">, branch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;main&quot;</span><span class="na">}</span>
+</code></pre></div>
+
+<p>to your fpm.toml file and you&rsquo;ll be able to checkout and use pic.</p>
+<h3 id="cmake_1">CMake</h3>
+<p>For CMake it is a bit more complex, since you&rsquo;ll need to pull the dependency. You can see this <a href="https://github.com/JorgeG94/pic-app-sample">template repo</a>, which
+serves as an example on pulling and using the code inside your build system.</p>
+<h3 id="staticshared-linking-via-cmake">Static/Shared linking via CMake</h3>
+<p>pic is compiled with &ldquo;CMake symbols&rdquo;, i.e. it will be findable by a CMake package provided you do the right things. Using
+<code>find_package(pic REQUIRED)</code> will use CMake intrinsics to try to find the necessary things to link to pic. pic comes with the
+target <code>pic::pic</code> that you can use for your <code>target_link_libraries(${my_target} PRIVATE pic::pic)</code>. This will import
+all includes, modules, libs, etc.</p>
+<p>How CMake finds <code>pic::pic</code> depends on the policy <code>CMP0074</code>, this controls if the variables <code>pic_DIR</code> or <code>pic_ROOT</code> are used
+to search for the package. If you have set the policy: <code>cmake_policy(SET CMP0074 NEW)</code>, then <code>pic_ROOT</code> will also be used,
+otherwise it is <em>IGNORED</em>. By setting <code>export pic_ROOT=/path/to/where/pic/is/installed</code> it will let CMake find the
+necessary files it needs to just link pic. Be careful that, as of now, pic needs to be in small letter. All caps will fail to
+find.</p>
         </div>
           <div class="col-md-4">
             <div class="card card-body bg-light">
@@ -216,7 +271,7 @@ ctest
           <div class="col-xs-6 col-sm-3">
             <div>
               <h3>Modules</h3>
-              <ul><li><a href='module/pic.html'>pic</a></li><li><a href='module/pic_array.html'>pic_array</a></li><li><a href='module/pic_ascii.html'>pic_ascii</a></li><li><a href='module/pic_command_line.html'>pic_command_line</a></li><li><a href='module/pic_constants.html'>pic_constants</a></li><li><a href='module/pic_device.html'>pic_device</a></li><li><a href='module/pic_flop_rate.html'>pic_flop_rate</a></li><li><a href='module/pic_flop_recorder.html'>pic_flop_recorder</a></li><li><a href='module/pic_global_definitions.html'>pic_global_definitions</a></li><li><a href='module/pic_gpu_runtime.html'>pic_gpu_runtime</a></li></ul>
+              <ul><li><a href='module/pic.html'>pic</a></li><li><a href='module/pic_array.html'>pic_array</a></li><li><a href='module/pic_ascii.html'>pic_ascii</a></li><li><a href='module/pic_blas_interfaces.html'>pic_blas_interfaces</a></li><li><a href='module/pic_command_line.html'>pic_command_line</a></li><li><a href='module/pic_constants.html'>pic_constants</a></li><li><a href='module/pic_device.html'>pic_device</a></li><li><a href='module/pic_flop_rate.html'>pic_flop_rate</a></li><li><a href='module/pic_flop_recorder.html'>pic_flop_recorder</a></li><li><a href='module/pic_global_definitions.html'>pic_global_definitions</a></li></ul>
             </div>
             <div>
               <ul>
@@ -227,7 +282,7 @@ ctest
           <div class="col-xs-6 col-sm-3">
             <div>
               <h3>Procedures</h3>
-              <ul><li><a href='proc/add_flops.html'>add_flops</a></li><li><a href='interface/adjustl.html'>adjustl</a></li><li><a href='proc/adjustl_string.html'>adjustl_string</a></li><li><a href='interface/adjustr.html'>adjustr</a></li><li><a href='proc/adjustr_string.html'>adjustr_string</a></li><li><a href='proc/assign_string_char.html'>assign_string_char</a></li><li><a href='interface/assignment(=).html'>assignment(=)</a></li><li><a href='interface/char.html'>char</a></li><li><a href='proc/char_decrease_ord_sort.html'>char_decrease_ord_sort</a></li><li><a href='proc/char_decrease_sort.html'>char_decrease_sort</a></li></ul>
+              <ul><li><a href='proc/add_flops.html'>add_flops</a></li><li><a href='interface/adjustl.html'>adjustl</a></li><li><a href='proc/adjustl_string.html'>adjustl_string</a></li><li><a href='interface/adjustr.html'>adjustr</a></li><li><a href='proc/adjustr_string.html'>adjustr_string</a></li><li><a href='proc/assign_string_char.html'>assign_string_char</a></li><li><a href='interface/assignment(=).html'>assignment(=)</a></li><li><a href='interface/blas_asum.html'>blas_asum</a></li><li><a href='interface/blas_axpy.html'>blas_axpy</a></li><li><a href='interface/blas_copy.html'>blas_copy</a></li></ul>
             </div>
             <div>
               <ul>
@@ -262,7 +317,7 @@ ctest
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2025-10-28 20:49 +0000             </p>
+ on 2025-10-29 01:55 +0000             </p>
           </div>
         </div>
         <br>

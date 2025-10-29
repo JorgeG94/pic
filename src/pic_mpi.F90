@@ -1,3 +1,5 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
 #ifdef PIC_HAVE_MPI
 !! The pic_mpi.F90 file is the main interface to the MPI implementation, it should
 !! be done in such a way that we can compile the library with and without MPI
