@@ -1,6 +1,7 @@
 ! SPDX-License-Identifier: MIT
 ! Integrated from the Fortran Standard Library licensed under MIT
 ! Copyright (c) 2025 Jorge Luis Galvez Vallejo
+!! This file contains the module that handles all ASCII related business
 
 !> The `stdlib_ascii` module provides procedures for handling and manipulating
 !> intrinsic character variables and constants.

@@ -1,6 +1,7 @@
 ! SPDX-License-Identifier: MIT
 ! Integrated from the Fortran Standard Library licensed under MIT
 ! Copyright (c) 2025 Jorge Luis Galvez Vallejo
+!! string manipulation module and subroutines
 
 !> This module implements basic string handling routines.
 !>

@@ -1,8 +1,10 @@
 ! SPDX-License-Identifier: MIT
 ! Integrated from the Fortran Standard Library licensed under MIT
 ! Copyright (c) 2025 Jorge Luis Galvez Vallejo
+!! Contains the 32 bit hashing routines
 
 module pic_hash_32bit
+!! module for pic's 32 bit hashing algorithms
 
    use pic_hash_32bit_fnv, only: fnv_1_hash, fnv_1a_hash
    use pic_types, only: &
