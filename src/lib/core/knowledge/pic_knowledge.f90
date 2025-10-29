@@ -19,7 +19,7 @@ contains
       type(string_type), allocatable :: knowledge(:)
       integer(int32) :: n, idx
       real(dp) :: r
-      allocate (knowledge(8))
+      allocate (knowledge(11))
 
       knowledge(1) = "The long line! (CS,2023)"
       knowledge(2) = "Maybe I have the Fortran brain-rot in Dijkstra's words (IP,2025)"
@@ -29,6 +29,9 @@ contains
       knowledge(6) = "Stonks (MS, 2019)"
       knowledge(7) = "Praise the machine god"
       knowledge(8) = "Maybe I WILL use a more efficient language: Fortran (Jorge, to CS)"
+      knowledge(9) = "No one owns Makefiles!"
+      knowledge(10) = "Why did you choose CMake over any other build system? Jorge: Stockholm Syndrome?"
+      knowledge(11) = "That's exactly what Bjarne Sostrup intended when he created C++ - in response to RS doing an abomination in C++, by CS"
 
       n = size(knowledge)
 
