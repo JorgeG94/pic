@@ -38,5 +38,3 @@ Documentation for the latest development version may be found at
 
 Included below is the changelog--a list of significant changes
 implemented between each release.
-
-{!CHANGELOG.md!}

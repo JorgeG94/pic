@@ -21,8 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
 ### Fixed
 -
 
-### Security
--
 
 ## [0.1.0] – 2025-10-31
 ### Added
