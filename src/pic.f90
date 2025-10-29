@@ -5,8 +5,8 @@
 module pic
  !! simple interface module that prints banner and other information about the library
  !! mostly here to verify installs, etc.
-   !use, intrinsic :: iso_fortran_env, only: compiler_version
-   !use, intrinsic :: iso_fortran_env, only : compiler_options
+   use, intrinsic :: iso_fortran_env, only: compiler_version
+   use, intrinsic :: iso_fortran_env, only: compiler_options
    implicit none
    private
    public :: pic_print_banner
@@ -26,11 +26,11 @@ contains
       print *, "                                        "
       print *, "               PIC LIBRARY"
       print *, "========================================"
-      !print '(4a)', &
-      !   '   PIC compiled with ', &
-      !   compiler_version()
-      !print '(4a)', ' using the options ',        &
-      !  compiler_options()
+      print '(4a)', &
+         '   PIC compiled with ', &
+         compiler_version()
+      print '(4a)', ' using the options ', &
+         compiler_options()
 
    end subroutine pic_print_banner
 end module pic
