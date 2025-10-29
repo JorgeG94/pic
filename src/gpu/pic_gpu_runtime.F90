@@ -31,8 +31,8 @@ module pic_gpu_runtime
          integer(c_int), intent(out) :: count
       end function cudaGetDeviceCount
    end interface
-
-#elif defined(HAVE_HIP)
+#endif
+#ifdef HAVE_HIP
    interface
       function hipMemGetInfo(freeMem, totalMem) bind(C, name="hipMemGetInfo")
          use iso_c_binding, only: c_int, c_size_t
@@ -53,7 +53,6 @@ module pic_gpu_runtime
          integer(c_int), intent(out) :: count
       end function hipGetDeviceCount
    end interface
-
 #endif
 
 contains
@@ -64,9 +63,11 @@ contains
       integer(c_int), intent(out) :: ierr
 #ifdef HAVE_CUDA
       ierr = cudaMemGetInfo(freeMem, totalMem)
-#elif defined(HAVE_HIP)
+#endif
+#ifdef HAVE_HIP
       ierr = hipMemGetInfo(freeMem, totalMem)
-#else
+#endif
+#if !defined(HAVE_CUDA) && !defined(HAVE_HIP)
       freeMem = 0_c_size_t
       totalMem = 0_c_size_t
       ierr = -1
@@ -78,9 +79,11 @@ contains
       integer(c_int), intent(out) :: device_id, ierr
 #ifdef HAVE_CUDA
       ierr = cudaGetDevice(device_id)
-#elif defined(HAVE_HIP)
+#endif
+#ifdef HAVE_HIP
       ierr = hipGetDevice(device_id)
-#else
+#endif
+#if !defined(HAVE_CUDA) && !defined(HAVE_HIP)
       ierr = -1_c_int
       device_id = -1_c_int
 #endif
@@ -91,9 +94,11 @@ contains
       integer(c_int), intent(out) :: device_count, ierr
 #ifdef HAVE_CUDA
       ierr = cudaGetDeviceCount(device_count)
-#elif defined(HAVE_HIP)
+#endif
+#ifdef HAVE_HIP
       ierr = hipGetDeviceCount(device_count)
-#else
+#endif
+#if !defined(HAVE_CUDA) && !defined(HAVE_HIP)
       ierr = -1_c_int
       device_count = 0_c_int
 #endif
