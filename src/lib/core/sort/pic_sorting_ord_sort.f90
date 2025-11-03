@@ -47,14 +47,10 @@
 !! of modified versions of the code in the Fortran Standard Library under
 !! the MIT license.
 
-!submodule(pic_sorting) pic_sorting_ord_sort
-module pic_sorting_ord_sort
-   use pic_types, only: int32, int64, sp, dp, int_index
-   use pic_optional_value, only: pic_optional
+submodule(pic_sorting) pic_sorting_ord_sort
 
    implicit none
 
-   public :: ord_sort
    !! The generic subroutine implementing the `ORD_SORT` algorithm to return
 !! an input array with its elements sorted in order of (non-)decreasing
 !! value. Its use has the syntax:
@@ -102,7 +98,6 @@ module pic_sorting_ord_sort
 !!    call array_search( array, values )
 !!    ...
 !!```
-   private
 
    integer, parameter :: &
       ! The maximum number of entries in a run stack, good for an array of
@@ -117,67 +112,6 @@ module pic_sorting_ord_sort
       integer(int_index) :: base = 0
       integer(int_index) :: len = 0
    end type run_type
-
-   interface ord_sort
-!! The generic subroutine interface implementing the `ORD_SORT` algorithm,
-!! a translation to Fortran 2008, of the `"Rust" sort` algorithm found in
-!! `slice.rs`
-!! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
-!! `ORD_SORT` is a hybrid stable comparison algorithm combining `merge sort`,
-!! and `insertion sort`.
-!!
-!! It is always at worst O(N Ln(N)) in sorting random
-!! data, having a performance about 25% slower than `SORT` on such
-!! data, but has much better performance than `SORT` on partially
-!! sorted data, having O(N) performance on uniformly non-increasing or
-!! non-decreasing data.
-
-      module subroutine int32_ord_sort(array, work, reverse)
-         implicit none
-!! `int32_ord_sort( array )` sorts the input `ARRAY` of type `integer(int32)`
-!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
-         integer(int32), intent(inout)         :: array(0:)
-         integer(int32), intent(out), optional :: work(0:)
-         logical, intent(in), optional :: reverse
-      end subroutine int32_ord_sort
-
-      module subroutine int64_ord_sort(array, work, reverse)
-         implicit none
-!! `int64_ord_sort( array )` sorts the input `ARRAY` of type `integer(int64)`
-!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
-         integer(int64), intent(inout)         :: array(0:)
-         integer(int64), intent(out), optional :: work(0:)
-         logical, intent(in), optional :: reverse
-      end subroutine int64_ord_sort
-
-      module subroutine sp_ord_sort(array, work, reverse)
-         implicit none
-!! `sp_ord_sort( array )` sorts the input `ARRAY` of type `real(sp)`
-!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
-         real(sp), intent(inout)         :: array(0:)
-         real(sp), intent(out), optional :: work(0:)
-         logical, intent(in), optional :: reverse
-      end subroutine sp_ord_sort
-
-      module subroutine dp_ord_sort(array, work, reverse)
-         implicit none
-!! `dp_ord_sort( array )` sorts the input `ARRAY` of type `real(dp)`
-!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
-         real(dp), intent(inout)         :: array(0:)
-         real(dp), intent(out), optional :: work(0:)
-         logical, intent(in), optional :: reverse
-      end subroutine dp_ord_sort
-
-      module subroutine char_ord_sort(array, work, reverse)
-         implicit none
-!! `char_ord_sort( array )` sorts the input `ARRAY` of type `character(len=*)`
-!! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
-         character(len=*), intent(inout)         :: array(0:)
-         character(len=len(array)), intent(out), optional :: work(0:)
-         logical, intent(in), optional :: reverse
-      end subroutine char_ord_sort
-
-   end interface ord_sort
 
 contains
 
@@ -3589,5 +3523,4 @@ contains
 
    end subroutine char_decrease_ord_sort
 
-!end submodule pic_sorting_ord_sort
-end module pic_sorting_ord_sort
+end submodule pic_sorting_ord_sort
