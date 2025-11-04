@@ -39,10 +39,7 @@
 !!
 !! as the official source of the algorithm.
 
-!submodule(pic_sorting) pic_sorting_sort
-module pic_sorting_sort
-   use pic_types, only: int32, int64, sp, dp, int_index
-   use pic_optional_value, only: pic_optional
+submodule(pic_sorting) pic_sorting_sort
 !! This submodule implements the overloaded sorting subroutine `SORT`
 !! that can be used to sort four kinds of `INTEGER` arrays and three kinds
 !! of `REAL` arrays. Sorting is in order of increasing value, with the worst
@@ -57,106 +54,6 @@ module pic_sorting_sort
 !! better than `quicksort` performance.
 
    implicit none
-
-   public :: sort
-!! The generic subroutine implementing the `SORT` algorithm to return
-!! an input array with its elements sorted in order of (non-)decreasing
-!! value. Its use has the syntax:
-!!
-!!     call sort( array[, reverse] )
-!!
-!! with the arguments:
-!!
-!! * array: the rank 1 array to be sorted. It is an `intent(inout)`
-!!   argument of any of the types `integer(int8)`, `integer(int16)`,
-!!   `integer(int32)`, `integer(int64)`, `real(real32)`, `real(real64)`,
-!!   `real(real128)`, `character(*)`, `type(string_type)`,
-!!   `type(bitset_64)`, `type(bitset_large)`. If both the type
-!!   of `array` is real and at least one of the elements is a `NaN`, then
-!!   the ordering of the result is undefined. Otherwise it is defined to be the
-!!   original elements in non-decreasing order.
-!! * `reverse` (optional): shall be a scalar of type default logical. It
-!!   is an `intent(in)` argument. If present with a value of `.true.` then
-!!   `array` will be sorted in order of non-increasing values in unstable
-!!   order. Otherwise index will sort `array` in order of non-decreasing
-!!   values in unstable order.
-!!
-!!#### Example
-!!
-!!```fortran
-!!    ...
-!!    ! Read random data from a file
-!!    call read_file( 'dummy_file', array )
-!!    ! Sort the random data
-!!    call sort( array )
-!!    ! Process the sorted data
-!!    call array_search( array, values )
-!!    ...
-!!```
-
-   private
-
-   interface sort
-!! The generic subroutine interface implementing the `SORT` algorithm, based
-!! on the `introsort` of David Musser.
-!! ([Specification](../page/specs/stdlib_sorting.html#sort-sorts-an-input-array))
-
-      pure module subroutine int32_sort(array, reverse)
-!! `int32_sort( array[, reverse] )` sorts the input `ARRAY` of type `integer(int32)`
-!! using a hybrid sort based on the `introsort` of David Musser.
-!! The algorithm is of order O(N Ln(N)) for all inputs.
-!! Because it relies on `quicksort`, the coefficient of the O(N Ln(N))
-!! behavior is small for random data compared to other sorting algorithms.
-         implicit none
-         integer(int32), intent(inout)         :: array(0:)
-         logical, intent(in), optional :: reverse
-      end subroutine int32_sort
-
-      pure module subroutine int64_sort(array, reverse)
-!! `int64_sort( array[, reverse] )` sorts the input `ARRAY` of type `integer(int64)`
-!! using a hybrid sort based on the `introsort` of David Musser.
-!! The algorithm is of order O(N Ln(N)) for all inputs.
-!! Because it relies on `quicksort`, the coefficient of the O(N Ln(N))
-!! behavior is small for random data compared to other sorting algorithms.
-         implicit none
-         integer(int64), intent(inout)         :: array(0:)
-         logical, intent(in), optional :: reverse
-      end subroutine int64_sort
-
-      pure module subroutine sp_sort(array, reverse)
-!! `sp_sort( array[, reverse] )` sorts the input `ARRAY` of type `real(sp)`
-!! using a hybrid sort based on the `introsort` of David Musser.
-!! The algorithm is of order O(N Ln(N)) for all inputs.
-!! Because it relies on `quicksort`, the coefficient of the O(N Ln(N))
-!! behavior is small for random data compared to other sorting algorithms.
-         implicit none
-         real(sp), intent(inout)         :: array(0:)
-         logical, intent(in), optional :: reverse
-      end subroutine sp_sort
-
-      pure module subroutine dp_sort(array, reverse)
-!! `dp_sort( array[, reverse] )` sorts the input `ARRAY` of type `real(dp)`
-!! using a hybrid sort based on the `introsort` of David Musser.
-!! The algorithm is of order O(N Ln(N)) for all inputs.
-!! Because it relies on `quicksort`, the coefficient of the O(N Ln(N))
-!! behavior is small for random data compared to other sorting algorithms.
-         implicit none
-         real(dp), intent(inout)         :: array(0:)
-         logical, intent(in), optional :: reverse
-      end subroutine dp_sort
-
-      pure module subroutine char_sort(array, reverse)
-!! `char_sort( array[, reverse] )` sorts the input `ARRAY` of type `character(len=*)`
-!! using a hybrid sort based on the `introsort` of David Musser.
-!! The algorithm is of order O(N Ln(N)) for all inputs.
-!! Because it relies on `quicksort`, the coefficient of the O(N Ln(N))
-!! behavior is small for random data compared to other sorting algorithms.
-         implicit none
-         character(len=*), intent(inout)         :: array(0:)
-         logical, intent(in), optional :: reverse
-      end subroutine char_sort
-
-   end interface sort
 
 contains
 
@@ -1852,5 +1749,4 @@ contains
 
    end subroutine char_decrease_sort
 
-end module pic_sorting_sort
-!end submodule pic_sorting_sort
+end submodule pic_sorting_sort

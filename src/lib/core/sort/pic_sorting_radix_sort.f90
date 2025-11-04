@@ -1,10 +1,6 @@
-!submodule(pic_sorting) pic_sorting_radix_sort
-module pic_sorting_radix_sort
-   use pic_types, only: int32, int64, sp, dp, int_index
-   use pic_optional_value, only: pic_optional
+submodule(pic_sorting) pic_sorting_radix_sort
 
    implicit none
-   public :: radix_sort
 !! The generic subroutine implementing the LSD radix sort algorithm to return
 !! an input array with its elements sorted in order of (non-)decreasing
 !! value. Its use has the syntax:
@@ -46,7 +42,6 @@ module pic_sorting_radix_sort
 !!    call radix_sort( array )
 !!    ...
 !!```
-   private
 
    integer, parameter :: radix_bits = 8
    integer, parameter :: radix_mask = 255
@@ -54,42 +49,6 @@ module pic_sorting_radix_sort
    integer(kind=int32), parameter :: radix_mask_i32 = 255_int32
    integer(kind=int64), parameter :: radix_bits_i64 = 8_int64
    integer(kind=int64), parameter :: radix_mask_i64 = 255_int64
-
-   interface radix_sort
-!! The generic subroutine interface implementing the LSD radix sort algorithm,
-!! see https://en.wikipedia.org/wiki/Radix_sort for more details.
-!! It is always O(N) in sorting random data, but need a O(N) buffer.
-!! ([Specification](../page/specs/stdlib_sorting.html#radix_sort-sorts-an-input-array))
-!!
-
-      pure module subroutine int32_radix_sort(array, work, reverse)
-         implicit none
-         integer(kind=int32), dimension(:), intent(inout) :: array
-         integer(kind=int32), dimension(:), intent(inout), target, optional :: work
-         logical, intent(in), optional :: reverse
-      end subroutine int32_radix_sort
-
-      pure module subroutine int64_radix_sort(array, work, reverse)
-         implicit none
-         integer(kind=int64), dimension(:), intent(inout) :: array
-         integer(kind=int64), dimension(:), intent(inout), target, optional :: work
-         logical, intent(in), optional :: reverse
-      end subroutine int64_radix_sort
-
-      module subroutine sp_radix_sort(array, work, reverse)
-         implicit none
-         real(kind=sp), dimension(:), intent(inout), target :: array
-         real(kind=sp), dimension(:), intent(inout), target, optional :: work
-         logical, intent(in), optional :: reverse
-      end subroutine sp_radix_sort
-
-      module subroutine dp_radix_sort(array, work, reverse)
-         implicit none
-         real(kind=dp), dimension(:), intent(inout), target :: array
-         real(kind=dp), dimension(:), intent(inout), target, optional :: work
-         logical, intent(in), optional :: reverse
-      end subroutine dp_radix_sort
-   end interface radix_sort
 
 contains
 
@@ -424,5 +383,4 @@ contains
          deallocate (buffer)
       end if
    end subroutine dp_radix_sort
-!end submodule pic_sorting_radix_sort
-end module pic_sorting_radix_sort
+end submodule pic_sorting_radix_sort
