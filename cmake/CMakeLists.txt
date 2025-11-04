@@ -31,6 +31,8 @@ elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
   set(standard_compile_flags " -traceback")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "LLVMFlang")
   set(standard_compile_flags "")
+elseif(CMAKE_Fortran_COMPILER_ID MATCHES "LFortran")
+  set(standard_compile_flags "--debug-with-line-column")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "Cray")
   if(NOT CMAKE_GENERATOR MATCHES "Ninja")
     message(
