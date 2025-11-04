@@ -60,7 +60,6 @@ set(CMAKE_Fortran_FLAGS_DEBUG
     "${CMAKE_Fortran_FLAGS_DEBUG} ${fpe} ${debug}"
     PARENT_SCOPE)
 
-message(STATUS " Adding the flags ${standard_compile_flags}")
 set(CMAKE_Fortran_FLAGS
     "${CMAKE_Fortran_FLAGS} ${standard_compile_flags} ${warning_flags}"
     PARENT_SCOPE)
