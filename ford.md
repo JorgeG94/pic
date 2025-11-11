@@ -2,7 +2,7 @@
 src_dir: src
 output_dir: docs/fpm-ford
 project: PIC
-summary: A set of commonly used modules for HPC
+summary: A set of commonly used programs in Fortran aimed at scientific computing
 project_github: https://github.com/JorgeG94/pic
 project_download: https://github.com/JorgeG94/pic/archive/refs/heads/main.zip
 author: Jorge Luis Galvez Vallejo
