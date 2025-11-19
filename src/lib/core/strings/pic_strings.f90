@@ -995,7 +995,7 @@ contains
       character(kind=c_char) :: cstr(len(value) + 1)
       integer :: i, lv
       lv = len(value)
-      do concurrent(i=1:lv)
+      do i = 1, lv
          cstr(i) = value(i:i)
       end do
       cstr(lv + 1) = c_null_char
@@ -1009,7 +1009,7 @@ contains
       character(kind=c_char) :: cstr(slen(value) + 1)
       integer :: i, lv
       lv = slen(value)
-      do concurrent(i=1:lv)
+      do i = 1, lv
          cstr(i) = char(value, pos=i)
       end do
       cstr(lv + 1) = c_null_char
