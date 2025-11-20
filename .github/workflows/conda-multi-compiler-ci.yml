@@ -27,7 +27,6 @@ jobs:
         compiler: [gfortran, ifx, flang-new]
         include:
           - os: ubuntu-latest
-            extra-packages: "openblas"
           #- os: windows-latest
           #- os: macos-latest
           #  extra-packages: "openblas"
@@ -70,9 +69,9 @@ jobs:
         compiler: [gfortran, ifx, flang-new, nvfortran]
         include:
           - os: ubuntu-latest
-            extra-packages: "cmake, ninja, openblas"
+            extra-packages: "cmake, ninja"
           - os: macos-latest
-            extra-packages: "cmake, ninja, openblas"
+            extra-packages: "cmake, ninja"
         exclude:
           - os: macos-latest
             compiler: flang-new
@@ -91,6 +90,6 @@ jobs:
 
       - name: cmake test (release)
         run: |
-          cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -DPIC_ENABLE_BLAS=ON -DBLA_VENDOR=OpenBLAS -G Ninja
+          cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -G Ninja
           cmake --build build/release
           ctest --test-dir build/release --output-on-failure

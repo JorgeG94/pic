@@ -42,16 +42,12 @@ jobs:
         compiler: ${{ matrix.toolchain.compiler }}
         version: ${{ matrix.toolchain.version }}
 
-    - name: Install openblas
-      run: sudo apt install libopenblas-dev
-
     - name: Configure with CMake
       if: ${{ contains(matrix.build, 'cmake') }}
       run: >-
         cmake -G Ninja
         -DCMAKE_BUILD_TYPE=Release
         -DPIC_ENABLE_OMP=ON
-        -DPIC_ENABLE_BLAS=ON
         -S . -B ${{ env.BUILD_DIR }}
 
     - name: Build and compile
