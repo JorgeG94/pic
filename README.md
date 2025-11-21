@@ -20,7 +20,7 @@ to be for quantum chemistry but I ended up writing way more general routines tha
 
 I assume you have experience building things here. If you don't please go further down for a more verbose explanation.
 
-Briefly, for a minimal build (no BLAS, no MPI)  you need:
+Briefly, for a minimal build you need:
 
 - CMake (at least 3.22) or the Fortran Package Manager (at least 0.12.0)
 - A Fortran compiler
@@ -58,7 +58,7 @@ To run the tests: `fpm test --profile release`
 
 There's two build systems included in the present version, CMake and the [Fortran Package Manager](https://fpm.fortran-lang.org/index.html).
 
-The dependencies of the project are, as of now, CMake (if using cmake), MPI, OpenMP, and a BLAS/LAPACK library.
+The dependencies of the project are, as of now, CMake (if using cmake), and OpenMP.
 
 ## Documentation
 
@@ -73,42 +73,15 @@ CMake offers a very modular build of PIC, the following options are available an
 | Option Name            | Default | Description                                |
 |------------------------|---------|--------------------------------------------|
 | `PIC_DEFAULT_INT8`     | `OFF`   | Use 8-byte integers as default             |
-| `PIC_ENABLE_MPI`       | `OFF`   | Enable the use of MPI in PIC               |
 | `PIC_ENABLE_OMP`       | `OFF`   | Enable the use of OpenMP in PIC            |
-| `PIC_ENABLE_BLAS`      | `OFF`   | Enable BLAS/LAPACK libraries in PIC        |
 | `PIC_ENABLE_TESTING`   | `ON`    | Enable testing for PIC                     |
 | `PIC_ENABLE_JONQUIL`   | `OFF`   | Enable Jonquil for JSON/TOML handling      |
 
-#### Advanced options:
 
-| Option Name            | Default | Description                                |
-|------------------------|---------|--------------------------------------------|
-| `PIC_USE_VAPAA`        | `OFF`   | Use vapaa for binding to MPI               |
-
-Information on vapaa see [here](https://github.com/JorgeG94/vapaa/tree/main) which is my
-personal fork which is pulled from here, and Jeff's [project](https://github.com/jeffhammond/vapaa).
-
-Will update to use the orignal project at a later date.
-
-
-### Building (extended)
-
-To enable extended builds of PIC, i.e. using the BLAS interface and the dramatically underdeveloped MPI interface you can use the
-options provided above, simply:
-
-```
-cmake -DPIC_ENABLE_BLAS=ON -DPIC_ENABLE_MPI=ON ../
-```
-
-This will build the necessary files and will add the BLAS related tests to the `ctest` suite.
 
 ### FPM
 
 Install the FPM following the [instructions](https://fpm.fortran-lang.org/install/index.html#install) and then simply: `fpm install`
-
-The FPM will build the entire library, however the BLAS tests are not included in the default build. This is for simplicity for people
-that want to include `pic` as a dependency in their `fpm.toml` files. To compile PIC with BLAS support, make sure to pass the compile flag:
-`fpm install --flag "-DPIC_HAVE_BLAS"` so that the code gets compiled correctly.
 
 ## Contributing
 
