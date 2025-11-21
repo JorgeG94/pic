@@ -74,7 +74,6 @@ if(PIC_ENABLE_OMP)
   target_link_libraries(${core_lib} OpenMP::OpenMP_Fortran)
 endif()
 
-
 target_link_libraries(${main_lib} ${core_lib} ${libraries_to_link})
 
 # Install Fortran module files (assuming they are in the build directory)
