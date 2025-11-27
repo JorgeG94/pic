@@ -6,11 +6,14 @@
 module pic_io
   !! Assorted output helper routines
    use pic_types, only: sp, dp, int32, int64, default_int
+   use pic_ascii, only: to_upper, to_lower
    implicit none
    private
+
+   public :: to_upper, to_lower
    public :: print_asterisk_row
 
-   public :: to_char, pad, to_upper
+   public :: to_char, pad
    public :: set_precision, get_precision
 
    integer(default_int), parameter :: default_dp_precision = 12
@@ -42,14 +45,6 @@ module pic_io
       module procedure to_char_matrix_int64
       module procedure to_char_matrix_sp
       module procedure to_char_matrix_dp
-   end interface
-
-   interface to_upper
-    !! takes a character variable and transforms it to uppercase
-    !!
-    !! usage var = to_upper("hello")
-    !!
-      module procedure to_upper
    end interface
 
    interface pad
@@ -92,22 +87,6 @@ contains
       end do
       write (*, *)
    end subroutine print_asterisk_row
-
-   function to_upper(str) result(upper_str)
-      character(len=*), intent(in) :: str
-      character(len=len(str)) :: upper_str
-      integer(default_int) :: i
-      character :: ch
-
-      do i = 1, len(str)
-         ch = str(i:i)
-         if (ch >= 'a' .and. ch <= 'z') then
-            upper_str(i:i) = char(iachar(ch) - 32)
-         else
-            upper_str(i:i) = ch
-         end if
-      end do
-   end function to_upper
 
    function pad(s, width) result(padded)
     !! function to pad a string with a certain number of characters for nice printing
