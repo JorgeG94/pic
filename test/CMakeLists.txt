@@ -1,53 +1,54 @@
 # Unit testing
-set(tests
-    "base_utils"
-    "pic_string"
-    "pic_string_assignment"
-    "pic_string_functions"
-    "pic_string_intrinsic"
-    "pic_string_match"
-    "pic_string_operator"
-    "pic_string_strip_chomp"
-    "pic_string_to_string"
-    "pic_ascii"
-    "pic_timers"
-    "pic_logger"
-    "pic_flop_recorder"
-    "pic_flop_rate"
-    "pic_matrix_printer_v2"
-    "pic_array"
-    "pic_optional"
-    "pic_hash"
-    "pic_sorting")
-set(pre_proc_tests "pic_string_derivedtype_io")
 
 find_package(Threads REQUIRED)
-set(test-srcs "main_tests.f90")
 
-foreach(t IN LISTS tests)
-  string(MAKE_C_IDENTIFIER ${t} t)
-  list(APPEND test-srcs "test_${t}.f90")
-endforeach()
-foreach(t IN LISTS pre_proc_tests)
-  string(MAKE_C_IDENTIFIER ${t} t)
-  list(APPEND test-srcs "test_${t}.F90")
-endforeach()
-list(APPEND tests ${pre_proc_tests})
+# Macro to add a test executable for .f90 files
+macro(ADDTEST name)
+    add_executable(test_${name} test_${name}.f90)
+    set_target_properties(test_${name}
+        PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/tests/modules/${name}")
+    target_include_directories(test_${name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
+    target_link_libraries(test_${name} PRIVATE "${main_lib}" "${core_lib}" "test-drive::test-drive")
+    add_test(NAME ${project_name}/${name}
+             COMMAND $<TARGET_FILE:test_${name}>
+             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+endmacro(ADDTEST)
 
-add_executable("${project_name}-tester" "${test-srcs}")
+# Macro to add a test executable for preprocessed .F90 files
+macro(ADDTESTPP name)
+    add_executable(test_${name} test_${name}.F90)
+    set_target_properties(test_${name}
+        PROPERTIES Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/tests/modules/${name}")
+    target_include_directories(test_${name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
+    target_link_libraries(test_${name} PRIVATE "${main_lib}" "${core_lib}" "test-drive::test-drive")
+    add_test(NAME ${project_name}/${name}
+             COMMAND $<TARGET_FILE:test_${name}>
+             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+endmacro(ADDTESTPP)
 
-set_target_properties(
-  "${project_name}-tester"
-  PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-             Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/tests/modules")
-target_include_directories("${project_name}-tester"
-                           PRIVATE "${CMAKE_BINARY_DIR}/modules")
-target_link_libraries(
-  "${project_name}-tester" PRIVATE "${main_lib}" "${core_lib}"
-                                   test-drive::test-drive)
+# Add individual test executables
+message(STATUS "Adding individual test executables...")
 
-message(STATUS "Adding the following tests to ctests...")
-foreach(t IN LISTS tests)
-  message(STATUS "${project_name}/${t} ${project_name}-tester ${t}")
-  add_test("${project_name}/${t}" "${project_name}-tester" "${t}")
-endforeach()
+# Regular tests (.f90)
+ADDTEST(base_utils)
+ADDTEST(pic_string)
+ADDTEST(pic_string_assignment)
+ADDTEST(pic_string_functions)
+ADDTEST(pic_string_intrinsic)
+ADDTEST(pic_string_match)
+ADDTEST(pic_string_operator)
+ADDTEST(pic_string_strip_chomp)
+ADDTEST(pic_string_to_string)
+ADDTEST(pic_ascii)
+ADDTEST(pic_timers)
+ADDTEST(pic_logger)
+ADDTEST(pic_flop_recorder)
+ADDTEST(pic_flop_rate)
+ADDTEST(pic_matrix_printer_v2)
+ADDTEST(pic_array)
+ADDTEST(pic_optional)
+ADDTEST(pic_hash)
+ADDTEST(pic_sorting)
+
+# Preprocessed tests (.F90)
+ADDTESTPP(pic_string_derivedtype_io)

@@ -1663,3 +1663,30 @@ contains
    end subroutine test_pic_scramble_array_char
 
 end module test_pic_array
+
+
+program tester_pic_array
+   use, intrinsic :: iso_fortran_env, only: error_unit
+   use testdrive, only: run_testsuite, new_testsuite, testsuite_type
+   use test_pic_array, only: collect_pic_array_tests
+   implicit none
+   integer :: stat, is
+   type(testsuite_type), allocatable :: testsuites(:)
+   character(len=*), parameter :: fmt = '("#", *(1x, a))'
+
+   stat = 0
+
+   testsuites = [ &
+      new_testsuite("pic_array", collect_pic_array_tests) &
+      ]
+
+   do is = 1, size(testsuites)
+      write(error_unit, fmt) "Testing:", testsuites(is)%name
+      call run_testsuite(testsuites(is)%collect, error_unit, stat)
+   end do
+
+   if (stat > 0) then
+      write(error_unit, '(i0, 1x, a)') stat, "test(s) failed!"
+      error stop
+   end if
+end program tester_pic_array
