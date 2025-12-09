@@ -27,7 +27,7 @@ Briefly, for a minimal build you need:
 - An internet connection to pull the `test-drive` dependency
 
 These instructions should work on any OS, but be mindful this is aimed at Linux. I personally have built the code
-on MacOS on an M4 macbook, Linux x86, Linux ARM64, Windows using the WSL. 
+on MacOS on an M4 macbook, Linux x86, Linux ARM64, Windows using the WSL.
 
 On Mac I used brew to install the compilers, using conda seems to introduce some issues. I recommend using brew for now.
 
