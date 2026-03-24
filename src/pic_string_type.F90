@@ -1208,7 +1208,8 @@ end subroutine read_formatted
 !> We deeply trust in the compiler to inline and optimize this piece of code away.
 elemental subroutine unused_dummy_argument(dummy)
    class(*), intent(in) :: dummy
-   associate (dummy => dummy); end associate
+   associate (dummy => dummy)
+   end associate
 end subroutine unused_dummy_argument
 
 !> Safely return the character sequences represented by the string
