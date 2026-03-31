@@ -1,7 +1,7 @@
 ! SPDX-Identifer: MIT
 module pic_test_string_derivedtype_io
    use testdrive, only: new_unittest, unittest_type, error_type, check
-#ifndef __NVCOMPILER_LLVM__
+#if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG)
    use pic_string_type, only: string_type, assignment(=), slen, &
                               write (formatted), read (formatted), write (unformatted), read (unformatted), &
                               operator(==)
@@ -32,7 +32,7 @@ contains
 
       type(string_type) :: string
       integer :: io, stat
-#ifndef __NVCOMPILER_LLVM__
+#if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG)
       string = "Important saved value"
 
       open (newunit=io, form="formatted", status="scratch")
@@ -59,7 +59,7 @@ contains
 
       type(string_type) :: string
       integer :: io, stat
-#ifndef __NVCOMPILER_LLVM__
+#if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG)
       string = "Important saved value"
 
       open (newunit=io, form="formatted", status="scratch")
@@ -86,7 +86,7 @@ contains
 
       type(string_type) :: string
       integer :: io
-#ifndef __NVCOMPILER_LLVM__
+#if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG)
       string = "Important saved value"
 
       open (newunit=io, form="unformatted", status="scratch")
