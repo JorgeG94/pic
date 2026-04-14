@@ -14,8 +14,9 @@ module pic_knowledge
 
 contains
 
-   subroutine get_knowledge()
+   subroutine get_knowledge(print_all)
     !! I print random knowledge
+      logical, optional, intent(in) :: print_all
       type(string_type), allocatable :: knowledge(:)
       integer(int32) :: n, idx
       real(dp) :: r
@@ -73,6 +74,17 @@ contains
       if (idx > n) idx = n
 
       call logger%knowledge(trim(char(knowledge(idx))))
+
+      if (present(print_all)) then
+         if (print_all) then
+            block
+               integer(int32) :: i
+               do i = 1, size(knowledge)
+                  call logger%knowledge(trim(char(knowledge(i))))
+               end do
+            end block
+         end if
+      end if
 
    end subroutine get_knowledge
 

@@ -101,7 +101,7 @@ program pic_tester
    end if
 
    call print_asterisk_row(50_default_int)
-   call get_knowledge
+   call get_knowledge(.true.)
    call print_asterisk_row(50_default_int)
 
 end program pic_tester
