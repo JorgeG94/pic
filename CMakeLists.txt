@@ -21,6 +21,7 @@ option(PIC_ENABLE_TESTING "Enable testing for PIC" ON)
 option(PIC_BUILD_STRESS "Build dgemm flop stress case" OFF)
 option(PIC_DISABLE_PROFILER "Disable the profiler for zero overhead" OFF)
 option(PIC_USE_NVTX "Enable NVTX annotations for Nsight Systems" OFF)
+option(PIC_USE_C_DATATYPES "Use iso_c_binding kinds for sp, dp, qp, and default_int" OFF)
 
 add_subdirectory(cmake)
 
@@ -49,6 +50,10 @@ if(PIC_DEFAULT_INT8)
   # only pic_types.F90 in the core lib needs this, the rest just inherit from
   # there
   target_compile_definitions(${core_lib} PRIVATE USE_INT8)
+endif()
+
+if(PIC_USE_C_DATATYPES)
+  target_compile_definitions(${core_lib} PRIVATE PIC_C_COMPAT)
 endif()
 
 # Print summary info
