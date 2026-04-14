@@ -135,8 +135,3 @@ MPI Support
 ^^^^^^^^^^^
 
 Enable with ``-DPIC_ENABLE_MPI=ON``. Provides MPI-aware utilities.
-
-JSON Support (Jonquil)
-^^^^^^^^^^^^^^^^^^^^^^
-
-Enable with ``-DPIC_ENABLE_JONQUIL=ON``. Provides JSON parsing and generation.
