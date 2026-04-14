@@ -245,8 +245,9 @@ contains
       !! Test that the pure logger actually works from a pure subroutine
       type(error_type), allocatable, intent(out) :: error
       type(log_buffer_type) :: buf
+      integer(default_int), parameter :: test = 42
 
-      call example_pure_routine(42, buf)
+      call example_pure_routine(test, buf)
 
       call check(error, buf%count == 2, "Pure routine should have buffered 2 messages")
       if (allocated(error)) return
