@@ -374,9 +374,9 @@ contains
       call logger%info('------------------------------------------------------------')
 
       do i = 0, n_print - 1
-         ! sort_indices(i) is the 0-based index into times_to_sort
-         ! region_map(sort_indices(i) + 1) gives us the actual region index
-         j = region_map(sort_indices(i) + 1)
+         ! sort_indices(i) is a 1-based index (Fortran standard) into times_to_sort
+         ! region_map(sort_indices(i)) gives us the actual region index
+         j = region_map(sort_indices(i))
          if (total_time > 0.0_dp) then
             pct = 100.0_dp*state%regions(j)%total_time/total_time
          else
