@@ -22,7 +22,7 @@ I assume you have experience building things here. If you don't please go furthe
 
 Briefly, for a minimal build you need:
 
-- CMake (at least 3.22) or the Fortran Package Manager (at least 0.12.0)
+- CMake (at least 3.31) or the Fortran Package Manager (at least 0.12.0)
 - A Fortran compiler
 - An internet connection to pull the `test-drive` dependency
 
