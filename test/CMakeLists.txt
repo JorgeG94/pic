@@ -20,7 +20,8 @@ set(tests
     "pic_hash"
     "pic_sorting"
     "pic_pure_logger"
-    "pic_error")
+    "pic_error"
+    "pic_profiler")
 set(pre_proc_tests "pic_string_derivedtype_io")
 
 find_package(Threads REQUIRED)

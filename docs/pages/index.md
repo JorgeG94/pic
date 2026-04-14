@@ -180,7 +180,7 @@ For example, in Fortran there is no `sort` function that provides similar functi
 However, there are many other functionalities that need to be covered and implemented for all types of programs. This is what drove me
 to create PIC.
 
-PIC is intended to be a set of functions and subroutines that facilitate developing code aimed for High Performance Computing for Scientific Applications. For example, weather simulations, finite element methods, computational quanutm chemistry, molecular dynamics, etc. The idea of PIC is to provide seamless interfaces to MPI, BLAS to allow people to think about their science instead of the code.
+PIC is intended to be a set of functions and subroutines that facilitate developing code aimed for High Performance Computing for Scientific Applications. For example, weather simulations, finite element methods, computational quanutm chemistry, molecular dynamics, etc.
 
 The aim is to maybe "look pythonic in nature", but probably closer to Julia.
 

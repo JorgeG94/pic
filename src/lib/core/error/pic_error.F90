@@ -17,8 +17,9 @@ module pic_error
    !!   type(error_t) :: err
    !!   call err%set(ERROR_IO, "failed to open file")
    !!   if (err%has_error()) call err%fatal()
+   !!   ! Or using operator: if (.haserror. err) call err%fatal()
    !!
-   !! Error wrapping (Rust-style "caused by"):
+   !! Error wrapping (Rust-style "caused by", outermost first):
    !!   call low_level_routine(err)
    !!   if (err%has_error()) then
    !!      call err%wrap(ERROR_PARSE, "failed to parse input")
@@ -31,8 +32,9 @@ module pic_error
    private
 
    public :: error_t
-   public :: SUCCESS, ERROR_GENERIC, ERROR_IO, ERROR_PARSE, ERROR_VALIDATION
+   public :: SUCCESS, ERROR_GENERIC, ERROR_IO, ERROR_PARSE, ERROR_VALIDATION, ERROR_ALLOC
    public :: code_to_string
+   public :: operator(.haserror.)
 
    !! Error codes
    integer(default_int), parameter :: SUCCESS = 0
@@ -40,6 +42,12 @@ module pic_error
    integer(default_int), parameter :: ERROR_IO = 2
    integer(default_int), parameter :: ERROR_PARSE = 3
    integer(default_int), parameter :: ERROR_VALIDATION = 4
+   integer(default_int), parameter :: ERROR_ALLOC = 5
+
+   interface operator(.haserror.)
+      !! Operator for checking error state: if (.haserror. err) then
+      module procedure error_has_error
+   end interface
 
    !! Stack trace configuration
    integer(default_int), parameter :: MAX_STACK_DEPTH = 20
@@ -103,6 +111,8 @@ contains
          name = "ERROR_PARSE"
       case (ERROR_VALIDATION)
          name = "ERROR_VALIDATION"
+      case (ERROR_ALLOC)
+         name = "ERROR_ALLOC"
       case default
          name = "UNKNOWN"
       end select
@@ -173,6 +183,8 @@ contains
       !! Pushes the current error into the cause chain and sets a new
       !! top-level code and message (Rust-style "caused by")
       !!
+      !! Print order: outermost wrapper first, root cause last (like Rust).
+      !!
       !! Usage:
       !!   call parse_json(data, err)
       !!   if (err%has_error()) then
@@ -226,11 +238,11 @@ contains
 
    function error_get_full_trace(self) result(trace)
       !! Get complete error message with cause chain and stack trace
-      !! Returns a multi-line string
+      !! Returns a dynamically-sized multi-line string
       class(error_t), intent(in) :: self
       character(len=:), allocatable :: trace
-      character(len=4096) :: buffer
-      integer(default_int) :: i, pos
+      character(len=32) :: idx_str
+      integer(default_int) :: i
 
       if (.not. self%has_error()) then
          trace = ""
@@ -238,36 +250,28 @@ contains
       end if
 
       ! Top-level error with named code
-      buffer = code_to_string(self%code)//": "
-      pos = len_trim(buffer) + 1
-
+      trace = code_to_string(self%code)//": "
       if (allocated(self%message)) then
-         buffer(pos:) = self%message
-         pos = len_trim(buffer) + 1
+         trace = trace//self%message
       end if
 
-      ! Cause chain (most recent wrap first)
+      ! Cause chain: prints from most-recent wrap (cause_depth) down to
+      ! root cause (1), matching Rust's "caused by" display order
       do i = self%cause_depth, 1, -1
-         buffer(pos:) = new_line('a')//"  Caused by: "//trim(code_to_string(self%cause_codes(i)))//": "
-         pos = len_trim(buffer) + 1
-         buffer(pos:) = trim(self%cause_messages(i))
-         pos = len_trim(buffer) + 1
+         trace = trace//new_line('a')//"  Caused by: "// &
+                 trim(code_to_string(self%cause_codes(i)))//": "// &
+                 trim(self%cause_messages(i))
       end do
 
       ! Stack trace
       if (self%stack_depth > 0) then
-         buffer(pos:) = new_line('a')//"Call stack (most recent first):"
-         pos = len_trim(buffer) + 1
-
+         trace = trace//new_line('a')//"Call stack (most recent first):"
          do i = self%stack_depth, 1, -1
-            write (buffer(pos:), '(A,I0,A)') new_line('a')//"  [", i, "] "
-            pos = len_trim(buffer) + 1
-            buffer(pos:) = trim(self%call_stack(i))
-            pos = len_trim(buffer) + 1
+            write (idx_str, '(I0)') i
+            trace = trace//new_line('a')//"  ["//trim(idx_str)//"] "// &
+                    trim(self%call_stack(i))
          end do
       end if
-
-      trace = trim(buffer)
    end function error_get_full_trace
 
    subroutine error_print_trace(self, unit)

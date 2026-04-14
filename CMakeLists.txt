@@ -19,6 +19,8 @@ option(PIC_DEFAULT_INT8 "Use 8-byte integers as default" OFF)
 option(PIC_ENABLE_OMP "Enable the use of OpenMP in PIC" OFF)
 option(PIC_ENABLE_TESTING "Enable testing for PIC" ON)
 option(PIC_BUILD_STRESS "Build dgemm flop stress case" OFF)
+option(PIC_DISABLE_PROFILER "Disable the profiler for zero overhead" OFF)
+option(PIC_USE_NVTX "Enable NVTX annotations for Nsight Systems" OFF)
 
 add_subdirectory(cmake)
 
