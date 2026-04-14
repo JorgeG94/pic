@@ -77,7 +77,6 @@ CMake offers a very modular build of PIC, the following options are available an
 | `PIC_DEFAULT_INT8`     | `OFF`   | Use 8-byte integers as default             |
 | `PIC_ENABLE_OMP`       | `OFF`   | Enable the use of OpenMP in PIC            |
 | `PIC_ENABLE_TESTING`   | `ON`    | Enable testing for PIC                     |
-| `PIC_ENABLE_JONQUIL`   | `OFF`   | Enable Jonquil for JSON/TOML handling      |
 
 
 

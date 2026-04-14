@@ -1,12 +1,46 @@
+.. image:: _static/pic_logo.png
+   :align: center
+   :width: 250px
+   :alt: PIC - Portable Fortran Utility Library
+
 User Guide to PIC
 =================
 
-A portable Fortran utility library
-----------------------------------
+*A portable Fortran utility library for scientific computing*
 
-PIC (a Huastec word) is a portable Fortran utility library providing commonly needed features (strings, logging, timers, arrays, sorting, hashing, etc.) with first-class support across GNU, Intel, NVIDIA HPC, LFortran, Cray, and Flang compilers.
+----
 
-For API documentation, see the `FORD-generated docs <https://jorgeg94.github.io/pic/>`_.
+PIC (a Huastec word meaning "otter") is a portable Fortran utility library providing commonly needed features with first-class support across multiple compilers.
+
+Why PIC?
+--------
+
+The Fortran ecosystem lacks a standard library that compiles reliably across all compilers. While the Fortran stdlib project aims to fill this gap, it doesn't build on compilers like nvfortran. PIC exists to provide **portable utilities that work everywhere**.
+
+**Key Features:**
+
+- Strings, logging, timers, arrays, sorting, hashing
+- Tested on GNU, Intel, NVIDIA HPC, LFortran, Cray, and Flang
+- Two build systems: CMake and FPM
+- MIT licensed and open source
+
+**Quick Start:**
+
+.. code-block:: fortran
+
+   program hello_pic
+      use pic
+      implicit none
+
+      call log_info("Hello from PIC!")
+   end program hello_pic
+
+Links
+-----
+
+- `API Documentation (FORD) <https://jorgeg94.github.io/pic/>`_
+- `GitHub Repository <https://github.com/JorgeG94/pic>`_
+- `Examples Repository <https://github.com/JorgeG94/pic_examples>`_
 
 .. toctree::
    :maxdepth: 2
@@ -22,3 +56,9 @@ For API documentation, see the `FORD-generated docs <https://jorgeg94.github.io/
 
    contributing
    compiler_portability
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`

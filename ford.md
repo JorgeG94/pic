@@ -98,7 +98,6 @@ CMake offers a very modular build of PIC, the following options are available an
 | `PIC_ENABLE_OMP`       | `OFF`   | Enable the use of OpenMP in PIC            |
 | `PIC_ENABLE_BLAS`      | `OFF`   | Enable BLAS/LAPACK libraries in PIC        |
 | `PIC_ENABLE_TESTING`   | `ON`    | Enable testing for PIC                     |
-| `PIC_ENABLE_JONQUIL`   | `OFF`   | Enable Jonquil for JSON/TOML handling      |
 
 #### Advanced options:
 

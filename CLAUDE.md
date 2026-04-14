@@ -17,7 +17,7 @@ fpm build --profile release
 fpm test --profile release
 ```
 
-Key CMake options: `PIC_ENABLE_OMP`, `PIC_DEFAULT_INT8`, `PIC_ENABLE_BLAS`, `PIC_ENABLE_JONQUIL`, `PIC_ENABLE_MPI`.
+Key CMake options: `PIC_ENABLE_OMP`, `PIC_DEFAULT_INT8`, `PIC_ENABLE_BLAS`, `PIC_ENABLE_MPI`.
 
 ## Project layout
 
