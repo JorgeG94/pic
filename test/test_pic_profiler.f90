@@ -19,7 +19,13 @@ contains
                   new_unittest("test_profiler_get_time", test_profiler_get_time), &
                   new_unittest("test_profiler_enable_disable", test_profiler_enable_disable), &
                   new_unittest("test_profiler_reset", test_profiler_reset), &
-                  new_unittest("test_profiler_stack_based_stop", test_profiler_stack_based_stop) &
+                  new_unittest("test_profiler_stack_based_stop", test_profiler_stack_based_stop), &
+                  new_unittest("test_profiler_init_disabled", test_profiler_init_disabled), &
+                  new_unittest("test_profiler_nvtx_only", test_profiler_nvtx_only), &
+                  new_unittest("test_profiler_report_with_title", test_profiler_report_with_title), &
+                  new_unittest("test_profiler_report_with_root", test_profiler_report_with_root), &
+                  new_unittest("test_profiler_explicit_stop_nested", test_profiler_explicit_stop_nested), &
+                  new_unittest("test_profiler_edge_cases", test_profiler_edge_cases) &
                   ]
    end subroutine collect_pic_profiler_tests
 
@@ -248,6 +254,186 @@ contains
 
       call profiler_finalize()
    end subroutine test_profiler_stack_based_stop
+
+   subroutine test_profiler_init_disabled(error)
+      !! Test initializing profiler with enabled=.false.
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: t
+
+      call profiler_init(enabled=.false.)
+
+      ! This should not be recorded since profiler starts disabled
+      call profiler_start("disabled_init_test")
+      call dummy_work()
+      call profiler_stop("disabled_init_test")
+
+      t = profiler_get_time("disabled_init_test")
+      call check(error, t == 0.0_dp, "Region should not be recorded when init with enabled=false")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      ! Enable and verify it works now
+      call profiler_enable()
+      call profiler_start("after_enable")
+      call dummy_work()
+      call profiler_stop("after_enable")
+
+      t = profiler_get_time("after_enable")
+      call check(error, t > 0.0_dp, "Region should be recorded after enable")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call profiler_finalize()
+   end subroutine test_profiler_init_disabled
+
+   subroutine test_profiler_nvtx_only(error)
+      !! Test nvtx_only regions are excluded from report but still timed
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: t
+
+      call profiler_init()
+
+      ! Start an nvtx_only region
+      call profiler_start("nvtx_region", nvtx_only=.true.)
+      call dummy_work()
+      call profiler_stop("nvtx_region")
+
+      ! Time should still be recorded
+      t = profiler_get_time("nvtx_region")
+      call check(error, t > 0.0_dp, "nvtx_only region should still have time")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      ! Report should not crash (nvtx_only regions excluded from print)
+      call profiler_report()
+
+      call profiler_finalize()
+   end subroutine test_profiler_nvtx_only
+
+   subroutine test_profiler_report_with_title(error)
+      !! Test profiler_report with a title
+      type(error_type), allocatable, intent(out) :: error
+
+      call profiler_init()
+
+      call profiler_start("titled_region")
+      call dummy_work()
+      call profiler_stop("titled_region")
+
+      ! Should not crash
+      call profiler_report(title="Test Report")
+
+      call check(error, .true., "Report with title should not crash")
+      call profiler_finalize()
+   end subroutine test_profiler_report_with_title
+
+   subroutine test_profiler_report_with_root(error)
+      !! Test profiler_report with root_region for percentage calculation
+      type(error_type), allocatable, intent(out) :: error
+
+      call profiler_init()
+
+      call profiler_start("root")
+      call dummy_work()
+      call profiler_start("child")
+      call dummy_work()
+      call profiler_stop("child")
+      call profiler_stop("root")
+
+      ! Should not crash and percentages relative to root
+      call profiler_report(root_region="root")
+
+      call check(error, .true., "Report with root_region should not crash")
+      call profiler_finalize()
+   end subroutine test_profiler_report_with_root
+
+   subroutine test_profiler_explicit_stop_nested(error)
+      !! Test explicit name stop with nested regions (exercises remove_from_stack)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: t1, t2, t3
+
+      call profiler_init()
+
+      ! Start three nested regions
+      call profiler_start("level1")
+      call dummy_work()
+      call profiler_start("level2")
+      call dummy_work()
+      call profiler_start("level3")
+      call dummy_work()
+
+      ! Stop middle one explicitly (not top of stack)
+      call profiler_stop("level2")
+
+      ! Stop remaining with stack-based
+      call profiler_stop()  ! stops level3
+      call profiler_stop()  ! stops level1
+
+      t1 = profiler_get_time("level1")
+      t2 = profiler_get_time("level2")
+      t3 = profiler_get_time("level3")
+
+      call check(error, t1 > 0.0_dp, "level1 should have time")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call check(error, t2 > 0.0_dp, "level2 should have time")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call check(error, t3 > 0.0_dp, "level3 should have time")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call profiler_finalize()
+   end subroutine test_profiler_explicit_stop_nested
+
+   subroutine test_profiler_edge_cases(error)
+      !! Test edge cases: stop non-existent, stop empty stack, double start
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: t
+
+      call profiler_init()
+
+      ! Stop non-existent region (should not crash)
+      call profiler_stop("does_not_exist")
+
+      ! Stop with empty stack (should not crash)
+      call profiler_stop()
+
+      ! Double start same region (second should be ignored)
+      call profiler_start("double_start")
+      call profiler_start("double_start")  ! should be no-op
+      call dummy_work()
+      call profiler_stop()
+
+      t = profiler_get_time("double_start")
+      call check(error, t > 0.0_dp, "Double-started region should still work")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      ! Report with no regions after finalize/init
+      call profiler_finalize()
+      call profiler_init()
+      call profiler_report()  ! should not crash with 0 regions
+
+      call check(error, .true., "Edge cases should not crash")
+      call profiler_finalize()
+   end subroutine test_profiler_edge_cases
 
    subroutine dummy_work()
       !! Perform some dummy computation to measure
