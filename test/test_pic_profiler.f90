@@ -89,16 +89,8 @@ contains
       t2 = profiler_get_time("region_2")
 
       call check(error, t1 > 0.0_dp, "Region 1 time should be positive")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call check(error, t2 > 0.0_dp, "Region 2 time should be positive")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call profiler_finalize()
    end subroutine test_profiler_multiple_regions
@@ -126,10 +118,6 @@ contains
       t2 = profiler_get_time("accumulated")
 
       call check(error, t2 > t1, "Time should accumulate across multiple calls")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call profiler_finalize()
    end subroutine test_profiler_accumulated_time
@@ -144,10 +132,6 @@ contains
       ! Get time for non-existent region
       t = profiler_get_time("does_not_exist")
       call check(error, t == 0.0_dp, "Non-existent region should return 0.0")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call profiler_finalize()
    end subroutine test_profiler_get_time
@@ -174,10 +158,6 @@ contains
 
       t = profiler_get_time("disabled_test")
       call check(error, t == 0.0_dp, "Disabled region should not be recorded")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       ! Re-enable
       call profiler_enable()
@@ -198,19 +178,11 @@ contains
 
       t = profiler_get_time("reset_test")
       call check(error, t > 0.0_dp, "Should have time before reset")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call profiler_reset()
 
       t = profiler_get_time("reset_test")
       call check(error, t == 0.0_dp, "Time should be zero after reset")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call profiler_finalize()
    end subroutine test_profiler_reset
@@ -235,22 +207,10 @@ contains
       t_inner = profiler_get_time("inner")
 
       call check(error, t_outer > 0.0_dp, "Outer region should have time")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call check(error, t_inner > 0.0_dp, "Inner region should have time")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call check(error, t_outer > t_inner, "Outer should be longer than inner")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call profiler_finalize()
    end subroutine test_profiler_stack_based_stop
@@ -282,10 +242,6 @@ contains
 
       t = profiler_get_time("after_enable")
       call check(error, t > 0.0_dp, "Region should be recorded after enable")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call profiler_finalize()
    end subroutine test_profiler_init_disabled
@@ -305,10 +261,6 @@ contains
       ! Time should still be recorded
       t = profiler_get_time("nvtx_region")
       call check(error, t > 0.0_dp, "nvtx_only region should still have time")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       ! Report should not crash (nvtx_only regions excluded from print)
       call profiler_report()
@@ -380,22 +332,10 @@ contains
       t3 = profiler_get_time("level3")
 
       call check(error, t1 > 0.0_dp, "level1 should have time")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call check(error, t2 > 0.0_dp, "level2 should have time")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call check(error, t3 > 0.0_dp, "level3 should have time")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       call profiler_finalize()
    end subroutine test_profiler_explicit_stop_nested
@@ -421,10 +361,6 @@ contains
 
       t = profiler_get_time("double_start")
       call check(error, t > 0.0_dp, "Double-started region should still work")
-      if (allocated(error)) then
-         call profiler_finalize()
-         return
-      end if
 
       ! Report with no regions after finalize/init
       call profiler_finalize()
