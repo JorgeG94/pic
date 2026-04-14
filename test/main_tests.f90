@@ -17,6 +17,7 @@ program pic_tester
    use pic_test_string_derivedtype_io, only: collect_string_derivedtype_io_tests
    use test_pic_timer, only: collect_pic_timers_tests
    use test_pic_logger, only: collect_pic_logger_tests
+   use test_pic_pure_logger, only: collect_pic_pure_logger_tests
    use test_pic_flop_recorder, only: collect_pic_flop_recorder_tests
    use test_pic_flop_rate, only: collect_flop_rate_tests
    use test_pic_matrix_printer_v2, only: collect_pic_matrix_printer_v2_tests
@@ -40,7 +41,7 @@ program pic_tester
    stat = 0_int32
    ! we allocate like this because some compilers will complain about doing on the fly allocation
    ! looking at you lfortran
-   allocate (testsuites(20))
+   allocate (testsuites(21))
    testsuites = [ &
                 new_testsuite("base_utils", collect_suite1), &
                 new_testsuite("pic_string", collect_pic_string_tests), &
@@ -61,7 +62,8 @@ program pic_tester
                 new_testsuite("pic_optional", collect_pic_optional_tests), &
                 new_testsuite("pic_hash", collect_pic_hash_tests), &
                 new_testsuite("pic_ascii", collect_pic_ascii_tests), &
-                new_testsuite("pic_sorting", collect_pic_sorting_tests) &
+                new_testsuite("pic_sorting", collect_pic_sorting_tests), &
+                new_testsuite("pic_pure_logger", collect_pic_pure_logger_tests) &
                 ]
    ! here you add another test suite to the array
 
