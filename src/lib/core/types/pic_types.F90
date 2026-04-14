@@ -9,7 +9,7 @@ module pic_types
    use, intrinsic :: iso_fortran_env, only: int8, int16, int32, int64
 #ifdef PIC_C_COMPAT
    use, intrinsic :: iso_c_binding, only: c_bool, c_char, &
-      c_float, c_double, c_long_double, c_int, c_int64_t
+                                                                             c_float, c_double, c_long_double, c_int, c_int64_t
 #else
    use, intrinsic :: iso_c_binding, only: c_bool, c_char
 #endif

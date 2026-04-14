@@ -21,13 +21,16 @@ option(PIC_ENABLE_TESTING "Enable testing for PIC" ON)
 option(PIC_BUILD_STRESS "Build dgemm flop stress case" OFF)
 option(PIC_DISABLE_PROFILER "Disable the profiler for zero overhead" OFF)
 option(PIC_USE_NVTX "Enable NVTX annotations for Nsight Systems" OFF)
-option(PIC_USE_C_DATATYPES "Use iso_c_binding kinds for sp, dp, qp, and default_int" OFF)
+option(PIC_USE_C_DATATYPES
+       "Use iso_c_binding kinds for sp, dp, qp, and default_int" OFF)
 
 if(PIC_DEFAULT_INT8 AND PIC_USE_C_DATATYPES)
-  message(FATAL_ERROR
-    "PIC_DEFAULT_INT8 and PIC_USE_C_DATATYPES are mutually exclusive.\n"
-    "PIC_DEFAULT_INT8 sets default_int to int64, while PIC_USE_C_DATATYPES "
-    "sets it to c_int (typically int32). Please enable only one of these options.")
+  message(
+    FATAL_ERROR
+      "PIC_DEFAULT_INT8 and PIC_USE_C_DATATYPES are mutually exclusive.\n"
+      "PIC_DEFAULT_INT8 sets default_int to int64, while PIC_USE_C_DATATYPES "
+      "sets it to c_int (typically int32). Please enable only one of these options."
+  )
 endif()
 
 add_subdirectory(cmake)
