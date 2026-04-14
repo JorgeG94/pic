@@ -37,9 +37,51 @@ src/lib/core/
   flop_recorder/  pic_flop_recorder.f90
   flop_rate/      pic_flop_rate.f90
   knowledge/      pic_knowledge.f90
+  error/          pic_error.F90
+  profiler/       pic_profiler.F90
 src/pic.f90       Umbrella module (banner)
 test/             All tests + main_tests.f90 runner
 ```
+
+### Error handling
+
+Use `error_t` from `pic_error` for unified error handling with stack traces:
+
+```fortran
+use pic_error
+type(error_t) :: err
+
+call err%set(ERROR_IO, "failed to open file")
+if (err%has_error()) call err%fatal()
+
+! Wrap errors for context (Rust-style "caused by"):
+call low_level_routine(err)
+if (err%has_error()) then
+   call err%wrap(ERROR_PARSE, "failed to parse input")
+   return
+end if
+```
+
+Error codes: `SUCCESS`, `ERROR_GENERIC`, `ERROR_IO`, `ERROR_PARSE`, `ERROR_VALIDATION`.
+
+### Profiler
+
+Use `pic_profiler` for named code regions with optional NVTX support:
+
+```fortran
+use pic_profiler
+
+call profiler_init()
+call profiler_start("outer")
+call profiler_start("inner")
+! ...
+call profiler_stop()  ! stops "inner" (stack-based)
+call profiler_stop()  ! stops "outer"
+call profiler_report()
+call profiler_finalize()
+```
+
+Compile with `-DPIC_USE_NVTX` for NVIDIA Nsight Systems integration, or `-DPIC_DISABLE_PROFILER` for zero overhead.
 
 ## Coding conventions
 
