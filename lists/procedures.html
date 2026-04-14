@@ -132,6 +132,15 @@ The length of the character sequence remains unchanged.</p></td>
                  <td><p>Assign a character sequence to a string.</p></td>
                </tr>
 			   <tr>
+                 <td><a href='../proc/buffer_message.html'>buffer_message</a></td>
+                 <td><a href='../module/pic_pure_logger.html'>pic_pure_logger</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Core buffering routine — appends a log entry to the buffer.
+If the buffer is full, increments the overflow counter.
+If a message or name exceeds its max length, it is truncated
+and the entry is flagged.</p></td>
+               </tr>
+			   <tr>
                  <td><a href='../interface/char.html'>char</a></td>
                  <td><a href='../module/pic_string_type.html'>pic_string_type</a></td>
                  <td>Interface</td>
@@ -261,6 +270,12 @@ Default character set variant where trailing whitespace is removed.</p></td>
                  <td><a href='../module/pic_strings.html'>pic_strings</a></td>
                  <td>Function</td>
                  <td><p>Remove trailing substrings from string.</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/clear_log_buffer.html'>clear_log_buffer</a></td>
+                 <td><a href='../module/pic_pure_logger.html'>pic_pure_logger</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Reset the buffer to empty. Call after flushing if you want to reuse it.</p></td>
                </tr>
 			   <tr>
                  <td><a href='../proc/close_log_file.html'>close_log_file</a></td>
@@ -429,6 +444,12 @@ Returns an integer</p></td>
                  <td><a href='../module/pic_logger.html'>pic_logger</a></td>
                  <td>Subroutine</td>
                  <td><p>Log a message that will only be printed at the debug level of verbosity</p><a href="../proc/debug.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/dispatch.html'>dispatch</a></td>
+                 <td><a href='../module/pic_pure_logger.html'>pic_pure_logger</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Route a buffered entry to the appropriate logger method</p></td>
                </tr>
 			   <tr>
                  <td><a href='../proc/dp_decrease_ord_sort.html'>dp_decrease_ord_sort</a></td>
@@ -683,6 +704,13 @@ number of flops and the elapsed time</p><a href="../proc/flop_rate_get_flop_rate
                  <td><a href='../module/pic_flop_rate.html'>pic_flop_rate</a></td>
                  <td>Subroutine</td>
                  <td><p>Calls the stop method for the timer contained in the flop rate type</p><a href="../proc/flop_rate_stop_time.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/flush_log_buffer.html'>flush_log_buffer</a></td>
+                 <td><a href='../module/pic_pure_logger.html'>pic_pure_logger</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Flush all buffered entries through the real logger, then clear the buffer.
+This is impure — call it once you are back outside the pure call chain.</p><a href="../proc/flush_log_buffer.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
                </tr>
 			   <tr>
                  <td><a href='../interface/fnv_1_hash.html'>fnv_1_hash</a></td>
@@ -1700,6 +1728,48 @@ which will be slow for large matrix sizes. pic_transpose does not assume symmetr
                  <td><p>print a vector of  values</p></td>
                </tr>
 			   <tr>
+                 <td><a href='../proc/pure_debug.html'>pure_debug</a></td>
+                 <td><a href='../module/pic_pure_logger.html'>pic_pure_logger</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Buffer a debug-level message</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/pure_error.html'>pure_error</a></td>
+                 <td><a href='../module/pic_pure_logger.html'>pic_pure_logger</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Buffer an error-level message</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/pure_info.html'>pure_info</a></td>
+                 <td><a href='../module/pic_pure_logger.html'>pic_pure_logger</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Buffer an info-level message</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/pure_knowledge.html'>pure_knowledge</a></td>
+                 <td><a href='../module/pic_pure_logger.html'>pic_pure_logger</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Buffer a knowledge-level message</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/pure_performance.html'>pure_performance</a></td>
+                 <td><a href='../module/pic_pure_logger.html'>pic_pure_logger</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Buffer a performance-level message</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/pure_verbose.html'>pure_verbose</a></td>
+                 <td><a href='../module/pic_pure_logger.html'>pic_pure_logger</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Buffer a verbose-level message</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/pure_warning.html'>pure_warning</a></td>
+                 <td><a href='../module/pic_pure_logger.html'>pic_pure_logger</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Buffer a warning-level message</p></td>
+               </tr>
+			   <tr>
                  <td><a href='../interface/radix_sort.html'>radix_sort</a></td>
                  <td><a href='../module/pic_sorting.html'>pic_sorting</a></td>
                  <td>Interface</td>
@@ -2561,7 +2631,7 @@ unit.</p></td>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-04-03 06:35 +0000             </p>
+ on 2026-04-14 06:16 +0000             </p>
           </div>
         </div>
         <br>
