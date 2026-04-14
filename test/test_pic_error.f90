@@ -1,7 +1,7 @@
 module test_pic_error
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_error, only: error_t, code_to_string, &
-                        SUCCESS, ERROR_GENERIC, ERROR_IO, ERROR_PARSE, ERROR_VALIDATION
+   use pic_error, only: error_t, code_to_string, operator(.haserror.), &
+                        SUCCESS, ERROR_GENERIC, ERROR_IO, ERROR_PARSE, ERROR_VALIDATION, ERROR_ALLOC
    use pic_types, only: default_int
    implicit none
    private
@@ -28,7 +28,9 @@ contains
                   new_unittest("test_set_resets_chain", test_set_resets_chain), &
                   new_unittest("test_get_full_trace_no_error", test_get_full_trace_no_error), &
                   new_unittest("test_get_full_trace_with_causes", test_get_full_trace_with_causes), &
-                  new_unittest("test_print_trace_to_file", test_print_trace_to_file) &
+                  new_unittest("test_print_trace_to_file", test_print_trace_to_file), &
+                  new_unittest("test_error_alloc_code", test_error_alloc_code), &
+                  new_unittest("test_haserror_operator", test_haserror_operator) &
                   ]
    end subroutine collect_pic_error_tests
 
@@ -352,5 +354,44 @@ contains
          close (unit_num, status="delete")
       end if
    end subroutine test_print_trace_to_file
+
+   subroutine test_error_alloc_code(error)
+      !! Test ERROR_ALLOC code and code_to_string
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+
+      call err%set(ERROR_ALLOC, "failed to allocate array")
+
+      call check(error, err%has_error(), "Should have error after set")
+      if (allocated(error)) return
+
+      call check(error, err%is(ERROR_ALLOC), "Should match ERROR_ALLOC")
+      if (allocated(error)) return
+
+      call check(error, code_to_string(ERROR_ALLOC) == "ERROR_ALLOC", "ERROR_ALLOC name")
+      if (allocated(error)) return
+   end subroutine test_error_alloc_code
+
+   subroutine test_haserror_operator(error)
+      !! Test .haserror. operator for checking error state
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+
+      ! Fresh error should not have error
+      call check(error,.not. (.haserror.err), "Fresh error should be false with operator")
+      if (allocated(error)) return
+
+      ! Set an error
+      call err%set(ERROR_IO, "test error")
+
+      call check(error, .haserror.err, "Error should be true with operator")
+      if (allocated(error)) return
+
+      ! Clear and check again
+      call err%clear()
+
+      call check(error,.not. (.haserror.err), "Cleared error should be false with operator")
+      if (allocated(error)) return
+   end subroutine test_haserror_operator
 
 end module test_pic_error

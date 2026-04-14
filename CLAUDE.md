@@ -53,8 +53,9 @@ type(error_t) :: err
 
 call err%set(ERROR_IO, "failed to open file")
 if (err%has_error()) call err%fatal()
+! Or using operator: if (.haserror. err) call err%fatal()
 
-! Wrap errors for context (Rust-style "caused by"):
+! Wrap errors for context (Rust-style "caused by", outermost first):
 call low_level_routine(err)
 if (err%has_error()) then
    call err%wrap(ERROR_PARSE, "failed to parse input")
@@ -62,7 +63,7 @@ if (err%has_error()) then
 end if
 ```
 
-Error codes: `SUCCESS`, `ERROR_GENERIC`, `ERROR_IO`, `ERROR_PARSE`, `ERROR_VALIDATION`.
+Error codes: `SUCCESS`, `ERROR_GENERIC`, `ERROR_IO`, `ERROR_PARSE`, `ERROR_VALIDATION`, `ERROR_ALLOC`.
 
 ### Profiler
 
