@@ -114,7 +114,7 @@ Measure FLOP rates for performance analysis.
 Knowledge Base (``pic_knowledge``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Hardware and system information utilities.
+Lore, akin to Fortune.
 
 Optional Features
 -----------------
@@ -125,13 +125,3 @@ OpenMP Support
 ^^^^^^^^^^^^^^
 
 Enable with ``-DPIC_ENABLE_OMP=ON``. Provides parallel implementations of various operations.
-
-BLAS Support
-^^^^^^^^^^^^
-
-Enable with ``-DPIC_ENABLE_BLAS=ON``. Provides BLAS-backed linear algebra operations.
-
-MPI Support
-^^^^^^^^^^^
-
-Enable with ``-DPIC_ENABLE_MPI=ON``. Provides MPI-aware utilities.

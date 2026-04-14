@@ -28,12 +28,13 @@ The Fortran ecosystem lacks a standard library that compiles reliably across all
 
 .. code-block:: fortran
 
-   program hello_pic
-      use pic
-      implicit none
+    program main
+       use pic, only: pic_print_banner
+       implicit none
 
-      call log_info("Hello from PIC!")
-   end program hello_pic
+       call pic_print_banner()
+
+    end program main
 
 Links
 -----

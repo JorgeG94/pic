@@ -129,7 +129,7 @@ Then use it in your code:
       use pic
       implicit none
 
-      call log_info("PIC is working!")
+      call pic_print_banner()
    end program my_app
 
 Platform Notes
