@@ -1,0 +1,271 @@
+module test_pic_profiler
+   use testdrive, only: new_unittest, unittest_type, error_type, check
+   use pic_profiler
+   use pic_types, only: dp
+   implicit none
+   private
+   public :: collect_pic_profiler_tests
+
+contains
+
+   subroutine collect_pic_profiler_tests(testsuite)
+      type(unittest_type), allocatable, intent(out) :: testsuite(:)
+
+      testsuite = [ &
+                  new_unittest("test_profiler_init_finalize", test_profiler_init_finalize), &
+                  new_unittest("test_profiler_start_stop", test_profiler_start_stop), &
+                  new_unittest("test_profiler_multiple_regions", test_profiler_multiple_regions), &
+                  new_unittest("test_profiler_accumulated_time", test_profiler_accumulated_time), &
+                  new_unittest("test_profiler_get_time", test_profiler_get_time), &
+                  new_unittest("test_profiler_enable_disable", test_profiler_enable_disable), &
+                  new_unittest("test_profiler_reset", test_profiler_reset), &
+                  new_unittest("test_profiler_stack_based_stop", test_profiler_stack_based_stop) &
+                  ]
+   end subroutine collect_pic_profiler_tests
+
+   subroutine test_profiler_init_finalize(error)
+      !! Test profiler initialization and finalization
+      type(error_type), allocatable, intent(out) :: error
+
+      ! Initialize profiler
+      call profiler_init()
+
+      ! Finalize profiler
+      call profiler_finalize()
+
+      ! Should be able to init again after finalize
+      call profiler_init()
+      call profiler_finalize()
+
+      ! Test passes if no crash
+      call check(error, .true., "Profiler init/finalize should work")
+   end subroutine test_profiler_init_finalize
+
+   subroutine test_profiler_start_stop(error)
+      !! Test starting and stopping a region
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: t
+
+      call profiler_init()
+
+      call profiler_start("test_region")
+      ! Do some work
+      call dummy_work()
+      call profiler_stop("test_region")
+
+      t = profiler_get_time("test_region")
+      call check(error, t > 0.0_dp, "Region time should be positive")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call profiler_finalize()
+   end subroutine test_profiler_start_stop
+
+   subroutine test_profiler_multiple_regions(error)
+      !! Test multiple profiling regions
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: t1, t2
+
+      call profiler_init()
+
+      call profiler_start("region_1")
+      call dummy_work()
+      call profiler_stop("region_1")
+
+      call profiler_start("region_2")
+      call dummy_work()
+      call dummy_work()
+      call profiler_stop("region_2")
+
+      t1 = profiler_get_time("region_1")
+      t2 = profiler_get_time("region_2")
+
+      call check(error, t1 > 0.0_dp, "Region 1 time should be positive")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call check(error, t2 > 0.0_dp, "Region 2 time should be positive")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call profiler_finalize()
+   end subroutine test_profiler_multiple_regions
+
+   subroutine test_profiler_accumulated_time(error)
+      !! Test that time accumulates across multiple start/stop pairs
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: t1, t2
+      integer :: i
+
+      call profiler_init()
+
+      ! First measurement
+      call profiler_start("accumulated")
+      call dummy_work()
+      call profiler_stop("accumulated")
+      t1 = profiler_get_time("accumulated")
+
+      ! Additional measurements
+      do i = 1, 5
+         call profiler_start("accumulated")
+         call dummy_work()
+         call profiler_stop("accumulated")
+      end do
+      t2 = profiler_get_time("accumulated")
+
+      call check(error, t2 > t1, "Time should accumulate across multiple calls")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call profiler_finalize()
+   end subroutine test_profiler_accumulated_time
+
+   subroutine test_profiler_get_time(error)
+      !! Test getting time for non-existent region
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: t
+
+      call profiler_init()
+
+      ! Get time for non-existent region
+      t = profiler_get_time("does_not_exist")
+      call check(error, t == 0.0_dp, "Non-existent region should return 0.0")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call profiler_finalize()
+   end subroutine test_profiler_get_time
+
+   subroutine test_profiler_enable_disable(error)
+      !! Test enabling and disabling profiler
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: t
+
+      call profiler_init()
+
+      ! Record with profiler enabled
+      call profiler_start("enabled_test")
+      call dummy_work()
+      call profiler_stop("enabled_test")
+
+      ! Disable profiler
+      call profiler_disable()
+
+      ! This should not be recorded
+      call profiler_start("disabled_test")
+      call dummy_work()
+      call profiler_stop("disabled_test")
+
+      t = profiler_get_time("disabled_test")
+      call check(error, t == 0.0_dp, "Disabled region should not be recorded")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      ! Re-enable
+      call profiler_enable()
+
+      call profiler_finalize()
+   end subroutine test_profiler_enable_disable
+
+   subroutine test_profiler_reset(error)
+      !! Test resetting profiler data
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: t
+
+      call profiler_init()
+
+      call profiler_start("reset_test")
+      call dummy_work()
+      call profiler_stop("reset_test")
+
+      t = profiler_get_time("reset_test")
+      call check(error, t > 0.0_dp, "Should have time before reset")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call profiler_reset()
+
+      t = profiler_get_time("reset_test")
+      call check(error, t == 0.0_dp, "Time should be zero after reset")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call profiler_finalize()
+   end subroutine test_profiler_reset
+
+   subroutine test_profiler_stack_based_stop(error)
+      !! Test stack-based stop (no name argument)
+      type(error_type), allocatable, intent(out) :: error
+      real(dp) :: t_outer, t_inner
+
+      call profiler_init()
+
+      ! Nested regions with stack-based stop
+      call profiler_start("outer")
+      call dummy_work()
+      call profiler_start("inner")
+      call dummy_work()
+      call profiler_stop()  ! stops "inner"
+      call dummy_work()
+      call profiler_stop()  ! stops "outer"
+
+      t_outer = profiler_get_time("outer")
+      t_inner = profiler_get_time("inner")
+
+      call check(error, t_outer > 0.0_dp, "Outer region should have time")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call check(error, t_inner > 0.0_dp, "Inner region should have time")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call check(error, t_outer > t_inner, "Outer should be longer than inner")
+      if (allocated(error)) then
+         call profiler_finalize()
+         return
+      end if
+
+      call profiler_finalize()
+   end subroutine test_profiler_stack_based_stop
+
+   subroutine dummy_work()
+      !! Perform some dummy computation to measure
+      !! Uses cpu_time to ensure at least 1ms of work
+      real(dp) :: start_cpu, end_cpu, x
+      integer :: i
+
+      call cpu_time(start_cpu)
+      x = 0.0_dp
+      i = 0
+      do
+         i = i + 1
+         x = x + sin(real(i, dp))
+         call cpu_time(end_cpu)
+         ! Run for at least 10ms
+         if (end_cpu - start_cpu > 0.01_dp) exit
+         if (i > 10000000) exit  ! Safety limit
+      end do
+   end subroutine dummy_work
+
+end module test_pic_profiler
