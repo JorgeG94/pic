@@ -103,7 +103,7 @@
 to be for quantum chemistry but I ended up writing way more general routines than I expected.</p>
 <h2 id="building-tldr-on-linux">Building (TLDR) on Linux</h2>
 <p>I assume you have experience building things here. If you don&rsquo;t please go further down for a more verbose explanation.</p>
-<p>Briefly, for a minimal build (no BLAS, no MPI)  you need:</p>
+<p>Briefly, for a minimal build you need:</p>
 <ul>
 <li>CMake (at least 3.22) or the Fortran Package Manager (at least 0.12.0)</li>
 <li>A Fortran compiler</li>
@@ -129,7 +129,7 @@ make -j install
 <p>To run the tests: <code>fpm test --profile release</code></p>
 <h2 id="building-and-dependencies">Building and dependencies</h2>
 <p>There&rsquo;s two build systems included in the present version, CMake and the <a href="https://fpm.fortran-lang.org/index.html">Fortran Package Manager</a>.</p>
-<p>The dependencies of the project are, as of now, CMake (if using cmake), MPI, OpenMP, and a BLAS/LAPACK library.</p>
+<p>The dependencies of the project are, as of now, CMake (if using cmake), and OpenMP if requested.</p>
 <h2 id="documentation">Documentation</h2>
 <p>The code itself is documented using <a href="https://forddocs.readthedocs.io/en/stable/">FORD</a> and the documentation is available <a href="https://jorgeg94.github.io/pic/">here</a>.</p>
 <p>Comments in the code that are prefixed with <code>!!</code> are considered documentation comments and will be processed by FORD. Comments without that prefix are considered regular comments and will not be processed by FORD. So, please do not use <code>!!</code> for your comments unless you want them to be included in the documentation.</p>
@@ -150,19 +150,9 @@ make -j install
 <td>Use 8-byte integers as default</td>
 </tr>
 <tr>
-<td><code>PIC_ENABLE_MPI</code></td>
-<td><code>OFF</code></td>
-<td>Enable the use of MPI in PIC</td>
-</tr>
-<tr>
 <td><code>PIC_ENABLE_OMP</code></td>
 <td><code>OFF</code></td>
 <td>Enable the use of OpenMP in PIC</td>
-</tr>
-<tr>
-<td><code>PIC_ENABLE_BLAS</code></td>
-<td><code>OFF</code></td>
-<td>Enable BLAS/LAPACK libraries in PIC</td>
 </tr>
 <tr>
 <td><code>PIC_ENABLE_TESTING</code></td>
@@ -171,38 +161,9 @@ make -j install
 </tr>
 </tbody>
 </table>
-<h4 id="advanced-options">Advanced options:</h4>
-<table>
-<thead>
-<tr>
-<th>Option Name</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>PIC_USE_VAPAA</code></td>
-<td><code>OFF</code></td>
-<td>Use vapaa for binding to MPI</td>
-</tr>
-</tbody>
-</table>
-<p>Information on vapaa see <a href="https://github.com/JorgeG94/vapaa/tree/main">here</a> which is my
-personal fork which is pulled from here, and Jeff&rsquo;s <a href="https://github.com/jeffhammond/vapaa">project</a>.</p>
-<p>Will update to use the orignal project at a later date.</p>
 <h3 id="building-extended">Building (extended)</h3>
-<p>To enable extended builds of PIC, i.e. using the BLAS interface and the dramatically underdeveloped MPI interface you can use the
-options provided above, simply:</p>
-<div class="codehilite"><pre><span></span><code>cmake -DPIC_ENABLE_BLAS=ON -DPIC_ENABLE_MPI=ON ../
-</code></pre></div>
-
-<p>This will build the necessary files and will add the BLAS related tests to the <code>ctest</code> suite.</p>
 <h3 id="fpm">FPM</h3>
 <p>Install the FPM following the <a href="https://fpm.fortran-lang.org/install/index.html#install">instructions</a> and then simply: <code>fpm install</code></p>
-<p>The FPM will build the entire library, however the BLAS tests are not included in the default build. This is for simplicity for people
-that want to include <code>pic</code> as a dependency in their <code>fpm.toml</code> files. To compile PIC with BLAS support, make sure to pass the compile flag:
-<code>fpm install --flag "-DPIC_HAVE_BLAS"</code> so that the code gets compiled correctly.</p>
 <h2 id="contributing">Contributing</h2>
 <p>Please see the <a href="https://jorgeg94.github.io/pic/page/contributing.html">contributing guidelines</a> for information on how to contribute to the project.</p>
 <p>See our <a href="CODE_OF_CONDUCT.md">code of conduct</a> for details on community standards. In short, PIC is a welcoming codebase that is open to contributions
@@ -288,7 +249,7 @@ find.</p>
           <div class="col-xs-6 col-sm-3">
             <div>
               <h3>Derived Types</h3>
-              <ul><li><a href='type/error_t.html'>error_t</a></li><li><a href='type/flop_rate_type.html'>flop_rate_type</a></li><li><a href='type/flop_recorder_type.html'>flop_recorder_type</a></li><li><a href='type/log_buffer_type.html'>log_buffer_type</a></li><li><a href='type/log_entry_type.html'>log_entry_type</a></li><li><a href='type/logger_type.html'>logger_type</a></li><li><a href='type/run_type.html'>run_type</a></li><li><a href='type/run_type~2.html'>run_type</a></li><li><a href='type/string_type.html'>string_type</a></li><li><a href='type/timer_type.html'>timer_type</a></li></ul>
+              <ul><li><a href='type/error_t.html'>error_t</a></li><li><a href='type/flop_rate_type.html'>flop_rate_type</a></li><li><a href='type/flop_recorder_type.html'>flop_recorder_type</a></li><li><a href='type/log_buffer_type.html'>log_buffer_type</a></li><li><a href='type/log_entry_type.html'>log_entry_type</a></li><li><a href='type/logger_type.html'>logger_type</a></li><li><a href='type/profiler_state.html'>profiler_state</a></li><li><a href='type/run_type.html'>run_type</a></li><li><a href='type/run_type~2.html'>run_type</a></li><li><a href='type/string_type.html'>string_type</a></li></ul>
             </div>
             <div>
               <ul>
@@ -312,7 +273,7 @@ find.</p>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-04-14 11:10 +0000             </p>
+ on 2026-04-14 12:44 +0000             </p>
           </div>
         </div>
         <br>

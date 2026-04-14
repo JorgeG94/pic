@@ -89,7 +89,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.4% of total for procedures.">33 statements</a>
+                 title=" 0.3% of total for procedures.">24 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -131,9 +131,8 @@
       </a>
       <div id="vars-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../proc/error_get_full_trace.html#variable-buffer">buffer</a>
-            <a class="list-group-item" href="../proc/error_get_full_trace.html#variable-i~102">i</a>
-            <a class="list-group-item" href="../proc/error_get_full_trace.html#variable-pos">pos</a>
+            <a class="list-group-item" href="../proc/error_get_full_trace.html#variable-i~106">i</a>
+            <a class="list-group-item" href="../proc/error_get_full_trace.html#variable-idx_str">idx_str</a>
         </div>
       </div>
     </div>
@@ -174,7 +173,7 @@
     
 
     <p>Get complete error message with cause chain and stack trace
-Returns a multi-line string</p>
+Returns a dynamically-sized multi-line string</p>
 
     <h3>Type Bound</h3>
     <p><a href='../type/error_t.html'>error_t</a></p>
@@ -192,7 +191,7 @@ Returns a multi-line string</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~28"></span>
+              <span class="anchor" id="variable-self~17"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(in)</td>
@@ -368,24 +367,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-buffer"></span>
-              character(len=4096),
-            </td>
-              <td>private</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>buffer</strong></td>
-                <td></td>
-                <td></td>
-            <td>
-                
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-i~102"></span>
+              <span class="anchor" id="variable-i~106"></span>
               integer(kind=default_int),
             </td>
               <td>private</td>
@@ -402,15 +384,15 @@ large graphs.</div>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-pos"></span>
-              integer(kind=default_int),
+              <span class="anchor" id="variable-idx_str"></span>
+              character(len=32),
             </td>
               <td>private</td>
             <td>
               
             </td>
             <td>::</td>
-            <td><strong>pos</strong></td>
+            <td><strong>idx_str</strong></td>
                 <td></td>
                 <td></td>
             <td>
@@ -435,11 +417,11 @@ large graphs.</div>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">function </span><span class="n">error_get_full_trace</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
 <span class="w">      </span><span class="c">!! Get complete error message with cause chain and stack trace</span>
-<span class="w">      </span><span class="c">!! Returns a multi-line string</span>
+<span class="w">      </span><span class="c">!! Returns a dynamically-sized multi-line string</span>
 <span class="w">      </span><span class="k">class</span><span class="p">(</span><span class="n">error_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">self</span>
 <span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">trace</span>
-<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">4096</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">buffer</span>
-<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">pos</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">idx_str</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
 
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">has_error</span><span class="p">())</span><span class="w"> </span><span class="k">then</span>
 <span class="k">         </span><span class="n">trace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
@@ -447,37 +429,29 @@ large graphs.</div>
 <span class="k">      end if</span>
 
 <span class="w">      </span><span class="c">! Top-level error with named code</span>
-<span class="w">      </span><span class="n">buffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">code_to_string</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">code</span><span class="p">)</span><span class="o">//</span><span class="s2">&quot;: &quot;</span>
-<span class="w">      </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">len_trim</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
-
+<span class="w">      </span><span class="n">trace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">code_to_string</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">code</span><span class="p">)</span><span class="o">//</span><span class="s2">&quot;: &quot;</span>
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">message</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
-<span class="k">         </span><span class="n">buffer</span><span class="p">(</span><span class="n">pos</span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">message</span>
-<span class="w">         </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">len_trim</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="k">         </span><span class="n">trace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trace</span><span class="o">//</span><span class="n">self</span><span class="p">%</span><span class="n">message</span>
 <span class="w">      </span><span class="k">end if</span>
 
-<span class="w">      </span><span class="c">! Cause chain (most recent wrap first)</span>
+<span class="w">      </span><span class="c">! Cause chain: prints from most-recent wrap (cause_depth) down to</span>
+<span class="w">      </span><span class="c">! root cause (1), matching Rust&#39;s &quot;caused by&quot; display order</span>
 <span class="w">      </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">cause_depth</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
-<span class="w">         </span><span class="n">buffer</span><span class="p">(</span><span class="n">pos</span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">new_line</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">//</span><span class="s2">&quot;  Caused by: &quot;</span><span class="o">//</span><span class="nb">trim</span><span class="p">(</span><span class="n">code_to_string</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">cause_codes</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span><span class="o">//</span><span class="s2">&quot;: &quot;</span>
-<span class="w">         </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">len_trim</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">         </span><span class="n">buffer</span><span class="p">(</span><span class="n">pos</span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">trim</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">cause_messages</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-<span class="w">         </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">len_trim</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="n">trace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trace</span><span class="o">//</span><span class="nb">new_line</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">//</span><span class="s2">&quot;  Caused by: &quot;</span><span class="o">//</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                 </span><span class="nb">trim</span><span class="p">(</span><span class="n">code_to_string</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">cause_codes</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span><span class="o">//</span><span class="s2">&quot;: &quot;</span><span class="o">//</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                 </span><span class="nb">trim</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">cause_messages</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
 <span class="w">      </span><span class="k">end do</span>
 
 <span class="w">      </span><span class="c">! Stack trace</span>
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">stack_depth</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">         </span><span class="n">buffer</span><span class="p">(</span><span class="n">pos</span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">new_line</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">//</span><span class="s2">&quot;Call stack (most recent first):&quot;</span>
-<span class="w">         </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">len_trim</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
-
+<span class="k">         </span><span class="n">trace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trace</span><span class="o">//</span><span class="nb">new_line</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">//</span><span class="s2">&quot;Call stack (most recent first):&quot;</span>
 <span class="w">         </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">stack_depth</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
-<span class="w">            </span><span class="k">write</span><span class="w"> </span><span class="p">(</span><span class="n">buffer</span><span class="p">(</span><span class="n">pos</span><span class="p">:),</span><span class="w"> </span><span class="s1">&#39;(A,I0,A)&#39;</span><span class="p">)</span><span class="w"> </span><span class="nb">new_line</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">//</span><span class="s2">&quot;  [&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;] &quot;</span>
-<span class="w">            </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">len_trim</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">            </span><span class="n">buffer</span><span class="p">(</span><span class="n">pos</span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">trim</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">call_stack</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-<span class="w">            </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">len_trim</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="k">write</span><span class="w"> </span><span class="p">(</span><span class="n">idx_str</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;(I0)&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">i</span>
+<span class="w">            </span><span class="n">trace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trace</span><span class="o">//</span><span class="nb">new_line</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">//</span><span class="s2">&quot;  [&quot;</span><span class="o">//</span><span class="nb">trim</span><span class="p">(</span><span class="n">idx_str</span><span class="p">)</span><span class="o">//</span><span class="s2">&quot;] &quot;</span><span class="o">//</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                    </span><span class="nb">trim</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">call_stack</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
 <span class="w">         </span><span class="k">end do</span>
 <span class="k">      end if</span>
-
-<span class="k">      </span><span class="n">trace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">trim</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
-<span class="w">   </span><span class="k">end function </span><span class="n">error_get_full_trace</span>
+<span class="k">   end function </span><span class="n">error_get_full_trace</span>
 </pre></div>
 
     </section>
@@ -501,7 +475,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-04-14 11:10 +0000             </p>
+ on 2026-04-14 12:44 +0000             </p>
           </div>
         </div>
         <br>

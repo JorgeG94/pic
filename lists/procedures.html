@@ -575,7 +575,7 @@ Use for unrecoverable errors</p><a href="../proc/error_fatal.html" class="pull-r
                  <td><a href='../module/pic_error.html'>pic_error</a></td>
                  <td>Function</td>
                  <td><p>Get complete error message with cause chain and stack trace
-Returns a multi-line string</p></td>
+Returns a dynamically-sized multi-line string</p></td>
                </tr>
 			   <tr>
                  <td><a href='../proc/error_get_message.html'>error_get_message</a></td>
@@ -711,6 +711,13 @@ Returns an integer</p></td>
                  <td><p>Returns the starting index of the &lsquo;occurrence&rsquo;th occurrence of substring &lsquo;pattern&rsquo;
 in input &lsquo;string&rsquo;
 Returns an integer</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/find_or_create_region.html'>find_or_create_region</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Function</td>
+                 <td><p>Find an existing region by name or create a new one
+Returns -1 if MAX_REGIONS is exceeded</p></td>
                </tr>
 			   <tr>
                  <td><a href='../proc/find_string_char.html'>find_string_char</a></td>
@@ -1467,6 +1474,24 @@ In this version the left-hand side character sequences is by a string.</p></td>
 In this version both character sequences are by a string.</p></td>
                </tr>
 			   <tr>
+                 <td><a href='../proc/nvtx_range_pop.html'>nvtx_range_pop</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Pop an NVTX range (no-op if PIC_USE_NVTX not defined)</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/nvtx_range_push.html'>nvtx_range_push</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Push an NVTX range (no-op if PIC_USE_NVTX not defined)</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../interface/operator(.haserror.).html'>operator(.haserror.)</a></td>
+                 <td><a href='../module/pic_error.html'>pic_error</a></td>
+                 <td>Interface</td>
+                 <td><p>Operator for checking error state: if (.haserror. err) then</p></td>
+               </tr>
+			   <tr>
                  <td><a href='../interface/operator(SLASHSLASH).html'>operator(//)</a></td>
                  <td><a href='../module/pic_string_type.html'>pic_string_type</a></td>
                  <td>Interface</td>
@@ -1807,6 +1832,60 @@ which will be slow for large matrix sizes. pic_transpose does not assume symmetr
                  <td><p>print a vector of  values</p></td>
                </tr>
 			   <tr>
+                 <td><a href='../proc/profiler_disable.html'>profiler_disable</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Disable profiling temporarily</p><a href="../proc/profiler_disable.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/profiler_enable.html'>profiler_enable</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Enable profiling (if it was disabled)</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/profiler_finalize.html'>profiler_finalize</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Finalize the profiler and release resources</p><a href="../proc/profiler_finalize.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/profiler_get_time.html'>profiler_get_time</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Function</td>
+                 <td><p>Get accumulated time for a named region</p><a href="../proc/profiler_get_time.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/profiler_init.html'>profiler_init</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Initialize the profiler</p><a href="../proc/profiler_init.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/profiler_report.html'>profiler_report</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Print profiling report sorted by time</p><a href="../proc/profiler_report.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/profiler_reset.html'>profiler_reset</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Reset all timing data while keeping region names</p><a href="../proc/profiler_reset.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/profiler_start.html'>profiler_start</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Start a named profiling region</p><a href="../proc/profiler_start.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/profiler_stop.html'>profiler_stop</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Stop a profiling region</p><a href="../proc/profiler_stop.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+			   <tr>
                  <td><a href='../proc/pure_debug.html'>pure_debug</a></td>
                  <td><a href='../module/pic_pure_logger.html'>pic_pure_logger</a></td>
                  <td>Subroutine</td>
@@ -1892,6 +1971,12 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
                  <td><a href='../module/pic_string_type.html'>pic_string_type</a></td>
                  <td>Subroutine</td>
                  <td><p>Read a character sequence from a connected unformatted unit into the string.</p></td>
+               </tr>
+			   <tr>
+                 <td><a href='../proc/remove_from_stack.html'>remove_from_stack</a></td>
+                 <td><a href='../module/pic_profiler.html'>pic_profiler</a></td>
+                 <td>Subroutine</td>
+                 <td><p>Remove a region index from the stack (helper for explicit stop)</p></td>
                </tr>
 			   <tr>
                  <td><a href='../interface/repeat.html'>repeat</a></td>
@@ -2710,7 +2795,7 @@ unit.</p></td>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-04-14 11:10 +0000             </p>
+ on 2026-04-14 12:44 +0000             </p>
           </div>
         </div>
         <br>

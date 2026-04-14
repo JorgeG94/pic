@@ -1,0 +1,1329 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>pic_profiler &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>pic_profiler
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.9% of total for modules and submodules.">217 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_profiler.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_profiler.f90.html'>pic_profiler.F90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">pic_profiler</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_profiler.html#variable-max_name_len">MAX_NAME_LEN</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#variable-max_regions">MAX_REGIONS</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#variable-state">state</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#types-0"
+         aria-expanded="false" aria-controls="types-0">
+         <h4 class="card-header bg-primary text-white">Derived Types</h4>
+      </a>
+      <div id="types-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_profiler.html#type-profiler_state">profiler_state</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#type-tracked_region">tracked_region</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#funcs-0"
+         aria-expanded="false" aria-controls="funcs-0">
+         <h4 class="card-header bg-primary text-white">Functions</h4>
+      </a>
+      <div id="funcs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-profiler_get_time">profiler_get_time</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-find_or_create_region">find_or_create_region</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#subs-0"
+         aria-expanded="false" aria-controls="subs-0">
+         <h4 class="card-header bg-primary text-white">Subroutines</h4>
+      </a>
+      <div id="subs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-profiler_disable">profiler_disable</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-profiler_enable">profiler_enable</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-profiler_finalize">profiler_finalize</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-profiler_init">profiler_init</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-profiler_report">profiler_report</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-profiler_reset">profiler_reset</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-profiler_start">profiler_start</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-profiler_stop">profiler_stop</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-nvtx_range_pop">nvtx_range_pop</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-nvtx_range_push">nvtx_range_push</a>
+            <a class="list-group-item" href="../module/pic_profiler.html#proc-remove_from_stack">remove_from_stack</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <p>Lightweight profiler for named code regions with optional NVTX support</p>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='pic_types.html'>pic_types</a></li>
+                  <li class="list-inline-item"><a href='pic_sorting.html'>pic_sorting</a></li>
+                  <li class="list-inline-item"><a href='pic_timer.html'>pic_timer</a></li>
+                  <li class="list-inline-item"><a href='pic_logger.html'>pic_logger</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~pic_profiler~~UsesGraph Pages: 1 -->
+<svg id="modulepic_profilerUsesGraph" width="641pt" height="242pt"
+ viewBox="0.00 0.00 641.00 241.69" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_profiler~~UsesGraph" class="graph" transform="scale(0.95 0.95) rotate(0) translate(4 250.51)">
+<title>module~~pic_profiler~~UsesGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-250.51 671,-250.51 671,4 -4,4"/>
+<!-- module~pic_profiler -->
+<g id="module~~pic_profiler~~UsesGraph_node1" class="node">
+<title>module~pic_profiler</title>
+<polygon fill="none" stroke="black" points="667,-82.99 595,-82.99 595,-58.99 667,-58.99 667,-82.99"/>
+<text text-anchor="middle" x="631" y="-68.59" font-family="Helvetica,sans-Serif" font-size="10.50">pic_profiler</text>
+</g>
+<!-- module~pic_logger -->
+<g id="module~~pic_profiler~~UsesGraph_node2" class="node">
+<title>module~pic_logger</title>
+<g id="a_module~~pic_profiler~~UsesGraph_node2"><a xlink:href="../module/pic_logger.html" xlink:title="pic_logger">
+<polygon fill="#337ab7" stroke="#337ab7" points="460,-222.99 392,-222.99 392,-198.99 460,-198.99 460,-222.99"/>
+<text text-anchor="middle" x="426" y="-208.59" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_logger</text>
+</a>
+</g>
+</g>
+<!-- module~pic_profiler&#45;&gt;module~pic_logger -->
+<g id="module~~pic_profiler~~UsesGraph_edge1" class="edge">
+<title>module~pic_profiler&#45;&gt;module~pic_logger</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M527,-189.99C509.25,-198.11 488.29,-203.12 470.15,-206.21"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="469.47,-202.77 460.12,-207.77 470.54,-209.69 469.47,-202.77"/>
+</g>
+<!-- module~pic_sorting -->
+<g id="module~~pic_profiler~~UsesGraph_node3" class="node">
+<title>module~pic_sorting</title>
+<g id="a_module~~pic_profiler~~UsesGraph_node3"><a xlink:href="../module/pic_sorting.html" xlink:title="pic_sorting">
+<polygon fill="#337ab7" stroke="#337ab7" points="461,-180.99 391,-180.99 391,-156.99 461,-156.99 461,-180.99"/>
+<text text-anchor="middle" x="426" y="-166.59" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_sorting</text>
+</a>
+</g>
+</g>
+<!-- module~pic_profiler&#45;&gt;module~pic_sorting -->
+<g id="module~~pic_profiler~~UsesGraph_edge2" class="edge">
+<title>module~pic_profiler&#45;&gt;module~pic_sorting</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M624.31,-83.12C611.53,-108.7 577.8,-167.69 529,-189.99"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M527,-189.99C505.23,-199.94 478.63,-193.57 458.34,-185.32"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="459.5,-182 448.93,-181.18 456.68,-188.41 459.5,-182"/>
+</g>
+<!-- module~pic_timer -->
+<g id="module~~pic_profiler~~UsesGraph_node4" class="node">
+<title>module~pic_timer</title>
+<g id="a_module~~pic_profiler~~UsesGraph_node4"><a xlink:href="../module/pic_timer.html" xlink:title="pic_timer">
+<polygon fill="#337ab7" stroke="#337ab7" points="559,-82.99 497,-82.99 497,-58.99 559,-58.99 559,-82.99"/>
+<text text-anchor="middle" x="528" y="-68.59" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_timer</text>
+</a>
+</g>
+</g>
+<!-- module~pic_profiler&#45;&gt;module~pic_timer -->
+<g id="module~~pic_profiler~~UsesGraph_edge3" class="edge">
+<title>module~pic_profiler&#45;&gt;module~pic_timer</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M594.96,-70.99C586.7,-70.99 577.82,-70.99 569.34,-70.99"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="569.27,-67.49 559.27,-70.99 569.27,-74.49 569.27,-67.49"/>
+</g>
+<!-- module~pic_types -->
+<g id="module~~pic_profiler~~UsesGraph_node5" class="node">
+<title>module~pic_types</title>
+<g id="a_module~~pic_profiler~~UsesGraph_node5"><a xlink:href="../module/pic_types.html" xlink:title="pic_types">
+<polygon fill="#337ab7" stroke="#337ab7" points="192,-142.99 130,-142.99 130,-118.99 192,-118.99 192,-142.99"/>
+<text text-anchor="middle" x="161" y="-128.59" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_types</text>
+</a>
+</g>
+</g>
+<!-- module~pic_profiler&#45;&gt;module~pic_types -->
+<g id="module~~pic_profiler~~UsesGraph_edge4" class="edge">
+<title>module~pic_profiler&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M604.04,-58.83C537.07,-29.34 354.79,38.62 228,-29.99 197.05,-46.74 178.3,-85 169.06,-109.33"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="165.75,-108.21 165.68,-118.8 172.34,-110.56 165.75,-108.21"/>
+</g>
+<!-- module~pic_logger&#45;&gt;module~pic_types -->
+<g id="module~~pic_profiler~~UsesGraph_edge6" class="edge">
+<title>module~pic_logger&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M397.95,-223.11C358.14,-238.98 282.6,-261.54 228,-231.99 197.05,-215.25 178.3,-176.98 169.06,-152.66"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="172.34,-151.43 165.68,-143.19 165.75,-153.78 172.34,-151.43"/>
+</g>
+<!-- module~pic_global_definitions -->
+<g id="module~~pic_profiler~~UsesGraph_node8" class="node">
+<title>module~pic_global_definitions</title>
+<g id="a_module~~pic_profiler~~UsesGraph_node8"><a xlink:href="../module/pic_global_definitions.html" xlink:title="pic_global_definitions">
+<polygon fill="#337ab7" stroke="#337ab7" points="355,-222.99 228,-222.99 228,-198.99 355,-198.99 355,-222.99"/>
+<text text-anchor="middle" x="291.5" y="-208.59" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_global_definitions</text>
+</a>
+</g>
+</g>
+<!-- module~pic_logger&#45;&gt;module~pic_global_definitions -->
+<g id="module~~pic_profiler~~UsesGraph_edge5" class="edge">
+<title>module~pic_logger&#45;&gt;module~pic_global_definitions</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M391.91,-210.99C383.69,-210.99 374.55,-210.99 365.24,-210.99"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="365.11,-207.49 355.11,-210.99 365.11,-214.49 365.11,-207.49"/>
+</g>
+<!-- module~pic_sorting&#45;&gt;module~pic_types -->
+<g id="module~~pic_profiler~~UsesGraph_edge8" class="edge">
+<title>module~pic_sorting&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#7fff00" stroke-dasharray="5,2" d="M390.86,-168.34C351.32,-167.06 284.39,-163.25 228,-151.99 219.44,-150.28 210.43,-147.86 201.91,-145.25"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="202.78,-141.86 192.19,-142.15 200.65,-148.53 202.78,-141.86"/>
+</g>
+<!-- module~pic_optional_value -->
+<g id="module~~pic_profiler~~UsesGraph_node10" class="node">
+<title>module~pic_optional_value</title>
+<g id="a_module~~pic_profiler~~UsesGraph_node10"><a xlink:href="../module/pic_optional_value.html" xlink:title="pic_optional_value">
+<polygon fill="#337ab7" stroke="#337ab7" points="347.5,-142.99 235.5,-142.99 235.5,-118.99 347.5,-118.99 347.5,-142.99"/>
+<text text-anchor="middle" x="291.5" y="-128.59" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_optional_value</text>
+</a>
+</g>
+</g>
+<!-- module~pic_sorting&#45;&gt;module~pic_optional_value -->
+<g id="module~~pic_profiler~~UsesGraph_edge7" class="edge">
+<title>module~pic_sorting&#45;&gt;module~pic_optional_value</title>
+<path fill="none" stroke="#7fff00" stroke-dasharray="5,2" d="M390.88,-159.21C376.79,-155.17 360.14,-150.39 344.59,-145.93"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="345.14,-142.45 334.56,-143.06 343.21,-149.18 345.14,-142.45"/>
+</g>
+<!-- module~pic_timer&#45;&gt;module~pic_types -->
+<g id="module~~pic_profiler~~UsesGraph_edge10" class="edge">
+<title>module~pic_timer&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M496.68,-72.54C442.36,-75.49 330.56,-82.38 292.5,-90.99"/>
+</g>
+<!-- module~pic_io -->
+<g id="module~~pic_profiler~~UsesGraph_node9" class="node">
+<title>module~pic_io</title>
+<g id="a_module~~pic_profiler~~UsesGraph_node9"><a xlink:href="../module/pic_io.html" xlink:title="pic_io">
+<polygon fill="#337ab7" stroke="#337ab7" points="453,-62.99 399,-62.99 399,-38.99 453,-38.99 453,-62.99"/>
+<text text-anchor="middle" x="426" y="-48.59" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_io</text>
+</a>
+</g>
+</g>
+<!-- module~pic_timer&#45;&gt;module~pic_io -->
+<g id="module~~pic_profiler~~UsesGraph_edge9" class="edge">
+<title>module~pic_timer&#45;&gt;module~pic_io</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M497,-64.99C486.34,-62.86 474.23,-60.44 463.11,-58.22"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="463.74,-54.77 453.25,-56.24 462.37,-61.64 463.74,-54.77"/>
+</g>
+<!-- iso_c_binding -->
+<g id="module~~pic_profiler~~UsesGraph_node6" class="node">
+<title>iso_c_binding</title>
+<g id="a_module~~pic_profiler~~UsesGraph_node6"><a xlink:href="http://fortranwiki.org/fortran/show/iso_c_binding" xlink:title="iso_c_binding">
+<polygon fill="#337ab7" stroke="#337ab7" points="89,-163.99 5,-163.99 5,-139.99 89,-139.99 89,-163.99"/>
+<text text-anchor="middle" x="47" y="-149.59" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_c_binding</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_c_binding -->
+<g id="module~~pic_profiler~~UsesGraph_edge11" class="edge">
+<title>module~pic_types&#45;&gt;iso_c_binding</title>
+<path fill="none" stroke="#7f00ff" stroke-dasharray="5,2" d="M129.99,-136.62C120.46,-138.41 109.64,-140.44 99.07,-142.42"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="98.23,-139.01 89.05,-144.3 99.52,-145.89 98.23,-139.01"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~pic_profiler~~UsesGraph_node7" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~pic_profiler~~UsesGraph_node7"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-121.99 0,-121.99 0,-97.99 94,-97.99 94,-121.99"/>
+<text text-anchor="middle" x="47" y="-107.59" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_fortran_env -->
+<g id="module~~pic_profiler~~UsesGraph_edge12" class="edge">
+<title>module~pic_types&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#7f00ff" stroke-dasharray="5,2" d="M129.99,-125.37C121.98,-123.87 113.07,-122.19 104.15,-120.52"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="104.6,-117.05 94.13,-118.64 103.31,-123.93 104.6,-117.05"/>
+</g>
+<!-- module~pic_global_definitions&#45;&gt;module~pic_types -->
+<g id="module~~pic_profiler~~UsesGraph_edge13" class="edge">
+<title>module~pic_global_definitions&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#00ff66" stroke-dasharray="5,2" d="M256.54,-198.97C247.03,-195.04 236.87,-190.31 228,-184.99 211.54,-175.13 194.83,-161.41 182.34,-150.27"/>
+<polygon fill="#00ff66" stroke="#00ff66" points="184.54,-147.54 174.79,-143.39 179.82,-152.71 184.54,-147.54"/>
+</g>
+<!-- module~pic_io&#45;&gt;module~pic_types -->
+<g id="module~~pic_profiler~~UsesGraph_edge15" class="edge">
+<title>module~pic_io&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M398.9,-60.07C372.38,-69.01 330,-82.51 292.5,-90.99"/>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M290.5,-90.99C260.22,-97.84 226.76,-108.36 201.57,-116.89"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="200.33,-113.61 192.01,-120.17 202.6,-120.23 200.33,-113.61"/>
+</g>
+<!-- module~pic_ascii -->
+<g id="module~~pic_profiler~~UsesGraph_node11" class="node">
+<title>module~pic_ascii</title>
+<g id="a_module~~pic_profiler~~UsesGraph_node11"><a xlink:href="../module/pic_ascii.html" xlink:title="pic_ascii">
+<polygon fill="#337ab7" stroke="#337ab7" points="320.5,-62.99 262.5,-62.99 262.5,-38.99 320.5,-38.99 320.5,-62.99"/>
+<text text-anchor="middle" x="291.5" y="-48.59" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_ascii</text>
+</a>
+</g>
+</g>
+<!-- module~pic_io&#45;&gt;module~pic_ascii -->
+<g id="module~~pic_profiler~~UsesGraph_edge14" class="edge">
+<title>module~pic_io&#45;&gt;module~pic_ascii</title>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M398.82,-50.99C379.51,-50.99 352.91,-50.99 331.16,-50.99"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="330.92,-47.49 320.92,-50.99 330.92,-54.49 330.92,-47.49"/>
+</g>
+<!-- module~pic_optional_value&#45;&gt;module~pic_types -->
+<g id="module~~pic_profiler~~UsesGraph_edge16" class="edge">
+<title>module~pic_optional_value&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#cc00ff" stroke-dasharray="5,2" d="M235.26,-130.99C224.14,-130.99 212.65,-130.99 202.16,-130.99"/>
+<polygon fill="#cc00ff" stroke="#cc00ff" points="202.06,-127.49 192.06,-130.99 202.06,-134.49 202.06,-127.49"/>
+</g>
+<!-- module~pic_ascii&#45;&gt;module~pic_types -->
+<g id="module~~pic_profiler~~UsesGraph_edge17" class="edge">
+<title>module~pic_ascii&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M262.28,-60.72C251.24,-65.03 238.68,-70.59 228,-76.99 211.54,-86.86 194.83,-100.58 182.34,-111.72"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="179.82,-109.28 174.79,-118.6 184.54,-114.45 179.82,-109.28"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panmodulepic_profilerUsesGraph = svgPanZoom('#modulepic_profilerUsesGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      
+      <br>
+
+
+        <section>
+          <h2>Variables</h2>
+            <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-max_name_len"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>MAX_NAME_LEN</strong></td>
+<td> =</td>
+                <td>64</td>
+            <td>
+                <p>Maximum length of region names</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-max_regions"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>MAX_REGIONS</strong></td>
+<td> =</td>
+                <td>256</td>
+            <td>
+                <p>Maximum number of distinct profiling regions</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-state"></span>
+              type(<a href='../type/profiler_state.html'>profiler_state</a>),
+            </td>
+              <td>private,</td>
+            <td>
+              save
+            </td>
+            <td>::</td>
+            <td><strong>state</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>Global profiler state (module-level singleton)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+        </section>
+        <br>
+
+
+
+
+        <section>
+          <h2>Derived Types</h2>
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-profiler_state"></span>
+      <h3>
+        type, private&nbsp;::&nbsp;
+        <a href='../type/profiler_state.html'>profiler_state</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>Internal type for global profiler state</p>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-enabled"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>enabled</strong></td>
+<td> =</td>
+                <td>.true.</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-initialized"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>initialized</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-num_regions"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>num_regions</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-regions"></span>
+              type(<a href='../type/tracked_region.html'>tracked_region</a>),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>regions</strong>(MAX_REGIONS)</td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-stack"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>stack</strong>(MAX_REGIONS)</td>
+                <td></td>
+                <td></td>
+            <td>
+<p>Stack of active region indices (for stack-based stop)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-stack_depth"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>stack_depth</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>Current depth of the active region stack</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-tracked_region"></span>
+      <h3>
+        type, private&nbsp;::&nbsp;
+        <a href='../type/tracked_region.html'>tracked_region</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>Internal type for tracking a single profiling region</p>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-active"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>active</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-call_count"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>call_count</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name"></span>
+              character(len=MAX_NAME_LEN),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+<td> =</td>
+                <td>&#39;&#39;</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nvtx_only"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nvtx_only</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+<p>If true, only shows in NVTX timeline, not in text report</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-timer"></span>
+              type(<a href='../type/timer_type.html'>timer_type</a>),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>timer</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>PIC timer for this region</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-total_time"></span>
+              real(kind=dp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>total_time</strong></td>
+<td> =</td>
+                <td>0.0_dp</td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-profiler_get_time"></span> <h3>public  function <a href='../proc/profiler_get_time.html'>profiler_get_time</a>(name) result(t)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Get accumulated time for a named region</p><a href="../proc/profiler_get_time.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~6"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-find_or_create_region"></span> <h3>private  function <a href='../proc/find_or_create_region.html'>find_or_create_region</a>(name) result(idx)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Find an existing region by name or create a new one
+Returns -1 if MAX_REGIONS is exceeded</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~3"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Subroutines</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-profiler_disable"></span> <h3>public  subroutine <a href='../proc/profiler_disable.html'>profiler_disable</a>()  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Disable profiling temporarily</p><a href="../proc/profiler_disable.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+    <em>None</em>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-profiler_enable"></span> <h3>public  subroutine <a href='../proc/profiler_enable.html'>profiler_enable</a>()  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Enable profiling (if it was disabled)</p>
+
+  <h4>Arguments</h4>
+    <em>None</em>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-profiler_finalize"></span> <h3>public  subroutine <a href='../proc/profiler_finalize.html'>profiler_finalize</a>()  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Finalize the profiler and release resources</p><a href="../proc/profiler_finalize.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+    <em>None</em>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-profiler_init"></span> <h3>public  subroutine <a href='../proc/profiler_init.html'>profiler_init</a>(enabled)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Initialize the profiler</p><a href="../proc/profiler_init.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-enabled~2"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>enabled</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-profiler_report"></span> <h3>public  subroutine <a href='../proc/profiler_report.html'>profiler_report</a>(title, root_region)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Print profiling report sorted by time</p><a href="../proc/profiler_report.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-title"></span>
+              character(len=*),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>title</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-root_region"></span>
+              character(len=*),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>root_region</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-profiler_reset"></span> <h3>public  subroutine <a href='../proc/profiler_reset.html'>profiler_reset</a>()  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Reset all timing data while keeping region names</p><a href="../proc/profiler_reset.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+    <em>None</em>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-profiler_start"></span> <h3>public  subroutine <a href='../proc/profiler_start.html'>profiler_start</a>(name, nvtx_only)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Start a named profiling region</p><a href="../proc/profiler_start.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~4"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nvtx_only~2"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nvtx_only</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-profiler_stop"></span> <h3>public  subroutine <a href='../proc/profiler_stop.html'>profiler_stop</a>(name)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Stop a profiling region</p><a href="../proc/profiler_stop.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~5"></span>
+              character(len=*),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-nvtx_range_pop"></span> <h3>private  subroutine <a href='../proc/nvtx_range_pop.html'>nvtx_range_pop</a>()  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Pop an NVTX range (no-op if PIC_USE_NVTX not defined)</p>
+
+  <h4>Arguments</h4>
+    <em>None</em>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-nvtx_range_push"></span> <h3>private  subroutine <a href='../proc/nvtx_range_push.html'>nvtx_range_push</a>(name)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Push an NVTX range (no-op if PIC_USE_NVTX not defined)</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~2"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-remove_from_stack"></span> <h3>private  subroutine <a href='../proc/remove_from_stack.html'>remove_from_stack</a>(idx)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Remove a region index from the stack (helper for explicit stop)</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-idx~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>idx</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-04-14 12:44 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>
