@@ -86,7 +86,7 @@ Compile with `-DPIC_USE_NVTX` for NVIDIA Nsight Systems integration, or `-DPIC_D
 
 ## Coding conventions
 
-Refer to `/home/runner/work/pic/pic/FORTRAN_STYLE.md` for the project Fortran style guide and examples.
+Refer to `FORTRAN_STYLE.md` for the project Fortran style guide and examples.
 
 ### Types and kinds
 
