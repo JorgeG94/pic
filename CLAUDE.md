@@ -86,6 +86,8 @@ Compile with `-DPIC_USE_NVTX` for NVIDIA Nsight Systems integration, or `-DPIC_D
 
 ## Coding conventions
 
+Refer to `FORTRAN_STYLE.md` for the project Fortran style guide and examples.
+
 ### Types and kinds
 
 Always use `integer(default_int)` from `pic_types` — never bare `integer`, `integer(4)`, or `integer(8)`. The project must compile with both `int32` (default) and `int64` (`-DPIC_DEFAULT_INT8=ON` / `-DUSE_INT8`). Real kinds: `sp`, `dp`, `qp` from `pic_types`.
@@ -137,8 +139,10 @@ Test with [Compiler Explorer](https://godbolt.org/) if you don't have access to 
 
 - **fprettify** enforces formatting (runs via pre-commit hook).
 - **fortitude** lints with config in `fpm.toml`: rules `C`, `E`, `S` selected; `C003` and `C072` ignored; line length 178; tests excluded.
+- Install fortitude linter: `python3 -m pip install fortitude-lint`
 - Install pre-commit: `python3 -m pip install pre-commit && pre-commit install`
 - Run manually: `pre-commit run --all-files`
+- Agents should attempt to run both `pre-commit run --all-files` and `fortitude check` before finalizing changes.
 
 ## Testing
 
