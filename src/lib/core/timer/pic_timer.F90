@@ -4,7 +4,7 @@
 
 module pic_timer
   !! contains a simple timer module to measure and record time
-   use pic_types, only: dp, default_int
+   use pic_types, only: dp, int64
    use pic_io, only: to_char
 #ifdef _OPENMP
    use omp_lib, only: omp_get_wtime
@@ -23,9 +23,9 @@ module pic_timer
       real(dp) :: stop_time = 0.0_dp
       real(dp) :: walltime
       logical :: is_running = .false.
-      integer(default_int) :: start_count = 0_default_int
-      integer(default_int) :: stop_count = 0_default_int
-      integer(default_int) :: count_rate = 1_default_int
+      integer(int64) :: start_count = 0_int64
+      integer(int64) :: stop_count = 0_int64
+      integer(int64) :: count_rate = 1_int64
    contains
       procedure, non_overridable :: start => timer_start
       procedure, non_overridable :: stop => timer_stop
@@ -100,7 +100,7 @@ contains
       !!
       class(timer_type), intent(in) :: self
       real(dp) :: elapsed
-      integer(default_int) :: current_count
+      integer(int64) :: current_count
       elapsed = 0.0_dp
 #ifdef _OPENMP
       if (self%is_running) then

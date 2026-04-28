@@ -28,7 +28,7 @@ module pic_string_type
    public :: assignment(=)
    public :: operator(>), operator(>=), operator(<), operator(<=)
    public :: operator(==), operator(/=), operator(//)
-#ifndef __NVCOMPILER_LLVM__
+#if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG)
    public :: write (formatted), write (unformatted)
    public :: read (formatted), read (unformatted)
 #endif
@@ -355,7 +355,7 @@ module pic_string_type
       module procedure :: concat_char_string
    end interface operator(//)
 
-#ifndef __NVCOMPILER_LLVM__
+#if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG)
    !> Write the character sequence hold by the string to a connected formatted
    !> unit.
    interface write (formatted)
@@ -1089,7 +1089,7 @@ elemental function concat_char_string(lhs, rhs) result(string)
 
 end function concat_char_string
 
-#ifndef __NVCOMPILER_LLVM__
+#if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG)
 !> Write the character sequence hold by the string to a connected unformatted
 !> unit.
 subroutine write_unformatted(string, unit, iostat, iomsg)
@@ -1208,7 +1208,8 @@ end subroutine read_formatted
 !> We deeply trust in the compiler to inline and optimize this piece of code away.
 elemental subroutine unused_dummy_argument(dummy)
    class(*), intent(in) :: dummy
-   associate (dummy => dummy); end associate
+   associate (dummy => dummy)
+   end associate
 end subroutine unused_dummy_argument
 
 !> Safely return the character sequences represented by the string

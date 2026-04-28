@@ -236,7 +236,7 @@ contains
    end subroutine int32_radix_sort
 
    module subroutine sp_radix_sort(array, work, reverse)
-      use iso_c_binding, only: c_loc, c_f_pointer
+      use, intrinsic :: iso_c_binding, only: c_loc, c_f_pointer
       real(kind=sp), dimension(:), intent(inout), target :: array
       real(kind=sp), dimension(:), intent(inout), target, optional :: work
       logical, intent(in), optional :: reverse
@@ -339,7 +339,7 @@ contains
    end subroutine int64_radix_sort
 
    module subroutine dp_radix_sort(array, work, reverse)
-      use iso_c_binding, only: c_loc, c_f_pointer
+      use, intrinsic :: iso_c_binding, only: c_loc, c_f_pointer
       real(kind=dp), dimension(:), intent(inout), target :: array
       real(kind=dp), dimension(:), intent(inout), target, optional :: work
       logical, intent(in), optional :: reverse

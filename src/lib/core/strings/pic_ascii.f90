@@ -234,7 +234,7 @@ contains
 
    !> Returns the corresponding lowercase letter, if `c` is an uppercase
    !> ASCII character, otherwise `c` itself.
-   elemental function char_to_lower(c) result(t)
+   pure elemental function char_to_lower(c) result(t)
       character(len=1), intent(in) :: c
           !! A character.
       character(len=1)             :: t
@@ -249,7 +249,7 @@ contains
 
    !> Returns the corresponding uppercase letter, if `c` is a lowercase
    !> ASCII character, otherwise `c` itself.
-   elemental function char_to_upper(c) result(t)
+   pure elemental function char_to_upper(c) result(t)
       character(len=1), intent(in) :: c
           !! A character.
       character(len=1)             :: t
@@ -265,7 +265,7 @@ contains
    !> Convert character variable to lower case
    !>
    !> Version: experimental
-   elemental function to_lower(string) result(lower_string)
+   pure elemental function to_lower(string) result(lower_string)
       character(len=*), intent(in) :: string
       character(len=len(string)) :: lower_string
       integer :: i
@@ -279,7 +279,7 @@ contains
    !> Convert character variable to upper case
    !>
    !> Version: experimental
-   elemental function to_upper(string) result(upper_string)
+   pure elemental function to_upper(string) result(upper_string)
       character(len=*), intent(in) :: string
       character(len=len(string)) :: upper_string
       integer :: i

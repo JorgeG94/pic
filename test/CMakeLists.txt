@@ -18,7 +18,10 @@ set(tests
     "pic_array"
     "pic_optional"
     "pic_hash"
-    "pic_sorting")
+    "pic_sorting"
+    "pic_pure_logger"
+    "pic_error"
+    "pic_profiler")
 set(pre_proc_tests "pic_string_derivedtype_io")
 
 find_package(Threads REQUIRED)
@@ -46,8 +49,8 @@ target_link_libraries(
   "${project_name}-tester" PRIVATE "${main_lib}" "${core_lib}"
                                    test-drive::test-drive)
 
-message(STATUS "Adding the following tests to ctests...")
+# message(STATUS "Adding the following tests to ctests...")
 foreach(t IN LISTS tests)
-  message(STATUS "${project_name}/${t} ${project_name}-tester ${t}")
+  # message(STATUS "${project_name}/${t} ${project_name}-tester ${t}")
   add_test("${project_name}/${t}" "${project_name}-tester" "${t}")
 endforeach()

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.31)
 
 project(
   "PIC"
@@ -18,8 +18,20 @@ include(print_status)
 option(PIC_DEFAULT_INT8 "Use 8-byte integers as default" OFF)
 option(PIC_ENABLE_OMP "Enable the use of OpenMP in PIC" OFF)
 option(PIC_ENABLE_TESTING "Enable testing for PIC" ON)
-option(PIC_ENABLE_JONQUIL "Enable Jonquil for json/toml handling" OFF)
 option(PIC_BUILD_STRESS "Build dgemm flop stress case" OFF)
+option(PIC_DISABLE_PROFILER "Disable the profiler for zero overhead" OFF)
+option(PIC_USE_NVTX "Enable NVTX annotations for Nsight Systems" OFF)
+option(PIC_USE_C_KINDS
+       "Use iso_c_binding kinds for sp, dp, qp, and default_int" OFF)
+
+if(PIC_DEFAULT_INT8 AND PIC_USE_C_KINDS)
+  message(
+    FATAL_ERROR
+      "PIC_DEFAULT_INT8 and PIC_USE_C_KINDS are mutually exclusive.\n"
+      "PIC_DEFAULT_INT8 sets default_int to int64, while PIC_USE_C_KINDS "
+      "sets it to c_int (typically int32). Please enable only one of these options."
+  )
+endif()
 
 add_subdirectory(cmake)
 
@@ -29,10 +41,6 @@ if(NOT TARGET test-drive::test-drive AND PIC_ENABLE_TESTING)
   enable_testing()
   find_package("test-drive" REQUIRED)
   list(APPEND external_libraries_to_link test-drive::test-drive)
-endif()
-if(NOT TARGET jonquil::jonquil AND PIC_ENABLE_JONQUIL)
-  find_package("jonquil" REQUIRED)
-  list(APPEND external_libraries_to_link jonquil::jonquil)
 endif()
 
 set(pic_suffix)
@@ -52,6 +60,10 @@ if(PIC_DEFAULT_INT8)
   # only pic_types.F90 in the core lib needs this, the rest just inherit from
   # there
   target_compile_definitions(${core_lib} PRIVATE USE_INT8)
+endif()
+
+if(PIC_USE_C_KINDS)
+  target_compile_definitions(${core_lib} PRIVATE PIC_C_COMPAT)
 endif()
 
 # Print summary info

@@ -10,7 +10,7 @@ module pic_strings
    use pic_string_type, only: string_type, char, verify, repeat, slen, len_trim, move
    use pic_optional_value, only: pic_optional
    use pic_types, only: sp, dp, int32, int64, fbool
-   use iso_c_binding, only: c_null_char, c_char
+   use, intrinsic :: iso_c_binding, only: c_null_char, c_char
    implicit none
    private
 
