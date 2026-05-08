@@ -3,14 +3,22 @@
 !! the gathered knowledge of the species
 module pic_knowledge
   !! a simple module that collects phrases and prints them out randomly, like fortune
-   use pic_types, only: int32, dp
+   use pic_types, only: int32, int64, dp
    use pic_logger, only: logger => global_logger
    use pic_string_type, only: string_type, assignment(=), char
+   use iso_c_binding, only: c_int64_t
    implicit none
 
    private
 
    public :: get_knowledge
+
+   interface
+      function pic_knowledge_seed() bind(C, name="pic_knowledge_seed")
+         import :: c_int64_t
+         integer(c_int64_t) :: pic_knowledge_seed
+      end function pic_knowledge_seed
+   end interface
 
 contains
 
@@ -70,8 +78,14 @@ contains
 
       n = size(knowledge)
 
+      call seed_rng()
+      ! discard a few draws — first samples after seeding can be correlated
+      ! across runs even when seeds differ
+      do idx = 1, 16
+         call random_number(r)
+      end do
       call random_number(r)
-      idx = int(r*n) + 1
+      idx = int(r*n, int32) + 1
       if (idx > n) idx = n
 
       call logger%knowledge(trim(char(knowledge(idx))))
@@ -88,5 +102,28 @@ contains
       end if
 
    end subroutine get_knowledge
+
+   subroutine seed_rng()
+    !! seed the RNG from a 64-bit nanosecond clock obtained from C, so
+    !! successive runs (and concurrent ones) produce different sequences.
+      integer(int32) :: seed_size, i
+      integer(int64) :: s64
+      integer(int32), allocatable :: seed(:)
+      integer(int32) :: x
+
+      call random_seed(size=seed_size)
+      allocate (seed(seed_size))
+      s64 = pic_knowledge_seed()
+      x = int(ieor(s64, ishft(s64, -32)), int32)
+      do i = 1, seed_size
+         x = ieor(x, ishft(x, 13))
+         x = ieor(x, ishft(x, -17))
+         x = ieor(x, ishft(x, 5))
+         x = x + 1640531527*i
+         seed(i) = x
+      end do
+      call random_seed(put=seed)
+      deallocate (seed)
+   end subroutine seed_rng
 
 end module pic_knowledge
