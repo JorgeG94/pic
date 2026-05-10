@@ -1,7 +1,7 @@
 module test_pic_string
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_io, only: to_char, set_precision, get_precision, pad, &
-                     to_upper
+                     to_upper, to_char_count
    use pic_types, only: int32, int64, dp, sp, default_int
    implicit none
    private
@@ -31,7 +31,8 @@ contains
                    new_unittest("test_write_with_precision_sp", test_write_with_precision_sp), &
                    new_unittest("test_write_with_precision_dp", test_write_with_precision_dp), &
                    new_unittest("test_padding", test_padding), &
-                   new_unittest("test_to_upper", test_to_upper) &
+                   new_unittest("test_to_upper", test_to_upper), &
+                   new_unittest("test_to_char_count", test_to_char_count_routine) &
                    ]
 
    end subroutine collect_pic_string_tests
@@ -241,5 +242,34 @@ contains
       if (allocated(error)) return
 
    end subroutine test_to_upper
+
+   subroutine test_to_char_count_routine(error)
+      type(error_type), allocatable, intent(out) :: error
+
+      call check(error, to_char_count(0_int64) == "0 cells")
+      if (allocated(error)) return
+
+      call check(error, to_char_count(500_int64) == "500 cells")
+      if (allocated(error)) return
+
+      call check(error, to_char_count(999_int64) == "999 cells")
+      if (allocated(error)) return
+
+      call check(error, to_char_count(40000_int64) == "40.0 K cells")
+      if (allocated(error)) return
+
+      call check(error, to_char_count(1000_int64) == "1.0 K cells")
+      if (allocated(error)) return
+
+      call check(error, to_char_count(4000000_int64) == "4.0 M cells")
+      if (allocated(error)) return
+
+      call check(error, to_char_count(40000000_int64) == "40.0 M cells")
+      if (allocated(error)) return
+
+      call check(error, to_char_count(4000000000_int64) == "4.0 B cells")
+      if (allocated(error)) return
+
+   end subroutine test_to_char_count_routine
 
 end module test_pic_string
