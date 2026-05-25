@@ -14,6 +14,7 @@ module pic_io
    public :: print_asterisk_row
 
    public :: to_char, pad
+   public :: to_char_count
    public :: set_precision, get_precision
 
    integer(default_int), parameter :: default_dp_precision = 12
@@ -119,6 +120,30 @@ contains
       integer(default_int) :: precision
       precision = dp_precision
    end function get_precision
+
+   function to_char_count(n) result(trimmed_str)
+      !! format a non-negative cell/element count with an SI suffix
+      !! 500 -> "500 cells", 40000 -> "40.0 K cells",
+      !! 4_000_000 -> "4.0 M cells", 4_000_000_000 -> "4.0 B cells"
+      integer(kind=int64), intent(in) :: n
+      character(len=:), allocatable :: trimmed_str
+      character(len=64) :: str
+      real(kind=dp) :: x
+
+      if (n < 1000_int64) then
+         write (str, '(I0,A)') n, " cells"
+      else if (n < 1000000_int64) then
+         x = real(n, dp)/1.0e3_dp
+         write (str, '(F0.1,A)') x, " K cells"
+      else if (n < 1000000000_int64) then
+         x = real(n, dp)/1.0e6_dp
+         write (str, '(F0.1,A)') x, " M cells"
+      else
+         x = real(n, dp)/1.0e9_dp
+         write (str, '(F0.1,A)') x, " B cells"
+      end if
+      trimmed_str = trim(str)
+   end function to_char_count
 
    function to_char_int32(i) result(trimmed_str)
       !! transform an int32 to a string

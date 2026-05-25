@@ -71,6 +71,7 @@ contains
 
       n = size(knowledge)
 
+      call random_seed()
       call random_number(r)
       idx = int(r*n) + 1
       if (idx > n) idx = n
