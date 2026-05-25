@@ -43,7 +43,7 @@ module pic_profiler
 
    type :: tracked_region
       !! Internal type for tracking a single profiling region
-      character(len=MAX_NAME_LEN) :: name = ''
+      character(len=MAX_NAME_LEN) :: name = ""
       type(timer_type) :: timer
          !! PIC timer for this region
       real(dp) :: total_time = 0.0_dp
@@ -362,16 +362,16 @@ contains
       end if
 
       ! Print report
-      call logger%info('')
-      call logger%info('============================================================')
+      call logger%info("")
+      call logger%info("============================================================")
       if (present(title)) then
-         call logger%info('Profiler Report: '//trim(title))
+         call logger%info("Profiler Report: "//trim(title))
       else
-         call logger%info('Profiler Report')
+         call logger%info("Profiler Report")
       end if
-      call logger%info('============================================================')
-      call logger%info('  Region                          Time (s)    Calls    %    ')
-      call logger%info('------------------------------------------------------------')
+      call logger%info("============================================================")
+      call logger%info("  Region                          Time (s)    Calls    %    ")
+      call logger%info("------------------------------------------------------------")
 
       do i = 0, n_print - 1
          ! sort_indices(i) is a 1-based index (Fortran standard) into times_to_sort
@@ -382,7 +382,7 @@ contains
          else
             pct = 0.0_dp
          end if
-         write (line, '(A,A32,F12.6,I8,F8.1)') '  ', &
+         write (line, "(A,A32,F12.6,I8,F8.1)") "  ", &
             state%regions(j)%name, &
             state%regions(j)%total_time, &
             state%regions(j)%call_count, &
@@ -390,15 +390,15 @@ contains
          call logger%info(trim(line))
       end do
 
-      call logger%info('------------------------------------------------------------')
-      write (line, '(A,F12.6)') '  Total:                        ', total_time
+      call logger%info("------------------------------------------------------------")
+      write (line, "(A,F12.6)") "  Total:                        ", total_time
       call logger%info(trim(line))
-      call logger%info('============================================================')
+      call logger%info("============================================================")
 
 #ifdef PIC_USE_NVTX
-      call logger%info('  (NVTX enabled - use Nsight Systems for GPU timeline)')
+      call logger%info("  (NVTX enabled - use Nsight Systems for GPU timeline)")
 #else
-      call logger%info('  (NVTX disabled - compile with -DPIC_USE_NVTX to enable)')
+      call logger%info("  (NVTX disabled - compile with -DPIC_USE_NVTX to enable)")
 #endif
    end subroutine profiler_report
 

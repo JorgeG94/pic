@@ -39,10 +39,10 @@ module pic_pure_logger
 
    type, public :: log_entry_type
       !! A single deferred log entry
-      character(len=max_message_len) :: message = ' '
-      character(len=max_label_len)   :: level = ' '
-      character(len=max_name_len)    :: module_name = ' '
-      character(len=max_name_len)    :: procedure_name = ' '
+      character(len=max_message_len) :: message = " "
+      character(len=max_label_len)   :: level = " "
+      character(len=max_name_len)    :: module_name = " "
+      character(len=max_name_len)    :: procedure_name = " "
       logical :: has_module = .false.
       logical :: has_procedure = .false.
       logical :: truncated = .false.

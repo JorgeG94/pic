@@ -110,15 +110,15 @@ contains
    elemental logical function is_alpha(c)
       character(len=1), intent(in) :: c
           !! The character to test.
-      is_alpha = (c >= 'A' .and. c <= 'Z') .or. (c >= 'a' .and. c <= 'z')
+      is_alpha = (c >= "A" .and. c <= "Z") .or. (c >= "a" .and. c <= "z")
    end function is_alpha
 
    !> Checks whether `c` is a letter or a number (0 .. 9, a .. z, A .. Z).
    elemental logical function is_alphanum(c)
       character(len=1), intent(in) :: c
           !! The character to test.
-      is_alphanum = (c >= '0' .and. c <= '9') .or. (c >= 'a' .and. c <= 'z') &
-                    .or. (c >= 'A' .and. c <= 'Z')
+      is_alphanum = (c >= "0" .and. c <= "9") .or. (c >= "a" .and. c <= "z") &
+                    .or. (c >= "A" .and. c <= "Z")
    end function is_alphanum
 
    !> Checks whether or not `c` is in the ASCII character set -
@@ -142,22 +142,22 @@ contains
    elemental logical function is_digit(c)
       character(len=1), intent(in) :: c
           !! The character to test.
-      is_digit = ('0' <= c) .and. (c <= '9')
+      is_digit = ("0" <= c) .and. (c <= "9")
    end function is_digit
 
    !> Checks whether `c` is a digit in base 8 (0 .. 7).
    elemental logical function is_octal_digit(c)
       character(len=1), intent(in) :: c
           !! The character to test.
-      is_octal_digit = (c >= '0') .and. (c <= '7')
+      is_octal_digit = (c >= "0") .and. (c <= "7")
    end function is_octal_digit
 
    !> Checks whether `c` is a digit in base 16 (0 .. 9, A .. F, a .. f).
    elemental logical function is_hex_digit(c)
       character(len=1), intent(in) :: c
           !! The character to test.
-      is_hex_digit = (c >= '0' .and. c <= '9') .or. (c >= 'a' .and. c <= 'f') &
-                     .or. (c >= 'A' .and. c <= 'F')
+      is_hex_digit = (c >= "0" .and. c <= "9") .or. (c >= "a" .and. c <= "f") &
+                     .or. (c >= "A" .and. c <= "F")
    end function is_hex_digit
 
    !> Checks whether or not `c` is a punctuation character. That includes
@@ -192,7 +192,7 @@ contains
       integer :: ic
       ic = iachar(c)
       !The character is printable if it's between ' ' and '~' in the ASCII table
-      is_printable = ic >= iachar(' ') .and. ic <= int(z'7E')
+      is_printable = ic >= iachar(" ") .and. ic <= int(z'7E')
    end function is_printable
 
    !> Checks whether `c` is a lowercase ASCII letter (a .. z).
@@ -201,14 +201,14 @@ contains
           !! The character to test.
       integer :: ic
       ic = iachar(c)
-      is_lower = ic >= iachar('a') .and. ic <= iachar('z')
+      is_lower = ic >= iachar("a") .and. ic <= iachar("z")
    end function is_lower
 
    !> Checks whether `c` is an uppercase ASCII letter (A .. Z).
    elemental logical function is_upper(c)
       character(len=1), intent(in) :: c
           !! The character to test.
-      is_upper = (c >= 'A') .and. (c <= 'Z')
+      is_upper = (c >= "A") .and. (c <= "Z")
    end function is_upper
 
    !> Checks whether or not `c` is a whitespace character. That includes the
@@ -219,7 +219,7 @@ contains
           !! The character to test.
       integer :: ic
       ic = iachar(c)             ! TAB, LF, VT, FF, CR
-      is_white = (c == ' ') .or. (ic >= int(z'09') .and. ic <= int(z'0D'))
+      is_white = (c == " ") .or. (ic >= int(z'09') .and. ic <= int(z'0D'))
    end function is_white
 
    !> Checks whether or not `c` is a blank character. That includes the
@@ -229,7 +229,7 @@ contains
           !! The character to test.
       integer :: ic
       ic = iachar(c)             ! TAB
-      is_blank = (c == ' ') .or. (ic == int(z'09'))
+      is_blank = (c == " ") .or. (ic == int(z'09'))
    end function is_blank
 
    !> Returns the corresponding lowercase letter, if `c` is an uppercase
@@ -238,7 +238,7 @@ contains
       character(len=1), intent(in) :: c
           !! A character.
       character(len=1)             :: t
-      integer, parameter :: wp = iachar('a') - iachar('A'), BA = iachar('A'), BZ = iachar('Z')
+      integer, parameter :: wp = iachar("a") - iachar("A"), BA = iachar("A"), BZ = iachar("Z")
       integer :: k
       !Check whether the integer equivalent is between BA=65 and BZ=90
       k = ichar(c)
@@ -253,7 +253,7 @@ contains
       character(len=1), intent(in) :: c
           !! A character.
       character(len=1)             :: t
-      integer, parameter :: wp = iachar('a') - iachar('A'), la = iachar('a'), lz = iachar('z')
+      integer, parameter :: wp = iachar("a") - iachar("A"), la = iachar("a"), lz = iachar("z")
       integer :: k
       !Check whether the integer equivalent is between la=97 and lz=122
       k = ichar(c)
@@ -330,9 +330,9 @@ contains
             sentence_string(i:i) = char_to_upper(string(i:i))
             n = i
             exit
-         else
-            sentence_string(i:i) = string(i:i)
          end if
+
+         sentence_string(i:i) = string(i:i)
       end do
 
       do i = n + 1, len(string)

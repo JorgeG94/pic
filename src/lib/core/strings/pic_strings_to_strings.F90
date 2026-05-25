@@ -22,7 +22,7 @@ contains
       character(len=buffer_len) :: buffer
       integer :: stat
 
-      write (buffer, '('//pic_optional(format, "g0")//')', iostat=stat) value
+      write (buffer, "("//pic_optional(format, "g0")//")", iostat=stat) value
       if (stat == 0) then
          string = trim(buffer)
       else
@@ -39,7 +39,7 @@ contains
       character(len=buffer_len) :: buffer
       integer :: stat
 
-      write (buffer, '('//pic_optional(format, "g0")//')', iostat=stat) value
+      write (buffer, "("//pic_optional(format, "g0")//")", iostat=stat) value
       if (stat == 0) then
          string = trim(buffer)
       else
@@ -76,7 +76,7 @@ contains
 
       if (value < 0_ik) then
          pos = pos - 1
-         buffer(pos:pos) = '-'
+         buffer(pos:pos) = "-"
       end if
 
       string = buffer(pos:)
@@ -132,7 +132,7 @@ contains
 
       if (value < 0_ik) then
          pos = pos - 1
-         buffer(pos:pos) = '-'
+         buffer(pos:pos) = "-"
       end if
 
       string = buffer(pos:)
@@ -167,13 +167,13 @@ contains
       character(len=10) :: precision_str
 
       ! Check if format contains "O0."
-      pos = index(fmt, 'O0.')
+      pos = index(fmt, "O0.")
       if (pos > 0) then
          ! Extract precision after the dot
          dot_pos = pos + 2  ! Position of '.'
          precision_str = fmt(dot_pos + 1:)
          ! Replace O0.w with Ow.w (where w is the precision)
-         fixed = fmt(1:pos - 1)//'O'//trim(precision_str)//'.'//trim(precision_str)
+         fixed = fmt(1:pos - 1)//"O"//trim(precision_str)//"."//trim(precision_str)
       else
          fixed = fmt
       end if

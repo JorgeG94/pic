@@ -354,9 +354,9 @@ contains
             r = n - 2
 ! |Y| <= |Z| => merge Y & Z, rho4
             return
-         else
-            r = -1
          end if
+
+         r = -1
 
       end function collapse
 
@@ -443,8 +443,9 @@ contains
                start = start - 1
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
-                     if (array(start) >= array(start - 1)) &
-                        exit Descending
+                     if (array(start) >= array(start - 1)) then
+                       exit Descending
+                     end if
                      start = start - 1
                   end do Descending
                   call reverse_segment(array(start:finish), &
@@ -490,8 +491,9 @@ contains
 
             end do Merge_loop
          end do
-         if (r_count /= 1) &
-            error stop "MERGE_SORT completed without RUN COUNT == 1."
+         if (r_count /= 1) then
+           error stop "MERGE_SORT completed without RUN COUNT == 1."
+         end if
 
       end subroutine merge_sort
 
@@ -768,9 +770,9 @@ contains
             r = n - 2
 ! |Y| <= |Z| => merge Y & Z, rho4
             return
-         else
-            r = -1
          end if
+
+         r = -1
 
       end function collapse
 
@@ -857,8 +859,9 @@ contains
                start = start - 1
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
-                     if (array(start) >= array(start - 1)) &
-                        exit Descending
+                     if (array(start) >= array(start - 1)) then
+                       exit Descending
+                     end if
                      start = start - 1
                   end do Descending
                   call reverse_segment(array(start:finish), &
@@ -904,8 +907,9 @@ contains
 
             end do Merge_loop
          end do
-         if (r_count /= 1) &
-            error stop "MERGE_SORT completed without RUN COUNT == 1."
+         if (r_count /= 1) then
+           error stop "MERGE_SORT completed without RUN COUNT == 1."
+         end if
 
       end subroutine merge_sort
 
@@ -1182,9 +1186,9 @@ contains
             r = n - 2
 ! |Y| <= |Z| => merge Y & Z, rho4
             return
-         else
-            r = -1
          end if
+
+         r = -1
 
       end function collapse
 
@@ -1271,8 +1275,9 @@ contains
                start = start - 1
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
-                     if (array(start) >= array(start - 1)) &
-                        exit Descending
+                     if (array(start) >= array(start - 1)) then
+                       exit Descending
+                     end if
                      start = start - 1
                   end do Descending
                   call reverse_segment(array(start:finish), &
@@ -1318,8 +1323,9 @@ contains
 
             end do Merge_loop
          end do
-         if (r_count /= 1) &
-            error stop "MERGE_SORT completed without RUN COUNT == 1."
+         if (r_count /= 1) then
+           error stop "MERGE_SORT completed without RUN COUNT == 1."
+         end if
 
       end subroutine merge_sort
 
@@ -1596,9 +1602,9 @@ contains
             r = n - 2
 ! |Y| <= |Z| => merge Y & Z, rho4
             return
-         else
-            r = -1
          end if
+
+         r = -1
 
       end function collapse
 
@@ -1685,8 +1691,9 @@ contains
                start = start - 1
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
-                     if (array(start) >= array(start - 1)) &
-                        exit Descending
+                     if (array(start) >= array(start - 1)) then
+                       exit Descending
+                     end if
                      start = start - 1
                   end do Descending
                   call reverse_segment(array(start:finish), &
@@ -1732,8 +1739,9 @@ contains
 
             end do Merge_loop
          end do
-         if (r_count /= 1) &
-            error stop "MERGE_SORT completed without RUN COUNT == 1."
+         if (r_count /= 1) then
+           error stop "MERGE_SORT completed without RUN COUNT == 1."
+         end if
 
       end subroutine merge_sort
 
@@ -2021,9 +2029,9 @@ contains
             r = n - 2
 ! |Y| <= |Z| => merge Y & Z, rho4
             return
-         else
-            r = -1
          end if
+
+         r = -1
 
       end function collapse
 
@@ -2110,8 +2118,9 @@ contains
                start = start - 1
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
-                     if (array(start) >= array(start - 1)) &
-                        exit Descending
+                     if (array(start) >= array(start - 1)) then
+                       exit Descending
+                     end if
                      start = start - 1
                   end do Descending
                   call reverse_segment(array(start:finish), &
@@ -2157,8 +2166,9 @@ contains
 
             end do Merge_loop
          end do
-         if (r_count /= 1) &
-            error stop "MERGE_SORT completed without RUN COUNT == 1."
+         if (r_count /= 1) then
+           error stop "MERGE_SORT completed without RUN COUNT == 1."
+         end if
 
       end subroutine merge_sort
 
@@ -2435,9 +2445,9 @@ contains
             r = n - 2
 ! |Y| <= |Z| => merge Y & Z, rho4
             return
-         else
-            r = -1
          end if
+
+         r = -1
 
       end function collapse
 
@@ -2524,8 +2534,9 @@ contains
                start = start - 1
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
-                     if (array(start) >= array(start - 1)) &
-                        exit Descending
+                     if (array(start) >= array(start - 1)) then
+                       exit Descending
+                     end if
                      start = start - 1
                   end do Descending
                   call reverse_segment(array(start:finish), &
@@ -2571,8 +2582,9 @@ contains
 
             end do Merge_loop
          end do
-         if (r_count /= 1) &
-            error stop "MERGE_SORT completed without RUN COUNT == 1."
+         if (r_count /= 1) then
+           error stop "MERGE_SORT completed without RUN COUNT == 1."
+         end if
 
       end subroutine merge_sort
 
@@ -2849,9 +2861,9 @@ contains
             r = n - 2
 ! |Y| <= |Z| => merge Y & Z, rho4
             return
-         else
-            r = -1
          end if
+
+         r = -1
 
       end function collapse
 
@@ -2938,8 +2950,9 @@ contains
                start = start - 1
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
-                     if (array(start) >= array(start - 1)) &
-                        exit Descending
+                     if (array(start) >= array(start - 1)) then
+                       exit Descending
+                     end if
                      start = start - 1
                   end do Descending
                   call reverse_segment(array(start:finish), &
@@ -2985,8 +2998,9 @@ contains
 
             end do Merge_loop
          end do
-         if (r_count /= 1) &
-            error stop "MERGE_SORT completed without RUN COUNT == 1."
+         if (r_count /= 1) then
+           error stop "MERGE_SORT completed without RUN COUNT == 1."
+         end if
 
       end subroutine merge_sort
 
@@ -3263,9 +3277,9 @@ contains
             r = n - 2
 ! |Y| <= |Z| => merge Y & Z, rho4
             return
-         else
-            r = -1
          end if
+
+         r = -1
 
       end function collapse
 
@@ -3352,8 +3366,9 @@ contains
                start = start - 1
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
-                     if (array(start) >= array(start - 1)) &
-                        exit Descending
+                     if (array(start) >= array(start - 1)) then
+                       exit Descending
+                     end if
                      start = start - 1
                   end do Descending
                   call reverse_segment(array(start:finish), &
@@ -3399,8 +3414,9 @@ contains
 
             end do Merge_loop
          end do
-         if (r_count /= 1) &
-            error stop "MERGE_SORT completed without RUN COUNT == 1."
+         if (r_count /= 1) then
+           error stop "MERGE_SORT completed without RUN COUNT == 1."
+         end if
 
       end subroutine merge_sort
 
@@ -3677,9 +3693,9 @@ contains
             r = n - 2
 ! |Y| <= |Z| => merge Y & Z, rho4
             return
-         else
-            r = -1
          end if
+
+         r = -1
 
       end function collapse
 
@@ -3766,8 +3782,9 @@ contains
                start = start - 1
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
-                     if (array(start) >= array(start - 1)) &
-                        exit Descending
+                     if (array(start) >= array(start - 1)) then
+                       exit Descending
+                     end if
                      start = start - 1
                   end do Descending
                   call reverse_segment(array(start:finish), &
@@ -3813,8 +3830,9 @@ contains
 
             end do Merge_loop
          end do
-         if (r_count /= 1) &
-            error stop "MERGE_SORT completed without RUN COUNT == 1."
+         if (r_count /= 1) then
+           error stop "MERGE_SORT completed without RUN COUNT == 1."
+         end if
 
       end subroutine merge_sort
 
@@ -4101,9 +4119,9 @@ contains
             r = n - 2
 ! |Y| <= |Z| => merge Y & Z, rho4
             return
-         else
-            r = -1
          end if
+
+         r = -1
 
       end function collapse
 
@@ -4190,8 +4208,9 @@ contains
                start = start - 1
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
-                     if (array(start) >= array(start - 1)) &
-                        exit Descending
+                     if (array(start) >= array(start - 1)) then
+                       exit Descending
+                     end if
                      start = start - 1
                   end do Descending
                   call reverse_segment(array(start:finish), &
@@ -4237,8 +4256,9 @@ contains
 
             end do Merge_loop
          end do
-         if (r_count /= 1) &
-            error stop "MERGE_SORT completed without RUN COUNT == 1."
+         if (r_count /= 1) then
+           error stop "MERGE_SORT completed without RUN COUNT == 1."
+         end if
 
       end subroutine merge_sort
 

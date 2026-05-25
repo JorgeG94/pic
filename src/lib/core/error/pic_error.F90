@@ -258,17 +258,17 @@ contains
       ! Cause chain: prints from most-recent wrap (cause_depth) down to
       ! root cause (1), matching Rust's "caused by" display order
       do i = self%cause_depth, 1, -1
-         trace = trace//new_line('a')//"  Caused by: "// &
+         trace = trace//new_line("a")//"  Caused by: "// &
                  trim(code_to_string(self%cause_codes(i)))//": "// &
                  trim(self%cause_messages(i))
       end do
 
       ! Stack trace
       if (self%stack_depth > 0) then
-         trace = trace//new_line('a')//"Call stack (most recent first):"
+         trace = trace//new_line("a")//"Call stack (most recent first):"
          do i = self%stack_depth, 1, -1
-            write (idx_str, '(I0)') i
-            trace = trace//new_line('a')//"  ["//trim(idx_str)//"] "// &
+            write (idx_str, "(I0)") i
+            trace = trace//new_line("a")//"  ["//trim(idx_str)//"] "// &
                     trim(self%call_stack(i))
          end do
       end if
@@ -287,25 +287,25 @@ contains
       if (.not. self%has_error()) return
 
       ! Top-level error with named code
-      write (out_unit, '(A)', advance='no') code_to_string(self%code)//": "
+      write (out_unit, "(A)", advance="no") code_to_string(self%code)//": "
       if (allocated(self%message)) then
-         write (out_unit, '(A)') trim(self%message)
+         write (out_unit, "(A)") trim(self%message)
       else
-         write (out_unit, '(A)') "(no message)"
+         write (out_unit, "(A)") "(no message)"
       end if
 
       ! Cause chain
       do i = self%cause_depth, 1, -1
-         write (out_unit, '(A)', advance='no') "  Caused by: "//trim(code_to_string(self%cause_codes(i)))//": "
-         write (out_unit, '(A)') trim(self%cause_messages(i))
+         write (out_unit, "(A)", advance="no") "  Caused by: "//trim(code_to_string(self%cause_codes(i)))//": "
+         write (out_unit, "(A)") trim(self%cause_messages(i))
       end do
 
       ! Stack trace
       if (self%stack_depth > 0) then
-         write (out_unit, '(A)') "Call stack (most recent first):"
+         write (out_unit, "(A)") "Call stack (most recent first):"
          do i = self%stack_depth, 1, -1
-            write (out_unit, '(A,I0,A)', advance='no') "  [", i, "] "
-            write (out_unit, '(A)') trim(self%call_stack(i))
+            write (out_unit, "(A,I0,A)", advance="no") "  [", i, "] "
+            write (out_unit, "(A)") trim(self%call_stack(i))
          end do
       end if
    end subroutine error_print_trace

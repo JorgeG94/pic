@@ -1468,7 +1468,7 @@ contains
         !! check if a 1d array of type int32 is sorted
       integer(int32), intent(in) :: array(:)
       integer(default_int), intent(in), optional :: order
-      integer(default_int):: sort_order
+      integer(default_int) :: sort_order
       integer(default_int) :: i
       logical :: sorted
 
@@ -1498,7 +1498,7 @@ contains
         !! check if a 1d array of type int64 is sorted
       integer(int64), intent(in) :: array(:)
       integer(default_int), intent(in), optional :: order
-      integer(default_int):: sort_order
+      integer(default_int) :: sort_order
       integer(default_int) :: i
       logical :: sorted
 
@@ -1528,7 +1528,7 @@ contains
         !! check if a 1d array of type sp is sorted
       real(sp), intent(in) :: array(:)
       integer(default_int), intent(in), optional :: order
-      integer(default_int):: sort_order
+      integer(default_int) :: sort_order
       integer(default_int) :: i
       logical :: sorted
 
@@ -1558,7 +1558,7 @@ contains
         !! check if a 1d array of type dp is sorted
       real(dp), intent(in) :: array(:)
       integer(default_int), intent(in), optional :: order
-      integer(default_int):: sort_order
+      integer(default_int) :: sort_order
       integer(default_int) :: i
       logical :: sorted
 
@@ -1888,13 +1888,13 @@ contains
       print *, open_bracket
       idx = 0
       do i = 1, n
-         write (*, '(A)', advance="no") open_bracket
+         write (*, "(A)", advance="no") open_bracket
          do j = 1, i
             idx = idx + 1
             if (j == i) then
-               write (*, '(A)', advance="no") to_char(packed(idx))
+               write (*, "(A)", advance="no") to_char(packed(idx))
             else
-               write (*, '(A)', advance="no") trim(to_char(packed(idx))//", ")
+               write (*, "(A)", advance="no") trim(to_char(packed(idx))//", ")
             end if
          end do
          if (i == n) then
@@ -1933,13 +1933,13 @@ contains
       print *, open_bracket
       idx = 0
       do i = 1, n
-         write (*, '(A)', advance="no") open_bracket
+         write (*, "(A)", advance="no") open_bracket
          do j = 1, i
             idx = idx + 1
             if (j == i) then
-               write (*, '(A)', advance="no") to_char(packed(idx))
+               write (*, "(A)", advance="no") to_char(packed(idx))
             else
-               write (*, '(A)', advance="no") trim(to_char(packed(idx))//", ")
+               write (*, "(A)", advance="no") trim(to_char(packed(idx))//", ")
             end if
          end do
          if (i == n) then
@@ -1978,13 +1978,13 @@ contains
       print *, open_bracket
       idx = 0
       do i = 1, n
-         write (*, '(A)', advance="no") open_bracket
+         write (*, "(A)", advance="no") open_bracket
          do j = 1, i
             idx = idx + 1
             if (j == i) then
-               write (*, '(A)', advance="no") to_char(packed(idx))
+               write (*, "(A)", advance="no") to_char(packed(idx))
             else
-               write (*, '(A)', advance="no") trim(to_char(packed(idx))//", ")
+               write (*, "(A)", advance="no") trim(to_char(packed(idx))//", ")
             end if
          end do
          if (i == n) then
@@ -2023,13 +2023,13 @@ contains
       print *, open_bracket
       idx = 0
       do i = 1, n
-         write (*, '(A)', advance="no") open_bracket
+         write (*, "(A)", advance="no") open_bracket
          do j = 1, i
             idx = idx + 1
             if (j == i) then
-               write (*, '(A)', advance="no") to_char(packed(idx))
+               write (*, "(A)", advance="no") to_char(packed(idx))
             else
-               write (*, '(A)', advance="no") trim(to_char(packed(idx))//", ")
+               write (*, "(A)", advance="no") trim(to_char(packed(idx))//", ")
             end if
          end do
          if (i == n) then

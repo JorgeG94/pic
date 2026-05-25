@@ -329,7 +329,7 @@ contains
       end if
 
       if (last <= 0) then
-         chomped_string = ''
+         chomped_string = ""
       else
          chomped_string = string(1:last)
       end if
@@ -577,7 +577,8 @@ contains
                   if (occurrence_ == 0) then
                      res = s_i - length_pattern + 1
                      exit
-                  else if (pic_optional(consider_overlapping, .true.)) then
+                  end if
+                  if (pic_optional(consider_overlapping, .true.)) then
                      p_i = lps_array(p_i)
                   else
                      p_i = 0
@@ -1026,7 +1027,7 @@ contains
       if (present(separator)) then
          sep = separator
       else
-         sep = ' '
+         sep = " "
       end if
       ! Calculate the total length required, including separators
       ltot = sum(len_trim(strings)) + (size(strings) - 1)*len(sep)
@@ -1060,13 +1061,13 @@ contains
       if (present(separator)) then
          sep = separator
       else
-         sep = ' '
+         sep = " "
       end if
       ! Calculate the total length required, including separators
       ltot = sum(len_trim(strings)) + (size(strings) - 1)*len(sep)
       allocate (character(len=ltot) :: joined)
 
-      joined = repeat(' ', ltot)
+      joined = repeat(" ", ltot)
       ! Concatenate strings with separator
       pos = 0
       do i = 1, size(strings)
