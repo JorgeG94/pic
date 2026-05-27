@@ -219,27 +219,32 @@ contains
    pure function strip_char(string) result(stripped_string)
       character(len=*), intent(in) :: string
       character(len=:), allocatable :: stripped_string
-      integer :: i, first, last
+      integer :: i, k, n, first, last
 
-      last = verify(string, whitespace, back=.true.)
-      ! Forward scan is hand-rolled via iachar rather than using
-      ! verify(string, whitespace) because classic flang (AOCC) implements
-      ! forward verify on top of strpbrk, which short-circuits at NUL — so a
-      ! leading achar(0) makes verify return 0 even though NUL is not in the
-      ! whitespace set. The back=.true. variant scans differently and is fine.
-      first = 0
-      do i = 1, len(string)
-         select case (iachar(string(i:i)))
-         case (9, 10, 11, 12, 13, 32)
-            cycle
-         case default
-            first = i
-            exit
-         end select
-      end do
-      ! When the string is all-whitespace (or empty), first == last == 0 and
+      ! Both scans are hand-rolled via iachar/if instead of verify+select-case
+      ! because classic flang (AOCC) (a) short-circuits verify(...) at NUL bytes
+      ! via its strpbrk-based implementation, and (b) miscompiles unlabeled
+      ! `exit` from inside a select-case nested in a do-loop. Plain if/exit
+      ! over iachar codes avoids both pitfalls.
+      n = len(string)
+      first = 1
+      last = 0
+      forward: do i = 1, n
+         k = iachar(string(i:i))
+         if (k == 32 .or. (k >= 9 .and. k <= 13)) cycle forward
+         first = i
+         last = i
+         exit forward
+      end do forward
+      backward: do i = n, first, -1
+         k = iachar(string(i:i))
+         if (k == 32 .or. (k >= 9 .and. k <= 13)) cycle backward
+         last = i
+         exit backward
+      end do backward
+      ! If the string is all-whitespace (or empty), first=1 and last=0, so
       ! string(1:0) is a zero-length substring per the standard.
-      stripped_string = string(max(first, 1):last)
+      stripped_string = string(first:last)
 
    end function strip_char
 
