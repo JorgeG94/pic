@@ -15,9 +15,12 @@ jobs:
           - {compiler: gcc, version: 12}
           - {compiler: gcc, version: 13}
           - {compiler: gcc, version: 14}
+          - {compiler: gcc, version: 15}
+          - {compiler: intel-classic, version: '2021.10'}
           - {compiler: intel, version: '2024.1'}
           - {compiler: intel, version: '2025.0'}
-          - {compiler: nvidia-hpc, version: '25.1'}
+          - {compiler: nvidia-hpc, version: 'latest'}
+          - {compiler: aocc, version: '5.1.0'}
         build: [cmake]
     env:
       BUILD_DIR: ${{ matrix.build == 'cmake' && 'build' || '.' }}
@@ -36,7 +39,7 @@ jobs:
 
 
     - name: Setup Fortran compiler
-      uses: fortran-lang/setup-fortran@v1.6.2
+      uses: fortran-lang/setup-fortran@v1.9.0
       id: setup-fortran
       with:
         compiler: ${{ matrix.toolchain.compiler }}
