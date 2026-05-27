@@ -91,7 +91,7 @@ contains
       character(len=buffer_len) :: buffer
       integer :: stat
 
-#ifdef __NVCOMPILER_LLVM__
+#if defined(__NVCOMPILER_LLVM__) || defined(__FLANG)
       adjusted_format = fix_nvhpc_octal_format(format)
 #else
       adjusted_format = format
@@ -147,7 +147,7 @@ contains
       character(len=buffer_len) :: buffer
       integer :: stat
 
-#ifdef __NVCOMPILER_LLVM__
+#if defined(__NVCOMPILER_LLVM__) || defined(__FLANG)
       adjusted_format = fix_nvhpc_octal_format(format)
 #else
       adjusted_format = format
