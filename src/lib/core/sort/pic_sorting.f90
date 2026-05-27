@@ -115,16 +115,6 @@ module pic_sorting
    private
    public :: ord_sort, sort_index, radix_sort
 
-   ! Defined here (rather than in the ord_sort / sort_index submodules where it
-   ! is used) because AOCC flang fails to emit the type-descriptor symbol when a
-   ! derived type is declared at submodule scope, producing an undefined-symbol
-   ! link error. Hoisting to the parent module makes pic_sorting.o own the td_
-   ! symbol and keeps the submodules portable across AOCC.
-   type :: run_type
-      integer(int_index) :: base = 0
-      integer(int_index) :: len = 0
-   end type run_type
-
    public :: sort
 !! The generic subroutine implementing the `SORT` algorithm to return
 !! an input array with its elements sorted in order of (non-)decreasing

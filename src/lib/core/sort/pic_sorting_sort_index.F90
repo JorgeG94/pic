@@ -48,6 +48,7 @@
 
 submodule(pic_sorting) pic_sorting_sort_index
 
+   use pic_sorting_run_type, only: run_type
    implicit none
 !! The generic subroutine implementing the `SORT_INDEX` algorithm to
 !! return an index array whose elements would sort the input array in the
@@ -163,9 +164,6 @@ submodule(pic_sorting) pic_sorting_sort_index
       ! https://svn.python.org/projects/python/trunk/Objects/listsort.txt
       max_merge_stack = int(ceiling(log(2._dp**64)/ &
                                     log(1.6180339887_dp)))
-
-   ! run_type is defined in the parent module pic_sorting (hoisted to dodge an
-   ! AOCC flang bug emitting type descriptors from submodule scope).
 
 contains
 
