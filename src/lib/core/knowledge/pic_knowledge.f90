@@ -20,7 +20,7 @@ contains
       type(string_type), allocatable :: knowledge(:)
       integer(int32) :: n, idx
       real(dp) :: r
-      allocate (knowledge(48))
+      allocate (knowledge(51))
 
       knowledge(1) = "The long line! (CS,2023)"
       knowledge(2) = "Maybe I have the Fortran brain-rot in Dijkstra's words (IP,2025)"
@@ -70,6 +70,9 @@ contains
       knowledge(46) = "If vim ceased to exist, I would quit programming."
       knowledge(47) = "If you're running global models you've given up on correct physics"
       knowledge(48) = "What do you think about bloodletting? - I think it is a very effective placebo!"
+      knowledge(49) = "The joy of Fortran is the compiler bugs you get to find! (Jorge)"
+      knowledge(50) = "Essentially, all models are wrong, but some are useful. (George E. P. Box)"
+      knowledge(51) = "With a small enough timestep anything can run! (MW)"
 
       n = size(knowledge)
 
