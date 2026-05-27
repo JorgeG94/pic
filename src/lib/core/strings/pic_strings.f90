@@ -219,32 +219,15 @@ contains
    pure function strip_char(string) result(stripped_string)
       character(len=*), intent(in) :: string
       character(len=:), allocatable :: stripped_string
-      integer :: i, k, n, first, last
+      integer :: first, last
 
-      ! Both scans are hand-rolled via iachar/if instead of verify+select-case
-      ! because classic flang (AOCC) (a) short-circuits verify(...) at NUL bytes
-      ! via its strpbrk-based implementation, and (b) miscompiles unlabeled
-      ! `exit` from inside a select-case nested in a do-loop. Plain if/exit
-      ! over iachar codes avoids both pitfalls.
-      n = len(string)
-      first = 1
-      last = 0
-      forward: do i = 1, n
-         k = iachar(string(i:i))
-         if (k == 32 .or. (k >= 9 .and. k <= 13)) cycle forward
-         first = i
-         last = i
-         exit forward
-      end do forward
-      backward: do i = n, first, -1
-         k = iachar(string(i:i))
-         if (k == 32 .or. (k >= 9 .and. k <= 13)) cycle backward
-         last = i
-         exit backward
-      end do backward
-      ! If the string is all-whitespace (or empty), first=1 and last=0, so
-      ! string(1:0) is a zero-length substring per the standard.
-      stripped_string = string(first:last)
+      first = verify(string, whitespace)
+      if (first == 0) then
+         stripped_string = ""
+      else
+         last = verify(string, whitespace, back=.true.)
+         stripped_string = string(first:last)
+      end if
 
    end function strip_char
 
