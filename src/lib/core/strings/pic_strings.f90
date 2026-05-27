@@ -222,12 +222,12 @@ contains
       integer :: first, last
 
       first = verify(string, whitespace)
-      if (first == 0) then
-         stripped_string = ""
-      else
-         last = verify(string, whitespace, back=.true.)
-         stripped_string = string(first:last)
-      end if
+      last = verify(string, whitespace, back=.true.)
+      ! Branch-free form: if the input is all-whitespace, first == last == 0,
+      ! and string(1:0) yields a zero-length substring per the standard. Doing
+      ! it this way avoids a conditional assignment of an empty literal to an
+      ! allocatable result, which classic flang (AOCC) miscompiles.
+      stripped_string = string(max(first, 1):last)
 
    end function strip_char
 
