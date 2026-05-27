@@ -452,7 +452,7 @@ elemental function char_string_pos(string, pos) result(character_string)
    integer, intent(in) :: pos
    character(len=1) :: character_string
 
-   character_string = merge(string%raw(pos:pos), ' ', allocated(string%raw))
+   character_string = merge(string%raw(pos:pos), " ", allocated(string%raw))
 
 end function char_string_pos
 
@@ -464,7 +464,7 @@ pure function char_string_range(string, start, last) result(character_string)
    character(len=last - start + 1) :: character_string
 
    character_string = merge(string%raw(int(start, long):int(last, long)), &
-                            repeat(' ', int(len(character_string), long)), allocated(string%raw))
+                            repeat(" ", int(len(character_string), long)), allocated(string%raw))
 
 end function char_string_range
 
@@ -1117,13 +1117,13 @@ subroutine write_formatted(string, unit, iotype, v_list, iostat, iomsg)
 
    select case (iotype)
    case ("LISTDIRECTED")
-      write (unit, '(a)', iostat=iostat, iomsg=iomsg) maybe(string)
+      write (unit, "(a)", iostat=iostat, iomsg=iomsg) maybe(string)
    case ("NAMELIST")
       error stop "[Fatal] This implementation does not support namelist output"
    case default   ! DT*
       select case (size(v_list))
       case (0)    ! DT
-         write (unit, '(a)', iostat=iostat, iomsg=iomsg) maybe(string)
+         write (unit, "(a)", iostat=iostat, iomsg=iomsg) maybe(string)
       case default
          error stop "[Fatal] This implementation does not support v_list formatters"
       end select
@@ -1183,9 +1183,9 @@ contains
       integer, parameter :: buffer_size = 512
       character(len=buffer_size) :: buffer
       integer :: chunk
-      line = ''
+      line = ""
       do
-         read (unit, '(a)', iostat=iostat, iomsg=iomsg, size=chunk, advance='no') &
+         read (unit, "(a)", iostat=iostat, iomsg=iomsg, size=chunk, advance="no") &
             buffer
          if (iostat > 0) exit
          line = line//buffer(:chunk)
@@ -1219,7 +1219,7 @@ pure function maybe(string) result(maybe_string)
    if (allocated(string%raw)) then
       maybe_string = string%raw
    else
-      maybe_string = ''
+      maybe_string = ""
    end if
 end function maybe
 
