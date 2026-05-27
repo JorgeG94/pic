@@ -7,7 +7,6 @@ set(tests
     "pic_string_intrinsic"
     "pic_string_match"
     "pic_string_operator"
-    "pic_string_strip_chomp"
     "pic_string_to_string"
     "pic_ascii"
     "pic_timers"
@@ -22,7 +21,7 @@ set(tests
     "pic_pure_logger"
     "pic_error"
     "pic_profiler")
-set(pre_proc_tests "pic_string_derivedtype_io")
+set(pre_proc_tests "pic_string_derivedtype_io" "pic_string_strip_chomp")
 
 find_package(Threads REQUIRED)
 set(test-srcs "main_tests.f90")

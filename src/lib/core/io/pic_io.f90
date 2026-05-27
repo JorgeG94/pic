@@ -131,16 +131,16 @@ contains
       real(kind=dp) :: x
 
       if (n < 1000_int64) then
-         write (str, '(I0,A)') n, " cells"
+         write (str, "(I0,A)") n, " cells"
       else if (n < 1000000_int64) then
          x = real(n, dp)/1.0e3_dp
-         write (str, '(F0.1,A)') x, " K cells"
+         write (str, "(F0.1,A)") x, " K cells"
       else if (n < 1000000000_int64) then
          x = real(n, dp)/1.0e6_dp
-         write (str, '(F0.1,A)') x, " M cells"
+         write (str, "(F0.1,A)") x, " M cells"
       else
          x = real(n, dp)/1.0e9_dp
-         write (str, '(F0.1,A)') x, " B cells"
+         write (str, "(F0.1,A)") x, " B cells"
       end if
       trimmed_str = trim(str)
    end function to_char_count
@@ -170,7 +170,7 @@ contains
       character(len=:), allocatable :: trimmed_str
       character(len=32) :: style
       !call write_with_precision(r, str)
-      write (style, '(A,I0,A)') '(F0.', dp_precision, ')'
+      write (style, "(A,I0,A)") "(F0.", dp_precision, ")"
       write (str, style) r
       trimmed_str = trim(str)
    end function to_char_sp
@@ -182,7 +182,7 @@ contains
       character(len=:), allocatable :: trimmed_str
       character(len=32) :: style
       !call write_with_precision(r, str)
-      write (style, '(A,I0,A)') '(F0.', dp_precision, ')'
+      write (style, "(A,I0,A)") "(F0.", dp_precision, ")"
       write (str, style) r
       trimmed_str = trim(str)
    end function to_char_dp
@@ -217,7 +217,7 @@ contains
       integer :: i, total_len
 
       ! Set up format
-      write (style, '(A,I0,A)') '(F0.', dp_precision, ')'
+      write (style, "(A,I0,A)") "(F0.", dp_precision, ")"
 
       ! Estimate total length needed
       total_len = 2  ! for brackets
@@ -253,7 +253,7 @@ contains
       ! Estimate total length needed
       total_len = 2  ! for brackets
       do i = 1, size(array)
-         write (temp_str, '(I0)') array(i)
+         write (temp_str, "(I0)") array(i)
          total_len = total_len + len_trim(temp_str) + 2  ! +2 for ", "
       end do
 
@@ -263,7 +263,7 @@ contains
       ! Build the string
       trimmed_str = "["
       do i = 1, size(array)
-         write (temp_str, '(I0)') array(i)
+         write (temp_str, "(I0)") array(i)
          if (i < size(array)) then
             trimmed_str = trimmed_str//trim(temp_str)//", "
          else
@@ -282,7 +282,7 @@ contains
       ! Estimate total length needed
       total_len = 2  ! for brackets
       do i = 1, size(array)
-         write (temp_str, '(I0)') array(i)
+         write (temp_str, "(I0)") array(i)
          total_len = total_len + len_trim(temp_str) + 2  ! +2 for ", "
       end do
 
@@ -292,7 +292,7 @@ contains
       ! Build the string
       trimmed_str = "["
       do i = 1, size(array)
-         write (temp_str, '(I0)') array(i)
+         write (temp_str, "(I0)") array(i)
          if (i < size(array)) then
             trimmed_str = trimmed_str//trim(temp_str)//", "
          else
@@ -310,7 +310,7 @@ contains
       integer :: i, total_len
 
       ! Set up format
-      write (style, '(A,I0,A)') '(F0.', sp_precision, ')'
+      write (style, "(A,I0,A)") "(F0.", sp_precision, ")"
 
       ! Estimate total length needed
       total_len = 2  ! for brackets
@@ -346,7 +346,7 @@ contains
       ncols = size(array, 2)
 
       ! Set up format
-      write (style, '(A,I0,A)') '(F0.', dp_precision, ')'
+      write (style, "(A,I0,A)") "(F0.", dp_precision, ")"
 
       ! Estimate total length needed (rough estimate)
       total_len = 10 + nrows  ! for outer brackets and newlines
@@ -362,7 +362,7 @@ contains
       allocate (character(len=total_len) :: trimmed_str)
 
       ! Build the string with newlines
-      trimmed_str = "["//new_line('a')
+      trimmed_str = "["//new_line("a")
       do i = 1, nrows
          trimmed_str = trimmed_str//" ["
          do j = 1, ncols
@@ -374,9 +374,9 @@ contains
             end if
          end do
          if (i < nrows) then
-            trimmed_str = trimmed_str//"],"//new_line('a')
+            trimmed_str = trimmed_str//"],"//new_line("a")
          else
-            trimmed_str = trimmed_str//"]"//new_line('a')
+            trimmed_str = trimmed_str//"]"//new_line("a")
          end if
       end do
       trimmed_str = trimmed_str//"]"
@@ -396,7 +396,7 @@ contains
       do i = 1, nrows
          total_len = total_len + 3  ! for row brackets and comma
          do j = 1, ncols
-            write (temp_str, '(I0)') array(i, j)
+            write (temp_str, "(I0)") array(i, j)
             total_len = total_len + len_trim(temp_str) + 2  ! +2 for ", "
          end do
       end do
@@ -410,7 +410,7 @@ contains
          if (i > 1) trimmed_str = trimmed_str//", "
          trimmed_str = trimmed_str//"["
          do j = 1, ncols
-            write (temp_str, '(I0)') array(i, j)
+            write (temp_str, "(I0)") array(i, j)
             if (j < ncols) then
                trimmed_str = trimmed_str//trim(temp_str)//", "
             else
@@ -436,7 +436,7 @@ contains
       do i = 1, nrows
          total_len = total_len + 3  ! for row brackets and comma
          do j = 1, ncols
-            write (temp_str, '(I0)') array(i, j)
+            write (temp_str, "(I0)") array(i, j)
             total_len = total_len + len_trim(temp_str) + 2  ! +2 for ", "
          end do
       end do
@@ -445,11 +445,11 @@ contains
       allocate (character(len=total_len) :: trimmed_str)
 
       ! Build the string with newlines
-      trimmed_str = "["//new_line('a')
+      trimmed_str = "["//new_line("a")
       do i = 1, nrows
          trimmed_str = trimmed_str//" ["
          do j = 1, ncols
-            write (temp_str, '(I0)') array(i, j)
+            write (temp_str, "(I0)") array(i, j)
             if (j < ncols) then
                trimmed_str = trimmed_str//trim(temp_str)//", "
             else
@@ -457,9 +457,9 @@ contains
             end if
          end do
          if (i < nrows) then
-            trimmed_str = trimmed_str//"],"//new_line('a')
+            trimmed_str = trimmed_str//"],"//new_line("a")
          else
-            trimmed_str = trimmed_str//"]"//new_line('a')
+            trimmed_str = trimmed_str//"]"//new_line("a")
          end if
       end do
       trimmed_str = trimmed_str//"]"
@@ -476,7 +476,7 @@ contains
       ncols = size(array, 2)
 
       ! Set up format
-      write (style, '(A,I0,A)') '(F0.', sp_precision, ')'
+      write (style, "(A,I0,A)") "(F0.", sp_precision, ")"
 
       ! Estimate total length needed
       total_len = 10 + nrows  ! for outer brackets and newlines
@@ -492,7 +492,7 @@ contains
       allocate (character(len=total_len) :: trimmed_str)
 
       ! Build the string with newlines
-      trimmed_str = "["//new_line('a')
+      trimmed_str = "["//new_line("a")
       do i = 1, nrows
          trimmed_str = trimmed_str//" ["
          do j = 1, ncols
@@ -504,9 +504,9 @@ contains
             end if
          end do
          if (i < nrows) then
-            trimmed_str = trimmed_str//"],"//new_line('a')
+            trimmed_str = trimmed_str//"],"//new_line("a")
          else
-            trimmed_str = trimmed_str//"]"//new_line('a')
+            trimmed_str = trimmed_str//"]"//new_line("a")
          end if
       end do
       trimmed_str = trimmed_str//"]"
