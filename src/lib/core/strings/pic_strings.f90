@@ -219,14 +219,26 @@ contains
    pure function strip_char(string) result(stripped_string)
       character(len=*), intent(in) :: string
       character(len=:), allocatable :: stripped_string
-      integer :: first, last
+      integer :: i, first, last
 
-      first = verify(string, whitespace)
       last = verify(string, whitespace, back=.true.)
-      ! Branch-free form: if the input is all-whitespace, first == last == 0,
-      ! and string(1:0) yields a zero-length substring per the standard. Doing
-      ! it this way avoids a conditional assignment of an empty literal to an
-      ! allocatable result, which classic flang (AOCC) miscompiles.
+      ! Forward scan is hand-rolled via iachar rather than using
+      ! verify(string, whitespace) because classic flang (AOCC) implements
+      ! forward verify on top of strpbrk, which short-circuits at NUL — so a
+      ! leading achar(0) makes verify return 0 even though NUL is not in the
+      ! whitespace set. The back=.true. variant scans differently and is fine.
+      first = 0
+      do i = 1, len(string)
+         select case (iachar(string(i:i)))
+         case (9, 10, 11, 12, 13, 32)
+            cycle
+         case default
+            first = i
+            exit
+         end select
+      end do
+      ! When the string is all-whitespace (or empty), first == last == 0 and
+      ! string(1:0) is a zero-length substring per the standard.
       stripped_string = string(max(first, 1):last)
 
    end function strip_char
