@@ -1,6 +1,16 @@
 name: Check Pre-commit Hooks
 
-on: [push]
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   pre-commit:
@@ -32,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run Fortitude Linter
-        uses: gha3mi/setup-fortran-conda@latest
+        uses: gha3mi/setup-fortran-conda@v0.17.1
         with:
           fortitude-check: true
           fortitude-settings: "--output-format github"
