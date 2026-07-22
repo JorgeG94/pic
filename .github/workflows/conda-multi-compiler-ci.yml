@@ -2,44 +2,39 @@
 # for setting this up. MIT Licensed.
 name: Setup Fortran multi OS multi compiler Conda CI/CD
 
+# Run on every branch push for fast developer feedback, and on PRs. The
+# concurrency group is keyed by branch name (head_ref on PRs, ref_name on
+# pushes) so a push to a branch that already has an open PR collapses into a
+# single run instead of building twice.
 on:
   push:
-    branches: [main]
   pull_request:
 
 permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
 
-  # Run FPM tests (debug + release) on all OS/compiler combinations
+  # Run FPM tests on all OS/compiler combinations. PIC is pure Fortran (no
+  # MPI/BLAS in this workflow), so the only combos we skip are the ones that
+  # simply do not exist upstream:
+  #   - ifx has no macOS build
+  #   - LLVM flang-new is not ready on Windows
   test_fpm:
     name: ${{ matrix.os }}_${{ matrix.compiler }}_fpm
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        #os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         compiler: [gfortran, ifx, flang-new]
-        include:
-          - os: ubuntu-latest
-          #- os: windows-latest
-          #- os: macos-latest
-          #  extra-packages: "openblas"
         exclude:
           - os: macos-latest
-            compiler: flang-new
-          - os: macos-latest
             compiler: ifx
-          - os: macos-latest
-            compiler: nvfortran
-          #- os: windows-latest
-          #  compiler: nvfortran
           - os: windows-latest
             compiler: flang-new
 
@@ -49,35 +44,27 @@ jobs:
         with:
           compiler: ${{ matrix.compiler }}
           platform: ${{ matrix.os }}
-          extra-packages: ${{ matrix.extra-packages }}
 
       - name: fpm versioning
-        run: |
-          fpm --version
+        run: fpm --version
 
       - name: fpm test (release)
-        run: |
-          fpm test --compiler ${{ matrix.compiler }} --profile release --verbose
+        run: fpm test --compiler ${{ matrix.compiler }} --profile release --verbose
 
-  # Run CMake + Ninja build/tests across OS/compiler matrix
+  # Run CMake + Ninja build/tests across the same OS/compiler matrix.
   test_cmake:
-    name: ${{ matrix.os }}_${{ matrix.compiler }}_wint8${{ matrix.int8 }}_cmake
+    name: ${{ matrix.os }}_${{ matrix.compiler }}_cmake
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         compiler: [gfortran, ifx, flang-new]
-        include:
-          - os: ubuntu-latest
-            extra-packages: "cmake, ninja"
         exclude:
           - os: macos-latest
-            compiler: flang-new
-          - os: macos-latest
             compiler: ifx
-          - os: macos-latest
-            compiler: nvfortran
+          - os: windows-latest
+            compiler: flang-new
 
     steps:
       - name: Setup Fortran
@@ -85,7 +72,7 @@ jobs:
         with:
           compiler: ${{ matrix.compiler }}
           platform: ${{ matrix.os }}
-          extra-packages: ${{ matrix.extra-packages }}
+          extra-packages: "cmake, ninja"
 
       - name: cmake test (release)
         run: |
