@@ -32,7 +32,11 @@ contains
 
       type(string_type) :: string
       integer :: io, stat
-#if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG)
+! LFortran inserts a processor-added leading blank around defined (UDDTIO)
+! list-directed output, so the round-tripped value gains a spurious leading
+! space. The formatted "(dt)" and unformatted paths below behave correctly,
+! so only this list-directed case is excluded (as for NVHPC and Flang).
+#if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG) && !defined(__LFORTRAN__)
       string = "Important saved value"
 
       open (newunit=io, form="formatted", status="scratch")

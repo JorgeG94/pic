@@ -212,6 +212,7 @@ contains
       !! Time is accumulated across multiple start/stop pairs.
       character(len=*), intent(in), optional :: name
       integer(default_int) :: idx
+      logical :: found
 
 #ifdef PIC_DISABLE_PROFILER
       return
@@ -220,11 +221,18 @@ contains
       if (.not. state%enabled) return
 
       if (present(name)) then
-         ! Find the region by name
+         ! Find the region by name. Use an explicit `found` flag instead of
+         ! relying on the DO-variable value after the loop, which is not
+         ! portable (e.g. LFortran leaves it at 0 for a zero-trip loop,
+         ! causing an out-of-bounds access below).
+         found = .false.
          do idx = 1, state%num_regions
-            if (trim(state%regions(idx)%name) == trim(name)) exit
+            if (trim(state%regions(idx)%name) == trim(name)) then
+               found = .true.
+               exit
+            end if
          end do
-         if (idx > state%num_regions) return
+         if (.not. found) return
          if (.not. state%regions(idx)%active) return
 
          ! Remove from stack (may not be at top if using explicit names)
