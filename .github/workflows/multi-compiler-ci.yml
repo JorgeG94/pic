@@ -1,15 +1,24 @@
 name: linux-multi-compiler-ci-blas-openmp
 
+# Run on every branch push for fast developer feedback, and on PRs. The
+# concurrency group is keyed by branch name (head_ref on PRs, ref_name on
+# pushes) so a push to a branch that already has an open PR collapses into a
+# single run instead of building twice.
 on:
   push:
-    branches: [main]
   pull_request:
+  # Weekly run to catch compiler/toolchain/dependency drift even with no code
+  # changes. 12:00 UTC Wednesday = 22:00 Sydney (AEST); drifts to 23:00 during
+  # AEDT since GitHub cron cannot follow daylight saving. Scheduled runs fire
+  # only on the default branch.
+  schedule:
+    - cron: '0 12 * * 3'
 
 permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
