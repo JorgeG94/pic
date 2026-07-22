@@ -385,7 +385,7 @@ contains
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
                      if (array(start) >= array(start - 1)) then
-                       exit Descending
+                        exit Descending
                      end if
                      start = start - 1
                   end do Descending
@@ -430,7 +430,7 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
-           error stop "MERGE_SORT completed without RUN COUNT == 1."
+            error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
       end subroutine merge_sort
@@ -721,7 +721,7 @@ contains
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
                      if (array(start) >= array(start - 1)) then
-                       exit Descending
+                        exit Descending
                      end if
                      start = start - 1
                   end do Descending
@@ -766,7 +766,7 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
-           error stop "MERGE_SORT completed without RUN COUNT == 1."
+            error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
       end subroutine merge_sort
@@ -1057,7 +1057,7 @@ contains
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
                      if (array(start) >= array(start - 1)) then
-                       exit Descending
+                        exit Descending
                      end if
                      start = start - 1
                   end do Descending
@@ -1102,7 +1102,7 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
-           error stop "MERGE_SORT completed without RUN COUNT == 1."
+            error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
       end subroutine merge_sort
@@ -1393,7 +1393,7 @@ contains
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
                      if (array(start) >= array(start - 1)) then
-                       exit Descending
+                        exit Descending
                      end if
                      start = start - 1
                   end do Descending
@@ -1438,7 +1438,7 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
-           error stop "MERGE_SORT completed without RUN COUNT == 1."
+            error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
       end subroutine merge_sort
@@ -1732,7 +1732,7 @@ contains
                if (array(start + 1) < array(start)) then
                   Descending: do while (start > 0)
                      if (array(start) >= array(start - 1)) then
-                       exit Descending
+                        exit Descending
                      end if
                      start = start - 1
                   end do Descending
@@ -1777,7 +1777,7 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
-           error stop "MERGE_SORT completed without RUN COUNT == 1."
+            error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
       end subroutine merge_sort
@@ -2068,7 +2068,7 @@ contains
                if (array(start + 1) > array(start)) then
                   Descending: do while (start > 0)
                      if (array(start) <= array(start - 1)) then
-                       exit Descending
+                        exit Descending
                      end if
                      start = start - 1
                   end do Descending
@@ -2113,7 +2113,7 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
-           error stop "MERGE_SORT completed without RUN COUNT == 1."
+            error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
       end subroutine merge_sort
@@ -2404,7 +2404,7 @@ contains
                if (array(start + 1) > array(start)) then
                   Descending: do while (start > 0)
                      if (array(start) <= array(start - 1)) then
-                       exit Descending
+                        exit Descending
                      end if
                      start = start - 1
                   end do Descending
@@ -2449,7 +2449,7 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
-           error stop "MERGE_SORT completed without RUN COUNT == 1."
+            error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
       end subroutine merge_sort
@@ -2740,7 +2740,7 @@ contains
                if (array(start + 1) > array(start)) then
                   Descending: do while (start > 0)
                      if (array(start) <= array(start - 1)) then
-                       exit Descending
+                        exit Descending
                      end if
                      start = start - 1
                   end do Descending
@@ -2785,7 +2785,7 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
-           error stop "MERGE_SORT completed without RUN COUNT == 1."
+            error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
       end subroutine merge_sort
@@ -3076,7 +3076,7 @@ contains
                if (array(start + 1) > array(start)) then
                   Descending: do while (start > 0)
                      if (array(start) <= array(start - 1)) then
-                       exit Descending
+                        exit Descending
                      end if
                      start = start - 1
                   end do Descending
@@ -3121,7 +3121,7 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
-           error stop "MERGE_SORT completed without RUN COUNT == 1."
+            error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
       end subroutine merge_sort
@@ -3415,7 +3415,7 @@ contains
                if (array(start + 1) > array(start)) then
                   Descending: do while (start > 0)
                      if (array(start) <= array(start - 1)) then
-                       exit Descending
+                        exit Descending
                      end if
                      start = start - 1
                   end do Descending
@@ -3460,7 +3460,7 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
-           error stop "MERGE_SORT completed without RUN COUNT == 1."
+            error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
       end subroutine merge_sort
