@@ -2,17 +2,28 @@
 # for setting this up. MIT Licensed.
 name: LFORTRAN CI
 
-on: [pull_request, push]
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# LFortran is an alpha compiler and not a production target, so this whole
+# workflow is allowed to go red without blocking merges (see continue-on-error
+# on the job). It still runs the test suite so we can see regressions.
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
 
   test_fpm:
     name: ${{ matrix.os }}_${{ matrix.compiler }}_fpm
     runs-on: ${{ matrix.os }}
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
@@ -26,7 +37,7 @@ jobs:
 
     steps:
       - name: Setup Fortran
-        uses: gha3mi/setup-fortran-conda@latest
+        uses: gha3mi/setup-fortran-conda@v0.17.1
         with:
           compiler: ${{ matrix.compiler }}
           platform: ${{ matrix.os }}
@@ -39,8 +50,8 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: echo "LFORTRAN_LINKER=clang" >> $GITHUB_ENV
 
-      - name: fpm build
+      - name: fpm build (debug)
         run: fpm build --compiler ${{ matrix.compiler }} --profile debug --verbose --flag "--cpp --std=f23"
 
-     # - name: fpm build (release)
-     #   run: fpm build --compiler ${{ matrix.compiler }} --profile release --verbose --flag "--cpp --std=f23"
+      - name: fpm test (debug)
+        run: fpm test --compiler ${{ matrix.compiler }} --profile debug --verbose --flag "--cpp --std=f23"

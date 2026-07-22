@@ -2,16 +2,17 @@
 # for setting this up. MIT Licensed.
 name: Setup Fortran multi OS multi compiler Conda CI/CD
 
-#on:
-#  push:
-#    branches: [feat/big-ci]
-#  pull_request:
-#    branches: [main]
-on: [push]
+on:
+  push:
+    branches: [main]
+  pull_request:
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
 
@@ -44,7 +45,7 @@ jobs:
 
     steps:
       - name: Setup Fortran
-        uses: gha3mi/setup-fortran-conda@latest
+        uses: gha3mi/setup-fortran-conda@v0.17.1
         with:
           compiler: ${{ matrix.compiler }}
           platform: ${{ matrix.os }}
@@ -80,7 +81,7 @@ jobs:
 
     steps:
       - name: Setup Fortran
-        uses: gha3mi/setup-fortran-conda@latest
+        uses: gha3mi/setup-fortran-conda@v0.17.1
         with:
           compiler: ${{ matrix.compiler }}
           platform: ${{ matrix.os }}
@@ -88,6 +89,6 @@ jobs:
 
       - name: cmake test (release)
         run: |
-          cmake -S . -B build/release -DWITH_XDP=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -G Ninja
+          cmake -S . -B build/release -DTESTDRIVE_WITH_XDP=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -G Ninja
           cmake --build build/release
           ctest --test-dir build/release --output-on-failure
