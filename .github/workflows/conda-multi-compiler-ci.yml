@@ -23,6 +23,7 @@ jobs:
   # MPI/BLAS in this workflow), so the only combos we skip are the ones that
   # simply do not exist upstream:
   #   - ifx has no macOS build
+  #   - LLVM flang-new has no conda-forge package on macOS
   #   - LLVM flang-new is not ready on Windows
   test_fpm:
     name: ${{ matrix.os }}_${{ matrix.compiler }}_fpm
@@ -35,6 +36,8 @@ jobs:
         exclude:
           - os: macos-latest
             compiler: ifx
+          - os: macos-latest
+            compiler: flang-new
           - os: windows-latest
             compiler: flang-new
 
@@ -63,6 +66,8 @@ jobs:
         exclude:
           - os: macos-latest
             compiler: ifx
+          - os: macos-latest
+            compiler: flang-new
           - os: windows-latest
             compiler: flang-new
 
