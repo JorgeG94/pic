@@ -7,6 +7,12 @@ name: linux-multi-compiler-ci-blas-openmp
 on:
   push:
   pull_request:
+  # Weekly run to catch compiler/toolchain/dependency drift even with no code
+  # changes. 12:00 UTC Wednesday = 22:00 Sydney (AEST); drifts to 23:00 during
+  # AEDT since GitHub cron cannot follow daylight saving. Scheduled runs fire
+  # only on the default branch.
+  schedule:
+    - cron: '0 12 * * 3'
 
 permissions:
   contents: read
