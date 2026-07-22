@@ -6,12 +6,24 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Weekly run to catch LFortran/toolchain updates even with no code changes.
+  # 12:00 UTC Wednesday = 22:00 Sydney (AEST); drifts to 23:00 during AEDT since
+  # GitHub cron cannot follow daylight saving. Scheduled runs fire only on the
+  # default branch.
+  schedule:
+    - cron: '0 12 * * 3'
 
 # LFortran is an alpha compiler and not a production target, so both jobs are
 # allowed to go red without blocking merges (continue-on-error). They still run
-# the full test suite -- via both fpm and cmake, in release -- so we can see
-# regressions. Release is used for cmake because a -g (debug) build needs
-# llvm-dwarfdump to link the test executable, which is not always present.
+# the full test suite so we can see regressions.
+#
+# Coverage split by build system:
+#   - fpm  runs in DEBUG. fpm's `--profile release` currently leaks its internal
+#     `flag_lfortran_opt` flag name unexpanded to lfortran (fpm bug), so release
+#     via fpm is not usable here.
+#   - cmake runs in RELEASE (-O3), which gives us the optimized-build coverage.
+#     Release also avoids the -g debug-info step that needs llvm-dwarfdump to
+#     link the test executable, which is not always present on the runner.
 
 permissions:
   contents: read
@@ -29,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         compiler: [lfortran]
 
     steps:
@@ -46,11 +58,11 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: echo "LFORTRAN_LINKER=clang" >> $GITHUB_ENV
 
-      - name: fpm build (release)
-        run: fpm build --compiler ${{ matrix.compiler }} --profile release --verbose --flag "--cpp --std=f23"
+      - name: fpm build (debug)
+        run: fpm build --compiler ${{ matrix.compiler }} --profile debug --verbose --flag "--cpp --std=f23"
 
-      - name: fpm test (release)
-        run: fpm test --compiler ${{ matrix.compiler }} --profile release --verbose --flag "--cpp --std=f23"
+      - name: fpm test (debug)
+        run: fpm test --compiler ${{ matrix.compiler }} --profile debug --verbose --flag "--cpp --std=f23"
 
   test_cmake:
     name: ${{ matrix.os }}_${{ matrix.compiler }}_cmake
@@ -59,7 +71,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macos-latest]
         compiler: [lfortran]
 
     steps:
