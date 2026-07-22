@@ -1,6 +1,25 @@
 name: linux-multi-compiler-ci-blas-openmp
 
-on: [pull_request, push]
+# Run on every branch push for fast developer feedback, and on PRs. The
+# concurrency group is keyed by branch name (head_ref on PRs, ref_name on
+# pushes) so a push to a branch that already has an open PR collapses into a
+# single run instead of building twice.
+on:
+  push:
+  pull_request:
+  # Weekly run to catch compiler/toolchain/dependency drift even with no code
+  # changes. 12:00 UTC Wednesday = 22:00 Sydney (AEST); drifts to 23:00 during
+  # AEDT since GitHub cron cannot follow daylight saving. Scheduled runs fire
+  # only on the default branch.
+  schedule:
+    - cron: '0 12 * * 3'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   Build:
@@ -15,9 +34,12 @@ jobs:
           - {compiler: gcc, version: 12}
           - {compiler: gcc, version: 13}
           - {compiler: gcc, version: 14}
+          - {compiler: gcc, version: 15}
+          - {compiler: intel-classic, version: '2021.10'}
           - {compiler: intel, version: '2024.1'}
           - {compiler: intel, version: '2025.0'}
-          - {compiler: nvidia-hpc, version: '25.1'}
+          - {compiler: nvidia-hpc, version: 'latest'}
+          - {compiler: aocc, version: '5.1.0'}
         build: [cmake]
     env:
       BUILD_DIR: ${{ matrix.build == 'cmake' && 'build' || '.' }}
@@ -36,7 +58,7 @@ jobs:
 
 
     - name: Setup Fortran compiler
-      uses: fortran-lang/setup-fortran@v1.6.2
+      uses: fortran-lang/setup-fortran@v1.9.0
       id: setup-fortran
       with:
         compiler: ${{ matrix.toolchain.compiler }}

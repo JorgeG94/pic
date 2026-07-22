@@ -1,6 +1,16 @@
 name: Build PIC using local conda env
 
-on: [push]
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test_conda:

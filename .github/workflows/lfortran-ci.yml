@@ -2,35 +2,54 @@
 # for setting this up. MIT Licensed.
 name: LFORTRAN CI
 
-on: [pull_request, push]
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Weekly run to catch LFortran/toolchain updates even with no code changes.
+  # 12:00 UTC Wednesday = 22:00 Sydney (AEST); drifts to 23:00 during AEDT since
+  # GitHub cron cannot follow daylight saving. Scheduled runs fire only on the
+  # default branch.
+  schedule:
+    - cron: '0 12 * * 3'
+
+# LFortran is an alpha compiler and not a production target, so both jobs are
+# allowed to go red without blocking merges (continue-on-error). They still run
+# the full test suite so we can see regressions.
+#
+# Coverage split by build system:
+#   - fpm  runs in DEBUG. fpm's `--profile release` currently leaks its internal
+#     `flag_lfortran_opt` flag name unexpanded to lfortran (fpm bug), so release
+#     via fpm is not usable here.
+#   - cmake runs in RELEASE (-O3), which gives us the optimized-build coverage.
+#     Release also avoids the -g debug-info step that needs llvm-dwarfdump to
+#     link the test executable, which is not always present on the runner.
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
 
   test_fpm:
     name: ${{ matrix.os }}_${{ matrix.compiler }}_fpm
     runs-on: ${{ matrix.os }}
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         compiler: [lfortran]
-        include:
-          - os: ubuntu-latest
-            extra-packages: ""
-          - os: windows-latest
-            extra-packages: ""
 
     steps:
       - name: Setup Fortran
-        uses: gha3mi/setup-fortran-conda@latest
+        uses: gha3mi/setup-fortran-conda@v0.17.1
         with:
           compiler: ${{ matrix.compiler }}
           platform: ${{ matrix.os }}
-          extra-packages: ${{ matrix.extra-packages }}
 
       - name: fpm versioning
         run: fpm --version
@@ -39,8 +58,33 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: echo "LFORTRAN_LINKER=clang" >> $GITHUB_ENV
 
-      - name: fpm build
+      - name: fpm build (debug)
         run: fpm build --compiler ${{ matrix.compiler }} --profile debug --verbose --flag "--cpp --std=f23"
 
-     # - name: fpm build (release)
-     #   run: fpm build --compiler ${{ matrix.compiler }} --profile release --verbose --flag "--cpp --std=f23"
+      - name: fpm test (debug)
+        run: fpm test --compiler ${{ matrix.compiler }} --profile debug --verbose --flag "--cpp --std=f23"
+
+  test_cmake:
+    name: ${{ matrix.os }}_${{ matrix.compiler }}_cmake
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        compiler: [lfortran]
+
+    steps:
+      - name: Setup Fortran
+        uses: gha3mi/setup-fortran-conda@v0.17.1
+        with:
+          compiler: ${{ matrix.compiler }}
+          platform: ${{ matrix.os }}
+          extra-packages: "cmake, ninja"
+
+      # Release avoids the -g debug info step that requires llvm-dwarfdump.
+      - name: cmake test (release)
+        run: |
+          cmake -S . -B build/release -DTESTDRIVE_WITH_XDP=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -G Ninja
+          cmake --build build/release
+          ctest --test-dir build/release --output-on-failure

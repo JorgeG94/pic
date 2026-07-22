@@ -153,8 +153,16 @@ contains
             call heap_sort(array)
          else
             call partition(array, index)
-            call introsort(array(0:index - 1), depth_limit - 1)
-            call introsort(array(index + 1:), depth_limit - 1)
+! Skip empty partitions. Besides avoiding useless recursion, this works
+! around an LFortran bug where evaluating `len(array)` for an empty
+! assumed-length character array passed through a recursive call chain
+! erroneously accesses element 0 (out-of-bounds).
+            if (index > 0_int_index) then
+               call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+               call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -317,8 +325,16 @@ contains
             call heap_sort(array)
          else
             call partition(array, index)
-            call introsort(array(0:index - 1), depth_limit - 1)
-            call introsort(array(index + 1:), depth_limit - 1)
+! Skip empty partitions. Besides avoiding useless recursion, this works
+! around an LFortran bug where evaluating `len(array)` for an empty
+! assumed-length character array passed through a recursive call chain
+! erroneously accesses element 0 (out-of-bounds).
+            if (index > 0_int_index) then
+               call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+               call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -481,8 +497,16 @@ contains
             call heap_sort(array)
          else
             call partition(array, index)
-            call introsort(array(0:index - 1), depth_limit - 1)
-            call introsort(array(index + 1:), depth_limit - 1)
+! Skip empty partitions. Besides avoiding useless recursion, this works
+! around an LFortran bug where evaluating `len(array)` for an empty
+! assumed-length character array passed through a recursive call chain
+! erroneously accesses element 0 (out-of-bounds).
+            if (index > 0_int_index) then
+               call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+               call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -645,8 +669,16 @@ contains
             call heap_sort(array)
          else
             call partition(array, index)
-            call introsort(array(0:index - 1), depth_limit - 1)
-            call introsort(array(index + 1:), depth_limit - 1)
+! Skip empty partitions. Besides avoiding useless recursion, this works
+! around an LFortran bug where evaluating `len(array)` for an empty
+! assumed-length character array passed through a recursive call chain
+! erroneously accesses element 0 (out-of-bounds).
+            if (index > 0_int_index) then
+               call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+               call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -809,8 +841,16 @@ contains
             call heap_sort(array)
          else
             call partition(array, index)
-            call introsort(array(0:index - 1), depth_limit - 1)
-            call introsort(array(index + 1:), depth_limit - 1)
+! Skip empty partitions. Besides avoiding useless recursion, this works
+! around an LFortran bug where evaluating `len(array)` for an empty
+! assumed-length character array passed through a recursive call chain
+! erroneously accesses element 0 (out-of-bounds).
+            if (index > 0_int_index) then
+               call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+               call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -973,8 +1013,16 @@ contains
             call heap_sort(array)
          else
             call partition(array, index)
-            call introsort(array(0:index - 1), depth_limit - 1)
-            call introsort(array(index + 1:), depth_limit - 1)
+! Skip empty partitions. Besides avoiding useless recursion, this works
+! around an LFortran bug where evaluating `len(array)` for an empty
+! assumed-length character array passed through a recursive call chain
+! erroneously accesses element 0 (out-of-bounds).
+            if (index > 0_int_index) then
+               call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+               call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -1137,8 +1185,16 @@ contains
             call heap_sort(array)
          else
             call partition(array, index)
-            call introsort(array(0:index - 1), depth_limit - 1)
-            call introsort(array(index + 1:), depth_limit - 1)
+! Skip empty partitions. Besides avoiding useless recursion, this works
+! around an LFortran bug where evaluating `len(array)` for an empty
+! assumed-length character array passed through a recursive call chain
+! erroneously accesses element 0 (out-of-bounds).
+            if (index > 0_int_index) then
+               call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+               call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -1301,8 +1357,16 @@ contains
             call heap_sort(array)
          else
             call partition(array, index)
-            call introsort(array(0:index - 1), depth_limit - 1)
-            call introsort(array(index + 1:), depth_limit - 1)
+! Skip empty partitions. Besides avoiding useless recursion, this works
+! around an LFortran bug where evaluating `len(array)` for an empty
+! assumed-length character array passed through a recursive call chain
+! erroneously accesses element 0 (out-of-bounds).
+            if (index > 0_int_index) then
+               call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+               call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -1465,8 +1529,16 @@ contains
             call heap_sort(array)
          else
             call partition(array, index)
-            call introsort(array(0:index - 1), depth_limit - 1)
-            call introsort(array(index + 1:), depth_limit - 1)
+! Skip empty partitions. Besides avoiding useless recursion, this works
+! around an LFortran bug where evaluating `len(array)` for an empty
+! assumed-length character array passed through a recursive call chain
+! erroneously accesses element 0 (out-of-bounds).
+            if (index > 0_int_index) then
+               call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+               call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -1629,8 +1701,16 @@ contains
             call heap_sort(array)
          else
             call partition(array, index)
-            call introsort(array(0:index - 1), depth_limit - 1)
-            call introsort(array(index + 1:), depth_limit - 1)
+! Skip empty partitions. Besides avoiding useless recursion, this works
+! around an LFortran bug where evaluating `len(array)` for an empty
+! assumed-length character array passed through a recursive call chain
+! erroneously accesses element 0 (out-of-bounds).
+            if (index > 0_int_index) then
+               call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+               call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort

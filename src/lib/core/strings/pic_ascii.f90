@@ -67,7 +67,12 @@ module pic_ascii
    character(len=*), public, parameter :: letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"  !! A .. Za .. z
    character(len=*), public, parameter :: uppercase = letters(1:26)  !! A .. Z
    character(len=*), public, parameter :: lowercase = letters(27:)  !! a .. z
-   character(len=*), public, parameter :: whitespace = " "//TAB//VT//CR//LF//FF  !! ASCII _whitespace
+   ! Built from inline achar(N) calls rather than concatenating the named
+   ! parameters above because classic flang (AOCC) miscompiles cross-parameter
+   ! character concatenation in parameter initializers, leaving whitespace with
+   ! the wrong content and breaking strip/chomp at runtime.
+   character(len=*), public, parameter :: whitespace = &
+                                          achar(32)//achar(9)//achar(11)//achar(13)//achar(10)//achar(12)  !! ASCII _whitespace
 
    !> Returns a new character sequence which is the lower case
    !> version of the input character sequence

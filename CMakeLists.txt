@@ -39,6 +39,15 @@ set(external_libraries_to_link)
 set(libraries_to_link)
 if(NOT TARGET test-drive::test-drive AND PIC_ENABLE_TESTING)
   enable_testing()
+  # Disable extended-precision real kinds in test-drive: AOCC flang (and some
+  # other minor compilers) lack an ieee_is_nan generic for real(qp)/real(xdp),
+  # which trips test-drive's is_nan_qp / is_nan_xdp at compile time.
+  set(TESTDRIVE_WITH_QP
+      OFF
+      CACHE BOOL "" FORCE)
+  set(TESTDRIVE_WITH_XDP
+      OFF
+      CACHE BOOL "" FORCE)
   find_package("test-drive" REQUIRED)
   list(APPEND external_libraries_to_link test-drive::test-drive)
 endif()

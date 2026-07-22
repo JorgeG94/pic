@@ -49,6 +49,7 @@
 
 submodule(pic_sorting) pic_sorting_ord_sort
 
+   use pic_sorting_run_type, only: run_type
    implicit none
 
    !! The generic subroutine implementing the `ORD_SORT` algorithm to return
@@ -105,13 +106,6 @@ submodule(pic_sorting) pic_sorting_ord_sort
       ! https://svn.python.org/projects/python/trunk/Objects/listsort.txt
       max_merge_stack = int(ceiling(log(2._dp**64)/ &
                                     log(1.6180339887_dp)))
-
-   type run_type
-!! Used to pass state around in a stack among helper functions for the
-!! `ORD_SORT` and `SORT_INDEX` algorithms
-      integer(int_index) :: base = 0
-      integer(int_index) :: len = 0
-   end type run_type
 
 contains
 
@@ -323,9 +317,15 @@ contains
          integer(int_index) :: i
 
          tmp = array(0)
-         find_hole: do i = 1, size(array, kind=int_index) - 1
+! Use an explicitly controlled index rather than the DO-variable value
+! after loop completion. The latter is not portable: LFortran leaves the
+! index at its last iterated value instead of the standard "final + step",
+! which would misplace `tmp` when it belongs at the end of the run.
+         i = 1
+         find_hole: do while (i < size(array, kind=int_index))
             if (array(i) >= tmp) exit find_hole
             array(i - 1) = array(i)
+            i = i + 1
          end do find_hole
          array(i - 1) = tmp
 
@@ -659,9 +659,15 @@ contains
          integer(int_index) :: i
 
          tmp = array(0)
-         find_hole: do i = 1, size(array, kind=int_index) - 1
+! Use an explicitly controlled index rather than the DO-variable value
+! after loop completion. The latter is not portable: LFortran leaves the
+! index at its last iterated value instead of the standard "final + step",
+! which would misplace `tmp` when it belongs at the end of the run.
+         i = 1
+         find_hole: do while (i < size(array, kind=int_index))
             if (array(i) >= tmp) exit find_hole
             array(i - 1) = array(i)
+            i = i + 1
          end do find_hole
          array(i - 1) = tmp
 
@@ -995,9 +1001,15 @@ contains
          integer(int_index) :: i
 
          tmp = array(0)
-         find_hole: do i = 1, size(array, kind=int_index) - 1
+! Use an explicitly controlled index rather than the DO-variable value
+! after loop completion. The latter is not portable: LFortran leaves the
+! index at its last iterated value instead of the standard "final + step",
+! which would misplace `tmp` when it belongs at the end of the run.
+         i = 1
+         find_hole: do while (i < size(array, kind=int_index))
             if (array(i) >= tmp) exit find_hole
             array(i - 1) = array(i)
+            i = i + 1
          end do find_hole
          array(i - 1) = tmp
 
@@ -1331,9 +1343,15 @@ contains
          integer(int_index) :: i
 
          tmp = array(0)
-         find_hole: do i = 1, size(array, kind=int_index) - 1
+! Use an explicitly controlled index rather than the DO-variable value
+! after loop completion. The latter is not portable: LFortran leaves the
+! index at its last iterated value instead of the standard "final + step",
+! which would misplace `tmp` when it belongs at the end of the run.
+         i = 1
+         find_hole: do while (i < size(array, kind=int_index))
             if (array(i) >= tmp) exit find_hole
             array(i - 1) = array(i)
+            i = i + 1
          end do find_hole
          array(i - 1) = tmp
 
@@ -1670,9 +1688,15 @@ contains
          integer(int_index) :: i
 
          tmp = array(0)
-         find_hole: do i = 1, size(array, kind=int_index) - 1
+! Use an explicitly controlled index rather than the DO-variable value
+! after loop completion. The latter is not portable: LFortran leaves the
+! index at its last iterated value instead of the standard "final + step",
+! which would misplace `tmp` when it belongs at the end of the run.
+         i = 1
+         find_hole: do while (i < size(array, kind=int_index))
             if (array(i) >= tmp) exit find_hole
             array(i - 1) = array(i)
+            i = i + 1
          end do find_hole
          array(i - 1) = tmp
 
@@ -2006,9 +2030,15 @@ contains
          integer(int_index) :: i
 
          tmp = array(0)
-         find_hole: do i = 1, size(array, kind=int_index) - 1
+! Use an explicitly controlled index rather than the DO-variable value
+! after loop completion. The latter is not portable: LFortran leaves the
+! index at its last iterated value instead of the standard "final + step",
+! which would misplace `tmp` when it belongs at the end of the run.
+         i = 1
+         find_hole: do while (i < size(array, kind=int_index))
             if (array(i) <= tmp) exit find_hole
             array(i - 1) = array(i)
+            i = i + 1
          end do find_hole
          array(i - 1) = tmp
 
@@ -2342,9 +2372,15 @@ contains
          integer(int_index) :: i
 
          tmp = array(0)
-         find_hole: do i = 1, size(array, kind=int_index) - 1
+! Use an explicitly controlled index rather than the DO-variable value
+! after loop completion. The latter is not portable: LFortran leaves the
+! index at its last iterated value instead of the standard "final + step",
+! which would misplace `tmp` when it belongs at the end of the run.
+         i = 1
+         find_hole: do while (i < size(array, kind=int_index))
             if (array(i) <= tmp) exit find_hole
             array(i - 1) = array(i)
+            i = i + 1
          end do find_hole
          array(i - 1) = tmp
 
@@ -2678,9 +2714,15 @@ contains
          integer(int_index) :: i
 
          tmp = array(0)
-         find_hole: do i = 1, size(array, kind=int_index) - 1
+! Use an explicitly controlled index rather than the DO-variable value
+! after loop completion. The latter is not portable: LFortran leaves the
+! index at its last iterated value instead of the standard "final + step",
+! which would misplace `tmp` when it belongs at the end of the run.
+         i = 1
+         find_hole: do while (i < size(array, kind=int_index))
             if (array(i) <= tmp) exit find_hole
             array(i - 1) = array(i)
+            i = i + 1
          end do find_hole
          array(i - 1) = tmp
 
@@ -3014,9 +3056,15 @@ contains
          integer(int_index) :: i
 
          tmp = array(0)
-         find_hole: do i = 1, size(array, kind=int_index) - 1
+! Use an explicitly controlled index rather than the DO-variable value
+! after loop completion. The latter is not portable: LFortran leaves the
+! index at its last iterated value instead of the standard "final + step",
+! which would misplace `tmp` when it belongs at the end of the run.
+         i = 1
+         find_hole: do while (i < size(array, kind=int_index))
             if (array(i) <= tmp) exit find_hole
             array(i - 1) = array(i)
+            i = i + 1
          end do find_hole
          array(i - 1) = tmp
 
@@ -3353,9 +3401,15 @@ contains
          integer(int_index) :: i
 
          tmp = array(0)
-         find_hole: do i = 1, size(array, kind=int_index) - 1
+! Use an explicitly controlled index rather than the DO-variable value
+! after loop completion. The latter is not portable: LFortran leaves the
+! index at its last iterated value instead of the standard "final + step",
+! which would misplace `tmp` when it belongs at the end of the run.
+         i = 1
+         find_hole: do while (i < size(array, kind=int_index))
             if (array(i) <= tmp) exit find_hole
             array(i - 1) = array(i)
+            i = i + 1
          end do find_hole
          array(i - 1) = tmp
 
