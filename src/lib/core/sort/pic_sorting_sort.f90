@@ -157,10 +157,12 @@ contains
 ! around an LFortran bug where evaluating `len(array)` for an empty
 ! assumed-length character array passed through a recursive call chain
 ! erroneously accesses element 0 (out-of-bounds).
-            if (index > 0_int_index) &
-               call introsort(array(0:index - 1), depth_limit - 1)
-            if (index + 1_int_index < size(array, kind=int_index)) &
-               call introsort(array(index + 1:), depth_limit - 1)
+            if (index > 0_int_index) then
+              call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+              call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -327,10 +329,12 @@ contains
 ! around an LFortran bug where evaluating `len(array)` for an empty
 ! assumed-length character array passed through a recursive call chain
 ! erroneously accesses element 0 (out-of-bounds).
-            if (index > 0_int_index) &
-               call introsort(array(0:index - 1), depth_limit - 1)
-            if (index + 1_int_index < size(array, kind=int_index)) &
-               call introsort(array(index + 1:), depth_limit - 1)
+            if (index > 0_int_index) then
+              call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+              call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -497,10 +501,12 @@ contains
 ! around an LFortran bug where evaluating `len(array)` for an empty
 ! assumed-length character array passed through a recursive call chain
 ! erroneously accesses element 0 (out-of-bounds).
-            if (index > 0_int_index) &
-               call introsort(array(0:index - 1), depth_limit - 1)
-            if (index + 1_int_index < size(array, kind=int_index)) &
-               call introsort(array(index + 1:), depth_limit - 1)
+            if (index > 0_int_index) then
+              call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+              call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -667,10 +673,12 @@ contains
 ! around an LFortran bug where evaluating `len(array)` for an empty
 ! assumed-length character array passed through a recursive call chain
 ! erroneously accesses element 0 (out-of-bounds).
-            if (index > 0_int_index) &
-               call introsort(array(0:index - 1), depth_limit - 1)
-            if (index + 1_int_index < size(array, kind=int_index)) &
-               call introsort(array(index + 1:), depth_limit - 1)
+            if (index > 0_int_index) then
+              call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+              call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -837,10 +845,12 @@ contains
 ! around an LFortran bug where evaluating `len(array)` for an empty
 ! assumed-length character array passed through a recursive call chain
 ! erroneously accesses element 0 (out-of-bounds).
-            if (index > 0_int_index) &
-               call introsort(array(0:index - 1), depth_limit - 1)
-            if (index + 1_int_index < size(array, kind=int_index)) &
-               call introsort(array(index + 1:), depth_limit - 1)
+            if (index > 0_int_index) then
+              call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+              call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -1007,10 +1017,12 @@ contains
 ! around an LFortran bug where evaluating `len(array)` for an empty
 ! assumed-length character array passed through a recursive call chain
 ! erroneously accesses element 0 (out-of-bounds).
-            if (index > 0_int_index) &
-               call introsort(array(0:index - 1), depth_limit - 1)
-            if (index + 1_int_index < size(array, kind=int_index)) &
-               call introsort(array(index + 1:), depth_limit - 1)
+            if (index > 0_int_index) then
+              call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+              call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -1177,10 +1189,12 @@ contains
 ! around an LFortran bug where evaluating `len(array)` for an empty
 ! assumed-length character array passed through a recursive call chain
 ! erroneously accesses element 0 (out-of-bounds).
-            if (index > 0_int_index) &
-               call introsort(array(0:index - 1), depth_limit - 1)
-            if (index + 1_int_index < size(array, kind=int_index)) &
-               call introsort(array(index + 1:), depth_limit - 1)
+            if (index > 0_int_index) then
+              call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+              call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -1347,10 +1361,12 @@ contains
 ! around an LFortran bug where evaluating `len(array)` for an empty
 ! assumed-length character array passed through a recursive call chain
 ! erroneously accesses element 0 (out-of-bounds).
-            if (index > 0_int_index) &
-               call introsort(array(0:index - 1), depth_limit - 1)
-            if (index + 1_int_index < size(array, kind=int_index)) &
-               call introsort(array(index + 1:), depth_limit - 1)
+            if (index > 0_int_index) then
+              call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+              call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -1517,10 +1533,12 @@ contains
 ! around an LFortran bug where evaluating `len(array)` for an empty
 ! assumed-length character array passed through a recursive call chain
 ! erroneously accesses element 0 (out-of-bounds).
-            if (index > 0_int_index) &
-               call introsort(array(0:index - 1), depth_limit - 1)
-            if (index + 1_int_index < size(array, kind=int_index)) &
-               call introsort(array(index + 1:), depth_limit - 1)
+            if (index > 0_int_index) then
+              call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+              call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
@@ -1687,10 +1705,12 @@ contains
 ! around an LFortran bug where evaluating `len(array)` for an empty
 ! assumed-length character array passed through a recursive call chain
 ! erroneously accesses element 0 (out-of-bounds).
-            if (index > 0_int_index) &
-               call introsort(array(0:index - 1), depth_limit - 1)
-            if (index + 1_int_index < size(array, kind=int_index)) &
-               call introsort(array(index + 1:), depth_limit - 1)
+            if (index > 0_int_index) then
+              call introsort(array(0:index - 1), depth_limit - 1)
+            end if
+            if (index + 1_int_index < size(array, kind=int_index)) then
+              call introsort(array(index + 1:), depth_limit - 1)
+            end if
          end if
 
       end subroutine introsort
