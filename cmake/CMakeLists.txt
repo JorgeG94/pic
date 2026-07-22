@@ -32,7 +32,7 @@ elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "LLVMFlang")
   set(standard_compile_flags "")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "LFortran")
-  set(standard_compile_flags "")
+  set(standard_compile_flags "--std=f23 --use-loop-variable-after-loop")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "Cray")
   if(NOT CMAKE_GENERATOR MATCHES "Ninja")
     message(
