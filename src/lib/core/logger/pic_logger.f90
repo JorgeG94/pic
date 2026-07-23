@@ -279,7 +279,7 @@ contains
          else if (present(module)) then
             write (unit, '(A, ": ", A)') trim(module), trim(message)
          else
-            write (unit, '(A)') trim(message)
+            write (unit, "(A)") trim(message)
          end if
       else
          if (present(module) .and. present(procedure)) then
