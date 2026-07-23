@@ -21,7 +21,8 @@ contains
                   new_unittest("test_logger_file_levels", test_logger_file_levels), &
                   new_unittest("test_logger_close_file", test_logger_close_file), &
                   new_unittest("test_logger_convenience_methods", test_logger_convenience_methods), &
-                  new_unittest("test_logger_file_content", test_logger_file_content) &
+                  new_unittest("test_logger_file_content", test_logger_file_content), &
+                  new_unittest("test_logger_explicit_printing", test_logger_explicit_printing) &
                   ]
    end subroutine collect_pic_logger_tests
 
@@ -257,14 +258,14 @@ contains
          if (index(line, "Test content message") > 0 .and. &
              index(line, "test_module") > 0 .and. &
              index(line, "test_procedure") > 0 .and. &
-             index(line, "INFO") > 0) then
+             index(line, "INFO") == 0) then
             found_message = .true.
             exit read
          end if
       end do read
       close (unit_num)
 
-      call check(error, found_message, "Should find expected message format in log file")
+      call check(error, found_message, "Should find expected message format in log file without level prefix")
       if (allocated(error)) return
 
       ! Clean up
@@ -274,5 +275,49 @@ contains
       end if
 
    end subroutine test_logger_file_content
+
+   subroutine test_logger_explicit_printing(error)
+      !! Test explicit level-prefix printing toggle
+      type(error_type), allocatable, intent(out) :: error
+      type(logger_type) :: logger
+      character(len=*), parameter :: test_filename = "test_logger_explicit.log"
+      character(len=200) :: line
+      logical :: file_exists, found_explicit, found_plain
+      integer(default_int) :: ios, unit_num
+
+      call logger%configure_file_output(test_filename, info_level)
+
+      call logger%set_explicit_printing(.false.)
+      call logger%info("Plain message", "test_module", "test_procedure")
+
+      call logger%set_explicit_printing(.true.)
+      call logger%info("Explicit message", "test_module", "test_procedure")
+      call logger%close_log_file()
+
+      inquire (file=test_filename, exist=file_exists)
+      call check(error, file_exists, "Log file should exist")
+      if (allocated(error)) return
+
+      found_plain = .false.
+      found_explicit = .false.
+      open (newunit=unit_num, file=test_filename, status="old", action="read")
+      read: do
+         read (unit_num, "(A)", iostat=ios) line
+         if (ios /= 0) exit read
+         if (index(line, "Plain message") > 0 .and. index(line, "INFO") == 0) found_plain = .true.
+         if (index(line, "Explicit message") > 0 .and. index(line, "INFO") > 0) found_explicit = .true.
+      end do read
+      close (unit_num)
+
+      call check(error, found_plain, "Plain message should not include level prefix by default")
+      if (allocated(error)) return
+      call check(error, found_explicit, "Explicit message should include level prefix when enabled")
+      if (allocated(error)) return
+
+      if (file_exists) then
+         open (unit=logfile_unit, file=test_filename, status="old", action="read")
+         close (logfile_unit, status="delete")
+      end if
+   end subroutine test_logger_explicit_printing
 
 end module test_pic_logger
