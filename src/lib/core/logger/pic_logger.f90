@@ -36,6 +36,8 @@ module pic_logger
         !! set default log file log level to verbose
       integer(default_int), private :: log_file_unit = -1
       logical, private :: log_file_open = .false.
+      logical, private :: hide_log_level_prefix = .true.
+        !! When true, omit level prefixes in rendered log lines.
 
    contains
 
@@ -45,6 +47,9 @@ module pic_logger
       procedure, public, pass(self), non_overridable :: configure
       !! Configure the logger to be a certain verbosity level.
       !! Usage: call my_logger%configure(level)
+      procedure, public, pass(self), non_overridable :: set_explicit_printing
+      !! Configure whether to print explicit level prefixes in log lines.
+      !! Usage: call my_logger%set_explicit_printing(.true.)
       procedure, public, pass(self), non_overridable :: configure_file_output
       !! Configure the logger to file to be a certain verbosity level.
       !! Usage: call my_logger%configure_file_output(filename, level)
@@ -118,6 +123,15 @@ contains
       integer(default_int), intent(in), optional :: level
       if (present(level)) self%log_level = level
    end subroutine configure
+
+   pure subroutine set_explicit_printing(self, explicit_printing)
+      !! Configure whether logs should include explicit level prefixes.
+      !!
+      !! Usage: call my_logger%set_explicit_printing(.true.)
+      class(logger_type), intent(inout) :: self
+      logical, intent(in) :: explicit_printing
+      self%hide_log_level_prefix = .not. explicit_printing
+   end subroutine set_explicit_printing
 
    subroutine configure_file_output(self, filename, level)
       !! Configure the logger to file to be a certain verbosity level
@@ -251,19 +265,30 @@ contains
       call self%log("LORE", message, module, procedure)
    end subroutine knowledge
 
-   subroutine write_log_line(unit, level, message, module, procedure)
+   subroutine write_log_line(unit, level, message, module, procedure, hide_log_level_prefix)
       !! Internal subroutine that will write the message to the log
       !! no interface to the public
       integer(default_int), intent(in) :: unit
       character(*), intent(in) :: level, message
       character(*), intent(in), optional :: module, procedure
+      logical, intent(in) :: hide_log_level_prefix
 
-      if (present(module) .and. present(procedure)) then
-         write (unit, '(A, ": ", A, ".", A, ": ", A)') trim(level), trim(module), trim(procedure), trim(message)
-      else if (present(module)) then
-         write (unit, '(A, ": ", A, ": ", A)') trim(level), trim(module), trim(message)
+      if (hide_log_level_prefix) then
+         if (present(module) .and. present(procedure)) then
+            write (unit, '(A, ".", A, ": ", A)') trim(module), trim(procedure), trim(message)
+         else if (present(module)) then
+            write (unit, '(A, ": ", A)') trim(module), trim(message)
+         else
+            write (unit, "(A)") trim(message)
+         end if
       else
-         write (unit, '(A, ": ", A)') trim(level), trim(message)
+         if (present(module) .and. present(procedure)) then
+            write (unit, '(A, ": ", A, ".", A, ": ", A)') trim(level), trim(module), trim(procedure), trim(message)
+         else if (present(module)) then
+            write (unit, '(A, ": ", A, ": ", A)') trim(level), trim(module), trim(message)
+         else
+            write (unit, '(A, ": ", A)') trim(level), trim(message)
+         end if
       end if
    end subroutine write_log_line
 
@@ -300,12 +325,12 @@ contains
 
       ! Console logging
       if (self%log_level >= log_level_value) then
-         call write_log_line(stdout, level, message, module, procedure)
+         call write_log_line(stdout, level, message, module, procedure, self%hide_log_level_prefix)
       end if
 
       ! File logging
       if (self%log_file_open .and. self%log_file_level >= log_level_value) then
-         call write_log_line(self%log_file_unit, level, message, module, procedure)
+         call write_log_line(self%log_file_unit, level, message, module, procedure, self%hide_log_level_prefix)
       end if
 
    end subroutine log
