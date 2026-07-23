@@ -17,7 +17,6 @@ contains
     !! my cool banner, work in progress
 
       print *, "========================================"
-      print *, "                                        "
       print *, "         _____  _____  _____ "
       print *, "        |  __ \\|_   _|/ ____|"
       print *, "        | |__) | | | | |     "
