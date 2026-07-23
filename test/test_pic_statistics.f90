@@ -66,10 +66,12 @@ contains
    subroutine test_mean_empty(error)
       !! Mean of an empty array is defined here as 0, for every input type.
       type(error_type), allocatable, intent(out) :: error
-      real(dp) :: vdp(0)
-      real(sp) :: vsp(0)
-      integer(int32) :: vi32(0)
-      integer(int64) :: vi64(0)
+      real(dp), allocatable :: vdp(:)
+      real(sp), allocatable :: vsp(:)
+      integer(int32), allocatable :: vi32(:)
+      integer(int64), allocatable :: vi64(:)
+
+      allocate (vdp(0), vsp(0), vi32(0), vi64(0))
       call check(error, mean(vdp), 0.0_dp, "empty dp is zero", thr=1.0e-12_dp)
       if (allocated(error)) return
       call check(error, mean(vsp), 0.0_dp, "empty sp is zero", thr=1.0e-12_dp)
