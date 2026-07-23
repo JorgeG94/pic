@@ -282,36 +282,74 @@ contains
       type(logger_type) :: logger
       character(len=*), parameter :: test_filename = "test_logger_explicit.log"
       character(len=200) :: line
-      logical :: file_exists, found_explicit, found_plain
+      logical :: file_exists
+      logical :: found_plain_message
+      logical :: found_plain_module_message
+      logical :: found_plain_module_procedure_message
+      logical :: found_explicit_message
+      logical :: found_explicit_module_message
+      logical :: found_explicit_module_procedure_message
       integer(default_int) :: ios, unit_num
 
       call logger%configure_file_output(test_filename, info_level)
 
-      call logger%set_explicit_printing(.false.)
-      call logger%info("Plain message", "test_module", "test_procedure")
+      ! Default behavior should hide level prefixes
+      call logger%info("Plain message")
+      call logger%info("Plain module message", "test_module")
+      call logger%info("Plain module.procedure message", "test_module", "test_procedure")
 
+      ! Explicit mode should include level prefixes
       call logger%set_explicit_printing(.true.)
-      call logger%info("Explicit message", "test_module", "test_procedure")
+      call logger%info("Explicit message")
+      call logger%info("Explicit module message", "test_module")
+      call logger%info("Explicit module.procedure message", "test_module", "test_procedure")
       call logger%close_log_file()
 
       inquire (file=test_filename, exist=file_exists)
       call check(error, file_exists, "Log file should exist")
       if (allocated(error)) return
 
-      found_plain = .false.
-      found_explicit = .false.
+      found_plain_message = .false.
+      found_plain_module_message = .false.
+      found_plain_module_procedure_message = .false.
+      found_explicit_message = .false.
+      found_explicit_module_message = .false.
+      found_explicit_module_procedure_message = .false.
       open (newunit=unit_num, file=test_filename, status="old", action="read")
       read: do
          read (unit_num, "(A)", iostat=ios) line
          if (ios /= 0) exit read
-         if (index(line, "Plain message") > 0 .and. index(line, "INFO") == 0) found_plain = .true.
-         if (index(line, "Explicit message") > 0 .and. index(line, "INFO") > 0) found_explicit = .true.
+         select case (trim(line))
+         case ("Plain message")
+            found_plain_message = .true.
+         case ("test_module: Plain module message")
+            found_plain_module_message = .true.
+         case ("test_module.test_procedure: Plain module.procedure message")
+            found_plain_module_procedure_message = .true.
+         case ("INFO: Explicit message")
+            found_explicit_message = .true.
+         case ("INFO: test_module: Explicit module message")
+            found_explicit_module_message = .true.
+         case ("INFO: test_module.test_procedure: Explicit module.procedure message")
+            found_explicit_module_procedure_message = .true.
+         end select
       end do read
       close (unit_num)
 
-      call check(error, found_plain, "Plain message should not include level prefix by default")
+      call check(error, found_plain_message, "Default plain message format should be logged without level prefix")
       if (allocated(error)) return
-      call check(error, found_explicit, "Explicit message should include level prefix when enabled")
+      call check(error, found_plain_module_message, "Default plain module format should be logged without level prefix")
+      if (allocated(error)) return
+      call check(error, found_plain_module_procedure_message, &
+                 "Default plain module.procedure format should be logged without level prefix")
+      if (allocated(error)) return
+      call check(error, found_explicit_message, "Explicit message should include level prefix when enabled")
+      if (allocated(error)) return
+      call check(error, found_explicit_module_message, &
+                 "Explicit module format should include level prefix when enabled")
+      if (allocated(error)) return
+      call check(error, found_explicit_module_procedure_message, &
+                 "Explicit module.procedure format should include level prefix when enabled")
       if (allocated(error)) return
 
       if (file_exists) then
