@@ -10,7 +10,7 @@
     <meta name="author" content="Jorge Luis Galvez Vallejo" >
     <link rel="icon" href="../favicon.png">
 
-    <title>profiler_disable &ndash; PIC</title>
+    <title>set_explicit_printing &ndash; PIC</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -78,7 +78,7 @@
 
     <div class="container">
   <div class="row">
-    <h1>profiler_disable
+    <h1>set_explicit_printing
       <small>Subroutine</small>
       
     </h1>
@@ -89,21 +89,21 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.0% of total for procedures.">3 statements</a>
+                 title=" 0.1% of total for procedures.">5 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
-              <a href="../src/pic_profiler.F90"> Source File</a>
+              <a href="../src/pic_logger.f90"> Source File</a>
             </li>
         </ul>
       </div>
       <div class="col">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='../sourcefile/pic_profiler.f90.html'>pic_profiler.F90</a></li>
-                <li class="breadcrumb-item"><a href='../module/pic_profiler.html'>pic_profiler</a></li>
-            <li class="breadcrumb-item active" aria-current="page">profiler_disable</li>
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_logger.f90.html'>pic_logger.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_logger.html'>pic_logger</a></li>
+            <li class="breadcrumb-item active" aria-current="page">set_explicit_printing</li>
           </ol>
         </nav>
       </div>
@@ -146,7 +146,7 @@
     <div class="card card-primary">
       <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
-        <a class="list-group-item" href="../proc/profiler_disable.html#src">profiler_disable</a>
+        <a class="list-group-item" href="../proc/set_explicit_printing.html#src">set_explicit_printing</a>
       </div>
     </div>
 
@@ -156,18 +156,60 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public  subroutine profiler_disable()  
+    <h2>private pure subroutine set_explicit_printing(self, explicit_printing)  
 </h2>
     
 
-    <p>Disable profiling temporarily</p>
-<p>Regions started while disabled will not be tracked.
-Use profiler_enable() to re-enable.</p>
+    <p>Configure whether logs should include explicit level prefixes.</p>
+<p>Usage: call my_logger%set_explicit_printing(.true.)</p>
 
+    <h3>Type Bound</h3>
+    <p><a href='../type/logger_type.html'>logger_type</a></p>
 
     <h3>Arguments</h3>
-    <em>None</em>
-    <br>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~29"></span>
+              class(<a href='../type/logger_type.html'>logger_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-explicit_printing"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>explicit_printing</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
     <br>
 
 
@@ -182,16 +224,14 @@ Use profiler_enable() to re-enable.</p>
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">profiler_disable</span><span class="p">()</span>
-<span class="w">      </span><span class="c">!! Disable profiling temporarily</span>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">pure subroutine </span><span class="n">set_explicit_printing</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">explicit_printing</span><span class="p">)</span>
+<span class="w">      </span><span class="c">!! Configure whether logs should include explicit level prefixes.</span>
 <span class="w">      </span><span class="c">!!</span>
-<span class="w">      </span><span class="c">!! Regions started while disabled will not be tracked.</span>
-<span class="w">      </span><span class="c">!! Use profiler_enable() to re-enable.</span>
-<span class="cp">#ifdef PIC_DISABLE_PROFILER</span>
-<span class="w">      </span><span class="k">return</span>
-<span class="cp">#endif</span>
-<span class="w">      </span><span class="n">state</span><span class="p">%</span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
-<span class="w">   </span><span class="k">end subroutine </span><span class="n">profiler_disable</span>
+<span class="w">      </span><span class="c">!! Usage: call my_logger%set_explicit_printing(.true.)</span>
+<span class="w">      </span><span class="k">class</span><span class="p">(</span><span class="n">logger_type</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">self</span>
+<span class="w">      </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">explicit_printing</span>
+<span class="w">      </span><span class="n">self</span><span class="p">%</span><span class="n">hide_log_level_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">explicit_printing</span>
+<span class="w">   </span><span class="k">end subroutine </span><span class="n">set_explicit_printing</span>
 </pre></div>
 
     </section>

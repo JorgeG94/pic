@@ -89,7 +89,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title="<p>14.2% of total for derived types.</p>Including implementation: 127 statements, 28.5% of total for derived types.">20 statements</a>
+                 title="<p>15.4% of total for derived types.</p>Including implementation: 134 statements, 29.6% of total for derived types.">22 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -133,6 +133,7 @@
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../type/logger_type.html#variable-log_file_level">log_file_level</a>
             <a class="list-group-item" href="../type/logger_type.html#variable-log_level">log_level</a>
+            <a class="list-group-item" href="../type/logger_type.html#variable-hide_log_level_prefix">hide_log_level_prefix</a>
             <a class="list-group-item" href="../type/logger_type.html#variable-log_file_open">log_file_open</a>
             <a class="list-group-item" href="../type/logger_type.html#variable-log_file_unit">log_file_unit</a>
         </div>
@@ -168,8 +169,9 @@
             <a class="list-group-item" href="../type/logger_type.html#boundprocedure-debug">debug</a>
             <a class="list-group-item" href="../type/logger_type.html#boundprocedure-error">error</a>
             <a class="list-group-item" href="../type/logger_type.html#boundprocedure-info">info</a>
-            <a class="list-group-item" href="../type/logger_type.html#boundprocedure-knowledge">knowledge</a>
+            <a class="list-group-item" href="../type/logger_type.html#boundprocedure-knowledge~2">knowledge</a>
             <a class="list-group-item" href="../type/logger_type.html#boundprocedure-performance">performance</a>
+            <a class="list-group-item" href="../type/logger_type.html#boundprocedure-set_explicit_printing">set_explicit_printing</a>
             <a class="list-group-item" href="../type/logger_type.html#boundprocedure-verbose">verbose</a>
             <a class="list-group-item" href="../type/logger_type.html#boundprocedure-warning">warning</a>
             <a class="list-group-item" href="../type/logger_type.html#boundprocedure-log">log</a>
@@ -241,6 +243,23 @@
                 <td>info_level</td>
             <td>
                 <p>set default log level to info</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hide_log_level_prefix"></span>
+              logical,
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hide_log_level_prefix</strong></td>
+<td> =</td>
+                <td>.true.</td>
+            <td>
+                <p>When true, omit level prefixes in rendered log lines.</p>
             </td>
         </tr>
         <tr>
@@ -898,7 +917,7 @@ Usage: call my_logger%info(&ldquo;MESSAGE&rdquo;)</p>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-knowledge"></span>
+      <span class="anchor" id="boundprocedure-knowledge~2"></span>
       <h3>
           procedure, public, pass(self), non_overridable ::
   <strong>knowledge</strong>
@@ -1090,6 +1109,80 @@ Usage: call my_logger%performance(&ldquo;MESSAGE&rdquo;)</p>
             </td>
             <td>::</td>
             <td><strong>procedure</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-set_explicit_printing"></span>
+      <h3>
+          procedure, public, pass(self), non_overridable ::
+  <strong>set_explicit_printing</strong>
+        
+      </h3>
+    </div>
+        <div class="card-body">
+          
+          <p>Configure whether to print explicit level prefixes in log lines.
+Usage: call my_logger%set_explicit_printing(.true.)</p>
+        </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    private pure subroutine <a href='../proc/set_explicit_printing.html'>set_explicit_printing</a>(self, explicit_printing)  
+</h3>
+    
+
+  <p>Configure whether logs should include explicit level prefixes.</p><a href="../proc/set_explicit_printing.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='logger_type.html'>logger_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>explicit_printing</strong></td>
             <td>
 
             </td>
@@ -1446,6 +1539,8 @@ this is a private subroutine so it is not exposed to the user</p>
 <span class="w">        </span><span class="c">!! set default log file log level to verbose</span>
 <span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">),</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">log_file_unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
 <span class="w">      </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">log_file_open</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">      </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">hide_log_level_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">        </span><span class="c">!! When true, omit level prefixes in rendered log lines.</span>
 
 <span class="w">   </span><span class="k">contains</span>
 
@@ -1455,6 +1550,9 @@ this is a private subroutine so it is not exposed to the user</p>
 <span class="w">      </span><span class="k">procedure</span><span class="p">,</span><span class="w"> </span><span class="k">public</span><span class="p">,</span><span class="w"> </span><span class="k">pass</span><span class="p">(</span><span class="n">self</span><span class="p">),</span><span class="w"> </span><span class="k">non_overridable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">configure</span>
 <span class="w">      </span><span class="c">!! Configure the logger to be a certain verbosity level.</span>
 <span class="w">      </span><span class="c">!! Usage: call my_logger%configure(level)</span>
+<span class="w">      </span><span class="k">procedure</span><span class="p">,</span><span class="w"> </span><span class="k">public</span><span class="p">,</span><span class="w"> </span><span class="k">pass</span><span class="p">(</span><span class="n">self</span><span class="p">),</span><span class="w"> </span><span class="k">non_overridable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">set_explicit_printing</span>
+<span class="w">      </span><span class="c">!! Configure whether to print explicit level prefixes in log lines.</span>
+<span class="w">      </span><span class="c">!! Usage: call my_logger%set_explicit_printing(.true.)</span>
 <span class="w">      </span><span class="k">procedure</span><span class="p">,</span><span class="w"> </span><span class="k">public</span><span class="p">,</span><span class="w"> </span><span class="k">pass</span><span class="p">(</span><span class="n">self</span><span class="p">),</span><span class="w"> </span><span class="k">non_overridable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">configure_file_output</span>
 <span class="w">      </span><span class="c">!! Configure the logger to file to be a certain verbosity level.</span>
 <span class="w">      </span><span class="c">!! Usage: call my_logger%configure_file_output(filename, level)</span>
@@ -1508,7 +1606,7 @@ this is a private subroutine so it is not exposed to the user</p>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-07-23 10:56 +0000             </p>
+ on 2026-07-28 08:07 +0000             </p>
           </div>
         </div>
         <br>
