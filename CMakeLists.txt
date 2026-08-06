@@ -62,21 +62,20 @@ set(all_libs ${main_lib} ${core_lib})
 add_library(${main_lib} STATIC)
 add_library(${core_lib} STATIC)
 
-# Namespaced aliases, so that consumers can say pic::pic whichever integer
-# width this build was configured for.
+# Namespaced aliases, so that consumers can say pic::pic whichever integer width
+# this build was configured for.
 #
 # The install export already uses NAMESPACE pic::, but it exports the *real*
-# target names -- which means an -DPIC_DEFAULT_INT8=ON build offers
-# pic::pic_i8, and anything written against pic::pic breaks. Consuming pic
-# from a build tree (FetchContent, add_subdirectory) was worse still: no
-# namespaced target existed at all, so a downstream `if(NOT TARGET pic::pic)`
-# fell through to find_package and picked up the imported target from
-# picConfig.cmake, whose bare `-lpic` then failed to link against the
-# libpic_i8.a this build actually produces.
+# target names -- which means an -DPIC_DEFAULT_INT8=ON build offers pic::pic_i8,
+# and anything written against pic::pic breaks. Consuming pic from a build tree
+# (FetchContent, add_subdirectory) was worse still: no namespaced target existed
+# at all, so a downstream `if(NOT TARGET pic::pic)` fell through to find_package
+# and picked up the imported target from picConfig.cmake, whose bare `-lpic`
+# then failed to link against the libpic_i8.a this build actually produces.
 #
 # Aliasing here fixes both: pic::pic and pic::pic_core resolve to the targets
-# that exist, and because they are real targets rather than imported ones,
-# build ordering and module include paths propagate as they should.
+# that exist, and because they are real targets rather than imported ones, build
+# ordering and module include paths propagate as they should.
 add_library(pic::${project_name} ALIAS ${main_lib})
 add_library(pic::${project_name}_core ALIAS ${core_lib})
 
