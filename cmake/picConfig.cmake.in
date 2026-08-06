@@ -1,3 +1,18 @@
 @PACKAGE_INIT@
 
 include("${CMAKE_CURRENT_LIST_DIR}/picTargets.cmake")
+
+# picTargets exports the real target names under the pic:: namespace, so an
+# -DPIC_DEFAULT_INT8=ON install offers pic::pic_i8 rather than pic::pic.
+# Consumers should not have to know which integer width pic was built for, so
+# give them a stable spelling either way.
+foreach(_pic_pair "pic::pic;pic::pic_i8" "pic::pic_core;pic::pic_core_i8")
+  list(GET _pic_pair 0 _pic_stable)
+  list(GET _pic_pair 1 _pic_suffixed)
+  if(NOT TARGET ${_pic_stable} AND TARGET ${_pic_suffixed})
+    add_library(${_pic_stable} ALIAS ${_pic_suffixed})
+  endif()
+endforeach()
+unset(_pic_pair)
+unset(_pic_stable)
+unset(_pic_suffixed)
