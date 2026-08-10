@@ -1889,6 +1889,7 @@ contains
       logical, intent(in), optional :: reverse
 
       integer(int_index), allocatable :: ibuf(:)
+      character(len=:), allocatable :: buf(:)
       integer(int_index) :: array_size, i, stat
 
       stat = 0_int_index
@@ -1926,29 +1927,26 @@ contains
             call merge_sort(array, index, work, ibuf)
          end if
       else
-         block
-            character(len=:), allocatable :: buf(:)
-            allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
-                      stat=stat)
+         allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
+                   stat=stat)
 #ifdef __NVCOMPILER_LLVM__
 
 #else
-            if (stat /= 0) then
-               error stop "Allocation of array failed"
-            end if
+         if (stat /= 0) then
+            error stop "Allocation of array failed"
+         end if
 #endif
 
-            if (present(iwork)) then
-               if (size(iwork, kind=int_index) < array_size/2) then
-                  error stop "iwork array is too small."
-               end if
-               call merge_sort(array, index, buf, iwork)
-            else
-               allocate (ibuf(0:array_size/2 - 1), stat=stat)
-               if (stat /= 0) error stop "Allocation of index buffer failed."
-               call merge_sort(array, index, buf, ibuf)
+         if (present(iwork)) then
+            if (size(iwork, kind=int_index) < array_size/2) then
+               error stop "iwork array is too small."
             end if
-         end block
+            call merge_sort(array, index, buf, iwork)
+         else
+            allocate (ibuf(0:array_size/2 - 1), stat=stat)
+            if (stat /= 0) error stop "Allocation of index buffer failed."
+            call merge_sort(array, index, buf, ibuf)
+         end if
       end if
 
       if (pic_optional(reverse, .false.)) then
@@ -4010,6 +4008,7 @@ contains
       logical, intent(in), optional :: reverse
 
       integer(int_index_low), allocatable :: ibuf(:)
+      character(len=:), allocatable :: buf(:)
       integer(int_index) :: array_size, i, stat
 
       stat = 0_int_index
@@ -4047,28 +4046,25 @@ contains
             call merge_sort(array, index, work, ibuf)
          end if
       else
-         block
-            character(len=:), allocatable :: buf(:)
-            allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
-                      stat=stat)
+         allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
+                   stat=stat)
 #ifdef __NVCOMPILER_LLVM__
 
 #else
-            if (stat /= 0) then
-               error stop "Allocation of array failed"
-            end if
+         if (stat /= 0) then
+            error stop "Allocation of array failed"
+         end if
 #endif
-            if (present(iwork)) then
-               if (size(iwork, kind=int_index) < array_size/2) then
-                  error stop "iwork array is too small."
-               end if
-               call merge_sort(array, index, buf, iwork)
-            else
-               allocate (ibuf(0:array_size/2 - 1), stat=stat)
-               if (stat /= 0) error stop "Allocation of index buffer failed."
-               call merge_sort(array, index, buf, ibuf)
+         if (present(iwork)) then
+            if (size(iwork, kind=int_index) < array_size/2) then
+               error stop "iwork array is too small."
             end if
-         end block
+            call merge_sort(array, index, buf, iwork)
+         else
+            allocate (ibuf(0:array_size/2 - 1), stat=stat)
+            if (stat /= 0) error stop "Allocation of index buffer failed."
+            call merge_sort(array, index, buf, ibuf)
+         end if
       end if
 
       if (pic_optional(reverse, .false.)) then

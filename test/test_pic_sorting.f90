@@ -117,7 +117,10 @@ contains
 
       call pic_scramble_array(array)
 
-      call sort_index(array, index)
+      ! Pass work/iwork explicitly to avoid a deferred-length character(len=:)
+      ! allocatable inside a block construct, which causes a stack overflow on
+      ! Windows (1 MB default stack) with LFortran when the array is large.
+      call sort_index(array, index, work(1:n_elements/2), iwork(1:n_elements/2))
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -129,7 +132,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call sort_index(array, index)
+      call sort_index(array, index, work(1:n_elements/2), iwork(1:n_elements/2))
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -141,7 +144,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call sort_index(array, index, reverse=.true.)
+      call sort_index(array, index, work(1:n_elements/2), iwork(1:n_elements/2), reverse=.true.)
       call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -207,7 +210,10 @@ contains
 
       call pic_scramble_array(array)
 
-      call sort_index(array, index)
+      ! Pass work/iwork explicitly to avoid a deferred-length character(len=:)
+      ! allocatable inside a block construct, which causes a stack overflow on
+      ! Windows (1 MB default stack) with LFortran when the array is large.
+      call sort_index(array, index, work(1:n_elements/2), iwork(1:n_elements/2))
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -219,7 +225,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call sort_index(array, index)
+      call sort_index(array, index, work(1:n_elements/2), iwork(1:n_elements/2))
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
@@ -231,7 +237,7 @@ contains
       end do
       call pic_scramble_array(array)
 
-      call sort_index(array, index, reverse=.true.)
+      call sort_index(array, index, work(1:n_elements/2), iwork(1:n_elements/2), reverse=.true.)
       call check(error, is_sorted(array, DESCENDING), .true., "Array is not sorted!")
       if (allocated(error)) return
 
