@@ -17,13 +17,12 @@ set(tests
     "pic_array"
     "pic_optional"
     "pic_hash"
-    "pic_sorting"
     "pic_pure_logger"
     "pic_error"
     "pic_profiler"
     "pic_math"
     "pic_statistics")
-set(pre_proc_tests "pic_string_derivedtype_io" "pic_string_strip_chomp")
+set(pre_proc_tests "pic_string_derivedtype_io" "pic_string_strip_chomp" "pic_sorting")
 
 find_package(Threads REQUIRED)
 set(test-srcs "main_tests.f90")

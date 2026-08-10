@@ -104,8 +104,15 @@ contains
       character(len=10), allocatable :: work(:)
       integer(int32), allocatable :: index(:)
       integer(int32), allocatable :: iwork(:)
+! Windows default stack is 1 MB; reduce array size to avoid overflow with
+! LFortran whose LLVM backend may materialise large character-array-section
+! temporaries on the stack inside the sort_index merge loop.
+#if defined(_WIN32)
+      integer(int32), parameter :: n_elements = 2000_int32
+#else
       integer(int32), parameter :: n_elements = 12000_int32
-      integer(int32) :: i
+#endif
+      integer(int32) :: i, n_dup
 
       allocate (array(n_elements))
       do i = 1, n_elements
@@ -124,10 +131,12 @@ contains
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
-      do i = 1, 11160
+      ! n_dup: number of duplicate entries (~93 % of n_elements)
+      n_dup = (93*n_elements)/100
+      do i = 1, n_dup
          write (array(i), '(i4.4)') 42_int32
       end do
-      do i = 11161, n_elements
+      do i = n_dup + 1, n_elements
          write (array(i), '(i4.4)') int(50*i, int32)
       end do
       call pic_scramble_array(array)
@@ -136,10 +145,10 @@ contains
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
-      do i = 1, 11160
+      do i = 1, n_dup
          write (array(i), '(i4.4)') 42_int32
       end do
-      do i = 11161, n_elements
+      do i = n_dup + 1, n_elements
          write (array(i), '(i4.4)') int(50*i, int32)
       end do
       call pic_scramble_array(array)
@@ -197,8 +206,15 @@ contains
       character(len=10), allocatable :: work(:)
       integer(int64), allocatable :: index(:)
       integer(int64), allocatable :: iwork(:)
+! Windows default stack is 1 MB; reduce array size to avoid overflow with
+! LFortran whose LLVM backend may materialise large character-array-section
+! temporaries on the stack inside the sort_index merge loop.
+#if defined(_WIN32)
+      integer(int32), parameter :: n_elements = 2000_int32
+#else
       integer(int32), parameter :: n_elements = 12000_int32
-      integer(int32) :: i
+#endif
+      integer(int32) :: i, n_dup
 
       allocate (array(n_elements))
       do i = 1, n_elements
@@ -217,10 +233,12 @@ contains
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
-      do i = 1, 11160
+      ! n_dup: number of duplicate entries (~93 % of n_elements)
+      n_dup = (93*n_elements)/100
+      do i = 1, n_dup
          write (array(i), '(i4.4)') 42_int32
       end do
-      do i = 11161, n_elements
+      do i = n_dup + 1, n_elements
          write (array(i), '(i4.4)') int(50*i, int32)
       end do
       call pic_scramble_array(array)
@@ -229,10 +247,10 @@ contains
       call check(error, is_sorted(array), .true., "Array is not sorted!")
       if (allocated(error)) return
 
-      do i = 1, 11160
+      do i = 1, n_dup
          write (array(i), '(i4.4)') 42_int32
       end do
-      do i = 11161, n_elements
+      do i = n_dup + 1, n_elements
          write (array(i), '(i4.4)') int(50*i, int32)
       end do
       call pic_scramble_array(array)
