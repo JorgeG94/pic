@@ -17,8 +17,9 @@ module pic_logger
 
    character(*), parameter :: name = "pic_logger"
    integer(default_int), parameter, public :: &
-      debug_level = 10, &
-      verbose_level = 9, &
+      debug_level = 11, &
+      verbose_level = 10, &
+      large_info_level = 9, &
       info_level = 8, &
       performance_level = 7, &
       warning_level = 6, &
@@ -62,6 +63,9 @@ module pic_logger
       procedure, public, pass(self), non_overridable :: verbose
       !! Log a message that will only be printed at the verbose level of verbosity.
       !! Usage: call my_logger%verbose("MESSAGE")
+      procedure, public, pass(self), non_overridable :: large_info
+      !! Log a message that will only be printed at the large_info level of verbosity.
+      !! Usage: call my_logger%large_info("MESSAGE")
       procedure, public, pass(self), non_overridable :: info
       !! Log a message that will only be printed at the info level of verbosity.
       !! Usage: call my_logger%info("MESSAGE")
@@ -105,9 +109,11 @@ contains
       !! Where level can be a number according to the level struct
       !! or can be loaded from the level struct to be
       !!
-      !! debug_level = 10, &
+      !! debug_level = 11, &
       !!
-      !! verbose_level = 9, &
+      !! verbose_level = 10, &
+      !!
+      !! large_info_level = 9, &
       !!
       !! info_level = 8, &
       !!
@@ -141,9 +147,11 @@ contains
       !! Where level can be a number according to the level struct
       !! or can be loaded from the level struct to be
       !!
-      !! debug_level = 10, &
+      !! debug_level = 11, &
       !!
-      !! verbose_level = 9, &
+      !! verbose_level = 10, &
+      !!
+      !! large_info_level = 9, &
       !!
       !! info_level = 8, &
       !!
@@ -209,6 +217,17 @@ contains
       character(*), intent(in), optional :: module, procedure
       call self%log("VERBOSE", message, module, procedure)
    end subroutine verbose
+
+   subroutine large_info(self, message, module, procedure)
+      !! Log a message that will only be printed at the large_info level of verbosity
+      !!
+      !! Usage: call my_logger%large_info("MESSAGE")
+      !!
+      class(logger_type), intent(in) :: self
+      character(*), intent(in) :: message
+      character(*), intent(in), optional :: module, procedure
+      call self%log("LARGE_INFO", message, module, procedure)
+   end subroutine large_info
 
    subroutine info(self, message, module, procedure)
       !! Log a message that will only be printed at the info level of verbosity
@@ -308,6 +327,8 @@ contains
          log_level_value = debug_level
       case ("VERBOSE")
          log_level_value = verbose_level
+      case ("LARGE_INFO")
+         log_level_value = large_info_level
       case ("INFO")
          log_level_value = info_level
       case ("WARNING")
