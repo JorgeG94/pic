@@ -10,6 +10,9 @@ module pic_knowledge
 
    private
 
+   integer(int32), parameter :: banner_width = 80
+   !! width of the asterisk rows that frame the printed lore
+
    public :: get_knowledge
 
 contains
@@ -20,7 +23,7 @@ contains
       type(string_type), allocatable :: knowledge(:)
       integer(int32) :: n, idx
       real(dp) :: r
-      allocate (knowledge(64))
+      allocate (knowledge(81))
 
       knowledge(1) = "The long line! (CS,2023)"
       knowledge(2) = "Maybe I have the Fortran brain-rot in Dijkstra's words (IP,2025)"
@@ -86,6 +89,23 @@ contains
       knowledge(62) = "double Lizicide"
       knowledge(63) = "we've got spy advise!"
       knowledge(64) = "all change is bad!"
+      knowledge(65) = "It just a stone throw away! a big stone...and a long throw, but still!"
+      knowledge(66) = "Throw the house at it!"
+      knowledge(67) = "Damn that's a big damn (hehe)"
+      knowledge(68) = ":q"
+      knowledge(69) = "Welcome to the 9D action cinema! Any questions?"
+      knowledge(70) = "Are you trying to show us the German Bakery or the big hole?"
+      knowledge(71) = "Gravy is thick, involves coconut; curry is thin"
+      knowledge(72) = ":q!"
+      knowledge(73) = "Running on a treadmill sucks"
+      knowledge(74) = "That sounds good but it requires movement..."
+      knowledge(75) = "Sometimes in order to do the right thing, you have to do the wrong thing"
+      knowledge(76) = "When life hands you lemons...throw them back!"
+      knowledge(77) = "My name is Macedonio Silverio and I am here to kill you"
+      knowledge(78) = "Don't eat the street food or your stomach might try to fight back"
+      knowledge(79) = "Why are you writing a 400k line cuda kernel in the first place?"
+      knowledge(80) = "If you feel like you need me, please hesistate to contact me"
+      knowledge(81) = "Yeah writing an SC paper is fun! It's lots of pain, but fun!"
 
       n = size(knowledge)
 
@@ -94,15 +114,19 @@ contains
       idx = int(r*n) + 1
       if (idx > n) idx = n
 
+      call logger%knowledge(repeat("*", banner_width))
       call logger%knowledge(trim(char(knowledge(idx))))
+      call logger%knowledge(repeat("*", banner_width))
 
       if (present(print_all)) then
          if (print_all) then
             block
                integer(int32) :: i
+               call logger%knowledge(repeat("*", banner_width))
                do i = 1, size(knowledge)
                   call logger%knowledge(trim(char(knowledge(i))))
                end do
+               call logger%knowledge(repeat("*", banner_width))
             end block
          end if
       end if
