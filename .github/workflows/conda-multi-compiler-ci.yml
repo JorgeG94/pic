@@ -35,10 +35,17 @@ jobs:
   #     MSVC-based linker ignores, so the dependency libs (test-drive.lib) are
   #     not found (LNK1181). CMake links Intel-on-Windows correctly, so that
   #     combo is still covered by the test_cmake job below.
-  # NOTE (2026-08-27): conda-forge flang 23.1.0 (uploaded 2026-08-27) is broken --
-  # its run deps list libllvm23/libclang-cpp23.1 but not libmlir23, so the binary
-  # fails with "libMLIR.so.23.1: cannot open shared object file". flang-new is
-  # pinned to 22.1.8 below until conda-forge fixes the recipe.
+  #
+  # Compiler version pins (see the `include:` blocks below). Both work around
+  # broken conda-forge uploads and should be dropped once upstream is fixed:
+  #   - flang-new 22.1.8: conda-forge flang 23.1.0 (uploaded 2026-08-27) lists
+  #     libllvm23/libclang-cpp23.1 as run deps but not libmlir23, so the driver
+  #     dies with "libMLIR.so.23.1: cannot open shared object file" during the
+  #     action's compiler verification step.
+  #   - gfortran 16.1.0 on Windows: conda-forge rebuilt the whole win-64 GCC
+  #     stack as build _4 on 2026-08-25; that gcc cannot find crt2.o and
+  #     default-manifest.o from m2w64-sysroot_win-64, so every link fails.
+  #     16.1.0 was left at build _3 and still links.
   test_fpm:
     name: ${{ matrix.os }}_${{ matrix.compiler }}_fpm
     runs-on: ${{ matrix.os }}
@@ -56,13 +63,19 @@ jobs:
             compiler: flang-new
           - os: windows-latest
             compiler: ifx
+        include:
+          - compiler: flang-new
+            compiler_version: '22.1.8'
+          - os: windows-latest
+            compiler: gfortran
+            compiler_version: '16.1.0'
 
     steps:
       - name: Setup Fortran
         uses: gha3mi/setup-fortran-conda@v0.17.1
         with:
           compiler: ${{ matrix.compiler }}
-          compiler-version: ${{ matrix.compiler == 'flang-new' && '22.1.8' || '' }}
+          compiler-version: ${{ matrix.compiler_version }}
           platform: ${{ matrix.os }}
 
       - name: fpm versioning
@@ -87,13 +100,19 @@ jobs:
             compiler: flang-new
           - os: windows-latest
             compiler: flang-new
+        include:
+          - compiler: flang-new
+            compiler_version: '22.1.8'
+          - os: windows-latest
+            compiler: gfortran
+            compiler_version: '16.1.0'
 
     steps:
       - name: Setup Fortran
         uses: gha3mi/setup-fortran-conda@v0.17.1
         with:
           compiler: ${{ matrix.compiler }}
-          compiler-version: ${{ matrix.compiler == 'flang-new' && '22.1.8' || '' }}
+          compiler-version: ${{ matrix.compiler_version }}
           platform: ${{ matrix.os }}
           extra-packages: "cmake, ninja"
 
