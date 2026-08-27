@@ -990,13 +990,13 @@ https://svn.python.org/projects/python/trunk/Objects/listsort.txt</p>
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">int32_increase_ord_sort</span><span class="p">(</span><span class="k">array</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">)</span>
-<span class="c">! A translation to Fortran 2008, of the `&quot;Rust&quot; sort` algorithm found in</span>
+<span class="c">! A translation to Fortran 2008, of the `"Rust" sort` algorithm found in</span>
 <span class="c">! `slice.rs`</span>
 <span class="c">! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159</span>
 <span class="c">! The Rust version in turn is a simplification of the Timsort algorithm</span>
 <span class="c">! described in</span>
 <span class="c">! https://svn.python.org/projects/python/trunk/Objects/listsort.txt, as</span>
-<span class="c">! it drops both the use of &#39;galloping&#39; to identify bounds of regions to be</span>
+<span class="c">! it drops both the use of 'galloping' to identify bounds of regions to be</span>
 <span class="c">! sorted and the estimation of the optimal `run size`. However it remains</span>
 <span class="c">! a hybrid sorting algorithm combining an iterative Merge sort controlled</span>
 <span class="c">! by a stack of `RUNS` identified by regions of uniformly decreasing or</span>
@@ -1005,8 +1005,8 @@ https://svn.python.org/projects/python/trunk/Objects/listsort.txt</p>
 <span class="c">!</span>
 <span class="c">! Note the Fortran implementation simplifies the logic as it only has to</span>
 <span class="c">! deal with Fortran arrays of intrinsic types and not the full generality</span>
-<span class="c">! of Rust&#39;s arrays and lists for arbitrary types. It also adds the</span>
-<span class="c">! estimation of the optimal `run size` as suggested in Tim Peters&#39;</span>
+<span class="c">! of Rust's arrays and lists for arbitrary types. It also adds the</span>
+<span class="c">! estimation of the optimal `run size` as suggested in Tim Peters'</span>
 <span class="c">! original `listsort.txt`, and an optional `work` array to be used as</span>
 <span class="c">! scratch memory.</span>
 <span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int32</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w">         </span><span class="kd">::</span><span class="w"> </span><span class="k">array</span><span class="p">(</span><span class="mi">0</span><span class="p">:)</span>
@@ -1019,14 +1019,14 @@ https://svn.python.org/projects/python/trunk/Objects/listsort.txt</p>
 <span class="nb">      </span><span class="n">array_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="k">array</span><span class="p">,</span><span class="w"> </span><span class="nb">kind</span><span class="o">=</span><span class="n">int_index</span><span class="p">)</span>
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">work</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
 <span class="k">         if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">work</span><span class="p">,</span><span class="w"> </span><span class="nb">kind</span><span class="o">=</span><span class="n">int_index</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">array_size</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">            error stop</span><span class="w"> </span><span class="s2">&quot;int32_increase_ord_sort: work array is too small.&quot;</span>
+<span class="k">            error stop</span><span class="w"> </span><span class="s2">"int32_increase_ord_sort: work array is too small."</span>
 <span class="w">         </span><span class="k">end if</span>
 <span class="c">! Use the work array as scratch memory</span>
 <span class="w">         </span><span class="k">call </span><span class="n">merge_sort</span><span class="p">(</span><span class="k">array</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">)</span>
 <span class="w">      </span><span class="k">else</span>
 <span class="c">! Allocate a buffer to use as scratch memory.</span>
 <span class="w">         </span><span class="k">allocate</span><span class="w"> </span><span class="p">(</span><span class="n">buf</span><span class="p">(</span><span class="mi">0</span><span class="p">:</span><span class="n">array_size</span><span class="o">/</span><span class="mi">2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="nb">stat</span><span class="o">=</span><span class="nb">stat</span><span class="p">)</span>
-<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">stat</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s2">&quot;int32_increase_ord_sort: Allocation of buffer failed.&quot;</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">stat</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s2">"int32_increase_ord_sort: Allocation of buffer failed."</span>
 <span class="w">         </span><span class="k">call </span><span class="n">merge_sort</span><span class="p">(</span><span class="k">array</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">)</span>
 <span class="w">      </span><span class="k">end if</span>
 
@@ -1137,7 +1137,7 @@ https://svn.python.org/projects/python/trunk/Objects/listsort.txt</p>
 <span class="w">         </span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">array</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="c">! Use an explicitly controlled index rather than the DO-variable value</span>
 <span class="c">! after loop completion. The latter is not portable: LFortran leaves the</span>
-<span class="c">! index at its last iterated value instead of the standard &quot;final + step&quot;,</span>
+<span class="c">! index at its last iterated value instead of the standard "final + step",</span>
 <span class="c">! which would misplace `tmp` when it belongs at the end of the run.</span>
 <span class="w">         </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
 <span class="w">         </span><span class="n">find_hole</span><span class="p">:</span><span class="w"> </span><span class="k">do while</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="k">array</span><span class="p">,</span><span class="w"> </span><span class="nb">kind</span><span class="o">=</span><span class="n">int_index</span><span class="p">))</span>
@@ -1196,7 +1196,7 @@ https://svn.python.org/projects/python/trunk/Objects/listsort.txt</p>
 <span class="w">         </span><span class="n">r_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">         </span><span class="n">finish</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">array_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span>
 <span class="w">         </span><span class="k">do while</span><span class="w"> </span><span class="p">(</span><span class="n">finish</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
-<span class="c">! Find the next natural run, and reverse it if it&#39;s strictly descending.</span>
+<span class="c">! Find the next natural run, and reverse it if it's strictly descending.</span>
 <span class="w">            </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">finish</span>
 <span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">start</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 <span class="k">               </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span>
@@ -1248,7 +1248,7 @@ https://svn.python.org/projects/python/trunk/Objects/listsort.txt</p>
 <span class="w">            </span><span class="k">end do </span><span class="n">Merge_loop</span>
 <span class="w">         </span><span class="k">end do</span>
 <span class="k">         if</span><span class="w"> </span><span class="p">(</span><span class="n">r_count</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">            error stop</span><span class="w"> </span><span class="s2">&quot;MERGE_SORT completed without RUN COUNT == 1.&quot;</span>
+<span class="k">            error stop</span><span class="w"> </span><span class="s2">"MERGE_SORT completed without RUN COUNT == 1."</span>
 <span class="w">         </span><span class="k">end if</span>
 
 <span class="k">      end subroutine </span><span class="n">merge_sort</span>
@@ -1353,7 +1353,7 @@ https://svn.python.org/projects/python/trunk/Objects/listsort.txt</p>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-08-06 10:35 +0000             </p>
+ on 2026-08-27 13:53 +0000             </p>
           </div>
         </div>
         <br>
