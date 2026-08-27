@@ -35,6 +35,10 @@ jobs:
   #     MSVC-based linker ignores, so the dependency libs (test-drive.lib) are
   #     not found (LNK1181). CMake links Intel-on-Windows correctly, so that
   #     combo is still covered by the test_cmake job below.
+  # NOTE (2026-08-27): conda-forge flang 23.1.0 (uploaded 2026-08-27) is broken --
+  # its run deps list libllvm23/libclang-cpp23.1 but not libmlir23, so the binary
+  # fails with "libMLIR.so.23.1: cannot open shared object file". flang-new is
+  # pinned to 22.1.8 below until conda-forge fixes the recipe.
   test_fpm:
     name: ${{ matrix.os }}_${{ matrix.compiler }}_fpm
     runs-on: ${{ matrix.os }}
@@ -58,6 +62,7 @@ jobs:
         uses: gha3mi/setup-fortran-conda@v0.17.1
         with:
           compiler: ${{ matrix.compiler }}
+          compiler-version: ${{ matrix.compiler == 'flang-new' && '22.1.8' || '' }}
           platform: ${{ matrix.os }}
 
       - name: fpm versioning
@@ -88,6 +93,7 @@ jobs:
         uses: gha3mi/setup-fortran-conda@v0.17.1
         with:
           compiler: ${{ matrix.compiler }}
+          compiler-version: ${{ matrix.compiler == 'flang-new' && '22.1.8' || '' }}
           platform: ${{ matrix.os }}
           extra-packages: "cmake, ninja"
 
