@@ -1,7 +1,7 @@
 module test_pic_logger
    use testdrive, only: new_unittest, unittest_type, error_type, check
-   use pic_logger, only: logger_type, debug_level, verbose_level, info_level, &
-                         performance_level, warning_level, error_level, knowledge_level
+   use pic_logger, only: logger_type, debug_level, verbose_level, large_info_level, &
+                         info_level, performance_level, warning_level, error_level, knowledge_level
    use pic_types, only: default_int
    use pic_global_definitions, only: logfile_unit
    implicit none
@@ -106,7 +106,10 @@ contains
       call check(error, debug_level > verbose_level, "Debug level should be higher than verbose")
       if (allocated(error)) return
 
-      call check(error, verbose_level > info_level, "Verbose level should be higher than info")
+      call check(error, verbose_level > large_info_level, "Verbose level should be higher than large_info")
+      if (allocated(error)) return
+
+      call check(error, large_info_level > info_level, "Large_info level should be higher than info")
       if (allocated(error)) return
 
       call check(error, info_level > performance_level, "Info level should be higher than performance")
@@ -200,6 +203,7 @@ contains
       ! Test all convenience methods
       call logger%debug("Debug message")
       call logger%verbose("Verbose message")
+      call logger%large_info("Large info message")
       call logger%info("Info message")
       call logger%performance("Performance message")
       call logger%warning("Warning message")
