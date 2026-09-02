@@ -22,8 +22,8 @@ module pic_pure_logger
    !! Messages are buffered and flushed after the pure call chain returns.
    use pic_types, only: default_int
    use pic_logger, only: logger_type, &
-                         debug_level, verbose_level, info_level, performance_level, &
-                         warning_level, error_level, knowledge_level
+                         debug_level, verbose_level, large_info_level, info_level, &
+                         performance_level, warning_level, error_level, knowledge_level
 
    implicit none
    private
@@ -64,6 +64,7 @@ module pic_pure_logger
 
    public :: pure_debug
    public :: pure_verbose
+   public :: pure_large_info
    public :: pure_info
    public :: pure_performance
    public :: pure_warning
@@ -132,6 +133,14 @@ contains
       character(*), intent(in), optional :: module, procedure
       call buffer_message(buf, "VERBOSE", message, module, procedure)
    end subroutine pure_verbose
+
+   pure subroutine pure_large_info(buf, message, module, procedure)
+      !! Buffer a large_info-level message
+      type(log_buffer_type), intent(inout) :: buf
+      character(*), intent(in) :: message
+      character(*), intent(in), optional :: module, procedure
+      call buffer_message(buf, "LARGE_INFO", message, module, procedure)
+   end subroutine pure_large_info
 
    pure subroutine pure_info(buf, message, module, procedure)
       !! Buffer an info-level message
@@ -219,6 +228,8 @@ contains
             call logger%debug(trim(entry%message), trim(entry%module_name), trim(entry%procedure_name))
          case ("VERBOSE")
             call logger%verbose(trim(entry%message), trim(entry%module_name), trim(entry%procedure_name))
+         case ("LARGE_INFO")
+            call logger%large_info(trim(entry%message), trim(entry%module_name), trim(entry%procedure_name))
          case ("INFO")
             call logger%info(trim(entry%message), trim(entry%module_name), trim(entry%procedure_name))
          case ("PERFORMANCE")
@@ -238,6 +249,8 @@ contains
             call logger%debug(trim(entry%message), trim(entry%module_name))
          case ("VERBOSE")
             call logger%verbose(trim(entry%message), trim(entry%module_name))
+         case ("LARGE_INFO")
+            call logger%large_info(trim(entry%message), trim(entry%module_name))
          case ("INFO")
             call logger%info(trim(entry%message), trim(entry%module_name))
          case ("PERFORMANCE")
@@ -257,6 +270,8 @@ contains
             call logger%debug(trim(entry%message))
          case ("VERBOSE")
             call logger%verbose(trim(entry%message))
+         case ("LARGE_INFO")
+            call logger%large_info(trim(entry%message))
          case ("INFO")
             call logger%info(trim(entry%message))
          case ("PERFORMANCE")
