@@ -1578,7 +1578,13 @@ contains
 ! Allocate a buffer to use as scratch memory.
             allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
                       stat=stat)
-            if (stat /= 0) error stop "char_increase_ord_sort: Allocation of buffer failed."
+! Test `allocated` rather than `stat`: nvfortran does not set `stat`
+! reliably for deferred-length character array allocations, while
+! `allocated` always reports the real post-allocation state and is
+! .true. for a legal zero-size buffer (array_size 0 or 1).
+            if (.not. allocated(buf)) then
+               error stop "char_increase_ord_sort: allocation of character buffer failed."
+            end if
             call merge_sort(array, buf)
          end block
       end if
@@ -3291,7 +3297,13 @@ contains
 ! Allocate a buffer to use as scratch memory.
             allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
                       stat=stat)
-            if (stat /= 0) error stop "char_decrease_ord_sort: Allocation of buffer failed."
+! Test `allocated` rather than `stat`: nvfortran does not set `stat`
+! reliably for deferred-length character array allocations, while
+! `allocated` always reports the real post-allocation state and is
+! .true. for a legal zero-size buffer (array_size 0 or 1).
+            if (.not. allocated(buf)) then
+               error stop "char_decrease_ord_sort: allocation of character buffer failed."
+            end if
             call merge_sort(array, buf)
          end block
       end if

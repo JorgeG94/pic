@@ -1,6 +1,6 @@
 !! Licensing:
 !!
-!! This file is subjec† both to the Fortran Standard Library license, and
+!! This file is subject both to the Fortran Standard Library license, and
 !! to additional licensing requirements as it contains translations of
 !! other software.
 !!
