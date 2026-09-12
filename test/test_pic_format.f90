@@ -174,10 +174,23 @@ contains
       if (allocated(error)) return
       call check(error, to_string_fixed(0.0_dp, 0_default_int) == "0", "positive zero, no decimals")
       if (allocated(error)) return
-      call check(error, to_string_fixed(negative_zero, 2_default_int) == "-0.00", "negative zero keeps its sign")
+      ! Zero is canonicalised: negative zero renders exactly like positive zero.
+      ! Telling the signed zeros apart is processor dependent (F2018 16.9.165),
+      ! and Intel and AOCC do not, so asserting "-0.00" here would be asserting
+      ! a compiler's floating point model rather than this module's behaviour.
+      call check(error, to_string_fixed(negative_zero, 2_default_int) == "0.00", &
+                 "negative zero renders without a sign")
       if (allocated(error)) return
-      call check(error, to_string_fixed(negative_zero, 0_default_int) == "-0", &
-                 "negative zero with no decimals")
+      call check(error, to_string_fixed(negative_zero, 0_default_int) == "0", &
+                 "negative zero with no decimals renders without a sign")
+      if (allocated(error)) return
+      ! A non-zero value that rounds to zero DOES keep its sign: SIGN is well
+      ! defined for a non-zero argument, so this is portable.
+      call check(error, to_string_fixed(-1.0e-9_dp, 2_default_int) == "-0.00", &
+                 "a tiny negative value rounding to zero keeps its sign")
+      if (allocated(error)) return
+      call check(error, to_string_fixed(1.0e-9_dp, 2_default_int) == "0.00", &
+                 "a tiny positive value rounding to zero has no sign")
 
    end subroutine test_fixed_zero_and_negative_zero
 
@@ -353,8 +366,11 @@ contains
       if (allocated(error)) return
       call check(error, to_string_sci(0.0_dp, 1_default_int) == "0e+00", "zero with one significant digit")
       if (allocated(error)) return
-      call check(error, to_string_sci(negative_zero, 6_default_int) == "-0.00000e+00", &
-                 "negative zero keeps its sign")
+      call check(error, to_string_sci(negative_zero, 6_default_int) == "0.00000e+00", &
+                 "negative zero renders without a sign")
+      if (allocated(error)) return
+      call check(error, to_string_sci(-1.0e-9_dp, 3_default_int) == "-1.00e-09", &
+                 "a tiny negative value keeps its sign in scientific form")
 
    end subroutine test_sci_zero_and_negative_zero
 

@@ -45,9 +45,18 @@ module pic_format
    !! NaN of any payload or sign renders as `NaN`, positive infinity as `Inf`
    !! and negative infinity as `-Inf`.
    !!
-   !! The sign of the argument is always preserved, including for negative zero
-   !! and for negative values that round to zero: `to_string_fixed(-0.0_dp, 2)`
-   !! is `"-0.00"` and so is `to_string_fixed(-1.0e-9_dp, 2)`.
+   !! The sign of a non-zero argument is always preserved, including for values
+   !! that round to zero: `to_string_fixed(-1.0e-9_dp, 2)` is `"-0.00"`.
+   !!
+   !! Zero is always rendered without a sign, so `to_string_fixed(-0.0_dp, 2)`
+   !! is `"0.00"`, not `"-0.00"`. Distinguishing the signed zeros is processor
+   !! dependent in Fortran (F2018 16.9.165 makes SIGN return `|A|` where the
+   !! processor cannot tell them apart) and Intel and AOCC do not tell them
+   !! apart under their default floating point model. Rendering a sign here
+   !! would make the output depend on the compiler and its flags, which is
+   !! exactly what this module exists to prevent, so negative zero is
+   !! canonicalised to positive zero instead. This matches `pic_array_hash`,
+   !! which collapses the signed zeros to one digest for the same reason.
    use pic_types, only: default_int, int32, int64, sp, dp
    use pic_strings, only: to_string
    implicit none
@@ -145,9 +154,9 @@ contains
    pure function to_string_fixed_sp(value, decimals) result(string)
       !! Fixed point rendering of a `real(sp)` value.
       !!
-      !! Widening to `real(dp)` is exact for every finite `real(sp)` value, and
-      !! preserves NaN, both infinities and negative zero, so the double
-      !! precision expansion produces the same digits.
+      !! Widening to `real(dp)` is exact for every finite `real(sp)` value and
+      !! preserves NaN and both infinities, so the double precision expansion
+      !! produces the same digits.
       real(sp), intent(in) :: value
       integer(default_int), intent(in) :: decimals
       character(len=:), allocatable :: string
@@ -173,6 +182,15 @@ contains
       negative = is_negative(value)
 
       if (value == 0.0_dp) then
+         ! Zero never carries a sign. Recognising a negative zero requires SIGN
+         ! to distinguish the two signed zeros, which Fortran leaves processor
+         ! dependent (F2018 16.9.165: the result is |A| if the processor cannot
+         ! distinguish them), and Intel and AOCC do not distinguish them under
+         ! their default fast floating point model. Emitting "-0.00" would
+         ! therefore be compiler dependent, which is the one thing this module
+         ! exists to avoid. A non-zero value that merely rounds to zero does
+         ! keep its sign: SIGN is well defined for a non-zero argument.
+         negative = .false.
          rounded = ""
          n_rounded = 0_default_int
          point_pos = 0_default_int
@@ -215,6 +233,15 @@ contains
       negative = is_negative(value)
 
       if (value == 0.0_dp) then
+         ! Zero never carries a sign. Recognising a negative zero requires SIGN
+         ! to distinguish the two signed zeros, which Fortran leaves processor
+         ! dependent (F2018 16.9.165: the result is |A| if the processor cannot
+         ! distinguish them), and Intel and AOCC do not distinguish them under
+         ! their default fast floating point model. Emitting "-0.00" would
+         ! therefore be compiler dependent, which is the one thing this module
+         ! exists to avoid. A non-zero value that merely rounds to zero does
+         ! keep its sign: SIGN is well defined for a non-zero argument.
+         negative = .false.
          rounded = repeat("0", sig)
          exp10 = 0_default_int
       else
@@ -300,7 +327,9 @@ contains
    end subroutine special_text
 
    pure function is_negative(value) result(negative)
-      !! True for negative values and for negative zero. Not valid for NaN,
+      !! True for negative values. The result for negative zero is processor
+      !! dependent, so callers must not rely on it: every caller here tests
+      !! `value == 0` first and drops the sign for zero. Not valid for NaN,
       !! which the callers have already filtered out.
       real(dp), intent(in) :: value
       logical :: negative
