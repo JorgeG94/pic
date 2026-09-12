@@ -476,7 +476,7 @@ contains
       !! Build the IEEE special values without arithmetic, so that the test
       !! does not trip the -ffpe-trap=invalid,zero,overflow debug build.
       use, intrinsic :: ieee_arithmetic, only: ieee_value, ieee_quiet_nan, &
-                                               ieee_positive_inf, ieee_negative_inf
+                                                                                  ieee_positive_inf, ieee_negative_inf
       real(dp), intent(out) :: not_a_number, plus_inf, minus_inf
 
       not_a_number = ieee_value(1.0_dp, ieee_quiet_nan)
