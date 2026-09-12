@@ -64,6 +64,55 @@ jobs:
       - name: fpm test (debug)
         run: fpm test --compiler ${{ matrix.compiler }} --profile debug --verbose --flag "--cpp --std=f23"
 
+      # Per-suite triage. The whole-binary run above exits
+      # -1073740940 == 0xC0000374 == STATUS_HEAP_CORRUPTION on
+      # windows-latest while every individual test reports PASSED, so the
+      # corruption is only detected when the Windows heap is validated at
+      # process teardown. Linux and macOS do not reproduce it: glibc
+      # tolerates what the Windows heap rejects.
+      #
+      # Running each suite in its own process narrows the fault to one
+      # suite: a suite that exits 0xC0000374 alone owns the bad
+      # free/overrun. Runs only on failure of the step above, and never
+      # fails the job itself, so it is pure diagnostics.
+      - name: per-suite triage (diagnostic only)
+        if: failure()
+        shell: bash
+        continue-on-error: true
+        run: |
+          # Both the `tests` and `pre_proc_tests` lists are real ctest
+          # suites. The sed range below is inclusive of the pre_proc_tests
+          # line, so this picks up both; sort -u guards against the overlap.
+          suites=$(sed -n '/^set(tests/,/^set(pre_proc_tests/p' test/CMakeLists.txt \
+                   | grep -oE '"[a-z0-9_]+"' | tr -d '"' | sort -u)
+          if [ -z "$suites" ]; then
+            echo "could not extract suite names from test/CMakeLists.txt" >&2
+            exit 1
+          fi
+          echo "extracted $(echo $suites | wc -w) suites"
+          echo "=== running each suite in its own process ==="
+          failed=""
+          for s in $suites; do
+            set +e
+            fpm test --compiler ${{ matrix.compiler }} --profile debug \
+                     --flag "--cpp --std=f23" -- "$s" > "triage-$s.log" 2>&1
+            rc=$?
+            set -e
+            if [ "$rc" -eq 0 ]; then
+              printf '  %-32s ok\n' "$s"
+            else
+              printf '  %-32s EXIT %s\n' "$s" "$rc"
+              failed="$failed $s"
+              tail -n 20 "triage-$s.log" | sed 's/^/      | /'
+            fi
+          done
+          echo "=== suites that did not exit cleanly:${failed:-  (none)} ==="
+          echo
+          echo "Exit -1073740940 (0xC0000374) is STATUS_HEAP_CORRUPTION."
+          echo "If every suite passes alone, the fault is in teardown after"
+          echo "the last suite (main_tests.f90 calls print_asterisk_row and"
+          echo "get_knowledge there) or is cumulative across suites."
+
   test_cmake:
     name: ${{ matrix.os }}_${{ matrix.compiler }}_cmake
     runs-on: ${{ matrix.os }}
