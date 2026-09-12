@@ -25,7 +25,9 @@ contains
                   new_unittest("test_profiler_report_with_title", test_profiler_report_with_title), &
                   new_unittest("test_profiler_report_with_root", test_profiler_report_with_root), &
                   new_unittest("test_profiler_explicit_stop_nested", test_profiler_explicit_stop_nested), &
-                  new_unittest("test_profiler_edge_cases", test_profiler_edge_cases) &
+                  new_unittest("test_profiler_edge_cases", test_profiler_edge_cases), &
+                  new_unittest("test_profiler_region_table_full", test_profiler_region_table_full), &
+                  new_unittest("test_profiler_report_zero_total", test_profiler_report_zero_total) &
                   ]
    end subroutine collect_pic_profiler_tests
 
@@ -389,5 +391,72 @@ contains
          if (i > 10000000) exit  ! Safety limit
       end do
    end subroutine dummy_work
+
+   subroutine test_profiler_region_table_full(error)
+      !! Once the region table is full, further region names are dropped
+      !! silently and the already tracked regions keep working
+      type(error_type), allocatable, intent(out) :: error
+      integer, parameter :: max_regions = 256
+      character(len=16) :: name
+      integer :: i
+
+      call profiler_init()
+
+      do i = 1, max_regions
+         write (name, '(a,i3.3)') "fullreg", i
+         call profiler_start(trim(name))
+         call profiler_stop()
+      end do
+
+      ! The table is now full: this name cannot be recorded at all.
+      call profiler_start("overflowing_region")
+
+      call check(error, profiler_get_time("overflowing_region") <= 0.0_dp, &
+                 "A region rejected by a full table must not be tracked")
+      if (allocated(error)) return
+
+      ! Existing regions must still accumulate.
+      call profiler_start("fullreg001")
+      call dummy_work()
+      call profiler_stop()
+
+      call check(error, profiler_get_time("fullreg001") > 0.0_dp, &
+                 "Regions already in a full table must still accumulate time")
+      if (allocated(error)) return
+
+      call profiler_finalize()
+   end subroutine test_profiler_region_table_full
+
+   subroutine test_profiler_report_zero_total(error)
+      !! A root region that was never stopped has no time, so every printed
+      !! percentage must fall back to zero instead of dividing by zero
+      type(error_type), allocatable, intent(out) :: error
+
+      call profiler_init()
+
+      ! "zero_root" is started but never stopped, so it accrues no time.
+      call profiler_start("zero_root")
+      call profiler_start("zero_child")
+      call dummy_work()
+      call profiler_stop()
+
+      call check(error, profiler_get_time("zero_root") <= 0.0_dp, &
+                 "A region that was never stopped must record no time")
+      if (allocated(error)) return
+
+      call check(error, profiler_get_time("zero_child") >= 0.0_dp, &
+                 "A stopped child region must record non-negative time")
+      if (allocated(error)) return
+
+      ! Percentages are relative to a root whose total time is zero.
+      call profiler_report(root_region="zero_root")
+
+      call profiler_stop()
+      call profiler_finalize()
+
+      call check(error, profiler_get_time("zero_child") <= 0.0_dp, &
+                 "Finalizing the profiler must drop all recorded regions")
+      if (allocated(error)) return
+   end subroutine test_profiler_report_zero_total
 
 end module test_pic_profiler

@@ -54,7 +54,9 @@ contains
                   new_unittest("char", test_char), &
                   new_unittest("ichar", test_ichar), &
                   new_unittest("iachar", test_iachar), &
-                  new_unittest("move", test_move) &
+                  new_unittest("move", test_move), &
+                  new_unittest("ichar-iachar-empty", test_ichar_iachar_empty), &
+                  new_unittest("move-char-char", test_move_char_to_char) &
                   ]
    end subroutine collect_string_intrinsic_tests
 
@@ -739,5 +741,50 @@ contains
       if (allocated(error)) return
 
    end subroutine test_move
+
+   subroutine test_ichar_iachar_empty(error)
+      !> ichar/iachar of a string with no characters must return 0 rather
+      !> than indexing an empty or unallocated buffer
+      type(error_type), allocatable, intent(out) :: error
+      type(string_type) :: unset, empty
+
+      call check(error, ichar(unset) == 0, "ichar of an unset string should be 0")
+      if (allocated(error)) return
+
+      call check(error, iachar(unset) == 0, "iachar of an unset string should be 0")
+      if (allocated(error)) return
+
+      empty = ""
+      call check(error, ichar(empty) == 0, "ichar of an empty string should be 0")
+      if (allocated(error)) return
+
+      call check(error, iachar(empty) == 0, "iachar of an empty string should be 0")
+      if (allocated(error)) return
+   end subroutine test_ichar_iachar_empty
+
+   subroutine test_move_char_to_char(error)
+      !> move between two deferred-length characters transfers the allocation
+      type(error_type), allocatable, intent(out) :: error
+      character(len=:), allocatable :: from_char, to_char
+
+      from_char = "Move This Char"
+
+      call move(from_char, to_char)
+
+      call check(error,.not. allocated(from_char), "Source character should be deallocated")
+      if (allocated(error)) return
+
+      call check(error, allocated(to_char), "Target character should be allocated")
+      if (allocated(error)) return
+
+      call check(error, to_char == "Move This Char", "Target should hold the moved text")
+      if (allocated(error)) return
+
+      ! Moving an unallocated source leaves the target unallocated.
+      call move(from_char, to_char)
+
+      call check(error,.not. allocated(to_char), "Moving nothing should leave the target unallocated")
+      if (allocated(error)) return
+   end subroutine test_move_char_to_char
 
 end module pic_test_string_intrinsic

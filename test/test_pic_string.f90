@@ -32,7 +32,9 @@ contains
                    new_unittest("test_write_with_precision_dp", test_write_with_precision_dp), &
                    new_unittest("test_padding", test_padding), &
                    new_unittest("test_to_upper", test_to_upper), &
-                   new_unittest("test_to_char_count", test_to_char_count_routine) &
+                   new_unittest("test_to_char_count", test_to_char_count_routine), &
+                   new_unittest("test_pad_truncates", test_pad_truncates), &
+                   new_unittest("test_set_precision_rejects_nonpositive", test_set_precision_rejects_nonpositive) &
                    ]
 
    end subroutine collect_pic_string_tests
@@ -271,5 +273,52 @@ contains
       if (allocated(error)) return
 
    end subroutine test_to_char_count_routine
+
+   subroutine test_pad_truncates(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(default_int), parameter :: four = 4_default_int
+      integer(default_int), parameter :: eleven = 11_default_int
+      character(len=:), allocatable :: result
+
+      ! Padding to a width smaller than the text truncates from the left.
+      result = pad("truncate_me", four)
+      call check(error, result == "trun", "pad should cut the string down to the requested width")
+      if (allocated(error)) return
+
+      call check(error, len(result) == 4, "pad should return exactly the requested width")
+      if (allocated(error)) return
+
+      ! A width equal to the trimmed length is also the truncating branch.
+      result = pad("truncate_me", eleven)
+      call check(error, result == "truncate_me", "pad at exact width should be an identity")
+      if (allocated(error)) return
+   end subroutine test_pad_truncates
+
+   subroutine test_set_precision_rejects_nonpositive(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(default_int) :: old_precision
+      integer(default_int), parameter :: default_dp_precision = 12_default_int
+      integer(default_int), parameter :: six = 6_default_int
+      integer(default_int), parameter :: zero = 0_default_int
+      integer(default_int), parameter :: minus_three = -3_default_int
+
+      old_precision = get_precision()
+
+      call set_precision(six)
+      call set_precision(zero)
+      call check(error, get_precision() == default_dp_precision, &
+                 "A zero precision request should restore the default")
+      if (allocated(error)) return
+
+      call set_precision(six)
+      call set_precision(minus_three)
+      call check(error, get_precision() == default_dp_precision, &
+                 "A negative precision request should restore the default")
+      if (allocated(error)) return
+
+      call set_precision(old_precision)
+      call check(error, get_precision() == old_precision, "Precision should be restorable")
+      if (allocated(error)) return
+   end subroutine test_set_precision_rejects_nonpositive
 
 end module test_pic_string

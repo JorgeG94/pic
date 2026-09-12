@@ -22,7 +22,9 @@ contains
                   new_unittest("test_logger_close_file", test_logger_close_file), &
                   new_unittest("test_logger_convenience_methods", test_logger_convenience_methods), &
                   new_unittest("test_logger_file_content", test_logger_file_content), &
-                  new_unittest("test_logger_explicit_printing", test_logger_explicit_printing) &
+                  new_unittest("test_logger_explicit_printing", test_logger_explicit_printing), &
+                  new_unittest("test_logger_reconfigure_and_failed_open", test_logger_reconfigure_and_failed_open), &
+                  new_unittest("test_logger_sourced_copy", test_logger_sourced_copy) &
                   ]
    end subroutine collect_pic_logger_tests
 
@@ -361,5 +363,112 @@ contains
          close (logfile_unit, status="delete")
       end if
    end subroutine test_logger_explicit_printing
+
+   subroutine test_logger_reconfigure_and_failed_open(error)
+      !! Reconfiguring file output must close the previous file first, and a
+      !! file that cannot be opened must leave file logging switched off
+      type(error_type), allocatable, intent(out) :: error
+      type(logger_type) :: logger
+      character(len=*), parameter :: file_a = "test_logger_switch_a.log"
+      character(len=*), parameter :: file_b = "test_logger_switch_b.log"
+      character(len=*), parameter :: bad_file = "pic_no_such_directory/impossible.log"
+      logical :: a_has_a, a_has_b, b_has_a, b_has_b, b_has_c
+
+      call logger%configure_file_output(file_a, info_level)
+      call logger%info("alpha entry")
+
+      ! Switching targets has to close file A before opening file B.
+      call logger%configure_file_output(file_b, info_level)
+      call logger%info("bravo entry")
+      call logger%close_log_file()
+
+      call scan_log(file_a, "alpha entry", a_has_a)
+      call scan_log(file_a, "bravo entry", a_has_b)
+      call scan_log(file_b, "alpha entry", b_has_a)
+      call scan_log(file_b, "bravo entry", b_has_b)
+
+      call check(error, a_has_a, "First file should hold the message written while it was open")
+      if (allocated(error)) return
+
+      call check(error,.not. a_has_b, "First file must be closed once the target is switched")
+      if (allocated(error)) return
+
+      call check(error, b_has_b, "Second file should hold the message written after the switch")
+      if (allocated(error)) return
+
+      call check(error,.not. b_has_a, "Second file must not receive earlier messages")
+      if (allocated(error)) return
+
+      ! An unopenable path must be reported and must not enable file logging.
+      call logger%configure_file_output(bad_file, info_level)
+      call logger%info("charlie entry")
+      call logger%close_log_file()
+
+      call scan_log(file_b, "charlie entry", b_has_c)
+
+      call check(error,.not. b_has_c, "A failed open must not resume writing to the previous file")
+      if (allocated(error)) return
+
+      call delete_log(file_a)
+      call delete_log(file_b)
+   end subroutine test_logger_reconfigure_and_failed_open
+
+   subroutine test_logger_sourced_copy(error)
+      !! A sourced allocation of a logger must carry its configured level over
+      type(error_type), allocatable, intent(out) :: error
+      type(logger_type) :: logger
+      class(logger_type), allocatable :: copy
+      integer(default_int) :: level
+
+      call logger%configure(debug_level)
+
+      allocate (copy, source=logger)
+      call copy%configuration(level)
+
+      call check(error, level == debug_level, "A copied logger should keep the configured level")
+      if (allocated(error)) return
+
+      ! The copy must be independent of the original.
+      call copy%configure(error_level)
+      call logger%configuration(level)
+
+      call check(error, level == debug_level, "Reconfiguring the copy must not touch the original")
+      if (allocated(error)) return
+   end subroutine test_logger_sourced_copy
+
+   subroutine scan_log(filename, needle, found)
+      !! Report whether 'needle' occurs anywhere in 'filename'
+      character(len=*), intent(in) :: filename
+      character(len=*), intent(in) :: needle
+      logical, intent(out) :: found
+      character(len=512) :: line
+      integer(default_int) :: unit_num, ios
+      logical :: exists
+
+      found = .false.
+      inquire (file=filename, exist=exists)
+      if (.not. exists) return
+
+      open (newunit=unit_num, file=filename, status="old", action="read")
+      do
+         read (unit_num, "(A)", iostat=ios) line
+         if (ios /= 0) exit
+         if (index(line, needle) > 0) found = .true.
+      end do
+      close (unit_num)
+   end subroutine scan_log
+
+   subroutine delete_log(filename)
+      !! Remove a log file if it exists
+      character(len=*), intent(in) :: filename
+      integer(default_int) :: unit_num
+      logical :: exists
+
+      inquire (file=filename, exist=exists)
+      if (exists) then
+         open (newunit=unit_num, file=filename, status="old", action="read")
+         close (unit_num, status="delete")
+      end if
+   end subroutine delete_log
 
 end module test_pic_logger

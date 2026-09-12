@@ -30,7 +30,8 @@ contains
                                test_flush_reports_overflow_and_truncation), &
                   new_unittest("test_flush_unknown_level", test_flush_unknown_level), &
                   new_unittest("test_buffer_truncation_flag", test_buffer_truncation_flag), &
-                  new_unittest("test_pure_context", test_pure_context) &
+                  new_unittest("test_pure_context", test_pure_context), &
+                  new_unittest("test_buffer_sourced_copy", test_buffer_sourced_copy) &
                   ]
    end subroutine collect_pic_pure_logger_tests
 
@@ -524,5 +525,44 @@ contains
          call pure_debug(buf, "x is positive", module="test_pure_logger", procedure="example_pure_routine")
       end if
    end subroutine example_pure_routine
+
+   subroutine test_buffer_sourced_copy(error)
+      !! Sourced allocation of a buffer and of a single entry must preserve
+      !! their contents and stay independent of the original
+      type(error_type), allocatable, intent(out) :: error
+      type(log_buffer_type) :: buffer
+      class(log_buffer_type), allocatable :: buffer_copy
+      class(log_entry_type), allocatable :: entry_copy
+
+      call pure_info(buffer, "copied message", "copy_module", "copy_procedure")
+
+      allocate (buffer_copy, source=buffer)
+      allocate (entry_copy, source=buffer%entries(1))
+
+      call check(error, buffer_copy%count == 1, "Copied buffer should keep the entry count")
+      if (allocated(error)) return
+
+      call check(error, trim(buffer_copy%entries(1)%message) == "copied message", &
+                 "Copied buffer should keep the entry text")
+      if (allocated(error)) return
+
+      call check(error, trim(entry_copy%level) == "INFO", "Copied entry should keep its level")
+      if (allocated(error)) return
+
+      call check(error, trim(entry_copy%module_name) == "copy_module", &
+                 "Copied entry should keep its module name")
+      if (allocated(error)) return
+
+      ! Adding to the original must not disturb the copy.
+      call pure_error(buffer, "second message")
+
+      call check(error, buffer%count == 2, "Original buffer should hold both entries")
+      if (allocated(error)) return
+
+      call check(error, buffer_copy%count == 1, "Copied buffer must be independent of the original")
+      if (allocated(error)) return
+
+      call clear_log_buffer(buffer)
+   end subroutine test_buffer_sourced_copy
 
 end module test_pic_pure_logger

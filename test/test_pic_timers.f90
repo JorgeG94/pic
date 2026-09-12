@@ -17,7 +17,9 @@ contains
                   new_unittest("test_timer_short_delay", test_timer_short_delay), &
                   new_unittest("test_timer_multiple_measurements", test_timer_multiple_measurements), &
                   new_unittest("test_timer_get_elapsed_time", test_timer_get_elapsed_time), &
-                  new_unittest("test_timer_precision", test_timer_precision) &
+                  new_unittest("test_timer_precision", test_timer_precision), &
+                  new_unittest("test_timer_print_time", test_timer_print_time), &
+                  new_unittest("test_timer_sourced_copy", test_timer_sourced_copy) &
                   ]
    end subroutine collect_pic_timers_tests
 
@@ -179,5 +181,61 @@ contains
       ! can make this unreliable in unit tests, but we ensure both are reasonable
 
    end subroutine test_timer_precision
+
+   subroutine test_timer_print_time(error)
+      !! print_time must report without stopping a running timer, and must
+      !! also work on a stopped timer
+      type(error_type), allocatable, intent(out) :: error
+      type(timer_type) :: timer
+      real(dp) :: before, after, final_elapsed
+
+      call timer%start()
+      call dummy_work()
+      before = timer%get_elapsed_time()
+
+      ! Reporting on a running timer takes the "Currently elapsed" branch and
+      ! must leave the timer running.
+      call timer%print_time()
+
+      call dummy_work()
+      after = timer%get_elapsed_time()
+
+      call check(error, after >= before, "A running timer must keep accumulating across print_time")
+      if (allocated(error)) return
+
+      ! If print_time had stopped the timer this call would abort the program.
+      call timer%stop()
+      final_elapsed = timer%get_elapsed_time()
+
+      call check(error, final_elapsed >= 0.0_dp, "Elapsed time should be non-negative")
+      if (allocated(error)) return
+
+      ! Reporting on a stopped timer takes the "Elapsed time" branch and must
+      ! not change the recorded interval.
+      call timer%print_time()
+
+      call check(error, abs(timer%get_elapsed_time() - final_elapsed) <= 0.0_dp, &
+                 "print_time must not alter a stopped timer's elapsed time")
+      if (allocated(error)) return
+   end subroutine test_timer_print_time
+
+   subroutine test_timer_sourced_copy(error)
+      !! A sourced allocation of a timer must carry the measured interval over
+      type(error_type), allocatable, intent(out) :: error
+      type(timer_type) :: timer
+      class(timer_type), allocatable :: copy
+      real(dp) :: original
+
+      call timer%start()
+      call dummy_work()
+      call timer%stop()
+      original = timer%get_elapsed_time()
+
+      allocate (copy, source=timer)
+
+      call check(error, abs(copy%get_elapsed_time() - original) <= 0.0_dp, &
+                 "A copied timer should report the same elapsed time")
+      if (allocated(error)) return
+   end subroutine test_timer_sourced_copy
 
 end module test_pic_timer
