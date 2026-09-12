@@ -26,6 +26,8 @@ src/lib/core/
   types/          pic_types.F90, pic_global_definitions.f90
   strings/        pic_string_type.F90, pic_strings.f90, pic_ascii.f90, ...
   arrays/         pic_array.f90
+  math/           pic_math.f90
+  statistics/     pic_statistics.f90
   logger/         pic_logger.f90, pic_pure_logger.f90
   timer/          pic_timer.F90
   io/             pic_io.f90

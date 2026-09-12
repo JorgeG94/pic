@@ -19,7 +19,7 @@ module pic_strings
     use pic_string_type, only: string_type, char, verify, repeat, slen, len_trim, move
     use pic_optional_value, only: pic_optional
     use pic_types, only: sp, dp, int32, int64, fbool
-    use iso_c_binding, only: c_null_char, c_char
+    use, intrinsic :: iso_c_binding, only: c_null_char, c_char
     implicit none
     private
 
@@ -320,7 +320,7 @@ contains
         end if
 
         if (last <= 0) then
-            chomped_string = ''
+            chomped_string = ""
         else
             chomped_string = string(1:last)
         end if
@@ -570,7 +570,8 @@ contains
                         if (occurrence_ == 0) then
                             res = s_i - length_pattern + 1
                             exit
-                        else if (pic_optional(consider_overlapping, .true.)) then
+                        end if
+                        if (pic_optional(consider_overlapping, .true.)) then
                             p_i = lps_array(p_i)
                         else
                             p_i = 0
@@ -988,7 +989,7 @@ contains
        character(kind=c_char) :: cstr(len(value)+1)
        integer :: i,lv
        lv = len(value)
-       do concurrent (i=1:lv)
+       do i = 1, lv
            cstr(i) = value(i:i)
        end do
        cstr(lv+1) = c_null_char
@@ -1002,7 +1003,7 @@ contains
        character(kind=c_char) :: cstr(slen(value)+1)
        integer :: i,lv
        lv = slen(value)
-       do concurrent (i=1:lv)
+       do i = 1, lv
            cstr(i) = char(value,pos=i)
        end do
        cstr(lv+1) = c_null_char
@@ -1019,7 +1020,7 @@ contains
         if (present(separator)) then
             sep = separator
         else
-            sep = ' '
+            sep = " "
         end if
         ! Calculate the total length required, including separators
         ltot = sum(len_trim(strings)) + (size(strings) - 1) * len(sep)
@@ -1053,13 +1054,13 @@ contains
         if (present(separator)) then
             sep = separator
         else
-            sep = ' '
+            sep = " "
         end if
         ! Calculate the total length required, including separators
         ltot = sum(len_trim(strings)) + (size(strings) - 1) * len(sep)
         allocate(character(len=ltot) :: joined)
 
-        joined = repeat(' ',ltot)
+        joined = repeat(" ",ltot)
         ! Concatenate strings with separator
         pos = 0
         do i = 1, size(strings)
