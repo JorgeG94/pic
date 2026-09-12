@@ -47,7 +47,7 @@ contains
       if (allocated(error)) return
       call check(error, arr%is_empty(), "fresh array must be empty")
       if (allocated(error)) return
-      call check(error, .not. arr%is_full(), "fresh array must not be full")
+      call check(error,.not. arr%is_full(), "fresh array must not be full")
       if (allocated(error)) return
       call check(error, size(arr%as_array()) == 0, "as_array on empty must be zero length")
       if (allocated(error)) return
@@ -61,18 +61,18 @@ contains
 
       do i = 1_default_int, 5_default_int
          call arr%push_back(10_default_int*i, err)
-         call check(error, .not. err%has_error(), "push_back below capacity must succeed")
+         call check(error,.not. err%has_error(), "push_back below capacity must succeed")
          if (allocated(error)) return
       end do
 
       call check(error, arr%size() == 5_default_int, "size must be 5 after 5 pushes")
       if (allocated(error)) return
-      call check(error, .not. arr%is_empty(), "array with elements is not empty")
+      call check(error,.not. arr%is_empty(), "array with elements is not empty")
       if (allocated(error)) return
 
       do i = 5_default_int, 1_default_int, -1_default_int
          call arr%pop_back(value, err)
-         call check(error, .not. err%has_error(), "pop_back on non-empty must succeed")
+         call check(error,.not. err%has_error(), "pop_back on non-empty must succeed")
          if (allocated(error)) return
          call check(error, value == 10_default_int*i, "pop_back must return elements in LIFO order")
          if (allocated(error)) return
@@ -90,7 +90,7 @@ contains
 
       do i = 1_default_int, PIC_FIXED_ARRAY_CAPACITY
          call arr%push_back(i, err)
-         call check(error, .not. err%has_error(), "filling exactly to capacity must succeed")
+         call check(error,.not. err%has_error(), "filling exactly to capacity must succeed")
          if (allocated(error)) return
       end do
 
@@ -149,13 +149,13 @@ contains
       end do
 
       call arr%at(1_default_int, value, err)
-      call check(error, .not. err%has_error(), "at(1) must succeed")
+      call check(error,.not. err%has_error(), "at(1) must succeed")
       if (allocated(error)) return
       call check(error, value == 101_default_int, "at(1) must return the first element")
       if (allocated(error)) return
 
       call arr%at(arr%size(), value, err)
-      call check(error, .not. err%has_error(), "at(size) must succeed")
+      call check(error,.not. err%has_error(), "at(size) must succeed")
       if (allocated(error)) return
       call check(error, value == 103_default_int, "at(size) must return the last element")
       if (allocated(error)) return
@@ -221,7 +221,7 @@ contains
       if (allocated(error)) return
 
       call arr%push_back(99_default_int, err)
-      call check(error, .not. err%has_error(), "array must be reusable after clear")
+      call check(error,.not. err%has_error(), "array must be reusable after clear")
       if (allocated(error)) return
       call arr%at(1_default_int, value, err)
       call check(error, value == 99_default_int, "reused array must hold the new element")
@@ -266,13 +266,13 @@ contains
 
       call err%clear()
       call arr%at(1_default_int, value, err)
-      call check(error, .not. err%has_error(), "cleared err must stay clear on a successful at")
+      call check(error,.not. err%has_error(), "cleared err must stay clear on a successful at")
       if (allocated(error)) return
       call check(error, value == 1_default_int, "at must return the stored element")
       if (allocated(error)) return
 
       call arr%pop_back(value, err)
-      call check(error, .not. err%has_error(), "cleared err must stay clear on a successful pop_back")
+      call check(error,.not. err%has_error(), "cleared err must stay clear on a successful pop_back")
       if (allocated(error)) return
    end subroutine test_err_is_inout
 
@@ -288,7 +288,7 @@ contains
       if (allocated(error)) return
       call check(error, arr%is_empty(), "fresh array must be empty")
       if (allocated(error)) return
-      call check(error, .not. arr%is_full(), "fresh array must not be full")
+      call check(error,.not. arr%is_full(), "fresh array must not be full")
       if (allocated(error)) return
       call check(error, size(arr%as_array()) == 0, "as_array on empty must be zero length")
       if (allocated(error)) return
@@ -303,18 +303,18 @@ contains
 
       do i = 1_default_int, 5_default_int
          call arr%push_back(0.5_dp*real(i, dp), err)
-         call check(error, .not. err%has_error(), "push_back below capacity must succeed")
+         call check(error,.not. err%has_error(), "push_back below capacity must succeed")
          if (allocated(error)) return
       end do
 
       call check(error, arr%size() == 5_default_int, "size must be 5 after 5 pushes")
       if (allocated(error)) return
-      call check(error, .not. arr%is_empty(), "array with elements is not empty")
+      call check(error,.not. arr%is_empty(), "array with elements is not empty")
       if (allocated(error)) return
 
       do i = 5_default_int, 1_default_int, -1_default_int
          call arr%pop_back(value, err)
-         call check(error, .not. err%has_error(), "pop_back on non-empty must succeed")
+         call check(error,.not. err%has_error(), "pop_back on non-empty must succeed")
          if (allocated(error)) return
          call check(error, abs(value - 0.5_dp*real(i, dp)) < TOL, "pop_back must return elements in LIFO order")
          if (allocated(error)) return
@@ -332,7 +332,7 @@ contains
 
       do i = 1_default_int, PIC_FIXED_ARRAY_CAPACITY
          call arr%push_back(real(i, dp), err)
-         call check(error, .not. err%has_error(), "filling exactly to capacity must succeed")
+         call check(error,.not. err%has_error(), "filling exactly to capacity must succeed")
          if (allocated(error)) return
       end do
 
@@ -390,13 +390,13 @@ contains
       end do
 
       call arr%at(1_default_int, value, err)
-      call check(error, .not. err%has_error(), "at(1) must succeed")
+      call check(error,.not. err%has_error(), "at(1) must succeed")
       if (allocated(error)) return
       call check(error, abs(value - 101.0_dp) < TOL, "at(1) must return the first element")
       if (allocated(error)) return
 
       call arr%at(arr%size(), value, err)
-      call check(error, .not. err%has_error(), "at(size) must succeed")
+      call check(error,.not. err%has_error(), "at(size) must succeed")
       if (allocated(error)) return
       call check(error, abs(value - 103.0_dp) < TOL, "at(size) must return the last element")
       if (allocated(error)) return
@@ -462,7 +462,7 @@ contains
       if (allocated(error)) return
 
       call arr%push_back(99.5_dp, err)
-      call check(error, .not. err%has_error(), "array must be reusable after clear")
+      call check(error,.not. err%has_error(), "array must be reusable after clear")
       if (allocated(error)) return
       call arr%at(1_default_int, value, err)
       call check(error, abs(value - 99.5_dp) < TOL, "reused array must hold the new element")
