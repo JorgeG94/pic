@@ -83,11 +83,11 @@ contains
       call heap%push(42_int64, 7_int32)
       call check(error, heap%size() == 1, "one push gives size one")
       if (allocated(error)) return
-      call check(error, .not. heap%is_empty(), "a heap with one entry is not empty")
+      call check(error,.not. heap%is_empty(), "a heap with one entry is not empty")
       if (allocated(error)) return
 
       call heap%peek(key, payload, err)
-      call check(error, .not. err%has_error(), "peek on a non-empty heap succeeds")
+      call check(error,.not. err%has_error(), "peek on a non-empty heap succeeds")
       if (allocated(error)) return
       call check(error, key == 42_int64 .and. payload == 7_int32, "peek returns the only entry")
       if (allocated(error)) return
@@ -95,7 +95,7 @@ contains
       if (allocated(error)) return
 
       call heap%pop(key, payload, err)
-      call check(error, .not. err%has_error(), "pop on a non-empty heap succeeds")
+      call check(error,.not. err%has_error(), "pop on a non-empty heap succeeds")
       if (allocated(error)) return
       call check(error, key == 42_int64 .and. payload == 7_int32, "pop returns the only entry")
       if (allocated(error)) return
@@ -215,7 +215,7 @@ contains
       popped = 0
       do i = 1, N_GROW
          call heap%pop(key, payload, err)
-         call check(error, .not. err%has_error(), "pop succeeds while entries remain")
+         call check(error,.not. err%has_error(), "pop succeeds while entries remain")
          if (allocated(error)) return
          call check(error, key >= previous, "the heap property survived the reallocations")
          if (allocated(error)) return
@@ -277,7 +277,7 @@ contains
 
       call built%init()
       call built%build_from(keys, payloads, err)
-      call check(error, .not. err%has_error(), "build_from on matching arrays succeeds")
+      call check(error,.not. err%has_error(), "build_from on matching arrays succeeds")
       if (allocated(error)) return
       call check(error, built%size() == N_RANDOM, "build_from stores every entry")
       if (allocated(error)) return
@@ -333,7 +333,7 @@ contains
       block
          type(heap_t) :: virgin
          call virgin%build_from(empty_keys, empty_payloads, err)
-         call check(error, .not. err%has_error(), "an empty build_from is not an error")
+         call check(error,.not. err%has_error(), "an empty build_from is not an error")
          if (allocated(error)) return
          call check(error, virgin%is_empty(), "an empty build_from yields an empty heap")
          if (allocated(error)) return
@@ -512,7 +512,7 @@ contains
       end do
 
       call heap%peek(key, payload, err)
-      call check(error, .not. err%has_error(), "peek works on a max-heap")
+      call check(error,.not. err%has_error(), "peek works on a max-heap")
       if (allocated(error)) return
 
       previous = huge(1_int64)
