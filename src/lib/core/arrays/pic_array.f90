@@ -164,7 +164,7 @@ module pic_array
    interface pic_print_array
     !! Generic interface for printing arrays of different types
     !!
-    !! Usage: call pic_print_array(array, [optional] format)
+    !! Usage: call pic_print_array(array, [optional] format, [optional] err)
     !! Where format can be: NUMPY, PLAIN, MATHEMATICA (can use lower caps)
     !!
     !! Implemented types are:
@@ -176,6 +176,26 @@ module pic_array
     !! array(:) (packed matrix) -> sp, dp
     !!
     !! array(:,:,:) -> sp, dp
+    !!
+    !! ## Reporting bad input
+    !!
+    !! Two things can go wrong while printing, and both are reported through the
+    !! optional err argument without changing what the routines do:
+    !!
+    !! * an unrecognised format string. err is set to ERROR_VALIDATION and the
+    !!   array is still printed using NumPy brackets. When err is absent a
+    !!   warning is printed to stdout instead, exactly as before.
+    !!
+    !! * an n_elements that is not a packed triangle size (the packed-matrix
+    !!   specifics only). err is set to ERROR_VALIDATION and nothing is printed.
+    !!   When err is absent the complaint is printed to stdout instead, again as
+    !!   before.
+    !!
+    !! Neither case aborts, with or without err: these routines never terminated
+    !! the program and still do not, so adding err cannot turn a working caller
+    !! into a crashing one. A caller that wants to be told about bad input must
+    !! pass err and inspect it; a caller that does not pass err gets the
+    !! historical stdout message and no other signal.
     !!
       module procedure print_vector_int32
       module procedure print_vector_int64
@@ -226,10 +246,18 @@ contains
       mode = use_threaded_default
    end function get_threading_mode_
 
-   subroutine set_brackets(format_type, open_bracket, close_bracket)
+   subroutine set_brackets(format_type, open_bracket, close_bracket, err)
    !! Set brackets based on output format type
+   !!
+   !! An unrecognised format_type is reported but never fatal: the NumPy
+   !! brackets are selected either way, so the caller can always go on to
+   !! print. If err is present it is set to ERROR_VALIDATION; if err is absent
+   !! a warning goes to stdout, which is the historical behaviour.
       character(len=*), intent(in) :: format_type
       character(len=1), intent(out) :: open_bracket, close_bracket
+      type(error_t), intent(inout), optional :: err
+      !! set to ERROR_VALIDATION for an unsupported format_type; the brackets
+      !! still come back as the NumPy defaults
       select case (trim(to_upper(adjustl(format_type))))
       case ("NUMPY")
          open_bracket = "["
@@ -241,7 +269,11 @@ contains
          open_bracket = "["
          close_bracket = "]"
       case default
-         print *, "Warning: Unsupported format type '"//trim(format_type)//"'. Defaulting to NumPy style."
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_print_array: unsupported format type '"//trim(format_type)//"'")
+         else
+            print *, "Warning: Unsupported format type '"//trim(format_type)//"'. Defaulting to NumPy style."
+         end if
          open_bracket = "["
          close_bracket = "]"
       end select
@@ -1741,10 +1773,13 @@ contains
       end select
    end function is_sorted_char
 
-   subroutine print_vector_int32(vector, format_type)
+   subroutine print_vector_int32(vector, format_type, err)
      !! print a vector of ${T} values
       integer(int32), intent(in) :: vector(:)
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION for an unsupported format_type; the vector
+         !! is printed with NumPy brackets regardless
       character(len=20) :: print_format
 
       print_format = pic_optional(format_type, default_format)
@@ -1753,7 +1788,7 @@ contains
          character(len=1) :: open_bracket, close_bracket
          integer(default_int) :: i, loop_bound_i
          loop_bound_i = size(vector)
-         call set_brackets(print_format, open_bracket, close_bracket)
+         call set_brackets(print_format, open_bracket, close_bracket, err)
          write (*, "(A)", advance="no") open_bracket
          do i = 1, loop_bound_i
             if (i == loop_bound_i) then  ! Last element in the vector
@@ -1768,10 +1803,13 @@ contains
 
    end subroutine print_vector_int32
 
-   subroutine print_vector_int64(vector, format_type)
+   subroutine print_vector_int64(vector, format_type, err)
      !! print a vector of ${T} values
       integer(int64), intent(in) :: vector(:)
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION for an unsupported format_type; the vector
+         !! is printed with NumPy brackets regardless
       character(len=20) :: print_format
 
       print_format = pic_optional(format_type, default_format)
@@ -1780,7 +1818,7 @@ contains
          character(len=1) :: open_bracket, close_bracket
          integer(default_int) :: i, loop_bound_i
          loop_bound_i = size(vector)
-         call set_brackets(print_format, open_bracket, close_bracket)
+         call set_brackets(print_format, open_bracket, close_bracket, err)
          write (*, "(A)", advance="no") open_bracket
          do i = 1, loop_bound_i
             if (i == loop_bound_i) then  ! Last element in the vector
@@ -1795,10 +1833,13 @@ contains
 
    end subroutine print_vector_int64
 
-   subroutine print_vector_sp(vector, format_type)
+   subroutine print_vector_sp(vector, format_type, err)
      !! print a vector of ${T} values
       real(sp), intent(in) :: vector(:)
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION for an unsupported format_type; the vector
+         !! is printed with NumPy brackets regardless
       character(len=20) :: print_format
 
       print_format = pic_optional(format_type, default_format)
@@ -1807,7 +1848,7 @@ contains
          character(len=1) :: open_bracket, close_bracket
          integer(default_int) :: i, loop_bound_i
          loop_bound_i = size(vector)
-         call set_brackets(print_format, open_bracket, close_bracket)
+         call set_brackets(print_format, open_bracket, close_bracket, err)
          write (*, "(A)", advance="no") open_bracket
          do i = 1, loop_bound_i
             if (i == loop_bound_i) then  ! Last element in the vector
@@ -1822,10 +1863,13 @@ contains
 
    end subroutine print_vector_sp
 
-   subroutine print_vector_dp(vector, format_type)
+   subroutine print_vector_dp(vector, format_type, err)
      !! print a vector of ${T} values
       real(dp), intent(in) :: vector(:)
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION for an unsupported format_type; the vector
+         !! is printed with NumPy brackets regardless
       character(len=20) :: print_format
 
       print_format = pic_optional(format_type, default_format)
@@ -1834,7 +1878,7 @@ contains
          character(len=1) :: open_bracket, close_bracket
          integer(default_int) :: i, loop_bound_i
          loop_bound_i = size(vector)
-         call set_brackets(print_format, open_bracket, close_bracket)
+         call set_brackets(print_format, open_bracket, close_bracket, err)
          write (*, "(A)", advance="no") open_bracket
          do i = 1, loop_bound_i
             if (i == loop_bound_i) then  ! Last element in the vector
@@ -1849,10 +1893,13 @@ contains
 
    end subroutine print_vector_dp
 
-   subroutine print_matrix_int32(matrix, format_type)
+   subroutine print_matrix_int32(matrix, format_type, err)
     !! print a matrix of ${T} values
       integer(int32), intent(in) :: matrix(:, :)
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION for an unsupported format_type; the matrix
+         !! is printed with NumPy brackets regardless
       character(len=20) :: print_format
 
       print_format = pic_optional(format_type, default_format)
@@ -1862,7 +1909,7 @@ contains
          integer(default_int) :: i, j, rows, cols
          rows = size(matrix, 1)
          cols = size(matrix, 2)
-         call set_brackets(print_format, open_bracket, close_bracket)
+         call set_brackets(print_format, open_bracket, close_bracket, err)
          print *, open_bracket
          do i = 1, rows
             write (*, "(A)", advance="no") open_bracket
@@ -1884,10 +1931,13 @@ contains
 
    end subroutine print_matrix_int32
 
-   subroutine print_matrix_int64(matrix, format_type)
+   subroutine print_matrix_int64(matrix, format_type, err)
     !! print a matrix of ${T} values
       integer(int64), intent(in) :: matrix(:, :)
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION for an unsupported format_type; the matrix
+         !! is printed with NumPy brackets regardless
       character(len=20) :: print_format
 
       print_format = pic_optional(format_type, default_format)
@@ -1897,7 +1947,7 @@ contains
          integer(default_int) :: i, j, rows, cols
          rows = size(matrix, 1)
          cols = size(matrix, 2)
-         call set_brackets(print_format, open_bracket, close_bracket)
+         call set_brackets(print_format, open_bracket, close_bracket, err)
          print *, open_bracket
          do i = 1, rows
             write (*, "(A)", advance="no") open_bracket
@@ -1919,10 +1969,13 @@ contains
 
    end subroutine print_matrix_int64
 
-   subroutine print_matrix_sp(matrix, format_type)
+   subroutine print_matrix_sp(matrix, format_type, err)
     !! print a matrix of ${T} values
       real(sp), intent(in) :: matrix(:, :)
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION for an unsupported format_type; the matrix
+         !! is printed with NumPy brackets regardless
       character(len=20) :: print_format
 
       print_format = pic_optional(format_type, default_format)
@@ -1932,7 +1985,7 @@ contains
          integer(default_int) :: i, j, rows, cols
          rows = size(matrix, 1)
          cols = size(matrix, 2)
-         call set_brackets(print_format, open_bracket, close_bracket)
+         call set_brackets(print_format, open_bracket, close_bracket, err)
          print *, open_bracket
          do i = 1, rows
             write (*, "(A)", advance="no") open_bracket
@@ -1954,10 +2007,13 @@ contains
 
    end subroutine print_matrix_sp
 
-   subroutine print_matrix_dp(matrix, format_type)
+   subroutine print_matrix_dp(matrix, format_type, err)
     !! print a matrix of ${T} values
       real(dp), intent(in) :: matrix(:, :)
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION for an unsupported format_type; the matrix
+         !! is printed with NumPy brackets regardless
       character(len=20) :: print_format
 
       print_format = pic_optional(format_type, default_format)
@@ -1967,7 +2023,7 @@ contains
          integer(default_int) :: i, j, rows, cols
          rows = size(matrix, 1)
          cols = size(matrix, 2)
-         call set_brackets(print_format, open_bracket, close_bracket)
+         call set_brackets(print_format, open_bracket, close_bracket, err)
          print *, open_bracket
          do i = 1, rows
             write (*, "(A)", advance="no") open_bracket
@@ -1989,11 +2045,19 @@ contains
 
    end subroutine print_matrix_dp
 
-   subroutine print_packed_matrix_int32(packed, n_elements, format_type)
+   subroutine print_packed_matrix_int32(packed, n_elements, format_type, err)
    !! Print a packed lower triangular matrix of ${T} values
+   !!
+   !! n_elements must be n*(n + 1)/2 for some n. If it is not, nothing is
+   !! printed: err is set to ERROR_VALIDATION when it is present, and the
+   !! complaint goes to stdout when it is not. Neither path aborts, which is
+   !! how this routine has always behaved.
       integer(int32), intent(in) :: packed(:)
       integer(default_int), intent(in) :: n_elements
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION when n_elements is not a packed triangle
+         !! size, or when format_type is not supported
       character(len=20) :: print_format
       character(len=1) :: open_bracket, close_bracket
       integer(default_int) :: i, j, idx, n
@@ -2001,14 +2065,18 @@ contains
 
       ! Determine format
       print_format = pic_optional(format_type, default_format)
-      call set_brackets(print_format, open_bracket, close_bracket)
+      call set_brackets(print_format, open_bracket, close_bracket, err)
 
       ! Compute n from packed size using proper real arithmetic
       n_real = (-1.0_dp + sqrt(1.0_dp + 8.0_dp*real(n_elements, dp)))/2.0_dp
       n = int(n_real + 0.5_dp, default_int)
 
       if (n*(n + 1)/2 /= n_elements) then
-         print *, "Error: n_elements does not form a valid packed triangle"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_print_array: n_elements does not form a valid packed triangle")
+         else
+            print *, "Error: n_elements does not form a valid packed triangle"
+         end if
          return
       end if
 
@@ -2034,11 +2102,19 @@ contains
       print *, close_bracket
    end subroutine print_packed_matrix_int32
 
-   subroutine print_packed_matrix_int64(packed, n_elements, format_type)
+   subroutine print_packed_matrix_int64(packed, n_elements, format_type, err)
    !! Print a packed lower triangular matrix of ${T} values
+   !!
+   !! n_elements must be n*(n + 1)/2 for some n. If it is not, nothing is
+   !! printed: err is set to ERROR_VALIDATION when it is present, and the
+   !! complaint goes to stdout when it is not. Neither path aborts, which is
+   !! how this routine has always behaved.
       integer(int64), intent(in) :: packed(:)
       integer(default_int), intent(in) :: n_elements
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION when n_elements is not a packed triangle
+         !! size, or when format_type is not supported
       character(len=20) :: print_format
       character(len=1) :: open_bracket, close_bracket
       integer(default_int) :: i, j, idx, n
@@ -2046,14 +2122,18 @@ contains
 
       ! Determine format
       print_format = pic_optional(format_type, default_format)
-      call set_brackets(print_format, open_bracket, close_bracket)
+      call set_brackets(print_format, open_bracket, close_bracket, err)
 
       ! Compute n from packed size using proper real arithmetic
       n_real = (-1.0_dp + sqrt(1.0_dp + 8.0_dp*real(n_elements, dp)))/2.0_dp
       n = int(n_real + 0.5_dp, default_int)
 
       if (n*(n + 1)/2 /= n_elements) then
-         print *, "Error: n_elements does not form a valid packed triangle"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_print_array: n_elements does not form a valid packed triangle")
+         else
+            print *, "Error: n_elements does not form a valid packed triangle"
+         end if
          return
       end if
 
@@ -2079,11 +2159,19 @@ contains
       print *, close_bracket
    end subroutine print_packed_matrix_int64
 
-   subroutine print_packed_matrix_sp(packed, n_elements, format_type)
+   subroutine print_packed_matrix_sp(packed, n_elements, format_type, err)
    !! Print a packed lower triangular matrix of ${T} values
+   !!
+   !! n_elements must be n*(n + 1)/2 for some n. If it is not, nothing is
+   !! printed: err is set to ERROR_VALIDATION when it is present, and the
+   !! complaint goes to stdout when it is not. Neither path aborts, which is
+   !! how this routine has always behaved.
       real(sp), intent(in) :: packed(:)
       integer(default_int), intent(in) :: n_elements
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION when n_elements is not a packed triangle
+         !! size, or when format_type is not supported
       character(len=20) :: print_format
       character(len=1) :: open_bracket, close_bracket
       integer(default_int) :: i, j, idx, n
@@ -2091,14 +2179,18 @@ contains
 
       ! Determine format
       print_format = pic_optional(format_type, default_format)
-      call set_brackets(print_format, open_bracket, close_bracket)
+      call set_brackets(print_format, open_bracket, close_bracket, err)
 
       ! Compute n from packed size using proper real arithmetic
       n_real = (-1.0_dp + sqrt(1.0_dp + 8.0_dp*real(n_elements, dp)))/2.0_dp
       n = int(n_real + 0.5_dp, default_int)
 
       if (n*(n + 1)/2 /= n_elements) then
-         print *, "Error: n_elements does not form a valid packed triangle"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_print_array: n_elements does not form a valid packed triangle")
+         else
+            print *, "Error: n_elements does not form a valid packed triangle"
+         end if
          return
       end if
 
@@ -2124,11 +2216,19 @@ contains
       print *, close_bracket
    end subroutine print_packed_matrix_sp
 
-   subroutine print_packed_matrix_dp(packed, n_elements, format_type)
+   subroutine print_packed_matrix_dp(packed, n_elements, format_type, err)
    !! Print a packed lower triangular matrix of ${T} values
+   !!
+   !! n_elements must be n*(n + 1)/2 for some n. If it is not, nothing is
+   !! printed: err is set to ERROR_VALIDATION when it is present, and the
+   !! complaint goes to stdout when it is not. Neither path aborts, which is
+   !! how this routine has always behaved.
       real(dp), intent(in) :: packed(:)
       integer(default_int), intent(in) :: n_elements
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION when n_elements is not a packed triangle
+         !! size, or when format_type is not supported
       character(len=20) :: print_format
       character(len=1) :: open_bracket, close_bracket
       integer(default_int) :: i, j, idx, n
@@ -2136,14 +2236,18 @@ contains
 
       ! Determine format
       print_format = pic_optional(format_type, default_format)
-      call set_brackets(print_format, open_bracket, close_bracket)
+      call set_brackets(print_format, open_bracket, close_bracket, err)
 
       ! Compute n from packed size using proper real arithmetic
       n_real = (-1.0_dp + sqrt(1.0_dp + 8.0_dp*real(n_elements, dp)))/2.0_dp
       n = int(n_real + 0.5_dp, default_int)
 
       if (n*(n + 1)/2 /= n_elements) then
-         print *, "Error: n_elements does not form a valid packed triangle"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_print_array: n_elements does not form a valid packed triangle")
+         else
+            print *, "Error: n_elements does not form a valid packed triangle"
+         end if
          return
       end if
 
@@ -2169,10 +2273,13 @@ contains
       print *, close_bracket
    end subroutine print_packed_matrix_dp
 
-   subroutine print_3d_tensor_int32(matrix, format_type)
+   subroutine print_3d_tensor_int32(matrix, format_type, err)
     !! Print a 3D tensor of ${T} values
       integer(int32), intent(in) :: matrix(:, :, :)
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION for an unsupported format_type; the tensor
+         !! is printed with NumPy brackets regardless
       character(len=20) :: print_format
 
       print_format = pic_optional(format_type, default_format)
@@ -2183,12 +2290,12 @@ contains
          rows = size(matrix, 1)
          cols = size(matrix, 2)
          depth = size(matrix, 3)
-         call set_brackets(print_format, open_bracket, close_bracket)
+         call set_brackets(print_format, open_bracket, close_bracket, err)
          print *, open_bracket
          do k = 1, depth
             if (k > 1) print *, ","
             print *, open_bracket
-            call pic_print_array(matrix(:, :, k), print_format)
+            call pic_print_array(matrix(:, :, k), print_format, err)
             print *, close_bracket
          end do
          print *, close_bracket
@@ -2196,10 +2303,13 @@ contains
 
    end subroutine print_3d_tensor_int32
 
-   subroutine print_3d_tensor_int64(matrix, format_type)
+   subroutine print_3d_tensor_int64(matrix, format_type, err)
     !! Print a 3D tensor of ${T} values
       integer(int64), intent(in) :: matrix(:, :, :)
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION for an unsupported format_type; the tensor
+         !! is printed with NumPy brackets regardless
       character(len=20) :: print_format
 
       print_format = pic_optional(format_type, default_format)
@@ -2210,12 +2320,12 @@ contains
          rows = size(matrix, 1)
          cols = size(matrix, 2)
          depth = size(matrix, 3)
-         call set_brackets(print_format, open_bracket, close_bracket)
+         call set_brackets(print_format, open_bracket, close_bracket, err)
          print *, open_bracket
          do k = 1, depth
             if (k > 1) print *, ","
             print *, open_bracket
-            call pic_print_array(matrix(:, :, k), print_format)
+            call pic_print_array(matrix(:, :, k), print_format, err)
             print *, close_bracket
          end do
          print *, close_bracket
@@ -2223,10 +2333,13 @@ contains
 
    end subroutine print_3d_tensor_int64
 
-   subroutine print_3d_tensor_sp(matrix, format_type)
+   subroutine print_3d_tensor_sp(matrix, format_type, err)
     !! Print a 3D tensor of ${T} values
       real(sp), intent(in) :: matrix(:, :, :)
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION for an unsupported format_type; the tensor
+         !! is printed with NumPy brackets regardless
       character(len=20) :: print_format
 
       print_format = pic_optional(format_type, default_format)
@@ -2237,12 +2350,12 @@ contains
          rows = size(matrix, 1)
          cols = size(matrix, 2)
          depth = size(matrix, 3)
-         call set_brackets(print_format, open_bracket, close_bracket)
+         call set_brackets(print_format, open_bracket, close_bracket, err)
          print *, open_bracket
          do k = 1, depth
             if (k > 1) print *, ","
             print *, open_bracket
-            call pic_print_array(matrix(:, :, k), print_format)
+            call pic_print_array(matrix(:, :, k), print_format, err)
             print *, close_bracket
          end do
          print *, close_bracket
@@ -2250,10 +2363,13 @@ contains
 
    end subroutine print_3d_tensor_sp
 
-   subroutine print_3d_tensor_dp(matrix, format_type)
+   subroutine print_3d_tensor_dp(matrix, format_type, err)
     !! Print a 3D tensor of ${T} values
       real(dp), intent(in) :: matrix(:, :, :)
       character(len=*), intent(in), optional :: format_type
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION for an unsupported format_type; the tensor
+         !! is printed with NumPy brackets regardless
       character(len=20) :: print_format
 
       print_format = pic_optional(format_type, default_format)
@@ -2264,12 +2380,12 @@ contains
          rows = size(matrix, 1)
          cols = size(matrix, 2)
          depth = size(matrix, 3)
-         call set_brackets(print_format, open_bracket, close_bracket)
+         call set_brackets(print_format, open_bracket, close_bracket, err)
          print *, open_bracket
          do k = 1, depth
             if (k > 1) print *, ","
             print *, open_bracket
-            call pic_print_array(matrix(:, :, k), print_format)
+            call pic_print_array(matrix(:, :, k), print_format, err)
             print *, close_bracket
          end do
          print *, close_bracket
