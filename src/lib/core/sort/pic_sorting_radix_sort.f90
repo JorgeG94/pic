@@ -1,5 +1,7 @@
 submodule(pic_sorting) pic_sorting_radix_sort
 
+   use pic_error, only: error_raise, ERROR_VALIDATION
+
    implicit none
 !! The generic subroutine implementing the LSD radix sort algorithm to return
 !! an input array with its elements sorted in order of (non-)decreasing
@@ -186,10 +188,11 @@ contains
       end do
    end subroutine radix_sort_u64_helper
 
-   pure module subroutine int32_radix_sort(array, work, reverse)
+   pure module subroutine int32_radix_sort(array, work, reverse, err)
       integer(kind=int32), dimension(:), intent(inout) :: array
       integer(kind=int32), dimension(:), intent(inout), target, optional :: work
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
       integer(kind=int_index) :: i, N, start, middle, end
       integer(kind=int32), dimension(:), pointer :: buffer
       integer(kind=int32) :: item
@@ -197,6 +200,11 @@ contains
       N = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < N) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "int32_radix_sort: work array is too small.")
+               return
+            end if
             error stop "int32_radix_sort: work array is too small."
          end if
          use_internal_buffer = .false.
@@ -235,11 +243,12 @@ contains
       end if
    end subroutine int32_radix_sort
 
-   module subroutine sp_radix_sort(array, work, reverse)
+   module subroutine sp_radix_sort(array, work, reverse, err)
       use, intrinsic :: iso_c_binding, only: c_loc, c_f_pointer
       real(kind=sp), dimension(:), intent(inout), target :: array
       real(kind=sp), dimension(:), intent(inout), target, optional :: work
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
       integer(kind=int_index) :: i, N, pos, rev_pos
       integer(kind=int32), dimension(:), pointer :: arri32
       integer(kind=int32), dimension(:), pointer :: buffer
@@ -248,6 +257,11 @@ contains
       N = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < N) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "sp_radix_sort: work array is too small.")
+               return
+            end if
             error stop "sp_radix_sort: work array is too small."
          end if
          use_internal_buffer = .false.
@@ -289,10 +303,11 @@ contains
       end if
    end subroutine sp_radix_sort
 
-   pure module subroutine int64_radix_sort(array, work, reverse)
+   pure module subroutine int64_radix_sort(array, work, reverse, err)
       integer(kind=int64), dimension(:), intent(inout) :: array
       integer(kind=int64), dimension(:), intent(inout), target, optional :: work
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
       integer(kind=int_index) :: i, N, start, middle, end
       integer(kind=int64), dimension(:), pointer :: buffer
       integer(kind=int64) :: item
@@ -300,6 +315,11 @@ contains
       N = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < N) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "int64_radix_sort: work array is too small.")
+               return
+            end if
             error stop "int64_radix_sort: work array is too small."
          end if
          use_internal_buffer = .false.
@@ -338,11 +358,12 @@ contains
       end if
    end subroutine int64_radix_sort
 
-   module subroutine dp_radix_sort(array, work, reverse)
+   module subroutine dp_radix_sort(array, work, reverse, err)
       use, intrinsic :: iso_c_binding, only: c_loc, c_f_pointer
       real(kind=dp), dimension(:), intent(inout), target :: array
       real(kind=dp), dimension(:), intent(inout), target, optional :: work
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
       integer(kind=int_index) :: i, N, pos, rev_pos
       integer(kind=int64), dimension(:), pointer :: arri64
       integer(kind=int64), dimension(:), pointer :: buffer
@@ -351,7 +372,12 @@ contains
       N = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < N) then
-            error stop "sp_radix_sort: work array is too small."
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "dp_radix_sort: work array is too small.")
+               return
+            end if
+            error stop "dp_radix_sort: work array is too small."
          end if
          use_internal_buffer = .false.
          call c_f_pointer(c_loc(work), buffer, [N])

@@ -49,6 +49,8 @@
 submodule(pic_sorting) pic_sorting_sort_index
 
    use pic_sorting_run_type, only: run_type
+   use pic_error, only: error_raise, ERROR_ALLOC, ERROR_BOUNDS, ERROR_INTERNAL, &
+                        ERROR_VALIDATION
    implicit none
 !! The generic subroutine implementing the `SORT_INDEX` algorithm to
 !! return an index array whose elements would sort the input array in the
@@ -167,7 +169,7 @@ submodule(pic_sorting) pic_sorting_sort_index
 
 contains
 
-   module subroutine int32_sort_index_default(array, index, work, iwork, reverse)
+   module subroutine int32_sort_index_default(array, index, work, iwork, reverse, err)
 ! A modification of `int32_ord_sort` to return an array of indices that
 ! would perform a stable sort of the `ARRAY` as input, and also sort `ARRAY`
 ! as desired. The indices by default
@@ -198,6 +200,7 @@ contains
       integer(int32), intent(out), optional :: work(0:)
       integer(int_index), intent(out), optional :: iwork(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       integer(int32), allocatable :: buf(:)
       integer(int_index), allocatable :: ibuf(:)
@@ -207,10 +210,20 @@ contains
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "int32_sort_index_default: too many entries for the kind of index.")
+            return
+         end if
          error stop "Too many entries for the kind of index."
       end if
 
       if (array_size > size(index, kind=int_index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "int32_sort_index_default: too many entries for the size of index.")
+            return
+         end if
          error stop "Too many entries for the size of index."
       end if
 
@@ -225,30 +238,66 @@ contains
 ! If necessary allocate buffers to serve as scratch memory.
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "int32_sort_index_default: work array is too small.")
+               return
+            end if
             error stop "work array is too small."
          end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "int32_sort_index_default: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, work, iwork)
+            call merge_sort(array, index, work, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, work, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "int32_sort_index_default: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, work, ibuf, err)
          end if
       else
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "Allocation of array buffer failed."
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "int32_sort_index_default: allocation of array buffer failed.")
+               return
+            end if
+            error stop "Allocation of array buffer failed."
+         end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "int32_sort_index_default: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, buf, iwork)
+            call merge_sort(array, index, buf, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, buf, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "int32_sort_index_default: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, buf, ibuf, err)
          end if
       end if
 
@@ -388,7 +437,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, index, buf, ibuf)
+      subroutine merge_sort(array, index, buf, ibuf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -413,6 +462,7 @@ contains
          integer(int_index), intent(inout) :: index(0:)
          integer(int32), intent(inout) :: buf(0:)
          integer(int_index), intent(inout) :: ibuf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -492,6 +542,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "int32_sort_index_default: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -590,7 +645,7 @@ contains
 
    end subroutine int32_sort_index_default
 
-   module subroutine int64_sort_index_default(array, index, work, iwork, reverse)
+   module subroutine int64_sort_index_default(array, index, work, iwork, reverse, err)
 ! A modification of `int64_ord_sort` to return an array of indices that
 ! would perform a stable sort of the `ARRAY` as input, and also sort `ARRAY`
 ! as desired. The indices by default
@@ -621,6 +676,7 @@ contains
       integer(int64), intent(out), optional :: work(0:)
       integer(int_index), intent(out), optional :: iwork(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       integer(int64), allocatable :: buf(:)
       integer(int_index), allocatable :: ibuf(:)
@@ -629,10 +685,20 @@ contains
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "int64_sort_index_default: too many entries for the kind of index.")
+            return
+         end if
          error stop "Too many entries for the kind of index."
       end if
 
       if (array_size > size(index, kind=int_index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "int64_sort_index_default: too many entries for the size of index.")
+            return
+         end if
          error stop "Too many entries for the size of index."
       end if
 
@@ -647,30 +713,66 @@ contains
 ! If necessary allocate buffers to serve as scratch memory.
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "int64_sort_index_default: work array is too small.")
+               return
+            end if
             error stop "work array is too small."
          end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "int64_sort_index_default: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, work, iwork)
+            call merge_sort(array, index, work, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, work, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "int64_sort_index_default: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, work, ibuf, err)
          end if
       else
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "Allocation of array buffer failed."
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "int64_sort_index_default: allocation of array buffer failed.")
+               return
+            end if
+            error stop "Allocation of array buffer failed."
+         end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "int64_sort_index_default: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, buf, iwork)
+            call merge_sort(array, index, buf, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, buf, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "int64_sort_index_default: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, buf, ibuf, err)
          end if
       end if
 
@@ -810,7 +912,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, index, buf, ibuf)
+      subroutine merge_sort(array, index, buf, ibuf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -835,6 +937,7 @@ contains
          integer(int_index), intent(inout) :: index(0:)
          integer(int64), intent(inout) :: buf(0:)
          integer(int_index), intent(inout) :: ibuf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -914,6 +1017,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "int64_sort_index_default: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -1012,7 +1120,7 @@ contains
 
    end subroutine int64_sort_index_default
 
-   module subroutine sp_sort_index_default(array, index, work, iwork, reverse)
+   module subroutine sp_sort_index_default(array, index, work, iwork, reverse, err)
 ! A modification of `sp_ord_sort` to return an array of indices that
 ! would perform a stable sort of the `ARRAY` as input, and also sort `ARRAY`
 ! as desired. The indices by default
@@ -1043,6 +1151,7 @@ contains
       real(sp), intent(out), optional :: work(0:)
       integer(int_index), intent(out), optional :: iwork(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       real(sp), allocatable :: buf(:)
       integer(int_index), allocatable :: ibuf(:)
@@ -1051,10 +1160,20 @@ contains
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "sp_sort_index_default: too many entries for the kind of index.")
+            return
+         end if
          error stop "Too many entries for the kind of index."
       end if
 
       if (array_size > size(index, kind=int_index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "sp_sort_index_default: too many entries for the size of index.")
+            return
+         end if
          error stop "Too many entries for the size of index."
       end if
 
@@ -1069,30 +1188,66 @@ contains
 ! If necessary allocate buffers to serve as scratch memory.
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "sp_sort_index_default: work array is too small.")
+               return
+            end if
             error stop "work array is too small."
          end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "sp_sort_index_default: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, work, iwork)
+            call merge_sort(array, index, work, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, work, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "sp_sort_index_default: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, work, ibuf, err)
          end if
       else
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "Allocation of array buffer failed."
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "sp_sort_index_default: allocation of array buffer failed.")
+               return
+            end if
+            error stop "Allocation of array buffer failed."
+         end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "sp_sort_index_default: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, buf, iwork)
+            call merge_sort(array, index, buf, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, buf, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "sp_sort_index_default: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, buf, ibuf, err)
          end if
       end if
 
@@ -1232,7 +1387,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, index, buf, ibuf)
+      subroutine merge_sort(array, index, buf, ibuf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -1257,6 +1412,7 @@ contains
          integer(int_index), intent(inout) :: index(0:)
          real(sp), intent(inout) :: buf(0:)
          integer(int_index), intent(inout) :: ibuf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -1336,6 +1492,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "sp_sort_index_default: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -1434,7 +1595,7 @@ contains
 
    end subroutine sp_sort_index_default
 
-   module subroutine dp_sort_index_default(array, index, work, iwork, reverse)
+   module subroutine dp_sort_index_default(array, index, work, iwork, reverse, err)
 ! A modification of `dp_ord_sort` to return an array of indices that
 ! would perform a stable sort of the `ARRAY` as input, and also sort `ARRAY`
 ! as desired. The indices by default
@@ -1465,6 +1626,7 @@ contains
       real(dp), intent(out), optional :: work(0:)
       integer(int_index), intent(out), optional :: iwork(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       real(dp), allocatable :: buf(:)
       integer(int_index), allocatable :: ibuf(:)
@@ -1473,10 +1635,20 @@ contains
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "dp_sort_index_default: too many entries for the kind of index.")
+            return
+         end if
          error stop "Too many entries for the kind of index."
       end if
 
       if (array_size > size(index, kind=int_index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "dp_sort_index_default: too many entries for the size of index.")
+            return
+         end if
          error stop "Too many entries for the size of index."
       end if
 
@@ -1491,30 +1663,66 @@ contains
 ! If necessary allocate buffers to serve as scratch memory.
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "dp_sort_index_default: work array is too small.")
+               return
+            end if
             error stop "work array is too small."
          end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "dp_sort_index_default: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, work, iwork)
+            call merge_sort(array, index, work, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, work, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "dp_sort_index_default: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, work, ibuf, err)
          end if
       else
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "Allocation of array buffer failed."
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "dp_sort_index_default: allocation of array buffer failed.")
+               return
+            end if
+            error stop "Allocation of array buffer failed."
+         end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "dp_sort_index_default: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, buf, iwork)
+            call merge_sort(array, index, buf, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, buf, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "dp_sort_index_default: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, buf, ibuf, err)
          end if
       end if
 
@@ -1654,7 +1862,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, index, buf, ibuf)
+      subroutine merge_sort(array, index, buf, ibuf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -1679,6 +1887,7 @@ contains
          integer(int_index), intent(inout) :: index(0:)
          real(dp), intent(inout) :: buf(0:)
          integer(int_index), intent(inout) :: ibuf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -1758,6 +1967,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "dp_sort_index_default: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -1856,7 +2070,7 @@ contains
 
    end subroutine dp_sort_index_default
 
-   module subroutine char_sort_index_default(array, index, work, iwork, reverse)
+   module subroutine char_sort_index_default(array, index, work, iwork, reverse, err)
 ! A modification of `char_ord_sort` to return an array of indices that
 ! would perform a stable sort of the `ARRAY` as input, and also sort `ARRAY`
 ! as desired. The indices by default
@@ -1887,6 +2101,7 @@ contains
       character(len=len(array)), intent(out), optional :: work(0:)
       integer(int_index), intent(out), optional :: iwork(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       integer(int_index), allocatable :: ibuf(:)
       integer(int_index) :: array_size, i, stat
@@ -1895,10 +2110,20 @@ contains
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "char_sort_index_default: too many entries for the kind of index.")
+            return
+         end if
          error stop "Too many entries for the kind of index."
       end if
 
       if (array_size > size(index, kind=int_index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "char_sort_index_default: too many entries for the size of index.")
+            return
+         end if
          error stop "Too many entries for the size of index."
       end if
 
@@ -1913,17 +2138,34 @@ contains
 ! If necessary allocate buffers to serve as scratch memory.
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "char_sort_index_default: work array is too small.")
+               return
+            end if
             error stop "work array is too small."
          end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "char_sort_index_default: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, work, iwork)
+            call merge_sort(array, index, work, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, work, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "char_sort_index_default: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, work, ibuf, err)
          end if
       else
          block
@@ -1934,19 +2176,36 @@ contains
 
 #else
             if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "char_sort_index_default: allocation of character array buffer failed.")
+                  return
+               end if
                error stop "Allocation of array failed"
             end if
 #endif
 
             if (present(iwork)) then
                if (size(iwork, kind=int_index) < array_size/2) then
+                  if (present(err)) then
+                     call error_raise(err, ERROR_VALIDATION, &
+                                      "char_sort_index_default: iwork array is too small.")
+                     return
+                  end if
                   error stop "iwork array is too small."
                end if
-               call merge_sort(array, index, buf, iwork)
+               call merge_sort(array, index, buf, iwork, err)
             else
                allocate (ibuf(0:array_size/2 - 1), stat=stat)
-               if (stat /= 0) error stop "Allocation of index buffer failed."
-               call merge_sort(array, index, buf, ibuf)
+               if (stat /= 0) then
+                  if (present(err)) then
+                     call error_raise(err, ERROR_ALLOC, &
+                                      "char_sort_index_default: allocation of index buffer failed.")
+                     return
+                  end if
+                  error stop "Allocation of index buffer failed."
+               end if
+               call merge_sort(array, index, buf, ibuf, err)
             end if
          end block
       end if
@@ -2087,7 +2346,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, index, buf, ibuf)
+      subroutine merge_sort(array, index, buf, ibuf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -2112,6 +2371,7 @@ contains
          integer(int_index), intent(inout) :: index(0:)
          character(len=len(array)), intent(inout) :: buf(0:)
          integer(int_index), intent(inout) :: ibuf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -2191,6 +2451,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "char_sort_index_default: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -2289,7 +2554,7 @@ contains
 
    end subroutine char_sort_index_default
 
-   module subroutine int32_sort_index_low(array, index, work, iwork, reverse)
+   module subroutine int32_sort_index_low(array, index, work, iwork, reverse, err)
 ! A modification of `int32_ord_sort` to return an array of indices that
 ! would perform a stable sort of the `ARRAY` as input, and also sort `ARRAY`
 ! as desired. The indices by default
@@ -2320,6 +2585,7 @@ contains
       integer(int32), intent(out), optional :: work(0:)
       integer(int_index_low), intent(out), optional :: iwork(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       integer(int32), allocatable :: buf(:)
       integer(int_index_low), allocatable :: ibuf(:)
@@ -2328,10 +2594,20 @@ contains
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "int32_sort_index_low: too many entries for the kind of index.")
+            return
+         end if
          error stop "Too many entries for the kind of index."
       end if
 
       if (array_size > size(index, kind=int_index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "int32_sort_index_low: too many entries for the size of index.")
+            return
+         end if
          error stop "Too many entries for the size of index."
       end if
 
@@ -2346,30 +2622,66 @@ contains
 ! If necessary allocate buffers to serve as scratch memory.
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "int32_sort_index_low: work array is too small.")
+               return
+            end if
             error stop "work array is too small."
          end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "int32_sort_index_low: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, work, iwork)
+            call merge_sort(array, index, work, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, work, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "int32_sort_index_low: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, work, ibuf, err)
          end if
       else
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "Allocation of array buffer failed."
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "int32_sort_index_low: allocation of array buffer failed.")
+               return
+            end if
+            error stop "Allocation of array buffer failed."
+         end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "int32_sort_index_low: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, buf, iwork)
+            call merge_sort(array, index, buf, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, buf, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "int32_sort_index_low: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, buf, ibuf, err)
          end if
       end if
 
@@ -2509,7 +2821,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, index, buf, ibuf)
+      subroutine merge_sort(array, index, buf, ibuf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -2534,6 +2846,7 @@ contains
          integer(int_index_low), intent(inout) :: index(0:)
          integer(int32), intent(inout) :: buf(0:)
          integer(int_index_low), intent(inout) :: ibuf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -2613,6 +2926,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "int32_sort_index_low: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -2711,7 +3029,7 @@ contains
 
    end subroutine int32_sort_index_low
 
-   module subroutine int64_sort_index_low(array, index, work, iwork, reverse)
+   module subroutine int64_sort_index_low(array, index, work, iwork, reverse, err)
 ! A modification of `int64_ord_sort` to return an array of indices that
 ! would perform a stable sort of the `ARRAY` as input, and also sort `ARRAY`
 ! as desired. The indices by default
@@ -2742,6 +3060,7 @@ contains
       integer(int64), intent(out), optional :: work(0:)
       integer(int_index_low), intent(out), optional :: iwork(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       integer(int64), allocatable :: buf(:)
       integer(int_index_low), allocatable :: ibuf(:)
@@ -2750,10 +3069,20 @@ contains
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "int64_sort_index_low: too many entries for the kind of index.")
+            return
+         end if
          error stop "Too many entries for the kind of index."
       end if
 
       if (array_size > size(index, kind=int_index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "int64_sort_index_low: too many entries for the size of index.")
+            return
+         end if
          error stop "Too many entries for the size of index."
       end if
 
@@ -2768,30 +3097,66 @@ contains
 ! If necessary allocate buffers to serve as scratch memory.
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "int64_sort_index_low: work array is too small.")
+               return
+            end if
             error stop "work array is too small."
          end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "int64_sort_index_low: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, work, iwork)
+            call merge_sort(array, index, work, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, work, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "int64_sort_index_low: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, work, ibuf, err)
          end if
       else
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "Allocation of array buffer failed."
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "int64_sort_index_low: allocation of array buffer failed.")
+               return
+            end if
+            error stop "Allocation of array buffer failed."
+         end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "int64_sort_index_low: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, buf, iwork)
+            call merge_sort(array, index, buf, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, buf, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "int64_sort_index_low: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, buf, ibuf, err)
          end if
       end if
 
@@ -2931,7 +3296,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, index, buf, ibuf)
+      subroutine merge_sort(array, index, buf, ibuf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -2956,6 +3321,7 @@ contains
          integer(int_index_low), intent(inout) :: index(0:)
          integer(int64), intent(inout) :: buf(0:)
          integer(int_index_low), intent(inout) :: ibuf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -3035,6 +3401,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "int64_sort_index_low: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -3133,7 +3504,7 @@ contains
 
    end subroutine int64_sort_index_low
 
-   module subroutine sp_sort_index_low(array, index, work, iwork, reverse)
+   module subroutine sp_sort_index_low(array, index, work, iwork, reverse, err)
 ! A modification of `sp_ord_sort` to return an array of indices that
 ! would perform a stable sort of the `ARRAY` as input, and also sort `ARRAY`
 ! as desired. The indices by default
@@ -3164,6 +3535,7 @@ contains
       real(sp), intent(out), optional :: work(0:)
       integer(int_index_low), intent(out), optional :: iwork(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       real(sp), allocatable :: buf(:)
       integer(int_index_low), allocatable :: ibuf(:)
@@ -3172,10 +3544,20 @@ contains
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "sp_sort_index_low: too many entries for the kind of index.")
+            return
+         end if
          error stop "Too many entries for the kind of index."
       end if
 
       if (array_size > size(index, kind=int_index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "sp_sort_index_low: too many entries for the size of index.")
+            return
+         end if
          error stop "Too many entries for the size of index."
       end if
 
@@ -3190,30 +3572,66 @@ contains
 ! If necessary allocate buffers to serve as scratch memory.
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "sp_sort_index_low: work array is too small.")
+               return
+            end if
             error stop "work array is too small."
          end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "sp_sort_index_low: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, work, iwork)
+            call merge_sort(array, index, work, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, work, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "sp_sort_index_low: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, work, ibuf, err)
          end if
       else
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "Allocation of array buffer failed."
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "sp_sort_index_low: allocation of array buffer failed.")
+               return
+            end if
+            error stop "Allocation of array buffer failed."
+         end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "sp_sort_index_low: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, buf, iwork)
+            call merge_sort(array, index, buf, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, buf, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "sp_sort_index_low: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, buf, ibuf, err)
          end if
       end if
 
@@ -3353,7 +3771,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, index, buf, ibuf)
+      subroutine merge_sort(array, index, buf, ibuf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -3378,6 +3796,7 @@ contains
          integer(int_index_low), intent(inout) :: index(0:)
          real(sp), intent(inout) :: buf(0:)
          integer(int_index_low), intent(inout) :: ibuf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -3457,6 +3876,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "sp_sort_index_low: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -3555,7 +3979,7 @@ contains
 
    end subroutine sp_sort_index_low
 
-   module subroutine dp_sort_index_low(array, index, work, iwork, reverse)
+   module subroutine dp_sort_index_low(array, index, work, iwork, reverse, err)
 ! A modification of `dp_ord_sort` to return an array of indices that
 ! would perform a stable sort of the `ARRAY` as input, and also sort `ARRAY`
 ! as desired. The indices by default
@@ -3586,6 +4010,7 @@ contains
       real(dp), intent(out), optional :: work(0:)
       integer(int_index_low), intent(out), optional :: iwork(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       real(dp), allocatable :: buf(:)
       integer(int_index_low), allocatable :: ibuf(:)
@@ -3594,10 +4019,20 @@ contains
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "dp_sort_index_low: too many entries for the kind of index.")
+            return
+         end if
          error stop "Too many entries for the kind of index."
       end if
 
       if (array_size > size(index, kind=int_index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "dp_sort_index_low: too many entries for the size of index.")
+            return
+         end if
          error stop "Too many entries for the size of index."
       end if
 
@@ -3612,30 +4047,66 @@ contains
 ! If necessary allocate buffers to serve as scratch memory.
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "dp_sort_index_low: work array is too small.")
+               return
+            end if
             error stop "work array is too small."
          end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "dp_sort_index_low: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, work, iwork)
+            call merge_sort(array, index, work, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, work, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "dp_sort_index_low: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, work, ibuf, err)
          end if
       else
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "Allocation of array buffer failed."
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "dp_sort_index_low: allocation of array buffer failed.")
+               return
+            end if
+            error stop "Allocation of array buffer failed."
+         end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "dp_sort_index_low: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, buf, iwork)
+            call merge_sort(array, index, buf, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, buf, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "dp_sort_index_low: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, buf, ibuf, err)
          end if
       end if
 
@@ -3775,7 +4246,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, index, buf, ibuf)
+      subroutine merge_sort(array, index, buf, ibuf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -3800,6 +4271,7 @@ contains
          integer(int_index_low), intent(inout) :: index(0:)
          real(dp), intent(inout) :: buf(0:)
          integer(int_index_low), intent(inout) :: ibuf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -3879,6 +4351,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "dp_sort_index_low: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -3977,7 +4454,7 @@ contains
 
    end subroutine dp_sort_index_low
 
-   module subroutine char_sort_index_low(array, index, work, iwork, reverse)
+   module subroutine char_sort_index_low(array, index, work, iwork, reverse, err)
 ! A modification of `char_ord_sort` to return an array of indices that
 ! would perform a stable sort of the `ARRAY` as input, and also sort `ARRAY`
 ! as desired. The indices by default
@@ -4008,6 +4485,7 @@ contains
       character(len=len(array)), intent(out), optional :: work(0:)
       integer(int_index_low), intent(out), optional :: iwork(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       integer(int_index_low), allocatable :: ibuf(:)
       integer(int_index) :: array_size, i, stat
@@ -4016,10 +4494,20 @@ contains
       array_size = size(array, kind=int_index)
 
       if (array_size > huge(index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "char_sort_index_low: too many entries for the kind of index.")
+            return
+         end if
          error stop "Too many entries for the kind of index."
       end if
 
       if (array_size > size(index, kind=int_index)) then
+         if (present(err)) then
+            call error_raise(err, ERROR_BOUNDS, &
+                             "char_sort_index_low: too many entries for the size of index.")
+            return
+         end if
          error stop "Too many entries for the size of index."
       end if
 
@@ -4034,17 +4522,34 @@ contains
 ! If necessary allocate buffers to serve as scratch memory.
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "char_sort_index_low: work array is too small.")
+               return
+            end if
             error stop "work array is too small."
          end if
          if (present(iwork)) then
             if (size(iwork, kind=int_index) < array_size/2) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_VALIDATION, &
+                                   "char_sort_index_low: iwork array is too small.")
+                  return
+               end if
                error stop "iwork array is too small."
             end if
-            call merge_sort(array, index, work, iwork)
+            call merge_sort(array, index, work, iwork, err)
          else
             allocate (ibuf(0:array_size/2 - 1), stat=stat)
-            if (stat /= 0) error stop "Allocation of index buffer failed."
-            call merge_sort(array, index, work, ibuf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "char_sort_index_low: allocation of index buffer failed.")
+                  return
+               end if
+               error stop "Allocation of index buffer failed."
+            end if
+            call merge_sort(array, index, work, ibuf, err)
          end if
       else
          block
@@ -4055,18 +4560,35 @@ contains
 
 #else
             if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "char_sort_index_low: allocation of character array buffer failed.")
+                  return
+               end if
                error stop "Allocation of array failed"
             end if
 #endif
             if (present(iwork)) then
                if (size(iwork, kind=int_index) < array_size/2) then
+                  if (present(err)) then
+                     call error_raise(err, ERROR_VALIDATION, &
+                                      "char_sort_index_low: iwork array is too small.")
+                     return
+                  end if
                   error stop "iwork array is too small."
                end if
-               call merge_sort(array, index, buf, iwork)
+               call merge_sort(array, index, buf, iwork, err)
             else
                allocate (ibuf(0:array_size/2 - 1), stat=stat)
-               if (stat /= 0) error stop "Allocation of index buffer failed."
-               call merge_sort(array, index, buf, ibuf)
+               if (stat /= 0) then
+                  if (present(err)) then
+                     call error_raise(err, ERROR_ALLOC, &
+                                      "char_sort_index_low: allocation of index buffer failed.")
+                     return
+                  end if
+                  error stop "Allocation of index buffer failed."
+               end if
+               call merge_sort(array, index, buf, ibuf, err)
             end if
          end block
       end if
@@ -4207,7 +4729,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, index, buf, ibuf)
+      subroutine merge_sort(array, index, buf, ibuf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -4232,6 +4754,7 @@ contains
          integer(int_index_low), intent(inout) :: index(0:)
          character(len=len(array)), intent(inout) :: buf(0:)
          integer(int_index_low), intent(inout) :: ibuf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -4311,6 +4834,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "char_sort_index_low: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 

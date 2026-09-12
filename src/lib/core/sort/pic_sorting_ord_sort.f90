@@ -50,6 +50,7 @@
 submodule(pic_sorting) pic_sorting_ord_sort
 
    use pic_sorting_run_type, only: run_type
+   use pic_error, only: error_raise, ERROR_ALLOC, ERROR_INTERNAL, ERROR_VALIDATION
    implicit none
 
    !! The generic subroutine implementing the `ORD_SORT` algorithm to return
@@ -109,69 +110,74 @@ submodule(pic_sorting) pic_sorting_ord_sort
 
 contains
 
-   module subroutine int32_ord_sort(array, work, reverse)
+   module subroutine int32_ord_sort(array, work, reverse, err)
       integer(int32), intent(inout)         :: array(0:)
       integer(int32), intent(out), optional :: work(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       if (pic_optional(reverse, .false.)) then
-         call int32_decrease_ord_sort(array, work)
+         call int32_decrease_ord_sort(array, work, err)
       else
-         call int32_increase_ord_sort(array, work)
+         call int32_increase_ord_sort(array, work, err)
       end if
 
    end subroutine int32_ord_sort
-   module subroutine int64_ord_sort(array, work, reverse)
+   module subroutine int64_ord_sort(array, work, reverse, err)
       integer(int64), intent(inout)         :: array(0:)
       integer(int64), intent(out), optional :: work(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       if (pic_optional(reverse, .false.)) then
-         call int64_decrease_ord_sort(array, work)
+         call int64_decrease_ord_sort(array, work, err)
       else
-         call int64_increase_ord_sort(array, work)
+         call int64_increase_ord_sort(array, work, err)
       end if
 
    end subroutine int64_ord_sort
-   module subroutine sp_ord_sort(array, work, reverse)
+   module subroutine sp_ord_sort(array, work, reverse, err)
       real(sp), intent(inout)         :: array(0:)
       real(sp), intent(out), optional :: work(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       if (pic_optional(reverse, .false.)) then
-         call sp_decrease_ord_sort(array, work)
+         call sp_decrease_ord_sort(array, work, err)
       else
-         call sp_increase_ord_sort(array, work)
+         call sp_increase_ord_sort(array, work, err)
       end if
 
    end subroutine sp_ord_sort
-   module subroutine dp_ord_sort(array, work, reverse)
+   module subroutine dp_ord_sort(array, work, reverse, err)
       real(dp), intent(inout)         :: array(0:)
       real(dp), intent(out), optional :: work(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       if (pic_optional(reverse, .false.)) then
-         call dp_decrease_ord_sort(array, work)
+         call dp_decrease_ord_sort(array, work, err)
       else
-         call dp_increase_ord_sort(array, work)
+         call dp_increase_ord_sort(array, work, err)
       end if
 
    end subroutine dp_ord_sort
 
-   module subroutine char_ord_sort(array, work, reverse)
+   module subroutine char_ord_sort(array, work, reverse, err)
       character(len=*), intent(inout)         :: array(0:)
       character(len=len(array)), intent(out), optional :: work(0:)
       logical, intent(in), optional :: reverse
+      type(error_t), intent(inout), optional :: err
 
       if (pic_optional(reverse, .false.)) then
-         call char_decrease_ord_sort(array, work)
+         call char_decrease_ord_sort(array, work, err)
       else
-         call char_increase_ord_sort(array, work)
+         call char_increase_ord_sort(array, work, err)
       end if
 
    end subroutine char_ord_sort
 
-   subroutine int32_increase_ord_sort(array, work)
+   subroutine int32_increase_ord_sort(array, work, err)
 ! A translation to Fortran 2008, of the `"Rust" sort` algorithm found in
 ! `slice.rs`
 ! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
@@ -193,6 +199,7 @@ contains
 ! scratch memory.
       integer(int32), intent(inout)         :: array(0:)
       integer(int32), intent(out), optional :: work(0:)
+      type(error_t), intent(inout), optional :: err
 
       integer(int32), allocatable :: buf(:)
       integer(int_index) :: array_size
@@ -201,15 +208,27 @@ contains
       array_size = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "int32_increase_ord_sort: work array is too small.")
+               return
+            end if
             error stop "int32_increase_ord_sort: work array is too small."
          end if
 ! Use the work array as scratch memory
-         call merge_sort(array, work)
+         call merge_sort(array, work, err)
       else
 ! Allocate a buffer to use as scratch memory.
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "int32_increase_ord_sort: Allocation of buffer failed."
-         call merge_sort(array, buf)
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "int32_increase_ord_sort: allocation of scratch buffer failed.")
+               return
+            end if
+            error stop "int32_increase_ord_sort: Allocation of buffer failed."
+         end if
+         call merge_sort(array, buf, err)
       end if
 
    contains
@@ -331,7 +350,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, buf)
+      subroutine merge_sort(array, buf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -353,6 +372,7 @@ contains
 
          integer(int32), intent(inout) :: array(0:)
          integer(int32), intent(inout) :: buf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -430,6 +450,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "int32_increase_ord_sort: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -513,7 +538,7 @@ contains
 
    end subroutine int32_increase_ord_sort
 
-   subroutine int64_increase_ord_sort(array, work)
+   subroutine int64_increase_ord_sort(array, work, err)
 ! A translation to Fortran 2008, of the `"Rust" sort` algorithm found in
 ! `slice.rs`
 ! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
@@ -535,6 +560,7 @@ contains
 ! scratch memory.
       integer(int64), intent(inout)         :: array(0:)
       integer(int64), intent(out), optional :: work(0:)
+      type(error_t), intent(inout), optional :: err
 
       integer(int64), allocatable :: buf(:)
       integer(int_index) :: array_size
@@ -543,15 +569,27 @@ contains
       array_size = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "int64_increase_ord_sort: work array is too small.")
+               return
+            end if
             error stop "int64_increase_ord_sort: work array is too small."
          end if
 ! Use the work array as scratch memory
-         call merge_sort(array, work)
+         call merge_sort(array, work, err)
       else
 ! Allocate a buffer to use as scratch memory.
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "int64_increase_ord_sort: Allocation of buffer failed."
-         call merge_sort(array, buf)
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "int64_increase_ord_sort: allocation of scratch buffer failed.")
+               return
+            end if
+            error stop "int64_increase_ord_sort: Allocation of buffer failed."
+         end if
+         call merge_sort(array, buf, err)
       end if
 
    contains
@@ -673,7 +711,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, buf)
+      subroutine merge_sort(array, buf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -695,6 +733,7 @@ contains
 
          integer(int64), intent(inout) :: array(0:)
          integer(int64), intent(inout) :: buf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -772,6 +811,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "int64_increase_ord_sort: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -855,7 +899,7 @@ contains
 
    end subroutine int64_increase_ord_sort
 
-   subroutine sp_increase_ord_sort(array, work)
+   subroutine sp_increase_ord_sort(array, work, err)
 ! A translation to Fortran 2008, of the `"Rust" sort` algorithm found in
 ! `slice.rs`
 ! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
@@ -877,6 +921,7 @@ contains
 ! scratch memory.
       real(sp), intent(inout)         :: array(0:)
       real(sp), intent(out), optional :: work(0:)
+      type(error_t), intent(inout), optional :: err
 
       real(sp), allocatable :: buf(:)
       integer(int_index) :: array_size
@@ -885,15 +930,27 @@ contains
       array_size = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "sp_increase_ord_sort: work array is too small.")
+               return
+            end if
             error stop "sp_increase_ord_sort: work array is too small."
          end if
 ! Use the work array as scratch memory
-         call merge_sort(array, work)
+         call merge_sort(array, work, err)
       else
 ! Allocate a buffer to use as scratch memory.
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "sp_increase_ord_sort: Allocation of buffer failed."
-         call merge_sort(array, buf)
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "sp_increase_ord_sort: allocation of scratch buffer failed.")
+               return
+            end if
+            error stop "sp_increase_ord_sort: Allocation of buffer failed."
+         end if
+         call merge_sort(array, buf, err)
       end if
 
    contains
@@ -1015,7 +1072,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, buf)
+      subroutine merge_sort(array, buf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -1037,6 +1094,7 @@ contains
 
          real(sp), intent(inout) :: array(0:)
          real(sp), intent(inout) :: buf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -1114,6 +1172,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "sp_increase_ord_sort: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -1197,7 +1260,7 @@ contains
 
    end subroutine sp_increase_ord_sort
 
-   subroutine dp_increase_ord_sort(array, work)
+   subroutine dp_increase_ord_sort(array, work, err)
 ! A translation to Fortran 2008, of the `"Rust" sort` algorithm found in
 ! `slice.rs`
 ! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
@@ -1219,6 +1282,7 @@ contains
 ! scratch memory.
       real(dp), intent(inout)         :: array(0:)
       real(dp), intent(out), optional :: work(0:)
+      type(error_t), intent(inout), optional :: err
 
       real(dp), allocatable :: buf(:)
       integer(int_index) :: array_size
@@ -1227,15 +1291,27 @@ contains
       array_size = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "dp_increase_ord_sort: work array is too small.")
+               return
+            end if
             error stop "dp_increase_ord_sort: work array is too small."
          end if
 ! Use the work array as scratch memory
-         call merge_sort(array, work)
+         call merge_sort(array, work, err)
       else
 ! Allocate a buffer to use as scratch memory.
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "dp_increase_ord_sort: Allocation of buffer failed."
-         call merge_sort(array, buf)
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "dp_increase_ord_sort: allocation of scratch buffer failed.")
+               return
+            end if
+            error stop "dp_increase_ord_sort: Allocation of buffer failed."
+         end if
+         call merge_sort(array, buf, err)
       end if
 
    contains
@@ -1357,7 +1433,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, buf)
+      subroutine merge_sort(array, buf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -1379,6 +1455,7 @@ contains
 
          real(dp), intent(inout) :: array(0:)
          real(dp), intent(inout) :: buf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -1456,6 +1533,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "dp_increase_ord_sort: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -1539,7 +1621,7 @@ contains
 
    end subroutine dp_increase_ord_sort
 
-   subroutine char_increase_ord_sort(array, work)
+   subroutine char_increase_ord_sort(array, work, err)
 ! A translation to Fortran 2008, of the `"Rust" sort` algorithm found in
 ! `slice.rs`
 ! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
@@ -1561,6 +1643,7 @@ contains
 ! scratch memory.
       character(len=*), intent(inout)         :: array(0:)
       character(len=len(array)), intent(out), optional :: work(0:)
+      type(error_t), intent(inout), optional :: err
 
       integer(int_index) :: array_size
       integer :: stat
@@ -1568,18 +1651,30 @@ contains
       array_size = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "char_increase_ord_sort: work array is too small.")
+               return
+            end if
             error stop "char_increase_ord_sort: work array is too small."
          end if
 ! Use the work array as scratch memory
-         call merge_sort(array, work)
+         call merge_sort(array, work, err)
       else
          block
             character(len=:), allocatable :: buf(:)
 ! Allocate a buffer to use as scratch memory.
             allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
                       stat=stat)
-            if (stat /= 0) error stop "char_increase_ord_sort: Allocation of buffer failed."
-            call merge_sort(array, buf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "char_increase_ord_sort: allocation of scratch buffer failed.")
+                  return
+               end if
+               error stop "char_increase_ord_sort: Allocation of buffer failed."
+            end if
+            call merge_sort(array, buf, err)
          end block
       end if
 
@@ -1702,7 +1797,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, buf)
+      subroutine merge_sort(array, buf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -1724,6 +1819,7 @@ contains
 
          character(len=*), intent(inout) :: array(0:)
          character(len=len(array)), intent(inout) :: buf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -1801,6 +1897,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "char_increase_ord_sort: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -1884,7 +1985,7 @@ contains
 
    end subroutine char_increase_ord_sort
 
-   subroutine int32_decrease_ord_sort(array, work)
+   subroutine int32_decrease_ord_sort(array, work, err)
 ! A translation to Fortran 2008, of the `"Rust" sort` algorithm found in
 ! `slice.rs`
 ! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
@@ -1906,6 +2007,7 @@ contains
 ! scratch memory.
       integer(int32), intent(inout)         :: array(0:)
       integer(int32), intent(out), optional :: work(0:)
+      type(error_t), intent(inout), optional :: err
 
       integer(int32), allocatable :: buf(:)
       integer(int_index) :: array_size
@@ -1914,15 +2016,27 @@ contains
       array_size = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "int32_decrease_ord_sort: work array is too small.")
+               return
+            end if
             error stop "int32_decrease_ord_sort: work array is too small."
          end if
 ! Use the work array as scratch memory
-         call merge_sort(array, work)
+         call merge_sort(array, work, err)
       else
 ! Allocate a buffer to use as scratch memory.
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "int32_decrease_ord_sort: Allocation of buffer failed."
-         call merge_sort(array, buf)
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "int32_decrease_ord_sort: allocation of scratch buffer failed.")
+               return
+            end if
+            error stop "int32_decrease_ord_sort: Allocation of buffer failed."
+         end if
+         call merge_sort(array, buf, err)
       end if
 
    contains
@@ -2044,7 +2158,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, buf)
+      subroutine merge_sort(array, buf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -2066,6 +2180,7 @@ contains
 
          integer(int32), intent(inout) :: array(0:)
          integer(int32), intent(inout) :: buf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -2143,6 +2258,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "int32_decrease_ord_sort: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -2226,7 +2346,7 @@ contains
 
    end subroutine int32_decrease_ord_sort
 
-   subroutine int64_decrease_ord_sort(array, work)
+   subroutine int64_decrease_ord_sort(array, work, err)
 ! A translation to Fortran 2008, of the `"Rust" sort` algorithm found in
 ! `slice.rs`
 ! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
@@ -2248,6 +2368,7 @@ contains
 ! scratch memory.
       integer(int64), intent(inout)         :: array(0:)
       integer(int64), intent(out), optional :: work(0:)
+      type(error_t), intent(inout), optional :: err
 
       integer(int64), allocatable :: buf(:)
       integer(int_index) :: array_size
@@ -2256,15 +2377,27 @@ contains
       array_size = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "int64_decrease_ord_sort: work array is too small.")
+               return
+            end if
             error stop "int64_decrease_ord_sort: work array is too small."
          end if
 ! Use the work array as scratch memory
-         call merge_sort(array, work)
+         call merge_sort(array, work, err)
       else
 ! Allocate a buffer to use as scratch memory.
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "int64_decrease_ord_sort: Allocation of buffer failed."
-         call merge_sort(array, buf)
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "int64_decrease_ord_sort: allocation of scratch buffer failed.")
+               return
+            end if
+            error stop "int64_decrease_ord_sort: Allocation of buffer failed."
+         end if
+         call merge_sort(array, buf, err)
       end if
 
    contains
@@ -2386,7 +2519,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, buf)
+      subroutine merge_sort(array, buf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -2408,6 +2541,7 @@ contains
 
          integer(int64), intent(inout) :: array(0:)
          integer(int64), intent(inout) :: buf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -2485,6 +2619,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "int64_decrease_ord_sort: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -2568,7 +2707,7 @@ contains
 
    end subroutine int64_decrease_ord_sort
 
-   subroutine sp_decrease_ord_sort(array, work)
+   subroutine sp_decrease_ord_sort(array, work, err)
 ! A translation to Fortran 2008, of the `"Rust" sort` algorithm found in
 ! `slice.rs`
 ! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
@@ -2590,6 +2729,7 @@ contains
 ! scratch memory.
       real(sp), intent(inout)         :: array(0:)
       real(sp), intent(out), optional :: work(0:)
+      type(error_t), intent(inout), optional :: err
 
       real(sp), allocatable :: buf(:)
       integer(int_index) :: array_size
@@ -2598,15 +2738,27 @@ contains
       array_size = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "sp_decrease_ord_sort: work array is too small.")
+               return
+            end if
             error stop "sp_decrease_ord_sort: work array is too small."
          end if
 ! Use the work array as scratch memory
-         call merge_sort(array, work)
+         call merge_sort(array, work, err)
       else
 ! Allocate a buffer to use as scratch memory.
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "sp_decrease_ord_sort: Allocation of buffer failed."
-         call merge_sort(array, buf)
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "sp_decrease_ord_sort: allocation of scratch buffer failed.")
+               return
+            end if
+            error stop "sp_decrease_ord_sort: Allocation of buffer failed."
+         end if
+         call merge_sort(array, buf, err)
       end if
 
    contains
@@ -2728,7 +2880,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, buf)
+      subroutine merge_sort(array, buf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -2750,6 +2902,7 @@ contains
 
          real(sp), intent(inout) :: array(0:)
          real(sp), intent(inout) :: buf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -2827,6 +2980,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "sp_decrease_ord_sort: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -2910,7 +3068,7 @@ contains
 
    end subroutine sp_decrease_ord_sort
 
-   subroutine dp_decrease_ord_sort(array, work)
+   subroutine dp_decrease_ord_sort(array, work, err)
 ! A translation to Fortran 2008, of the `"Rust" sort` algorithm found in
 ! `slice.rs`
 ! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
@@ -2932,6 +3090,7 @@ contains
 ! scratch memory.
       real(dp), intent(inout)         :: array(0:)
       real(dp), intent(out), optional :: work(0:)
+      type(error_t), intent(inout), optional :: err
 
       real(dp), allocatable :: buf(:)
       integer(int_index) :: array_size
@@ -2940,15 +3099,27 @@ contains
       array_size = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "dp_decrease_ord_sort: work array is too small.")
+               return
+            end if
             error stop "dp_decrease_ord_sort: work array is too small."
          end if
 ! Use the work array as scratch memory
-         call merge_sort(array, work)
+         call merge_sort(array, work, err)
       else
 ! Allocate a buffer to use as scratch memory.
          allocate (buf(0:array_size/2 - 1), stat=stat)
-         if (stat /= 0) error stop "dp_decrease_ord_sort: Allocation of buffer failed."
-         call merge_sort(array, buf)
+         if (stat /= 0) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "dp_decrease_ord_sort: allocation of scratch buffer failed.")
+               return
+            end if
+            error stop "dp_decrease_ord_sort: Allocation of buffer failed."
+         end if
+         call merge_sort(array, buf, err)
       end if
 
    contains
@@ -3070,7 +3241,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, buf)
+      subroutine merge_sort(array, buf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -3092,6 +3263,7 @@ contains
 
          real(dp), intent(inout) :: array(0:)
          real(dp), intent(inout) :: buf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -3169,6 +3341,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "dp_decrease_ord_sort: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
@@ -3252,7 +3429,7 @@ contains
 
    end subroutine dp_decrease_ord_sort
 
-   subroutine char_decrease_ord_sort(array, work)
+   subroutine char_decrease_ord_sort(array, work, err)
 ! A translation to Fortran 2008, of the `"Rust" sort` algorithm found in
 ! `slice.rs`
 ! https://github.com/rust-lang/rust/blob/90eb44a5897c39e3dff9c7e48e3973671dcd9496/src/liballoc/slice.rs#L2159
@@ -3274,6 +3451,7 @@ contains
 ! scratch memory.
       character(len=*), intent(inout)         :: array(0:)
       character(len=len(array)), intent(out), optional :: work(0:)
+      type(error_t), intent(inout), optional :: err
 
       integer(int_index) :: array_size
       integer :: stat
@@ -3281,18 +3459,30 @@ contains
       array_size = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < array_size/2) then
+            if (present(err)) then
+               call error_raise(err, ERROR_VALIDATION, &
+                                "char_decrease_ord_sort: work array is too small.")
+               return
+            end if
             error stop "char_decrease_ord_sort: work array is too small."
          end if
 ! Use the work array as scratch memory
-         call merge_sort(array, work)
+         call merge_sort(array, work, err)
       else
          block
             character(len=:), allocatable :: buf(:)
 ! Allocate a buffer to use as scratch memory.
             allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
                       stat=stat)
-            if (stat /= 0) error stop "char_decrease_ord_sort: Allocation of buffer failed."
-            call merge_sort(array, buf)
+            if (stat /= 0) then
+               if (present(err)) then
+                  call error_raise(err, ERROR_ALLOC, &
+                                   "char_decrease_ord_sort: allocation of scratch buffer failed.")
+                  return
+               end if
+               error stop "char_decrease_ord_sort: Allocation of buffer failed."
+            end if
+            call merge_sort(array, buf, err)
          end block
       end if
 
@@ -3415,7 +3605,7 @@ contains
 
       end subroutine insert_head
 
-      subroutine merge_sort(array, buf)
+      subroutine merge_sort(array, buf, err)
 ! The Rust merge sort borrows some (but not all) of the ideas from TimSort,
 ! which is described in detail at
 ! (http://svn.python.org/projects/python/trunk/Objects/listsort.txt).
@@ -3437,6 +3627,7 @@ contains
 
          character(len=*), intent(inout) :: array(0:)
          character(len=len(array)), intent(inout) :: buf(0:)
+         type(error_t), intent(inout), optional :: err
 
          integer(int_index) :: array_size, finish, min_run, r, r_count, &
                                start
@@ -3514,6 +3705,11 @@ contains
             end do Merge_loop
          end do
          if (r_count /= 1) then
+            if (present(err)) then
+               call error_raise(err, ERROR_INTERNAL, &
+                                "char_decrease_ord_sort: merge_sort finished with run count /= 1.")
+               return
+            end if
             error stop "MERGE_SORT completed without RUN COUNT == 1."
          end if
 
