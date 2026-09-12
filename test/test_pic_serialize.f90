@@ -148,28 +148,28 @@ contains
       type(error_t) :: err
 
       call serialize_open_write(fname, unit, err)
-      call check(error, .not. err%has_error(), "open for write failed")
+      call check(error,.not. err%has_error(), "open for write failed")
       if (allocated(error)) return
       call write_header(unit, err)
-      call check(error, .not. err%has_error(), "write_header failed")
+      call check(error,.not. err%has_error(), "write_header failed")
       if (allocated(error)) return
       call write_array(unit, expected, err)
-      call check(error, .not. err%has_error(), "write int32 failed")
+      call check(error,.not. err%has_error(), "write int32 failed")
       if (allocated(error)) return
       call serialize_close(unit, err)
-      call check(error, .not. err%has_error(), "close failed")
+      call check(error,.not. err%has_error(), "close failed")
       if (allocated(error)) return
 
       call serialize_open_read(fname, unit, err)
       call read_header(unit, version, swapped, err)
-      call check(error, .not. err%has_error(), "read_header failed")
+      call check(error,.not. err%has_error(), "read_header failed")
       if (allocated(error)) return
       call check(error, version == PIC_FORMAT_VERSION, "version mismatch")
       if (allocated(error)) return
-      call check(error, .not. swapped, "native file should not be swapped")
+      call check(error,.not. swapped, "native file should not be swapped")
       if (allocated(error)) return
       call read_array(unit, got, swapped, err)
-      call check(error, .not. err%has_error(), "read int32 failed")
+      call check(error,.not. err%has_error(), "read int32 failed")
       if (allocated(error)) return
       call check(error, size(got) == 5, "wrong element count")
       if (allocated(error)) return
@@ -193,13 +193,13 @@ contains
       call write_header(unit, err)
       call write_array(unit, expected, err)
       call serialize_close(unit, err)
-      call check(error, .not. err%has_error(), "write path failed")
+      call check(error,.not. err%has_error(), "write path failed")
       if (allocated(error)) return
 
       call serialize_open_read(fname, unit, err)
       call read_header(unit, version, swapped, err)
       call read_array(unit, got, swapped, err)
-      call check(error, .not. err%has_error(), "read path failed")
+      call check(error,.not. err%has_error(), "read path failed")
       if (allocated(error)) return
       call check(error, size(got) == 4, "wrong element count")
       if (allocated(error)) return
@@ -223,13 +223,13 @@ contains
       call write_header(unit, err)
       call write_array(unit, expected, err)
       call serialize_close(unit, err)
-      call check(error, .not. err%has_error(), "write path failed")
+      call check(error,.not. err%has_error(), "write path failed")
       if (allocated(error)) return
 
       call serialize_open_read(fname, unit, err)
       call read_header(unit, version, swapped, err)
       call read_array(unit, got, swapped, err)
-      call check(error, .not. err%has_error(), "read path failed")
+      call check(error,.not. err%has_error(), "read path failed")
       if (allocated(error)) return
       call check(error, size(got) == 3, "wrong element count")
       if (allocated(error)) return
@@ -253,13 +253,13 @@ contains
       call write_header(unit, err)
       call write_array(unit, expected, err)
       call serialize_close(unit, err)
-      call check(error, .not. err%has_error(), "write path failed")
+      call check(error,.not. err%has_error(), "write path failed")
       if (allocated(error)) return
 
       call serialize_open_read(fname, unit, err)
       call read_header(unit, version, swapped, err)
       call read_array(unit, got, swapped, err)
-      call check(error, .not. err%has_error(), "read path failed")
+      call check(error,.not. err%has_error(), "read path failed")
       if (allocated(error)) return
       call check(error, size(got) == 3, "wrong element count")
       if (allocated(error)) return
@@ -283,13 +283,13 @@ contains
       call write_header(unit, err)
       call write_array(unit, expected, err)
       call serialize_close(unit, err)
-      call check(error, .not. err%has_error(), "write path failed")
+      call check(error,.not. err%has_error(), "write path failed")
       if (allocated(error)) return
 
       call serialize_open_read(fname, unit, err)
       call read_header(unit, version, swapped, err)
       call read_array(unit, got, swapped, err)
-      call check(error, .not. err%has_error(), "read path failed")
+      call check(error,.not. err%has_error(), "read path failed")
       if (allocated(error)) return
       call check(error, len(got) == len(expected), "wrong string length")
       if (allocated(error)) return
@@ -321,7 +321,7 @@ contains
       call write_array(unit, [7.0_dp], err)
       call write_array(unit, "tail", err)
       call serialize_close(unit, err)
-      call check(error, .not. err%has_error(), "mixed write failed")
+      call check(error,.not. err%has_error(), "mixed write failed")
       if (allocated(error)) return
 
       call serialize_open_read(fname, unit, err)
@@ -331,7 +331,7 @@ contains
       call read_array(unit, c, swapped, err)
       call read_array(unit, d, swapped, err)
       call read_array(unit, e, swapped, err)
-      call check(error, .not. err%has_error(), "mixed read failed")
+      call check(error,.not. err%has_error(), "mixed read failed")
       if (allocated(error)) return
       call check(error, all(a == [1_int32, 2_int32]), "int32 record differs")
       if (allocated(error)) return
@@ -372,7 +372,7 @@ contains
       call write_array(unit, none_dp, err)
       call write_array(unit, "", err)
       call serialize_close(unit, err)
-      call check(error, .not. err%has_error(), "empty write failed")
+      call check(error,.not. err%has_error(), "empty write failed")
       if (allocated(error)) return
 
       call check(error, file_bytes(fname) == PIC_HEADER_BYTES + 5_int64*PIC_RECORD_HEADER_BYTES, &
@@ -386,7 +386,7 @@ contains
       call read_array(unit, c, swapped, err)
       call read_array(unit, d, swapped, err)
       call read_array(unit, e, swapped, err)
-      call check(error, .not. err%has_error(), "empty read failed")
+      call check(error,.not. err%has_error(), "empty read failed")
       if (allocated(error)) return
       call check(error, size(a) == 0 .and. size(b) == 0 .and. size(c) == 0 .and. size(d) == 0, &
                  "empty arrays should come back empty")
@@ -413,7 +413,7 @@ contains
       call write_array(unit, [1.0_dp, 2.0_dp], err)
       call write_array(unit, "hello", err)
       call serialize_close(unit, err)
-      call check(error, .not. err%has_error(), "pinned write failed")
+      call check(error,.not. err%has_error(), "pinned write failed")
       if (allocated(error)) return
 
       ! 16 header + (12 + 3*4) + (12 + 2*8) + (12 + 5) = 85
@@ -477,7 +477,7 @@ contains
       type(error_t) :: err
 
       call make_simple_file(fname, err)
-      call check(error, .not. err%has_error(), "setup failed")
+      call check(error,.not. err%has_error(), "setup failed")
       if (allocated(error)) return
       call patch_chars(fname, 1_int64, "NOPE")
 
@@ -555,14 +555,14 @@ contains
       type(error_t) :: err
 
       call make_simple_file(fname, err)
-      call check(error, .not. err%has_error(), "setup failed")
+      call check(error,.not. err%has_error(), "setup failed")
       if (allocated(error)) return
 
       do i = 1, size(cuts)
          call err%clear()
          call copy_prefix(fname, cut, cuts(i))
          call serialize_open_read(cut, unit, err)
-         call check(error, .not. err%has_error(), "open of truncated file failed")
+         call check(error,.not. err%has_error(), "open of truncated file failed")
          if (allocated(error)) return
          call read_header(unit, version, swapped, err)
          call check(error, err%is(ERROR_IO), "truncated header should be ERROR_IO")
@@ -599,7 +599,7 @@ contains
          call copy_prefix(fname, cut, cuts(i))
          call serialize_open_read(cut, unit, err)
          call read_header(unit, version, swapped, err)
-         call check(error, .not. err%has_error(), "header of truncated file should still be valid")
+         call check(error,.not. err%has_error(), "header of truncated file should still be valid")
          if (allocated(error)) return
          call read_array(unit, got, swapped, err)
          call check(error, err%is(ERROR_IO), "truncated record should be ERROR_IO")
@@ -629,7 +629,7 @@ contains
       ! Record count lives at bytes 21..28; write -1 over it.
       open (newunit=raw, file=fname, form="unformatted", access="stream", &
             action="readwrite", status="old")
-      write (raw, pos=21_int64) -1_int64
+      write (raw, pos=21_int64) - 1_int64
       close (raw)
 
       call serialize_open_read(fname, unit, err)
@@ -660,7 +660,7 @@ contains
       call write_header(unit, err)
       call write_array(unit, "not a number", err)
       call serialize_close(unit, err)
-      call check(error, .not. err%has_error(), "setup failed")
+      call check(error,.not. err%has_error(), "setup failed")
       if (allocated(error)) return
 
       call serialize_open_read(fname, unit, err)
@@ -781,7 +781,7 @@ contains
 
       call serialize_open_read(fname, unit, err)
       call read_header(unit, version, swapped, err)
-      call check(error, .not. err%has_error(), "swapped header should be accepted")
+      call check(error,.not. err%has_error(), "swapped header should be accepted")
       if (allocated(error)) return
       call check(error, swapped, "reader must report a foreign byte order")
       if (allocated(error)) return
@@ -789,31 +789,31 @@ contains
       if (allocated(error)) return
 
       call read_array(unit, a, swapped, err)
-      call check(error, .not. err%has_error(), "swapped int32 read failed")
+      call check(error,.not. err%has_error(), "swapped int32 read failed")
       if (allocated(error)) return
       call check(error, all(a == i32_vals), "swapped int32 values differ")
       if (allocated(error)) return
 
       call read_array(unit, b, swapped, err)
-      call check(error, .not. err%has_error(), "swapped int64 read failed")
+      call check(error,.not. err%has_error(), "swapped int64 read failed")
       if (allocated(error)) return
       call check(error, all(b == i64_vals), "swapped int64 values differ")
       if (allocated(error)) return
 
       call read_array(unit, c, swapped, err)
-      call check(error, .not. err%has_error(), "swapped real(sp) read failed")
+      call check(error,.not. err%has_error(), "swapped real(sp) read failed")
       if (allocated(error)) return
       call check(error, all(abs(c - sp_vals) < 1.0e-6_sp), "swapped real(sp) values differ")
       if (allocated(error)) return
 
       call read_array(unit, d, swapped, err)
-      call check(error, .not. err%has_error(), "swapped real(dp) read failed")
+      call check(error,.not. err%has_error(), "swapped real(dp) read failed")
       if (allocated(error)) return
       call check(error, all(abs(d - dp_vals) <= abs(dp_vals)*1.0e-15_dp), "swapped real(dp) values differ")
       if (allocated(error)) return
 
       call read_array(unit, e, swapped, err)
-      call check(error, .not. err%has_error(), "swapped char read failed")
+      call check(error,.not. err%has_error(), "swapped char read failed")
       if (allocated(error)) return
       call check(error, e == text, "swapped char record differs")
       if (allocated(error)) return
@@ -851,7 +851,7 @@ contains
 
       call make_simple_file(fname, err)
       call serialize_open_read(fname, unit, err)
-      call check(error, .not. err%has_error(), "setup failed")
+      call check(error,.not. err%has_error(), "setup failed")
       if (allocated(error)) return
 
       call write_header(unit, err)
@@ -887,7 +887,7 @@ contains
 
       call err%clear()
       call serialize_close(unit, err)
-      call check(error, .not. err%has_error(), "close should succeed")
+      call check(error,.not. err%has_error(), "close should succeed")
       if (allocated(error)) return
       call remove_file(fname)
    end subroutine test_write_to_read_only_unit
