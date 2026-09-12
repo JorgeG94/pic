@@ -344,16 +344,46 @@ contains
       type(error_t) :: err
 
       call fill(p, 7_default_int, err)
-      call check(error, is_contiguous(p%x), "the whole field array is contiguous")
+      call check(error, is_contiguous(p%x), "the whole real field array is contiguous")
       if (allocated(error)) return
-      call check(error, is_contiguous(p%x(1:p%size())), "the live slice is contiguous")
+      call check(error, is_contiguous(p%id), "so is the whole integer field array")
       if (allocated(error)) return
-      call check(error, is_contiguous(p%id(1:p%size())), "so is an integer field")
+      call check(error, is_contiguous(p%active), "so is the whole logical field array")
       if (allocated(error)) return
-      call check(error, is_contiguous(p%active(1:p%size())), "so is a logical field")
+      call check(error, slice_reaches_callee_contiguous_dp(p%x(1:p%size())), &
+                 "the live real slice reaches a callee uncopied")
+      if (allocated(error)) return
+      call check(error, slice_reaches_callee_contiguous_i32(p%id(1:p%size())), &
+                 "so does the live integer slice")
+      if (allocated(error)) return
+      call check(error, slice_reaches_callee_contiguous_log(p%active(1:p%size())), &
+                 "so does the live logical slice")
       if (allocated(error)) return
       call check(error, sum(p%x(1:p%size())) == 28.0_dp, "the slice holds the live data")
    end subroutine test_fields_are_contiguous
+
+   ! The live slice of a field is handed to an assumed-shape dummy, which is how
+   ! a BLAS or LAPACK wrapper receives it. `is_contiguous` on the dummy is .true.
+   ! only when the actual argument arrived by reference with no copy-in, so this
+   ! is the property that actually matters for zero-copy interop. It is also the
+   ! portable spelling: classic flang (AOCC 5.1) accepts `is_contiguous` only on
+   ! a whole-array object and rejects an array section at the call site with
+   ! "F90-S-0074 Illegal number or type of arguments to is_contiguous".
+
+   logical function slice_reaches_callee_contiguous_dp(arr) result(ok)
+      real(dp), intent(in) :: arr(:)
+      ok = is_contiguous(arr)
+   end function slice_reaches_callee_contiguous_dp
+
+   logical function slice_reaches_callee_contiguous_i32(arr) result(ok)
+      integer(int32), intent(in) :: arr(:)
+      ok = is_contiguous(arr)
+   end function slice_reaches_callee_contiguous_i32
+
+   logical function slice_reaches_callee_contiguous_log(arr) result(ok)
+      logical, intent(in) :: arr(:)
+      ok = is_contiguous(arr)
+   end function slice_reaches_callee_contiguous_log
 
    ! ------------------------------------------------------------- round trip
 
