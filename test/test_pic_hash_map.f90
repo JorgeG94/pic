@@ -62,11 +62,11 @@ contains
       if (allocated(error)) return
       call check(error, map%bucket_count() == 0, "fresh map must have no buckets")
       if (allocated(error)) return
-      call check(error, .not. map%has_key("nope"), "fresh map has no keys")
+      call check(error,.not. map%has_key("nope"), "fresh map has no keys")
       if (allocated(error)) return
 
       call map%get("nope", value, found)
-      call check(error, .not. found, "get on empty map must not find")
+      call check(error,.not. found, "get on empty map must not find")
       if (allocated(error)) return
       call check(error, value == 0_int64, "get on empty map returns 0")
       if (allocated(error)) return
@@ -130,7 +130,7 @@ contains
       if (allocated(error)) return
       call check(error, map%bucket_count() == big_buckets, "clear keeps the capacity")
       if (allocated(error)) return
-      call check(error, .not. map%has_key("one"), "cleared map has no keys")
+      call check(error,.not. map%has_key("one"), "cleared map has no keys")
       if (allocated(error)) return
 
       ! refilling a cleared map restarts the insertion order at position 1
@@ -285,7 +285,7 @@ contains
 
       ! remove from the front: b c d e
       call map%remove("a", err)
-      call check(error, .not. err%has_error(), "removing a present key succeeds")
+      call check(error,.not. err%has_error(), "removing a present key succeeds")
       if (allocated(error)) return
       all_keys = map%keys()
       all_values = map%values()
@@ -296,7 +296,7 @@ contains
       if (allocated(error)) return
       call check(error, all_values(1) == 2_int64 .and. all_values(4) == 5_int64, "values shift with keys")
       if (allocated(error)) return
-      call check(error, .not. map%has_key("a"), "removed key is gone")
+      call check(error,.not. map%has_key("a"), "removed key is gone")
       if (allocated(error)) return
 
       ! remove from the middle: b d e
@@ -415,7 +415,7 @@ contains
 
       ! removing from the middle of a probe chain must not orphan the rest
       call map%remove(trim(chosen(3)))
-      call check(error, .not. map%has_key(trim(chosen(3))), "removed colliding key is gone")
+      call check(error,.not. map%has_key(trim(chosen(3))), "removed colliding key is gone")
       if (allocated(error)) return
       do i = 1, 6
          if (i == 3) cycle
@@ -442,11 +442,11 @@ contains
       call map%insert("bravo", 2_int64)
 
       call map%get("charlie", value, found)
-      call check(error, .not. found, "missing key is not found")
+      call check(error,.not. found, "missing key is not found")
       if (allocated(error)) return
       call check(error, value == 0_int64, "missing key yields a zero value")
       if (allocated(error)) return
-      call check(error, .not. map%has_key("charlie"), "has_key is false for a missing key")
+      call check(error,.not. map%has_key("charlie"), "has_key is false for a missing key")
       if (allocated(error)) return
 
       call map%remove("charlie", err)
@@ -474,7 +474,7 @@ contains
       if (allocated(error)) return
 
       call map%at(2_default_int, key, value, err)
-      call check(error, .not. err%has_error(), "in-range index does not error")
+      call check(error,.not. err%has_error(), "in-range index does not error")
       if (allocated(error)) return
       call check(error, key == "bravo" .and. value == 2_int64, "in-range index returns the entry")
       if (allocated(error)) return
@@ -507,7 +507,7 @@ contains
       call map%get("a  ", value, found)
       call check(error, found .and. value == 3_int64, "'a  ' keeps its own value")
       if (allocated(error)) return
-      call check(error, .not. map%has_key("a   "), "a longer blank run is yet another key")
+      call check(error,.not. map%has_key("a   "), "a longer blank run is yet another key")
       if (allocated(error)) return
 
       ! at() reports the exact key length, unlike the blank-padded keys()
