@@ -1,6 +1,6 @@
 submodule(pic_sorting) pic_sorting_radix_sort
 
-   use pic_error, only: error_raise, ERROR_VALIDATION
+   use pic_error, only: error_raise, ERROR_ALLOC, ERROR_VALIDATION
 
    implicit none
 !! The generic subroutine implementing the LSD radix sort algorithm to return
@@ -197,6 +197,7 @@ contains
       integer(kind=int32), dimension(:), pointer :: buffer
       integer(kind=int32) :: item
       logical :: use_internal_buffer
+      integer :: stat
       N = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < N) then
@@ -211,7 +212,19 @@ contains
          buffer => work
       else
          use_internal_buffer = .true.
-         allocate (buffer(N))
+! `buffer` is a pointer, so `associated` is what `allocated` is for an
+! allocatable; `nullify` first because a failed `allocate` leaves a pointer's
+! association status unchanged, i.e. undefined for a fresh local pointer.
+         nullify (buffer)
+         allocate (buffer(N), stat=stat)
+         if (.not. associated(buffer)) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "int32_radix_sort: allocation of scratch buffer failed.")
+               return
+            end if
+            error stop "int32_radix_sort: Allocation of buffer failed."
+         end if
       end if
       call radix_sort_u32_helper(N, array, buffer)
       if (array(1) >= 0 .and. array(N) < 0) then
@@ -254,6 +267,7 @@ contains
       integer(kind=int32), dimension(:), pointer :: buffer
       real(kind=sp) :: item
       logical :: use_internal_buffer
+      integer :: stat
       N = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < N) then
@@ -268,7 +282,19 @@ contains
          call c_f_pointer(c_loc(work), buffer, [N])
       else
          use_internal_buffer = .true.
-         allocate (buffer(N))
+! `buffer` is a pointer, so `associated` is what `allocated` is for an
+! allocatable; `nullify` first because a failed `allocate` leaves a pointer's
+! association status unchanged, i.e. undefined for a fresh local pointer.
+         nullify (buffer)
+         allocate (buffer(N), stat=stat)
+         if (.not. associated(buffer)) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "sp_radix_sort: allocation of scratch buffer failed.")
+               return
+            end if
+            error stop "sp_radix_sort: Allocation of buffer failed."
+         end if
       end if
       call c_f_pointer(c_loc(array), arri32, [N])
       call radix_sort_u32_helper(N, arri32, buffer)
@@ -312,6 +338,7 @@ contains
       integer(kind=int64), dimension(:), pointer :: buffer
       integer(kind=int64) :: item
       logical :: use_internal_buffer
+      integer :: stat
       N = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < N) then
@@ -326,7 +353,19 @@ contains
          buffer => work
       else
          use_internal_buffer = .true.
-         allocate (buffer(N))
+! `buffer` is a pointer, so `associated` is what `allocated` is for an
+! allocatable; `nullify` first because a failed `allocate` leaves a pointer's
+! association status unchanged, i.e. undefined for a fresh local pointer.
+         nullify (buffer)
+         allocate (buffer(N), stat=stat)
+         if (.not. associated(buffer)) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "int64_radix_sort: allocation of scratch buffer failed.")
+               return
+            end if
+            error stop "int64_radix_sort: Allocation of buffer failed."
+         end if
       end if
       call radix_sort_u64_helper(N, array, buffer)
       if (array(1) >= 0 .and. array(N) < 0) then
@@ -369,6 +408,7 @@ contains
       integer(kind=int64), dimension(:), pointer :: buffer
       real(kind=dp) :: item
       logical :: use_internal_buffer
+      integer :: stat
       N = size(array, kind=int_index)
       if (present(work)) then
          if (size(work, kind=int_index) < N) then
@@ -383,7 +423,19 @@ contains
          call c_f_pointer(c_loc(work), buffer, [N])
       else
          use_internal_buffer = .true.
-         allocate (buffer(N))
+! `buffer` is a pointer, so `associated` is what `allocated` is for an
+! allocatable; `nullify` first because a failed `allocate` leaves a pointer's
+! association status unchanged, i.e. undefined for a fresh local pointer.
+         nullify (buffer)
+         allocate (buffer(N), stat=stat)
+         if (.not. associated(buffer)) then
+            if (present(err)) then
+               call error_raise(err, ERROR_ALLOC, &
+                                "dp_radix_sort: allocation of scratch buffer failed.")
+               return
+            end if
+            error stop "dp_radix_sort: Allocation of buffer failed."
+         end if
       end if
       call c_f_pointer(c_loc(array), arri64, [N])
       call radix_sort_u64_helper(N, arri64, buffer)

@@ -12,6 +12,13 @@ module test_pic_sorting
    integer(int32), parameter :: SORT_ERR_SRC(8) = [8_int32, 1_int32, 7_int32, 2_int32, &
                                                    6_int32, 3_int32, 5_int32, 4_int32]
 
+   ! mixed-sign fixture for the degenerate radix_sort sizes: the first n
+   ! elements are the input and the first n of ..._ASC the expected result.
+   ! n == 2 also exercises the negative-value rotation branch, which needs
+   ! array(1) >= 0 and array(n) < 0 after the unsigned radix pass.
+   integer(int32), parameter :: RADIX_DEG_SRC(2) = [3_int32, -1_int32]
+   integer(int32), parameter :: RADIX_DEG_ASC(2) = [-1_int32, 3_int32]
+
 contains
 
    subroutine collect_pic_sorting_tests(testsuite)
@@ -63,7 +70,8 @@ contains
                   new_unittest("test_err_sort_index_work_too_small", test_err_sort_index_work_too_small), &
                   new_unittest("test_err_sort_index_iwork_too_small", test_err_sort_index_iwork_too_small), &
                   new_unittest("test_err_sort_index_index_too_small", test_err_sort_index_index_too_small), &
-                  new_unittest("test_err_absent_and_success", test_err_absent_and_success) &
+                  new_unittest("test_err_absent_and_success", test_err_absent_and_success), &
+                  new_unittest("test_radix_sort_degenerate_sizes", test_radix_sort_degenerate_sizes) &
                   ]
 
    end subroutine collect_pic_sorting_tests
@@ -2088,5 +2096,266 @@ contains
       call check(error, is_sorted(rdp), .true., "dp radix_sort with err did not sort!")
       if (allocated(error)) return
    end subroutine test_err_absent_and_success
+
+   subroutine test_radix_sort_degenerate_sizes(error)
+      !! `radix_sort` on arrays of size 0, 1 and 2, for every specialisation,
+      !! with and without `work`, with and without `err`, in both directions.
+      !!
+      !! This is the regression guard for the `associated(buffer)` check on the
+      !! internal scratch buffer: a legal zero-size `allocate (buffer(0))`
+      !! leaves the pointer associated with stat == 0, so the guard must not
+      !! misfire at size 0. An allocation that actually fails is not reachable
+      !! from a test, so the raising side of that check is unexercised.
+      type(error_type), allocatable, intent(out) :: error
+      integer(default_int) :: n
+
+      do n = 0, 2
+         call degenerate_i32(n, error)
+         if (allocated(error)) return
+         call degenerate_i64(n, error)
+         if (allocated(error)) return
+         call degenerate_sp(n, error)
+         if (allocated(error)) return
+         call degenerate_dp(n, error)
+         if (allocated(error)) return
+      end do
+   end subroutine test_radix_sort_degenerate_sizes
+
+   function radix_deg_expect(n) result(expect)
+      !! `RADIX_DEG_SRC(1:n)` in ascending order. Only n == 2 actually needs
+      !! reordering; the length 0 and 1 prefixes are already sorted.
+      integer(default_int), intent(in) :: n
+      integer(int32), allocatable :: expect(:)
+
+      allocate (expect(n))
+      if (n == 2) then
+         expect = RADIX_DEG_ASC
+      else
+         expect = RADIX_DEG_SRC(1:n)
+      end if
+   end function radix_deg_expect
+
+   function size_tag(prefix, n) result(text)
+      !! "<prefix> (size <n>)", for the degenerate-size assertion messages.
+      character(len=*), intent(in) :: prefix
+      integer(default_int), intent(in) :: n
+      character(len=:), allocatable :: text
+      character(len=16) :: num
+
+      write (num, '(i0)') n
+      text = prefix//" (size "//trim(num)//")"
+   end function size_tag
+
+   subroutine degenerate_i32(n, error)
+      integer(default_int), intent(in) :: n
+      type(error_type), allocatable, intent(inout) :: error
+      integer(int32), allocatable :: array(:), work(:)
+      integer(int32), allocatable :: expect(:), expect_rev(:)
+      integer(int32), allocatable :: asc(:)
+      type(error_t) :: err
+      integer(default_int) :: i
+
+      allocate (array(n), work(n), expect(n), expect_rev(n))
+      asc = radix_deg_expect(n)
+      expect = asc
+      do i = 1, n
+         expect_rev(i) = asc(n - i + 1)
+      end do
+
+      array = RADIX_DEG_SRC(1:n)
+      call radix_sort(array)
+      call check(error, all(array == expect), .true., size_tag("int32 radix_sort, internal buffer", n))
+      if (allocated(error)) return
+
+      array = RADIX_DEG_SRC(1:n)
+      call radix_sort(array, err=err)
+      call check(error, err%has_error(), .false., size_tag("int32 radix_sort raised on internal buffer", n))
+      if (allocated(error)) return
+      call check(error, all(array == expect), .true., size_tag("int32 radix_sort, internal buffer + err", n))
+      if (allocated(error)) return
+
+      array = RADIX_DEG_SRC(1:n)
+      call radix_sort(array, work)
+      call check(error, all(array == expect), .true., size_tag("int32 radix_sort, work", n))
+      if (allocated(error)) return
+
+      array = RADIX_DEG_SRC(1:n)
+      call radix_sort(array, work, err=err)
+      call check(error, err%has_error(), .false., size_tag("int32 radix_sort raised on work", n))
+      if (allocated(error)) return
+      call check(error, all(array == expect), .true., size_tag("int32 radix_sort, work + err", n))
+      if (allocated(error)) return
+
+      array = RADIX_DEG_SRC(1:n)
+      call radix_sort(array, reverse=.true.)
+      call check(error, all(array == expect_rev), .true., size_tag("int32 radix_sort, reverse", n))
+      if (allocated(error)) return
+
+      array = RADIX_DEG_SRC(1:n)
+      call radix_sort(array, reverse=.true., err=err)
+      call check(error, err%has_error(), .false., size_tag("int32 radix_sort raised on reverse", n))
+      if (allocated(error)) return
+      call check(error, all(array == expect_rev), .true., size_tag("int32 radix_sort, reverse + err", n))
+      if (allocated(error)) return
+   end subroutine degenerate_i32
+
+   subroutine degenerate_i64(n, error)
+      integer(default_int), intent(in) :: n
+      type(error_type), allocatable, intent(inout) :: error
+      integer(int64), allocatable :: array(:), work(:)
+      integer(int64), allocatable :: expect(:), expect_rev(:)
+      integer(int32), allocatable :: asc(:)
+      type(error_t) :: err
+      integer(default_int) :: i
+
+      allocate (array(n), work(n), expect(n), expect_rev(n))
+      asc = radix_deg_expect(n)
+      expect = int(asc, int64)
+      do i = 1, n
+         expect_rev(i) = int(asc(n - i + 1), int64)
+      end do
+
+      array = int(RADIX_DEG_SRC(1:n), int64)
+      call radix_sort(array)
+      call check(error, all(array == expect), .true., size_tag("int64 radix_sort, internal buffer", n))
+      if (allocated(error)) return
+
+      array = int(RADIX_DEG_SRC(1:n), int64)
+      call radix_sort(array, err=err)
+      call check(error, err%has_error(), .false., size_tag("int64 radix_sort raised on internal buffer", n))
+      if (allocated(error)) return
+      call check(error, all(array == expect), .true., size_tag("int64 radix_sort, internal buffer + err", n))
+      if (allocated(error)) return
+
+      array = int(RADIX_DEG_SRC(1:n), int64)
+      call radix_sort(array, work)
+      call check(error, all(array == expect), .true., size_tag("int64 radix_sort, work", n))
+      if (allocated(error)) return
+
+      array = int(RADIX_DEG_SRC(1:n), int64)
+      call radix_sort(array, work, err=err)
+      call check(error, err%has_error(), .false., size_tag("int64 radix_sort raised on work", n))
+      if (allocated(error)) return
+      call check(error, all(array == expect), .true., size_tag("int64 radix_sort, work + err", n))
+      if (allocated(error)) return
+
+      array = int(RADIX_DEG_SRC(1:n), int64)
+      call radix_sort(array, reverse=.true.)
+      call check(error, all(array == expect_rev), .true., size_tag("int64 radix_sort, reverse", n))
+      if (allocated(error)) return
+
+      array = int(RADIX_DEG_SRC(1:n), int64)
+      call radix_sort(array, reverse=.true., err=err)
+      call check(error, err%has_error(), .false., size_tag("int64 radix_sort raised on reverse", n))
+      if (allocated(error)) return
+      call check(error, all(array == expect_rev), .true., size_tag("int64 radix_sort, reverse + err", n))
+      if (allocated(error)) return
+   end subroutine degenerate_i64
+
+   subroutine degenerate_sp(n, error)
+      integer(default_int), intent(in) :: n
+      type(error_type), allocatable, intent(inout) :: error
+      real(sp), allocatable :: array(:), work(:)
+      real(sp), allocatable :: expect(:), expect_rev(:)
+      integer(int32), allocatable :: asc(:)
+      type(error_t) :: err
+      integer(default_int) :: i
+
+      allocate (array(n), work(n), expect(n), expect_rev(n))
+      asc = radix_deg_expect(n)
+      expect = real(asc, sp)
+      do i = 1, n
+         expect_rev(i) = real(asc(n - i + 1), sp)
+      end do
+
+      array = real(RADIX_DEG_SRC(1:n), sp)
+      call radix_sort(array)
+      call check(error, all(array == expect), .true., size_tag("sp radix_sort, internal buffer", n))
+      if (allocated(error)) return
+
+      array = real(RADIX_DEG_SRC(1:n), sp)
+      call radix_sort(array, err=err)
+      call check(error, err%has_error(), .false., size_tag("sp radix_sort raised on internal buffer", n))
+      if (allocated(error)) return
+      call check(error, all(array == expect), .true., size_tag("sp radix_sort, internal buffer + err", n))
+      if (allocated(error)) return
+
+      array = real(RADIX_DEG_SRC(1:n), sp)
+      call radix_sort(array, work)
+      call check(error, all(array == expect), .true., size_tag("sp radix_sort, work", n))
+      if (allocated(error)) return
+
+      array = real(RADIX_DEG_SRC(1:n), sp)
+      call radix_sort(array, work, err=err)
+      call check(error, err%has_error(), .false., size_tag("sp radix_sort raised on work", n))
+      if (allocated(error)) return
+      call check(error, all(array == expect), .true., size_tag("sp radix_sort, work + err", n))
+      if (allocated(error)) return
+
+      array = real(RADIX_DEG_SRC(1:n), sp)
+      call radix_sort(array, reverse=.true.)
+      call check(error, all(array == expect_rev), .true., size_tag("sp radix_sort, reverse", n))
+      if (allocated(error)) return
+
+      array = real(RADIX_DEG_SRC(1:n), sp)
+      call radix_sort(array, reverse=.true., err=err)
+      call check(error, err%has_error(), .false., size_tag("sp radix_sort raised on reverse", n))
+      if (allocated(error)) return
+      call check(error, all(array == expect_rev), .true., size_tag("sp radix_sort, reverse + err", n))
+      if (allocated(error)) return
+   end subroutine degenerate_sp
+
+   subroutine degenerate_dp(n, error)
+      integer(default_int), intent(in) :: n
+      type(error_type), allocatable, intent(inout) :: error
+      real(dp), allocatable :: array(:), work(:)
+      real(dp), allocatable :: expect(:), expect_rev(:)
+      integer(int32), allocatable :: asc(:)
+      type(error_t) :: err
+      integer(default_int) :: i
+
+      allocate (array(n), work(n), expect(n), expect_rev(n))
+      asc = radix_deg_expect(n)
+      expect = real(asc, dp)
+      do i = 1, n
+         expect_rev(i) = real(asc(n - i + 1), dp)
+      end do
+
+      array = real(RADIX_DEG_SRC(1:n), dp)
+      call radix_sort(array)
+      call check(error, all(array == expect), .true., size_tag("dp radix_sort, internal buffer", n))
+      if (allocated(error)) return
+
+      array = real(RADIX_DEG_SRC(1:n), dp)
+      call radix_sort(array, err=err)
+      call check(error, err%has_error(), .false., size_tag("dp radix_sort raised on internal buffer", n))
+      if (allocated(error)) return
+      call check(error, all(array == expect), .true., size_tag("dp radix_sort, internal buffer + err", n))
+      if (allocated(error)) return
+
+      array = real(RADIX_DEG_SRC(1:n), dp)
+      call radix_sort(array, work)
+      call check(error, all(array == expect), .true., size_tag("dp radix_sort, work", n))
+      if (allocated(error)) return
+
+      array = real(RADIX_DEG_SRC(1:n), dp)
+      call radix_sort(array, work, err=err)
+      call check(error, err%has_error(), .false., size_tag("dp radix_sort raised on work", n))
+      if (allocated(error)) return
+      call check(error, all(array == expect), .true., size_tag("dp radix_sort, work + err", n))
+      if (allocated(error)) return
+
+      array = real(RADIX_DEG_SRC(1:n), dp)
+      call radix_sort(array, reverse=.true.)
+      call check(error, all(array == expect_rev), .true., size_tag("dp radix_sort, reverse", n))
+      if (allocated(error)) return
+
+      array = real(RADIX_DEG_SRC(1:n), dp)
+      call radix_sort(array, reverse=.true., err=err)
+      call check(error, err%has_error(), .false., size_tag("dp radix_sort raised on reverse", n))
+      if (allocated(error)) return
+      call check(error, all(array == expect_rev), .true., size_tag("dp radix_sort, reverse + err", n))
+      if (allocated(error)) return
+   end subroutine degenerate_dp
 
 end module test_pic_sorting
