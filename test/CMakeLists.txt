@@ -23,7 +23,9 @@ set(tests
     "pic_profiler"
     "pic_math"
     "pic_statistics"
-    "pic_heap")
+    "pic_heap"
+    "pic_csr"
+    "pic_graph")
 set(pre_proc_tests "pic_string_derivedtype_io" "pic_string_strip_chomp")
 
 find_package(Threads REQUIRED)
