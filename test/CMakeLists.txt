@@ -24,7 +24,9 @@ set(tests
     "pic_math"
     "pic_statistics"
     "pic_serialize"
-    "pic_array_hash")
+    "pic_array_hash"
+    "pic_soa"
+    "pic_soa_particle")
 set(pre_proc_tests "pic_string_derivedtype_io" "pic_string_strip_chomp")
 
 find_package(Threads REQUIRED)
