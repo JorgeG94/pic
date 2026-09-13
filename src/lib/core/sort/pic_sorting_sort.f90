@@ -1,6 +1,6 @@
 !! Licensing:
 !!
-!! This file is subjec† both to the Fortran Standard Library license, and
+!! This file is subject both to the Fortran Standard Library license, and
 !! to additional licensing requirements as it contains translations of
 !! other software.
 !!
@@ -811,6 +811,18 @@ contains
       character(len=*), intent(inout) :: array(0:)
 
       integer(int32) :: depth_limit
+
+! An array of fewer than two elements is already sorted, so there is nothing to
+! do. This return is not an optimisation. `introsort` devolves to
+! `insertion_sort` for anything up to `insert_size` elements, and that routine
+! declares its `key` as `character(len=len(array))`; `LEN` of an assumed-length
+! dummy is a type parameter inquiry and is well defined for a zero-sized array,
+! but LFortran currently evaluates it by indexing element 0 and its bounds
+! checking then aborts (an LFortran defect, reported upstream; the skip of empty
+! partitions inside `introsort` below works around the same defect one level
+! down). At `size(array) == 0` the `depth_limit` expression is meaningless
+! anyway, since `log(0.0)` is -Infinity.
+      if (size(array, kind=int_index) < 2) return
 
       depth_limit = 2*int(floor(log(real(size(array, kind=int_index), &
                                          kind=dp))/log(2.0_dp)), &
@@ -1671,6 +1683,18 @@ contains
       character(len=*), intent(inout) :: array(0:)
 
       integer(int32) :: depth_limit
+
+! An array of fewer than two elements is already sorted, so there is nothing to
+! do. This return is not an optimisation. `introsort` devolves to
+! `insertion_sort` for anything up to `insert_size` elements, and that routine
+! declares its `key` as `character(len=len(array))`; `LEN` of an assumed-length
+! dummy is a type parameter inquiry and is well defined for a zero-sized array,
+! but LFortran currently evaluates it by indexing element 0 and its bounds
+! checking then aborts (an LFortran defect, reported upstream; the skip of empty
+! partitions inside `introsort` below works around the same defect one level
+! down). At `size(array) == 0` the `depth_limit` expression is meaningless
+! anyway, since `log(0.0)` is -Infinity.
+      if (size(array, kind=int_index) < 2) return
 
       depth_limit = 2*int(floor(log(real(size(array, kind=int_index), &
                                          kind=dp))/log(2.0_dp)), &

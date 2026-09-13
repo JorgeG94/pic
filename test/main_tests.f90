@@ -30,6 +30,18 @@ program pic_tester
    use test_pic_profiler, only: collect_pic_profiler_tests
    use test_pic_math, only: collect_pic_math_tests
    use test_pic_statistics, only: collect_pic_statistics_tests
+   use test_pic_rng, only: collect_pic_rng_tests
+   use test_pic_tokenizer, only: collect_pic_tokenizer_tests
+   use test_pic_format, only: collect_pic_format_tests
+   use test_pic_fixed_array, only: collect_pic_fixed_array_tests
+   use test_pic_heap, only: collect_pic_heap_tests
+   use test_pic_hash_map, only: collect_pic_hash_map_tests
+   use test_pic_csr, only: collect_pic_csr_tests
+   use test_pic_graph, only: collect_pic_graph_tests
+   use test_pic_serialize, only: collect_pic_serialize_tests
+   use test_pic_array_hash, only: collect_pic_array_hash_tests
+   use test_pic_soa, only: collect_pic_soa_tests
+   use test_pic_soa_particle, only: collect_pic_soa_particle_tests
    use pic_knowledge, only: get_knowledge
    ! add here the module you want to test
    implicit none
@@ -45,7 +57,7 @@ program pic_tester
    stat = 0_int32
    ! we allocate like this because some compilers will complain about doing on the fly allocation
    ! looking at you lfortran
-   allocate (testsuites(25))
+   allocate (testsuites(37))
    testsuites = [ &
                 new_testsuite("base_utils", collect_suite1), &
                 new_testsuite("pic_string", collect_pic_string_tests), &
@@ -71,7 +83,19 @@ program pic_tester
                 new_testsuite("pic_error", collect_pic_error_tests), &
                 new_testsuite("pic_profiler", collect_pic_profiler_tests), &
                 new_testsuite("pic_math", collect_pic_math_tests), &
-                new_testsuite("pic_statistics", collect_pic_statistics_tests) &
+                new_testsuite("pic_statistics", collect_pic_statistics_tests), &
+                new_testsuite("pic_rng", collect_pic_rng_tests), &
+                new_testsuite("pic_tokenizer", collect_pic_tokenizer_tests), &
+                new_testsuite("pic_format", collect_pic_format_tests), &
+                new_testsuite("pic_fixed_array", collect_pic_fixed_array_tests), &
+                new_testsuite("pic_heap", collect_pic_heap_tests), &
+                new_testsuite("pic_hash_map", collect_pic_hash_map_tests), &
+                new_testsuite("pic_csr", collect_pic_csr_tests), &
+                new_testsuite("pic_graph", collect_pic_graph_tests), &
+                new_testsuite("pic_serialize", collect_pic_serialize_tests), &
+                new_testsuite("pic_array_hash", collect_pic_array_hash_tests), &
+                new_testsuite("pic_soa", collect_pic_soa_tests), &
+                new_testsuite("pic_soa_particle", collect_pic_soa_particle_tests) &
                 ]
    ! here you add another test suite to the array
 

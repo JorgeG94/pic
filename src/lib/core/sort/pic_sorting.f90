@@ -101,6 +101,51 @@ module pic_sorting
 !! better than `quicksort` performance. `UNORD_SOORT` is about 25%
 !! more efficient than `ORD_SORT` at sorting purely random data, but af an
 !! order of `Ln(N)` less efficient at sorting partially sorted data.
+!!
+!!### Reporting failures through `error_t`
+!!
+!! `ORD_SORT`, `SORT_INDEX` and `RADIX_SORT` accept an optional `err`
+!! argument of type `error_t` from `pic_error`:
+!!
+!!```fortran
+!!    use pic_error, only: error_t
+!!    type(error_t) :: err
+!!    call ord_sort( array, work, err=err )
+!!    if (err%has_error()) call err%print_trace()
+!!```
+!!
+!! When `err` is present a detected failure sets it and the routine returns
+!! early without completing the sort. When `err` is absent the routine keeps
+!! its historical behaviour and aborts the process with `error stop`: these
+!! routines are (or contain) `pure` code, and a `pure` procedure can neither
+!! perform output nor `error stop` with a run-time message, so there is no
+!! way to report a failure other than through `err`.
+!!
+!! The codes used are
+!!
+!! * `ERROR_VALIDATION` - a caller supplied `work` or `iwork` scratch array
+!!   is too small for `array`;
+!! * `ERROR_BOUNDS` - `index` is too small for `array`, or `array` has more
+!!   elements than the kind of `index` can number;
+!! * `ERROR_ALLOC` - an internal scratch buffer could not be allocated;
+!! * `ERROR_INTERNAL` - an internal invariant of the merge sort was violated.
+!!   That is a bug in PIC, not bad input.
+!!
+!! State of the arguments when `err` has been set:
+!!
+!! * For `ERROR_VALIDATION`, `ERROR_BOUNDS` and `ERROR_ALLOC` the failure is
+!!   detected before any merging begins, so `array` still holds its input
+!!   values - except that `SORT_INDEX` called with `reverse = .true.` has
+!!   already reversed `array` in place and leaves it reversed.
+!! * `ERROR_INTERNAL` is raised after merging, so `array` is then an
+!!   unspecified permutation of its input.
+!! * `index`, `work` and `iwork` are `intent(out)`, so they are undefined
+!!   whenever `err` is set. `SORT_INDEX` happens to leave `index` holding the
+!!   identity permutation on a `work`/`iwork`/allocation failure, but callers
+!!   must not rely on that.
+!!
+!! `SORT` takes no `err` argument: it allocates nothing and validates nothing,
+!! so it has no failure to report.
 
    use pic_types, only: &
       int32, &
@@ -110,6 +155,8 @@ module pic_sorting
       int_index, int_index_low
 
    use pic_optional_value, only: pic_optional
+
+   use pic_error, only: error_t
 
    implicit none
    private
@@ -224,7 +271,7 @@ module pic_sorting
 !! with a value of `.TRUE.` the indices correspond to a non-increasing sort.
 
       module subroutine int32_sort_index_default(array, index, work, iwork, &
-                                                 reverse)
+                                                 reverse, err)
 !! `int32_sort_index_default( array, index[, work, iwork, reverse] )` sorts
 !! an input `ARRAY` of type `integer(int32)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
@@ -236,10 +283,11 @@ module pic_sorting
          integer(int32), intent(out), optional             :: work(0:)
          integer(int_index), intent(out), optional            :: iwork(0:)
          logical, intent(in), optional             :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine int32_sort_index_default
 
       module subroutine int64_sort_index_default(array, index, work, iwork, &
-                                                 reverse)
+                                                 reverse, err)
 !! `int64_sort_index_default( array, index[, work, iwork, reverse] )` sorts
 !! an input `ARRAY` of type `integer(int64)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
@@ -251,10 +299,11 @@ module pic_sorting
          integer(int64), intent(out), optional             :: work(0:)
          integer(int_index), intent(out), optional            :: iwork(0:)
          logical, intent(in), optional             :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine int64_sort_index_default
 
       module subroutine sp_sort_index_default(array, index, work, iwork, &
-                                              reverse)
+                                              reverse, err)
 !! `sp_sort_index_default( array, index[, work, iwork, reverse] )` sorts
 !! an input `ARRAY` of type `real(sp)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
@@ -266,10 +315,11 @@ module pic_sorting
          real(sp), intent(out), optional             :: work(0:)
          integer(int_index), intent(out), optional            :: iwork(0:)
          logical, intent(in), optional             :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine sp_sort_index_default
 
       module subroutine dp_sort_index_default(array, index, work, iwork, &
-                                              reverse)
+                                              reverse, err)
 !! `dp_sort_index_default( array, index[, work, iwork, reverse] )` sorts
 !! an input `ARRAY` of type `real(dp)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
@@ -281,10 +331,11 @@ module pic_sorting
          real(dp), intent(out), optional             :: work(0:)
          integer(int_index), intent(out), optional            :: iwork(0:)
          logical, intent(in), optional             :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine dp_sort_index_default
 
       module subroutine char_sort_index_default(array, index, work, iwork, &
-                                                reverse)
+                                                reverse, err)
 !! `char_sort_index_default( array, index[, work, iwork, reverse] )` sorts
 !! an input `ARRAY` of type `character(len=*)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
@@ -296,10 +347,11 @@ module pic_sorting
          character(len=len(array)), intent(out), optional             :: work(0:)
          integer(int_index), intent(out), optional            :: iwork(0:)
          logical, intent(in), optional             :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine char_sort_index_default
 
       module subroutine int32_sort_index_low(array, index, work, iwork, &
-                                             reverse)
+                                             reverse, err)
 !! `int32_sort_index_low( array, index[, work, iwork, reverse] )` sorts
 !! an input `ARRAY` of type `integer(int32)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
@@ -311,10 +363,11 @@ module pic_sorting
          integer(int32), intent(out), optional             :: work(0:)
          integer(int_index_low), intent(out), optional            :: iwork(0:)
          logical, intent(in), optional             :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine int32_sort_index_low
 
       module subroutine int64_sort_index_low(array, index, work, iwork, &
-                                             reverse)
+                                             reverse, err)
 !! `int64_sort_index_low( array, index[, work, iwork, reverse] )` sorts
 !! an input `ARRAY` of type `integer(int64)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
@@ -326,10 +379,11 @@ module pic_sorting
          integer(int64), intent(out), optional             :: work(0:)
          integer(int_index_low), intent(out), optional            :: iwork(0:)
          logical, intent(in), optional             :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine int64_sort_index_low
 
       module subroutine sp_sort_index_low(array, index, work, iwork, &
-                                          reverse)
+                                          reverse, err)
 !! `sp_sort_index_low( array, index[, work, iwork, reverse] )` sorts
 !! an input `ARRAY` of type `real(sp)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
@@ -341,10 +395,11 @@ module pic_sorting
          real(sp), intent(out), optional             :: work(0:)
          integer(int_index_low), intent(out), optional            :: iwork(0:)
          logical, intent(in), optional             :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine sp_sort_index_low
 
       module subroutine dp_sort_index_low(array, index, work, iwork, &
-                                          reverse)
+                                          reverse, err)
 !! `dp_sort_index_low( array, index[, work, iwork, reverse] )` sorts
 !! an input `ARRAY` of type `real(dp)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
@@ -356,10 +411,11 @@ module pic_sorting
          real(dp), intent(out), optional             :: work(0:)
          integer(int_index_low), intent(out), optional            :: iwork(0:)
          logical, intent(in), optional             :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine dp_sort_index_low
 
       module subroutine char_sort_index_low(array, index, work, iwork, &
-                                            reverse)
+                                            reverse, err)
 !! `char_sort_index_low( array, index[, work, iwork, reverse] )` sorts
 !! an input `ARRAY` of type `character(len=*)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
@@ -371,6 +427,7 @@ module pic_sorting
          character(len=len(array)), intent(out), optional             :: work(0:)
          integer(int_index_low), intent(out), optional            :: iwork(0:)
          logical, intent(in), optional             :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine char_sort_index_low
 
    end interface sort_index
@@ -382,32 +439,36 @@ module pic_sorting
 !! ([Specification](../page/specs/stdlib_sorting.html#radix_sort-sorts-an-input-array))
 !!
 
-      pure module subroutine int32_radix_sort(array, work, reverse)
+      pure module subroutine int32_radix_sort(array, work, reverse, err)
          implicit none
          integer(kind=int32), dimension(:), intent(inout) :: array
          integer(kind=int32), dimension(:), intent(inout), target, optional :: work
          logical, intent(in), optional :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine int32_radix_sort
 
-      pure module subroutine int64_radix_sort(array, work, reverse)
+      pure module subroutine int64_radix_sort(array, work, reverse, err)
          implicit none
          integer(kind=int64), dimension(:), intent(inout) :: array
          integer(kind=int64), dimension(:), intent(inout), target, optional :: work
          logical, intent(in), optional :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine int64_radix_sort
 
-      module subroutine sp_radix_sort(array, work, reverse)
+      module subroutine sp_radix_sort(array, work, reverse, err)
          implicit none
          real(kind=sp), dimension(:), intent(inout), target :: array
          real(kind=sp), dimension(:), intent(inout), target, optional :: work
          logical, intent(in), optional :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine sp_radix_sort
 
-      module subroutine dp_radix_sort(array, work, reverse)
+      module subroutine dp_radix_sort(array, work, reverse, err)
          implicit none
          real(kind=dp), dimension(:), intent(inout), target :: array
          real(kind=dp), dimension(:), intent(inout), target, optional :: work
          logical, intent(in), optional :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine dp_radix_sort
    end interface radix_sort
 
@@ -425,49 +486,54 @@ module pic_sorting
 !! sorted data, having O(N) performance on uniformly non-increasing or
 !! non-decreasing data.
 
-      module subroutine int32_ord_sort(array, work, reverse)
+      module subroutine int32_ord_sort(array, work, reverse, err)
          implicit none
 !! `int32_ord_sort( array )` sorts the input `ARRAY` of type `integer(int32)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
          integer(int32), intent(inout)         :: array(0:)
          integer(int32), intent(out), optional :: work(0:)
          logical, intent(in), optional :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine int32_ord_sort
 
-      module subroutine int64_ord_sort(array, work, reverse)
+      module subroutine int64_ord_sort(array, work, reverse, err)
          implicit none
 !! `int64_ord_sort( array )` sorts the input `ARRAY` of type `integer(int64)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
          integer(int64), intent(inout)         :: array(0:)
          integer(int64), intent(out), optional :: work(0:)
          logical, intent(in), optional :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine int64_ord_sort
 
-      module subroutine sp_ord_sort(array, work, reverse)
+      module subroutine sp_ord_sort(array, work, reverse, err)
          implicit none
 !! `sp_ord_sort( array )` sorts the input `ARRAY` of type `real(sp)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
          real(sp), intent(inout)         :: array(0:)
          real(sp), intent(out), optional :: work(0:)
          logical, intent(in), optional :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine sp_ord_sort
 
-      module subroutine dp_ord_sort(array, work, reverse)
+      module subroutine dp_ord_sort(array, work, reverse, err)
          implicit none
 !! `dp_ord_sort( array )` sorts the input `ARRAY` of type `real(dp)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
          real(dp), intent(inout)         :: array(0:)
          real(dp), intent(out), optional :: work(0:)
          logical, intent(in), optional :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine dp_ord_sort
 
-      module subroutine char_ord_sort(array, work, reverse)
+      module subroutine char_ord_sort(array, work, reverse, err)
          implicit none
 !! `char_ord_sort( array )` sorts the input `ARRAY` of type `character(len=*)`
 !! using a hybrid sort based on the `"Rust" sort` algorithm found in `slice.rs`
          character(len=*), intent(inout)         :: array(0:)
          character(len=len(array)), intent(out), optional :: work(0:)
          logical, intent(in), optional :: reverse
+         type(error_t), intent(inout), optional             :: err
       end subroutine char_ord_sort
 
    end interface ord_sort

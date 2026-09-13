@@ -4,7 +4,9 @@ module pic_test_string_to_string
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_strings, only: to_string, to_c_char, starts_with
    use pic_optional_value, only: pic_optional
-   use pic_types, only: sp, dp, int64
+   use pic_types, only: sp, dp, int32, int64
+   use pic_string_type, only: string_type, assignment(=)
+   use, intrinsic :: iso_c_binding, only: c_char, c_null_char
 
    implicit none
    private
@@ -22,7 +24,10 @@ contains
                   new_unittest("to_string-logical", test_to_string_logical), &
                   new_unittest("to_string-real", test_to_string_real), &
                   new_unittest("to_string-limit-i4", test_string_i4), &
-                  new_unittest("to_string-limit-i8", test_string_i8) &
+                  new_unittest("to_string-limit-i8", test_string_i8), &
+                  new_unittest("to_string-zero", test_to_string_zero), &
+                  new_unittest("to_string-invalid-format", test_to_string_invalid_format), &
+                  new_unittest("to_c_char-conversion", test_to_c_char_conversion) &
                   ]
    end subroutine collect_string_to_string_tests
 
@@ -157,5 +162,88 @@ contains
 
       call check(error, to_string(-huge(1_i8) - 1_i8), "-9223372036854775808")
    end subroutine test_string_i8
+
+   subroutine test_to_string_zero(error)
+      !> Zero takes a dedicated short-circuit in the integer formatters
+      type(error_type), allocatable, intent(out) :: error
+
+      call check_formatter(error, to_string(0_int32), "0", &
+          & "Default formatter for a zero int32")
+      if (allocated(error)) return
+
+      call check_formatter(error, to_string(0_int64), "0", &
+          & "Default formatter for a zero int64")
+      if (allocated(error)) return
+
+      call check_formatter(error, to_string(-1_int32), "-1", &
+          & "Default formatter for a negative int32")
+      if (allocated(error)) return
+
+      call check_formatter(error, to_string(-1_int64), "-1", &
+          & "Default formatter for a negative int64")
+      if (allocated(error)) return
+   end subroutine test_to_string_zero
+
+   subroutine test_to_string_invalid_format(error)
+      !> An unusable format descriptor yields the error symbol rather than
+      !> aborting, for every formatted overload
+      type(error_type), allocatable, intent(out) :: error
+
+      call check_formatter(error, to_string(1000.0_sp, '7.3'), "[*]", &
+          & "Invalid formatter for a single precision real")
+      if (allocated(error)) return
+
+      call check_formatter(error, to_string(1000.0_dp, '7.3'), "[*]", &
+          & "Invalid formatter for a double precision real")
+      if (allocated(error)) return
+
+      call check_formatter(error, to_string(100_int32, '7.3'), "[*]", &
+          & "Invalid formatter for an int32")
+      if (allocated(error)) return
+
+      call check_formatter(error, to_string(100_int64, '7.3'), "[*]", &
+          & "Invalid formatter for an int64")
+      if (allocated(error)) return
+   end subroutine test_to_string_invalid_format
+
+   subroutine test_to_c_char_conversion(error)
+      !> to_c_char must copy the characters and append a terminating null
+      type(error_type), allocatable, intent(out) :: error
+      character(len=*), parameter :: text = "pic"
+      character(kind=c_char) :: from_char(len(text) + 1)
+      character(kind=c_char) :: from_string(len(text) + 1)
+      type(string_type) :: str
+      integer :: i
+      logical :: same
+
+      from_char = to_c_char(text)
+
+      call check(error, size(from_char) == len(text) + 1, &
+                 "C string should have room for the terminator")
+      if (allocated(error)) return
+
+      same = .true.
+      do i = 1, len(text)
+         if (from_char(i) /= text(i:i)) same = .false.
+      end do
+
+      call check(error, same, "C string should hold the original characters")
+      if (allocated(error)) return
+
+      call check(error, from_char(len(text) + 1) == c_null_char, &
+                 "C string should be null terminated")
+      if (allocated(error)) return
+
+      str = text
+      from_string = to_c_char(str)
+
+      same = .true.
+      do i = 1, len(text) + 1
+         if (from_string(i) /= from_char(i)) same = .false.
+      end do
+
+      call check(error, same, "string_type and character overloads should agree")
+      if (allocated(error)) return
+   end subroutine test_to_c_char_conversion
 
 end module pic_test_string_to_string

@@ -3,7 +3,8 @@ module test_pic_array
    use pic_types, only: sp, dp, int32, int64, default_int
    use pic_array, only: pic_fill, set_threading_mode, get_threading_mode, &
                         pic_transpose, pic_sum, pic_copy, is_sorted, ASCENDING, &
-                        DESCENDING, pic_scramble_array
+                        DESCENDING, pic_scramble_array, pic_print_array
+   use pic_error, only: error_t, ERROR_VALIDATION, ERROR_IO, SUCCESS
    use pic_test_helpers, only: is_equal
    implicit none
    private
@@ -106,7 +107,21 @@ contains
                   new_unittest("pic_scramble_array_int64", test_pic_scramble_array_int64), &
                   new_unittest("pic_scramble_array_sp", test_pic_scramble_array_sp), &
                   new_unittest("pic_scramble_array_dp", test_pic_scramble_array_dp), &
-                  new_unittest("pic_scramble_array_char", test_pic_scramble_array_char) &
+                  new_unittest("pic_scramble_array_char", test_pic_scramble_array_char), &
+                  new_unittest("copy_vector_err_mismatch", test_copy_vector_err_mismatch), &
+                  new_unittest("copy_matrix_err_mismatch", test_copy_matrix_err_mismatch), &
+                  new_unittest("copy_3d_tensor_err_mismatch", test_copy_3d_tensor_err_mismatch), &
+                  new_unittest("transpose_err_mismatch", test_transpose_err_mismatch), &
+                  new_unittest("array_err_untouched_on_success", test_array_err_untouched_on_success), &
+                  new_unittest("array_no_err_valid_input", test_array_no_err_valid_input), &
+                  new_unittest("array_pure_guard", test_array_pure_guard), &
+                  new_unittest("print_bad_format_err", test_print_bad_format_err), &
+                  new_unittest("print_packed_bad_size_err", test_print_packed_bad_size_err), &
+                  new_unittest("print_bad_input_without_err", test_print_bad_input_without_err), &
+                  new_unittest("print_valid_input_err_clear", test_print_valid_input_err_clear), &
+                  new_unittest("is_sorted_rejects_unsorted", test_is_sorted_rejects_unsorted), &
+                  new_unittest("print_packed_rejects_bad_size", test_print_packed_rejects_bad_size), &
+                  new_unittest("print_unknown_format_falls_back", test_print_unknown_format_falls_back) &
                   ]
 
       ! Add more tests as needed
@@ -1661,5 +1676,660 @@ contains
       if (allocated(error)) return
 
    end subroutine test_pic_scramble_array_char
+
+   ! ------------------------------------------------------------------
+   ! error_t reporting for pic_copy / pic_transpose
+   !
+   ! pic_array reports a shape mismatch through the optional err argument
+   ! when one is supplied, and keeps the historical `error stop` abort when
+   ! it is not. The abort path cannot be exercised from inside a test
+   ! process, so these tests cover the err path plus the guarantee that the
+   ! err-less calls still behave exactly as they always did on valid input.
+   ! ------------------------------------------------------------------
+
+   subroutine check_validation(error, err, what)
+      !! Shared assertion for a reported shape mismatch: the error is set,
+      !! its code is ERROR_VALIDATION and it carries a non-empty message.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t), intent(in) :: err
+      character(len=*), intent(in) :: what
+
+      call check(error, err%has_error(), "err must be set by "//what)
+      if (allocated(error)) return
+
+      call check(error, err%get_code(), ERROR_VALIDATION, "code must be ERROR_VALIDATION for "//what)
+      if (allocated(error)) return
+
+      call check(error, err%is(ERROR_VALIDATION), "err%is(ERROR_VALIDATION) must hold for "//what)
+      if (allocated(error)) return
+
+      call check(error, len_trim(err%get_message()) > 0, "message must not be empty for "//what)
+      if (allocated(error)) return
+
+   end subroutine check_validation
+
+   subroutine test_copy_vector_err_mismatch(error)
+      !! A vector pic_copy whose destination and source differ in length
+      !! reports ERROR_VALIDATION and leaves the destination exactly as the
+      !! caller left it, for every supported element type.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: dest_int32(3), source_int32(4)
+      integer(int64) :: dest_int64(3), source_int64(4)
+      real(sp) :: dest_sp(3), source_sp(4)
+      real(dp) :: dest_dp(3), source_dp(4)
+
+      dest_int32 = 7_int32
+      source_int32 = 1_int32
+      call pic_copy(dest_int32, source_int32, err=err)
+      call check_validation(error, err, "pic_copy on int32 vectors")
+      if (allocated(error)) return
+      call check(error, all(dest_int32 == 7_int32), "int32 destination must be unchanged on mismatch")
+      if (allocated(error)) return
+
+      dest_int64 = 7_int64
+      source_int64 = 1_int64
+      call pic_copy(dest_int64, source_int64, err=err)
+      call check_validation(error, err, "pic_copy on int64 vectors")
+      if (allocated(error)) return
+      call check(error, all(dest_int64 == 7_int64), "int64 destination must be unchanged on mismatch")
+      if (allocated(error)) return
+
+      dest_sp = 7.0_sp
+      source_sp = 1.0_sp
+      call pic_copy(dest_sp, source_sp, err=err)
+      call check_validation(error, err, "pic_copy on sp vectors")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_sp, 7.0_sp)), "sp destination must be unchanged on mismatch")
+      if (allocated(error)) return
+
+      dest_dp = 7.0_dp
+      source_dp = 1.0_dp
+      call pic_copy(dest_dp, source_dp, err=err)
+      call check_validation(error, err, "pic_copy on dp vectors")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_dp, 7.0_dp)), "dp destination must be unchanged on mismatch")
+      if (allocated(error)) return
+
+   end subroutine test_copy_vector_err_mismatch
+
+   subroutine test_copy_matrix_err_mismatch(error)
+      !! A matrix pic_copy reports ERROR_VALIDATION for a mismatch in either
+      !! extent (rows for int32/sp, columns for int64/dp below) and leaves
+      !! the destination unchanged.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: dest_int32(2, 3), source_int32(3, 3)
+      integer(int64) :: dest_int64(2, 3), source_int64(2, 4)
+      real(sp) :: dest_sp(2, 3), source_sp(3, 3)
+      real(dp) :: dest_dp(2, 3), source_dp(2, 4)
+
+      dest_int32 = 7_int32
+      source_int32 = 1_int32
+      call pic_copy(dest_int32, source_int32, err=err)
+      call check_validation(error, err, "pic_copy on int32 matrices")
+      if (allocated(error)) return
+      call check(error, all(dest_int32 == 7_int32), "int32 destination must be unchanged on row mismatch")
+      if (allocated(error)) return
+
+      dest_int64 = 7_int64
+      source_int64 = 1_int64
+      call pic_copy(dest_int64, source_int64, err=err)
+      call check_validation(error, err, "pic_copy on int64 matrices")
+      if (allocated(error)) return
+      call check(error, all(dest_int64 == 7_int64), "int64 destination must be unchanged on column mismatch")
+      if (allocated(error)) return
+
+      dest_sp = 7.0_sp
+      source_sp = 1.0_sp
+      call pic_copy(dest_sp, source_sp, err=err)
+      call check_validation(error, err, "pic_copy on sp matrices")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_sp, 7.0_sp)), "sp destination must be unchanged on row mismatch")
+      if (allocated(error)) return
+
+      dest_dp = 7.0_dp
+      source_dp = 1.0_dp
+      call pic_copy(dest_dp, source_dp, err=err)
+      call check_validation(error, err, "pic_copy on dp matrices")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_dp, 7.0_dp)), "dp destination must be unchanged on column mismatch")
+      if (allocated(error)) return
+
+   end subroutine test_copy_matrix_err_mismatch
+
+   subroutine test_copy_3d_tensor_err_mismatch(error)
+      !! A 3d pic_copy reports ERROR_VALIDATION for a mismatch in any of the
+      !! three extents and leaves the destination unchanged. A different
+      !! extent is perturbed per type so all three size checks are exercised.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: dest_int32(2, 2, 2), source_int32(3, 2, 2)
+      integer(int64) :: dest_int64(2, 2, 2), source_int64(2, 3, 2)
+      real(sp) :: dest_sp(2, 2, 2), source_sp(2, 2, 3)
+      real(dp) :: dest_dp(2, 2, 2), source_dp(3, 3, 3)
+
+      dest_int32 = 7_int32
+      source_int32 = 1_int32
+      call pic_copy(dest_int32, source_int32, err=err)
+      call check_validation(error, err, "pic_copy on int32 tensors")
+      if (allocated(error)) return
+      call check(error, all(dest_int32 == 7_int32), "int32 destination must be unchanged on extent-1 mismatch")
+      if (allocated(error)) return
+
+      dest_int64 = 7_int64
+      source_int64 = 1_int64
+      call pic_copy(dest_int64, source_int64, err=err)
+      call check_validation(error, err, "pic_copy on int64 tensors")
+      if (allocated(error)) return
+      call check(error, all(dest_int64 == 7_int64), "int64 destination must be unchanged on extent-2 mismatch")
+      if (allocated(error)) return
+
+      dest_sp = 7.0_sp
+      source_sp = 1.0_sp
+      call pic_copy(dest_sp, source_sp, err=err)
+      call check_validation(error, err, "pic_copy on sp tensors")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_sp, 7.0_sp)), "sp destination must be unchanged on extent-3 mismatch")
+      if (allocated(error)) return
+
+      dest_dp = 7.0_dp
+      source_dp = 1.0_dp
+      call pic_copy(dest_dp, source_dp, err=err)
+      call check_validation(error, err, "pic_copy on dp tensors")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_dp, 7.0_dp)), "dp destination must be unchanged on all-extent mismatch")
+      if (allocated(error)) return
+
+   end subroutine test_copy_3d_tensor_err_mismatch
+
+   subroutine test_transpose_err_mismatch(error)
+      !! pic_transpose reports ERROR_VALIDATION when the result is not shaped
+      !! (cols, rows). The result is an intent(out) dummy, so on that path it
+      !! is undefined and deliberately not inspected here; what is guaranteed
+      !! is that the input matrix is untouched and that the call returns
+      !! instead of aborting.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: a_int32(2, 3), b_int32(2, 3)
+      integer(int64) :: a_int64(2, 3), b_int64_bad(2, 3), b_int64_good(3, 2)
+      real(sp) :: a_sp(2, 3), b_sp(2, 3)
+      real(dp) :: a_dp(2, 3), b_dp(3, 4)
+
+      a_int32 = 5_int32
+      call pic_transpose(a_int32, b_int32, err=err)
+      call check_validation(error, err, "pic_transpose on int32 matrices")
+      if (allocated(error)) return
+      call check(error, all(a_int32 == 5_int32), "int32 input must be unchanged on mismatch")
+      if (allocated(error)) return
+
+      a_int64 = 5_int64
+      call pic_transpose(a_int64, b_int64_bad, err=err)
+      call check_validation(error, err, "pic_transpose on int64 matrices")
+      if (allocated(error)) return
+      call check(error, all(a_int64 == 5_int64), "int64 input must be unchanged on mismatch")
+      if (allocated(error)) return
+
+      ! a successful call never writes err, so the caller clears it first
+      call err%clear()
+      call pic_transpose(a_int64, b_int64_good, err=err)
+      call check(error,.not. err%has_error(), "a (cols, rows) result must be accepted for int64")
+      if (allocated(error)) return
+      call check(error, all(b_int64_good == 5_int64), "int64 transpose must still copy the values through")
+      if (allocated(error)) return
+
+      a_sp = 5.0_sp
+      call pic_transpose(a_sp, b_sp, err=err)
+      call check_validation(error, err, "pic_transpose on sp matrices")
+      if (allocated(error)) return
+      call check(error, all(is_equal(a_sp, 5.0_sp)), "sp input must be unchanged on mismatch")
+      if (allocated(error)) return
+
+      a_dp = 5.0_dp
+      call pic_transpose(a_dp, b_dp, err=err)
+      call check_validation(error, err, "pic_transpose on dp matrices")
+      if (allocated(error)) return
+      call check(error, all(is_equal(a_dp, 5.0_dp)), "dp input must be unchanged on mismatch")
+      if (allocated(error)) return
+
+   end subroutine test_transpose_err_mismatch
+
+   subroutine test_array_err_untouched_on_success(error)
+      !! On valid input the routines never write to err. A caller-supplied,
+      !! already-clear err therefore stays clear, and an err that already
+      !! carried an unrelated error is deliberately left alone rather than
+      !! cleared behind the caller's back.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: dest_vector(4), source_vector(4)
+      real(dp) :: dest_matrix(2, 3), source_matrix(2, 3)
+      real(dp) :: dest_tensor(2, 2, 2), source_tensor(2, 2, 2)
+      real(dp) :: transposed(3, 2)
+
+      source_vector = 3_int32
+      dest_vector = 0_int32
+      call pic_copy(dest_vector, source_vector, err=err)
+      call check(error,.not. err%has_error(), "a valid vector copy must not set err")
+      if (allocated(error)) return
+      call check(error, err%get_code(), SUCCESS, "a valid vector copy must leave err at SUCCESS")
+      if (allocated(error)) return
+      call check(error, all(dest_vector == 3_int32), "a valid vector copy must still copy")
+      if (allocated(error)) return
+
+      source_matrix = 2.5_dp
+      dest_matrix = 0.0_dp
+      call pic_copy(dest_matrix, source_matrix, err=err)
+      call check(error,.not. err%has_error(), "a valid matrix copy must not set err")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_matrix, 2.5_dp)), "a valid matrix copy must still copy")
+      if (allocated(error)) return
+
+      source_tensor = 1.5_dp
+      dest_tensor = 0.0_dp
+      call pic_copy(dest_tensor, source_tensor, err=err)
+      call check(error,.not. err%has_error(), "a valid tensor copy must not set err")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_tensor, 1.5_dp)), "a valid tensor copy must still copy")
+      if (allocated(error)) return
+
+      call pic_transpose(source_matrix, transposed, err=err)
+      call check(error,.not. err%has_error(), "a valid transpose must not set err")
+      if (allocated(error)) return
+      call check(error, all(is_equal(transposed, 2.5_dp)), "a valid transpose must still transpose")
+      if (allocated(error)) return
+
+      call err%set(ERROR_IO, "unrelated failure the caller has not handled yet")
+      call pic_copy(dest_vector, source_vector, err=err)
+      call check(error, err%is(ERROR_IO), "a successful copy must not clear a pre-existing error")
+      if (allocated(error)) return
+
+   end subroutine test_array_err_untouched_on_success
+
+   subroutine test_array_no_err_valid_input(error)
+      !! Backward compatibility: the same calls made without err behave
+      !! exactly as they did before err existed, threaded paths included.
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: dest_vector(4), source_vector(4)
+      real(dp) :: dest_matrix(2, 3), source_matrix(2, 3)
+      real(dp) :: dest_tensor(2, 2, 2), source_tensor(2, 2, 2)
+      real(dp) :: transposed(3, 2)
+
+      source_vector = 3_int32
+      dest_vector = 0_int32
+      call pic_copy(dest_vector, source_vector)
+      call check(error, all(dest_vector == 3_int32), "err-less vector copy must still copy")
+      if (allocated(error)) return
+
+      dest_vector = 0_int32
+      call pic_copy(dest_vector, source_vector, .true.)
+      call check(error, all(dest_vector == 3_int32), "err-less threaded vector copy must still copy")
+      if (allocated(error)) return
+
+      source_matrix = 2.5_dp
+      dest_matrix = 0.0_dp
+      call pic_copy(dest_matrix, source_matrix, .true.)
+      call check(error, all(is_equal(dest_matrix, 2.5_dp)), "err-less threaded matrix copy must still copy")
+      if (allocated(error)) return
+
+      source_tensor = 1.5_dp
+      dest_tensor = 0.0_dp
+      call pic_copy(dest_tensor, source_tensor, .true.)
+      call check(error, all(is_equal(dest_tensor, 1.5_dp)), "err-less threaded tensor copy must still copy")
+      if (allocated(error)) return
+
+      call pic_transpose(source_matrix, transposed, .true.)
+      call check(error, all(is_equal(transposed, 2.5_dp)), "err-less threaded transpose must still transpose")
+      if (allocated(error)) return
+
+   end subroutine test_array_no_err_valid_input
+
+   pure function pure_is_sorted_guard(array) result(sorted)
+      !! Compile-time purity guard. is_sorted is pure, and downstream code is
+      !! allowed to call it from its own pure procedures. If pic_array ever
+      !! loses that purity this wrapper stops compiling, which is the point.
+      integer(int32), intent(in) :: array(:)
+      logical :: sorted
+
+      sorted = is_sorted(array, ASCENDING)
+
+   end function pure_is_sorted_guard
+
+   subroutine test_array_pure_guard(error)
+      !! Exercises the pure wrapper so the guard is linked, not just compiled.
+      type(error_type), allocatable, intent(out) :: error
+
+      call check(error, pure_is_sorted_guard([1_int32, 2_int32, 3_int32]), &
+                 "the pure wrapper must report an ascending array as sorted")
+      if (allocated(error)) return
+
+      call check(error,.not. pure_is_sorted_guard([3_int32, 2_int32, 1_int32]), &
+                 "the pure wrapper must report a descending array as unsorted")
+      if (allocated(error)) return
+
+   end subroutine test_array_pure_guard
+
+   subroutine test_print_bad_format_err(error)
+      !! An unrecognised format string is reported through err as
+      !! ERROR_VALIDATION by every pic_print_array family, and the message
+      !! names the offending string. The array is still printed with NumPy
+      !! brackets on that path, which is visible on stdout rather than
+      !! assertable from here, so err is all the caller has to go on.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: vector_int32(3)
+      integer(int64) :: vector_int64(3)
+      real(sp) :: vector_sp(3)
+      real(dp) :: vector_dp(3)
+      integer(int32) :: matrix_int32(2, 2)
+      real(dp) :: matrix_dp(2, 2)
+      real(sp) :: packed_sp(3)
+      real(dp) :: tensor_dp(2, 2, 2)
+
+      vector_int32 = 1_int32
+      call pic_print_array(vector_int32, "NOT_A_FORMAT", err=err)
+      call check_validation(error, err, "pic_print_array on an int32 vector with a bad format")
+      if (allocated(error)) return
+      call check(error, index(err%get_message(), "NOT_A_FORMAT") > 0, &
+                 "the message must name the unsupported format string")
+      if (allocated(error)) return
+
+      call err%clear()
+      vector_int64 = 1_int64
+      call pic_print_array(vector_int64, "numpyish", err=err)
+      call check_validation(error, err, "pic_print_array on an int64 vector with a bad format")
+      if (allocated(error)) return
+
+      call err%clear()
+      vector_sp = 1.0_sp
+      call pic_print_array(vector_sp, "BOGUS", err=err)
+      call check_validation(error, err, "pic_print_array on an sp vector with a bad format")
+      if (allocated(error)) return
+
+      call err%clear()
+      vector_dp = 1.0_dp
+      call pic_print_array(vector_dp, "BOGUS", err=err)
+      call check_validation(error, err, "pic_print_array on a dp vector with a bad format")
+      if (allocated(error)) return
+
+      call err%clear()
+      matrix_int32 = 2_int32
+      call pic_print_array(matrix_int32, "BOGUS", err=err)
+      call check_validation(error, err, "pic_print_array on an int32 matrix with a bad format")
+      if (allocated(error)) return
+
+      call err%clear()
+      matrix_dp = 2.0_dp
+      call pic_print_array(matrix_dp, "BOGUS", err=err)
+      call check_validation(error, err, "pic_print_array on a dp matrix with a bad format")
+      if (allocated(error)) return
+
+      call err%clear()
+      packed_sp = 1.0_sp
+      call pic_print_array(packed_sp, 3_default_int, "BOGUS", err=err)
+      call check_validation(error, err, "pic_print_array on an sp packed matrix with a bad format")
+      if (allocated(error)) return
+
+      call err%clear()
+      tensor_dp = 3.0_dp
+      call pic_print_array(tensor_dp, "BOGUS", err=err)
+      call check_validation(error, err, "pic_print_array on a dp tensor with a bad format")
+      if (allocated(error)) return
+
+   end subroutine test_print_bad_format_err
+
+   subroutine test_print_packed_bad_size_err(error)
+      !! An n_elements that is not n*(n + 1)/2 for any n is reported as
+      !! ERROR_VALIDATION and nothing is printed. Checked for all four packed
+      !! specialisations, since each carries its own copy of the test.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: packed_int32(4)
+      integer(int64) :: packed_int64(4)
+      real(sp) :: packed_sp(4)
+      real(dp) :: packed_dp(4)
+
+      packed_int32 = 1_int32
+      call pic_print_array(packed_int32, 4_default_int, err=err)
+      call check_validation(error, err, "an int32 packed matrix of 4 elements")
+      if (allocated(error)) return
+      call check(error, index(err%get_message(), "packed triangle") > 0, &
+                 "the message must say the packed triangle size is wrong")
+      if (allocated(error)) return
+
+      call err%clear()
+      packed_int64 = 1_int64
+      call pic_print_array(packed_int64, 4_default_int, "PLAIN", err=err)
+      call check_validation(error, err, "an int64 packed matrix of 4 elements")
+      if (allocated(error)) return
+
+      call err%clear()
+      packed_sp = 1.0_sp
+      call pic_print_array(packed_sp, 2_default_int, "MATHEMATICA", err=err)
+      call check_validation(error, err, "an sp packed matrix of 2 elements")
+      if (allocated(error)) return
+
+      call err%clear()
+      packed_dp = 1.0_dp
+      call pic_print_array(packed_dp, 4_default_int, "NUMPY", err=err)
+      call check_validation(error, err, "a dp packed matrix of 4 elements")
+      if (allocated(error)) return
+
+      call check(error, all(is_equal(packed_dp, 1.0_dp)), "the packed input must be left alone")
+      if (allocated(error)) return
+
+   end subroutine test_print_packed_bad_size_err
+
+   subroutine test_print_bad_input_without_err(error)
+      !! Documented err-less behaviour, unchanged from before err existed:
+      !! both failures report to stdout and return, and neither aborts. These
+      !! calls have no inspectable effect by design, so reaching the assertion
+      !! below is what is being tested - a regression that turned either site
+      !! into an error stop would take the whole test binary down here.
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: vector_int32(3)
+      real(dp) :: matrix_dp(2, 2)
+      real(dp) :: tensor_dp(2, 2, 2)
+      integer(int32) :: packed_int32(4)
+      integer(int64) :: packed_int64(4)
+      real(sp) :: packed_sp(4)
+      real(dp) :: packed_dp(4)
+      integer(default_int) :: calls_survived
+
+      calls_survived = 0
+
+      vector_int32 = 1_int32
+      call pic_print_array(vector_int32, "BOGUS")
+      calls_survived = calls_survived + 1
+
+      matrix_dp = 2.0_dp
+      call pic_print_array(matrix_dp, "BOGUS")
+      calls_survived = calls_survived + 1
+
+      tensor_dp = 3.0_dp
+      call pic_print_array(tensor_dp, "BOGUS")
+      calls_survived = calls_survived + 1
+
+      packed_int32 = 1_int32
+      call pic_print_array(packed_int32, 4_default_int)
+      calls_survived = calls_survived + 1
+
+      packed_int64 = 1_int64
+      call pic_print_array(packed_int64, 4_default_int)
+      calls_survived = calls_survived + 1
+
+      packed_sp = 1.0_sp
+      call pic_print_array(packed_sp, 4_default_int)
+      calls_survived = calls_survived + 1
+
+      packed_dp = 1.0_dp
+      call pic_print_array(packed_dp, 4_default_int)
+      calls_survived = calls_survived + 1
+
+      call check(error, calls_survived, 7_default_int, &
+                 "every err-less bad-input print must return instead of aborting")
+      if (allocated(error)) return
+
+   end subroutine test_print_bad_input_without_err
+
+   subroutine test_print_valid_input_err_clear(error)
+      !! Valid input still prints and never writes err, with err present or
+      !! absent. A packed size that is a genuine triangle is accepted, and a
+      !! pre-existing unrelated error is not cleared behind the caller's back.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: vector_int32(3)
+      real(dp) :: matrix_dp(2, 2)
+      real(dp) :: tensor_dp(2, 2, 2)
+      real(dp) :: packed_dp(6)
+
+      vector_int32 = 1_int32
+      call pic_print_array(vector_int32, "PLAIN", err=err)
+      call check(error,.not. err%has_error(), "a supported format must not set err for a vector")
+      if (allocated(error)) return
+      call check(error, err%get_code(), SUCCESS, "err must stay at SUCCESS for a supported format")
+      if (allocated(error)) return
+
+      matrix_dp = 2.0_dp
+      call pic_print_array(matrix_dp, "MATHEMATICA", err=err)
+      call check(error,.not. err%has_error(), "a supported format must not set err for a matrix")
+      if (allocated(error)) return
+
+      tensor_dp = 3.0_dp
+      call pic_print_array(tensor_dp, "NUMPY", err=err)
+      call check(error,.not. err%has_error(), "a supported format must not set err for a tensor")
+      if (allocated(error)) return
+
+      packed_dp = 1.0_dp
+      call pic_print_array(packed_dp, 6_default_int, "NUMPY", err=err)
+      call check(error,.not. err%has_error(), "a valid packed triangle size must not set err")
+      if (allocated(error)) return
+
+      call err%set(ERROR_IO, "unrelated failure the caller has not handled yet")
+      call pic_print_array(packed_dp, 6_default_int, err=err)
+      call check(error, err%is(ERROR_IO), "a successful print must not clear a pre-existing error")
+      if (allocated(error)) return
+
+      ! the same calls without err, which is how every existing caller makes them
+      call pic_print_array(vector_int32, "PLAIN")
+      call pic_print_array(matrix_dp)
+      call pic_print_array(tensor_dp, "NUMPY")
+      call pic_print_array(packed_dp, 6_default_int)
+
+      call check(error, all(is_equal(packed_dp, 1.0_dp)), "printing must not modify the array")
+      if (allocated(error)) return
+
+   end subroutine test_print_valid_input_err_clear
+
+   subroutine test_is_sorted_rejects_unsorted(error)
+      !! is_sorted must return .false. for every supported kind when the
+      !! requested ordering is violated, for both orderings
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: a_int32(4)
+      integer(int64) :: a_int64(4)
+      real(sp) :: a_sp(4)
+      real(dp) :: a_dp(4)
+      character(len=3) :: a_char(4)
+
+      a_int32 = [1_int32, 2_int32, 9_int32, 3_int32]
+      a_int64 = [1_int64, 2_int64, 9_int64, 3_int64]
+      a_sp = [1.0_sp, 2.0_sp, 9.0_sp, 3.0_sp]
+      a_dp = [1.0_dp, 2.0_dp, 9.0_dp, 3.0_dp]
+      a_char = ["aaa", "bbb", "zzz", "ccc"]
+
+      ! Ascending is requested but the last step decreases.
+      call check(error,.not. is_sorted(a_int32), "int32 descent must not count as ascending")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_int64), "int64 descent must not count as ascending")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_sp), "sp descent must not count as ascending")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_dp), "dp descent must not count as ascending")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_char), "character descent must not count as ascending")
+      if (allocated(error)) return
+
+      ! The explicit ASCENDING spelling must behave identically.
+      call check(error,.not. is_sorted(a_int32, ASCENDING), "explicit ASCENDING must reject int32 descent")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_char, ASCENDING), "explicit ASCENDING must reject character descent")
+      if (allocated(error)) return
+
+      ! Reversing the data makes it ascending and not descending.
+      a_int32 = [1_int32, 2_int32, 3_int32, 9_int32]
+      a_char = ["aaa", "bbb", "ccc", "zzz"]
+
+      call check(error, is_sorted(a_int32), "int32 ascending run must be accepted")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_int32, DESCENDING), "ascending int32 must not count as descending")
+      if (allocated(error)) return
+
+      call check(error, is_sorted(a_char), "character ascending run must be accepted")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_char, DESCENDING), "ascending characters must not count as descending")
+      if (allocated(error)) return
+   end subroutine test_is_sorted_rejects_unsorted
+
+   subroutine test_print_packed_rejects_bad_size(error)
+      !! A packed-triangle print with an element count that is not a
+      !! triangular number must bail out instead of reading past the array.
+      !! The arrays below are sized exactly to the (invalid) element count,
+      !! so an unguarded routine would run off their ends.
+      type(error_type), allocatable, intent(out) :: error
+      integer(default_int), parameter :: five = 5
+      integer(int32) :: v_int32(5)
+      integer(int64) :: v_int64(5)
+      real(sp) :: v_sp(5)
+      real(dp) :: v_dp(5)
+
+      v_int32 = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32]
+      v_int64 = [1_int64, 2_int64, 3_int64, 4_int64, 5_int64]
+      v_sp = [1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp]
+      v_dp = [1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp]
+
+      ! 5 is not of the form n*(n+1)/2, so all four of these must return early.
+      call pic_print_array(v_int32, five, "PLAIN")
+      call pic_print_array(v_int64, five, "PLAIN")
+      call pic_print_array(v_sp, five, "PLAIN")
+      call pic_print_array(v_dp, five, "PLAIN")
+
+      call check(error, all(v_int32 == [1_int32, 2_int32, 3_int32, 4_int32, 5_int32]), &
+                 "Rejected packed print must leave the int32 input untouched")
+      if (allocated(error)) return
+
+      call check(error, all(v_int64 == [1_int64, 2_int64, 3_int64, 4_int64, 5_int64]), &
+                 "Rejected packed print must leave the int64 input untouched")
+      if (allocated(error)) return
+
+      call check(error, all(abs(v_sp - [1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp]) <= 0.0_sp), &
+                 "Rejected packed print must leave the sp input untouched")
+      if (allocated(error)) return
+
+      call check(error, all(abs(v_dp - [1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp]) <= 0.0_dp), &
+                 "Rejected packed print must leave the dp input untouched")
+      if (allocated(error)) return
+   end subroutine test_print_packed_rejects_bad_size
+
+   subroutine test_print_unknown_format_falls_back(error)
+      !! An unrecognised bracket style must fall back to the NumPy style
+      !! instead of failing; the fallback is exercised on a valid triangle.
+      type(error_type), allocatable, intent(out) :: error
+      integer(default_int), parameter :: six = 6
+      integer(int32) :: v_int32(6)
+
+      v_int32 = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32]
+
+      call pic_print_array(v_int32, six, "NOT_A_REAL_FORMAT")
+
+      call check(error, all(v_int32 == [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32]), &
+                 "Printing with an unknown format must not modify the input")
+      if (allocated(error)) return
+   end subroutine test_print_unknown_format_falls_back
 
 end module test_pic_array

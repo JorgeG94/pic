@@ -119,6 +119,58 @@ Run a single test:
 
    ./build/pic-tester pic_feature test_name
 
+Generated Sources
+-----------------
+
+Several modules are **generated from fypp templates at development time**, and
+both the template and its output are committed. Editing the generated file
+directly is the single easiest way to have your change silently reverted by the
+next person who regenerates.
+
+Files under ``tools/autogen/`` ending in ``.fypp`` are the source of truth for:
+
+- ``src/lib/core/arrays/pic_array.f90``
+- ``src/lib/core/hash/pic_hash_32bit.f90``, ``pic_hash_32bit_fnv.f90``
+- ``src/lib/core/strings/pic_ascii.f90``, ``pic_strings.f90``,
+  ``pic_string_type.F90``, ``pic_string_type_constructor.f90``,
+  ``pic_strings_to_strings.F90``
+- ``src/lib/core/soa/pic_soa_particle.f90``
+
+To change any of them:
+
+.. code-block:: bash
+
+   # 1. edit the template under tools/autogen/
+   # 2. regenerate (needs fypp and fprettify)
+   cd tools/autogen && ./autogen.sh
+   # 3. commit BOTH the template and the regenerated source
+
+Check your work before pushing:
+
+.. code-block:: bash
+
+   tools/autogen/check_generated.sh
+
+It regenerates every template into a temporary directory and diffs against the
+committed output, so it never writes into ``src/``. CI runs the same script
+(``check-autogen.yml``); a mismatch fails the build.
+
+Other CI Checks
+---------------
+
+Two checks beyond the compiler matrix, both runnable locally:
+
+.. code-block:: bash
+
+   tools/autogen/check_generated.sh          # templates match their output
+   tools/ci/check_no_session_links.sh        # no assistant session URLs
+
+The second scans both commit messages and lines added to files. An assistant
+session URL points at a private transcript that resolves for nobody else, and
+once it is in a commit message it can only be removed by rewriting history —
+so it is refused while it is still cheap to fix. Co-authorship trailers are
+not matched and are fine to keep.
+
 Git Workflow
 ------------
 
@@ -140,4 +192,4 @@ This is the primary concern. Guard compiler-specific code with preprocessor dire
       use omp_lib
    #endif
 
-Test with `Compiler Explorer <https://godbolt.org/>`_ if you don't have access to all compilers. CI tests GNU 10-14, Intel 2024/2025, NVIDIA HPC 25.1, and LFortran.
+Test with `Compiler Explorer <https://godbolt.org/>`_ if you don't have access to all compilers. See :doc:`compiler_portability` for the full CI matrix and for the portability pitfalls that have actually bitten this project.

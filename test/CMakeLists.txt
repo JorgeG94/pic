@@ -22,7 +22,19 @@ set(tests
     "pic_error"
     "pic_profiler"
     "pic_math"
-    "pic_statistics")
+    "pic_statistics"
+    "pic_rng"
+    "pic_tokenizer"
+    "pic_format"
+    "pic_fixed_array"
+    "pic_heap"
+    "pic_hash_map"
+    "pic_csr"
+    "pic_graph"
+    "pic_serialize"
+    "pic_array_hash"
+    "pic_soa"
+    "pic_soa_particle")
 set(pre_proc_tests "pic_string_derivedtype_io" "pic_string_strip_chomp")
 
 find_package(Threads REQUIRED)

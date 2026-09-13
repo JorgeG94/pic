@@ -49,19 +49,30 @@ Install to a custom location:
 CMake Options
 ^^^^^^^^^^^^^
 
-+------------------------+---------+-------------------------------------------+
-| Option                 | Default | Description                               |
-+========================+=========+===========================================+
-| ``PIC_DEFAULT_INT8``   | OFF     | Use 64-bit default integers               |
-+------------------------+---------+-------------------------------------------+
-| ``PIC_ENABLE_OMP``     | OFF     | Enable OpenMP parallelization             |
-+------------------------+---------+-------------------------------------------+
-| ``PIC_ENABLE_BLAS``    | OFF     | Enable BLAS-backed operations             |
-+------------------------+---------+-------------------------------------------+
-| ``PIC_ENABLE_MPI``     | OFF     | Enable MPI support                        |
-+------------------------+---------+-------------------------------------------+
-| ``PIC_ENABLE_TESTING`` | ON      | Build the test suite                      |
-+------------------------+---------+-------------------------------------------+
++---------------------------+---------+----------------------------------------+
+| Option                    | Default | Description                            |
++===========================+=========+========================================+
+| ``PIC_DEFAULT_INT8``      | OFF     | Use 64-bit default integers            |
++---------------------------+---------+----------------------------------------+
+| ``PIC_ENABLE_OMP``        | OFF     | Enable OpenMP parallelization          |
++---------------------------+---------+----------------------------------------+
+| ``PIC_ENABLE_TESTING``    | ON      | Build the test suite                   |
++---------------------------+---------+----------------------------------------+
+| ``PIC_BUILD_STRESS``      | OFF     | Build the dgemm FLOP stress case       |
++---------------------------+---------+----------------------------------------+
+| ``PIC_DISABLE_PROFILER``  | OFF     | Compile the profiler out entirely      |
++---------------------------+---------+----------------------------------------+
+| ``PIC_USE_NVTX``          | OFF     | Emit NVTX ranges for Nsight Systems    |
++---------------------------+---------+----------------------------------------+
+| ``PIC_USE_C_KINDS``       | OFF     | Take ``sp``/``dp``/``qp``/             |
+|                           |         | ``default_int`` from ``iso_c_binding`` |
++---------------------------+---------+----------------------------------------+
+
+.. note::
+
+   ``PIC_DEFAULT_INT8`` and ``PIC_USE_C_KINDS`` cannot both be enabled — the
+   configure step rejects the combination, since ``iso_c_binding`` has no
+   64-bit default integer kind to offer.
 
 Building with FPM
 -----------------
