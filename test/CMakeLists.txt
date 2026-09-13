@@ -27,7 +27,8 @@ set(tests
     "pic_tokenizer"
     "pic_format"
     "pic_fixed_array"
-    "pic_heap")
+    "pic_heap"
+    "pic_hash_map")
 set(pre_proc_tests "pic_string_derivedtype_io" "pic_string_strip_chomp")
 
 find_package(Threads REQUIRED)
