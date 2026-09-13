@@ -38,6 +38,7 @@ program pic_tester
    use test_pic_hash_map, only: collect_pic_hash_map_tests
    use test_pic_csr, only: collect_pic_csr_tests
    use test_pic_graph, only: collect_pic_graph_tests
+   use test_pic_serialize, only: collect_pic_serialize_tests
    use pic_knowledge, only: get_knowledge
    ! add here the module you want to test
    implicit none
@@ -53,7 +54,7 @@ program pic_tester
    stat = 0_int32
    ! we allocate like this because some compilers will complain about doing on the fly allocation
    ! looking at you lfortran
-   allocate (testsuites(33))
+   allocate (testsuites(34))
    testsuites = [ &
                 new_testsuite("base_utils", collect_suite1), &
                 new_testsuite("pic_string", collect_pic_string_tests), &
@@ -87,7 +88,8 @@ program pic_tester
                 new_testsuite("pic_heap", collect_pic_heap_tests), &
                 new_testsuite("pic_hash_map", collect_pic_hash_map_tests), &
                 new_testsuite("pic_csr", collect_pic_csr_tests), &
-                new_testsuite("pic_graph", collect_pic_graph_tests) &
+                new_testsuite("pic_graph", collect_pic_graph_tests), &
+                new_testsuite("pic_serialize", collect_pic_serialize_tests) &
                 ]
    ! here you add another test suite to the array
 
