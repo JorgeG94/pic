@@ -56,7 +56,8 @@ contains
                   new_unittest("iachar", test_iachar), &
                   new_unittest("move", test_move), &
                   new_unittest("ichar-iachar-empty", test_ichar_iachar_empty), &
-                  new_unittest("move-char-char", test_move_char_to_char) &
+                  new_unittest("move-char-char", test_move_char_to_char), &
+                  new_unittest("unallocated-raw-inquiries", test_unallocated_raw_inquiries) &
                   ]
    end subroutine collect_string_intrinsic_tests
 
@@ -786,5 +787,35 @@ contains
       call check(error,.not. allocated(to_char), "Moving nothing should leave the target unallocated")
       if (allocated(error)) return
    end subroutine test_move_char_to_char
+
+   !> A default-initialised string_type has an unallocated `raw` component.
+   !> len_trim, char(string, pos) and char(string, start, last) used to reach it
+   !> through MERGE, whose value arguments are both evaluated regardless of the
+   !> mask, so each one referenced an unallocated allocatable (F2018 9.7.1).
+   !> Nothing here needs the string to be empty-but-allocated: that is a
+   !> different object and it is covered elsewhere.
+   subroutine test_unallocated_raw_inquiries(error)
+      type(error_type), allocatable, intent(out) :: error
+      type(string_type) :: unset
+
+      call check(error, len_trim(unset) == 0, "len_trim of an unallocated string is 0")
+      if (allocated(error)) return
+
+      call check(error, char(unset, 1) == " ", "char(string, pos) of an unallocated string is a blank")
+      if (allocated(error)) return
+
+      call check(error, char(unset, 2) == " ", "the position does not matter when raw is unallocated")
+      if (allocated(error)) return
+
+      call check(error, char(unset, 1, 3) == "   ", "char(string, start, last) of an unallocated string is all blanks")
+      if (allocated(error)) return
+
+      call check(error, len(char(unset, 1, 3)) == 3, "the result keeps the length the range asks for")
+      if (allocated(error)) return
+
+      call check(error, len_trim(char(unset, 1, 3)) == 0, "and it is blank, not junk")
+      if (allocated(error)) return
+
+   end subroutine test_unallocated_raw_inquiries
 
 end module pic_test_string_intrinsic

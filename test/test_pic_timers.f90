@@ -81,9 +81,18 @@ contains
 
       elapsed = timer%get_elapsed_time()
 
-      ! Should be positive
+      ! Not `> 0`: elapsed is measured in whole system_clock ticks, so a
+      ! processor whose tick is coarser than this loop legitimately reports
+      ! exactly zero, and a processor with no clock at all reports zero by
+      ! F2018 16.9.180. Neither is a timer fault, and asserting otherwise makes
+      ! this test fail on fast or coarse-clocked machines rather than on broken
+      ! ones. The `< 1.0` bound below is what catches a broken timer, and it
+      ! also rejects NaN and +Inf -- both compare false against any bound --
+      ! which is what a divide by a zero count_rate used to produce. A
+      ! self-comparison NaN check would be worse here: -ffast-math folds
+      ! `x == x` to .true. and the check would silently stop testing anything.
       print *, " Elapsed ", elapsed
-      call check(error, elapsed > 0.0_dp, "Timer with work should show positive elapsed time")
+      call check(error, elapsed >= 0.0_dp, "Timer with work should not show negative elapsed time")
       if (allocated(error)) return
 
       ! Should be reasonable (less than 1 second for this simple loop)
@@ -110,11 +119,13 @@ contains
       call timer%stop()
       elapsed2 = timer%get_elapsed_time()
 
-      ! Both should be positive
-      call check(error, elapsed1 > 0.0_dp, "First measurement should be positive")
+      ! See test_timer_short_delay: zero is a legitimate measurement when the
+      ! clock tick is coarser than the work, so these assert non-negative and
+      ! finite rather than strictly positive.
+      call check(error, elapsed1 >= 0.0_dp, "First measurement should not be negative")
       if (allocated(error)) return
 
-      call check(error, elapsed2 > 0.0_dp, "Second measurement should be positive")
+      call check(error, elapsed2 >= 0.0_dp, "Second measurement should not be negative")
       if (allocated(error)) return
 
       ! Second measurement should generally be larger (though not guaranteed due to system variance)

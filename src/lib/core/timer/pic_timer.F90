@@ -109,6 +109,20 @@ contains
          elapsed = self%stop_time - self%start_time
       end if
 #else
+      ! F2018 16.9.180: a processor with no clock sets COUNT_RATE to zero (and
+      ! COUNT to -HUGE(COUNT)). Dividing by it would be a zero divide, giving
+      ! Inf or NaN -- or, under -ffast-math, an unconstrained value -- which
+      ! then propagates into every derived figure such as a FLOP rate. There is
+      ! no time to report on such a processor, so report none. `elapsed` is
+      ! already 0.0_dp here.
+      !
+      ! A caller cannot distinguish "this processor has no clock" from "no
+      ! measurable time passed" from the result alone. That is deliberate:
+      ! get_elapsed_time is a function used inside expressions, so it has
+      ! nowhere to put an error_t, and both cases mean the same thing to the
+      ! arithmetic downstream.
+      if (self%count_rate <= 0_int64) return
+
       if (self%is_running) then
          call system_clock(count=current_count)
          elapsed = real(current_count - self%start_count, dp)/real(self%count_rate, dp)
