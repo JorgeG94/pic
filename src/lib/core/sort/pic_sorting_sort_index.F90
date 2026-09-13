@@ -2131,6 +2131,27 @@ contains
          index(i) = int(i + 1, kind=int_index)
       end do
 
+! An array of fewer than two elements is already sorted, and reversing a single
+! element is a no-op, so there is nothing left to sort here. This return is not
+! an optimisation. Everything below it drags a possibly zero-sized `array`
+! through the merge machinery for no reason, starting with a zero-sized scratch
+! buffer `buf(0:array_size/2 - 1)` whose element length comes from `len(array)`.
+! `LEN` of an assumed-length dummy is a type parameter inquiry and is perfectly
+! well defined for a zero-sized array, but LFortran currently evaluates it by
+! indexing element 0, so its bounds checking aborts the whole test binary there
+! (an LFortran defect, reported upstream; gfortran, ifx and nvfortran all accept
+! it). Not building a buffer we cannot use keeps the zero-sized case away from
+! that inquiry as well as from the `len(array)` that `reverse_segment` declares
+! its `temp` with.
+! The checks on the caller's `index` above stay above this return, so a too
+! small or too narrow `index` is still reported at `array_size` 1. The `work`
+! and `iwork` checks below cannot fire here whichever side of them this sits on:
+! both compare a size, which is never negative, against `array_size/2`, which is
+! 0 for `array_size` 0 and 1. `index` has just been given the identity
+! permutation it is documented to return, which is the correct answer for 0 and
+! 1 elements.
+      if (array_size < 2) return
+
       if (pic_optional(reverse, .false.)) then
          call reverse_segment(array, index)
       end if
@@ -4514,6 +4535,27 @@ contains
       do i = 0, array_size - 1
          index(i) = int(i + 1, kind=int_index_low)
       end do
+
+! An array of fewer than two elements is already sorted, and reversing a single
+! element is a no-op, so there is nothing left to sort here. This return is not
+! an optimisation. Everything below it drags a possibly zero-sized `array`
+! through the merge machinery for no reason, starting with a zero-sized scratch
+! buffer `buf(0:array_size/2 - 1)` whose element length comes from `len(array)`.
+! `LEN` of an assumed-length dummy is a type parameter inquiry and is perfectly
+! well defined for a zero-sized array, but LFortran currently evaluates it by
+! indexing element 0, so its bounds checking aborts the whole test binary there
+! (an LFortran defect, reported upstream; gfortran, ifx and nvfortran all accept
+! it). Not building a buffer we cannot use keeps the zero-sized case away from
+! that inquiry as well as from the `len(array)` that `reverse_segment` declares
+! its `temp` with.
+! The checks on the caller's `index` above stay above this return, so a too
+! small or too narrow `index` is still reported at `array_size` 1. The `work`
+! and `iwork` checks below cannot fire here whichever side of them this sits on:
+! both compare a size, which is never negative, against `array_size/2`, which is
+! 0 for `array_size` 0 and 1. `index` has just been given the identity
+! permutation it is documented to return, which is the correct answer for 0 and
+! 1 elements.
+      if (array_size < 2) return
 
       if (pic_optional(reverse, .false.)) then
          call reverse_segment(array, index)
