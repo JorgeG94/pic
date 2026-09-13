@@ -1,0 +1,37 @@
+name: No session links
+
+# An assistant session URL in a commit message points at a private transcript:
+# it never resolves for anyone reading this repository, and once committed it
+# can only be removed by rewriting history. Catch it while it is still cheap
+# to fix.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    name: No session URLs in commits or added lines
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout with full history
+        uses: actions/checkout@v4
+        with:
+          # The check walks a commit range, so the default shallow clone is
+          # not enough.
+          fetch-depth: 0
+
+      - name: Scan the commits this branch adds
+        env:
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          base="$BASE_SHA"
+          # A branch's first push reports an all-zero "before"; fall back to
+          # the parent so the push still gets checked rather than skipped.
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            base="${HEAD_SHA}^"
+          fi
+          bash tools/ci/check_no_session_links.sh "$base" "$HEAD_SHA"
