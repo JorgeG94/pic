@@ -531,8 +531,14 @@ contains
       !! their contents and stay independent of the original
       type(error_type), allocatable, intent(out) :: error
       type(log_buffer_type) :: buffer
-      class(log_buffer_type), allocatable :: buffer_copy
-      class(log_entry_type), allocatable :: entry_copy
+      ! Declared `type`, not `class`: nothing here dispatches, extends or is
+      ! passed as a polymorphic argument, so the copies only need to be the
+      ! same declared type as their source. Classic flang (AOCC 5.1.0)
+      ! segfaults on a sourced allocation into a polymorphic allocatable of
+      ! these types, and the polymorphism was incidental to what is asserted
+      ! below, which is unchanged.
+      type(log_buffer_type), allocatable :: buffer_copy
+      type(log_entry_type), allocatable :: entry_copy
 
       call pure_info(buffer, "copied message", "copy_module", "copy_procedure")
 

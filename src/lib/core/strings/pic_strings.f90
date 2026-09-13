@@ -7,7 +7,7 @@
 !>
 module pic_strings
    use pic_ascii, only: whitespace
-   use pic_string_type, only: string_type, char, verify, repeat, slen, len_trim, move
+   use pic_string_type, only: string_type, char, verify, repeat, slen, len_trim, assignment(=)
    use pic_optional_value, only: pic_optional
    use pic_types, only: sp, dp, int32, int64, fbool
    use, intrinsic :: iso_c_binding, only: c_null_char, c_char
@@ -1045,7 +1045,16 @@ contains
          end if
       end do
 
-      call move(from=joined, to=join_string)
+      ! Assign the result instead of moving into it. `move` passes this
+      ! function's own result variable to an intent(out) dummy whose deferred
+      ! length allocatable component is then filled by move_alloc, and both
+      ! PGI-derived front ends (classic flang in AOCC 5.1.0, and nvfortran)
+      ! produce a wrong result for that. This was the only `move` call in the
+      ! library, so nothing else was exposed to it. Defined assignment of a
+      ! character to a string_type is used everywhere and behaves on every
+      ! target compiler; the extra copy of an already-built buffer is not
+      ! measurable here.
+      join_string = joined
 
    end function join_string
 
