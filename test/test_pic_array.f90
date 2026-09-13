@@ -4,6 +4,7 @@ module test_pic_array
    use pic_array, only: pic_fill, set_threading_mode, get_threading_mode, &
                         pic_transpose, pic_sum, pic_copy, is_sorted, ASCENDING, &
                         DESCENDING, pic_scramble_array
+   use pic_error, only: error_t, ERROR_VALIDATION, ERROR_IO, SUCCESS
    use pic_test_helpers, only: is_equal
    implicit none
    private
@@ -106,7 +107,14 @@ contains
                   new_unittest("pic_scramble_array_int64", test_pic_scramble_array_int64), &
                   new_unittest("pic_scramble_array_sp", test_pic_scramble_array_sp), &
                   new_unittest("pic_scramble_array_dp", test_pic_scramble_array_dp), &
-                  new_unittest("pic_scramble_array_char", test_pic_scramble_array_char) &
+                  new_unittest("pic_scramble_array_char", test_pic_scramble_array_char), &
+                  new_unittest("copy_vector_err_mismatch", test_copy_vector_err_mismatch), &
+                  new_unittest("copy_matrix_err_mismatch", test_copy_matrix_err_mismatch), &
+                  new_unittest("copy_3d_tensor_err_mismatch", test_copy_3d_tensor_err_mismatch), &
+                  new_unittest("transpose_err_mismatch", test_transpose_err_mismatch), &
+                  new_unittest("array_err_untouched_on_success", test_array_err_untouched_on_success), &
+                  new_unittest("array_no_err_valid_input", test_array_no_err_valid_input), &
+                  new_unittest("array_pure_guard", test_array_pure_guard) &
                   ]
 
       ! Add more tests as needed
@@ -1661,5 +1669,336 @@ contains
       if (allocated(error)) return
 
    end subroutine test_pic_scramble_array_char
+
+   ! ------------------------------------------------------------------
+   ! error_t reporting for pic_copy / pic_transpose
+   !
+   ! pic_array reports a shape mismatch through the optional err argument
+   ! when one is supplied, and keeps the historical `error stop` abort when
+   ! it is not. The abort path cannot be exercised from inside a test
+   ! process, so these tests cover the err path plus the guarantee that the
+   ! err-less calls still behave exactly as they always did on valid input.
+   ! ------------------------------------------------------------------
+
+   subroutine check_validation(error, err, what)
+      !! Shared assertion for a reported shape mismatch: the error is set,
+      !! its code is ERROR_VALIDATION and it carries a non-empty message.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t), intent(in) :: err
+      character(len=*), intent(in) :: what
+
+      call check(error, err%has_error(), "err must be set by "//what)
+      if (allocated(error)) return
+
+      call check(error, err%get_code(), ERROR_VALIDATION, "code must be ERROR_VALIDATION for "//what)
+      if (allocated(error)) return
+
+      call check(error, err%is(ERROR_VALIDATION), "err%is(ERROR_VALIDATION) must hold for "//what)
+      if (allocated(error)) return
+
+      call check(error, len_trim(err%get_message()) > 0, "message must not be empty for "//what)
+      if (allocated(error)) return
+
+   end subroutine check_validation
+
+   subroutine test_copy_vector_err_mismatch(error)
+      !! A vector pic_copy whose destination and source differ in length
+      !! reports ERROR_VALIDATION and leaves the destination exactly as the
+      !! caller left it, for every supported element type.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: dest_int32(3), source_int32(4)
+      integer(int64) :: dest_int64(3), source_int64(4)
+      real(sp) :: dest_sp(3), source_sp(4)
+      real(dp) :: dest_dp(3), source_dp(4)
+
+      dest_int32 = 7_int32
+      source_int32 = 1_int32
+      call pic_copy(dest_int32, source_int32, err=err)
+      call check_validation(error, err, "pic_copy on int32 vectors")
+      if (allocated(error)) return
+      call check(error, all(dest_int32 == 7_int32), "int32 destination must be unchanged on mismatch")
+      if (allocated(error)) return
+
+      dest_int64 = 7_int64
+      source_int64 = 1_int64
+      call pic_copy(dest_int64, source_int64, err=err)
+      call check_validation(error, err, "pic_copy on int64 vectors")
+      if (allocated(error)) return
+      call check(error, all(dest_int64 == 7_int64), "int64 destination must be unchanged on mismatch")
+      if (allocated(error)) return
+
+      dest_sp = 7.0_sp
+      source_sp = 1.0_sp
+      call pic_copy(dest_sp, source_sp, err=err)
+      call check_validation(error, err, "pic_copy on sp vectors")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_sp, 7.0_sp)), "sp destination must be unchanged on mismatch")
+      if (allocated(error)) return
+
+      dest_dp = 7.0_dp
+      source_dp = 1.0_dp
+      call pic_copy(dest_dp, source_dp, err=err)
+      call check_validation(error, err, "pic_copy on dp vectors")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_dp, 7.0_dp)), "dp destination must be unchanged on mismatch")
+      if (allocated(error)) return
+
+   end subroutine test_copy_vector_err_mismatch
+
+   subroutine test_copy_matrix_err_mismatch(error)
+      !! A matrix pic_copy reports ERROR_VALIDATION for a mismatch in either
+      !! extent (rows for int32/sp, columns for int64/dp below) and leaves
+      !! the destination unchanged.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: dest_int32(2, 3), source_int32(3, 3)
+      integer(int64) :: dest_int64(2, 3), source_int64(2, 4)
+      real(sp) :: dest_sp(2, 3), source_sp(3, 3)
+      real(dp) :: dest_dp(2, 3), source_dp(2, 4)
+
+      dest_int32 = 7_int32
+      source_int32 = 1_int32
+      call pic_copy(dest_int32, source_int32, err=err)
+      call check_validation(error, err, "pic_copy on int32 matrices")
+      if (allocated(error)) return
+      call check(error, all(dest_int32 == 7_int32), "int32 destination must be unchanged on row mismatch")
+      if (allocated(error)) return
+
+      dest_int64 = 7_int64
+      source_int64 = 1_int64
+      call pic_copy(dest_int64, source_int64, err=err)
+      call check_validation(error, err, "pic_copy on int64 matrices")
+      if (allocated(error)) return
+      call check(error, all(dest_int64 == 7_int64), "int64 destination must be unchanged on column mismatch")
+      if (allocated(error)) return
+
+      dest_sp = 7.0_sp
+      source_sp = 1.0_sp
+      call pic_copy(dest_sp, source_sp, err=err)
+      call check_validation(error, err, "pic_copy on sp matrices")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_sp, 7.0_sp)), "sp destination must be unchanged on row mismatch")
+      if (allocated(error)) return
+
+      dest_dp = 7.0_dp
+      source_dp = 1.0_dp
+      call pic_copy(dest_dp, source_dp, err=err)
+      call check_validation(error, err, "pic_copy on dp matrices")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_dp, 7.0_dp)), "dp destination must be unchanged on column mismatch")
+      if (allocated(error)) return
+
+   end subroutine test_copy_matrix_err_mismatch
+
+   subroutine test_copy_3d_tensor_err_mismatch(error)
+      !! A 3d pic_copy reports ERROR_VALIDATION for a mismatch in any of the
+      !! three extents and leaves the destination unchanged. A different
+      !! extent is perturbed per type so all three size checks are exercised.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: dest_int32(2, 2, 2), source_int32(3, 2, 2)
+      integer(int64) :: dest_int64(2, 2, 2), source_int64(2, 3, 2)
+      real(sp) :: dest_sp(2, 2, 2), source_sp(2, 2, 3)
+      real(dp) :: dest_dp(2, 2, 2), source_dp(3, 3, 3)
+
+      dest_int32 = 7_int32
+      source_int32 = 1_int32
+      call pic_copy(dest_int32, source_int32, err=err)
+      call check_validation(error, err, "pic_copy on int32 tensors")
+      if (allocated(error)) return
+      call check(error, all(dest_int32 == 7_int32), "int32 destination must be unchanged on extent-1 mismatch")
+      if (allocated(error)) return
+
+      dest_int64 = 7_int64
+      source_int64 = 1_int64
+      call pic_copy(dest_int64, source_int64, err=err)
+      call check_validation(error, err, "pic_copy on int64 tensors")
+      if (allocated(error)) return
+      call check(error, all(dest_int64 == 7_int64), "int64 destination must be unchanged on extent-2 mismatch")
+      if (allocated(error)) return
+
+      dest_sp = 7.0_sp
+      source_sp = 1.0_sp
+      call pic_copy(dest_sp, source_sp, err=err)
+      call check_validation(error, err, "pic_copy on sp tensors")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_sp, 7.0_sp)), "sp destination must be unchanged on extent-3 mismatch")
+      if (allocated(error)) return
+
+      dest_dp = 7.0_dp
+      source_dp = 1.0_dp
+      call pic_copy(dest_dp, source_dp, err=err)
+      call check_validation(error, err, "pic_copy on dp tensors")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_dp, 7.0_dp)), "dp destination must be unchanged on all-extent mismatch")
+      if (allocated(error)) return
+
+   end subroutine test_copy_3d_tensor_err_mismatch
+
+   subroutine test_transpose_err_mismatch(error)
+      !! pic_transpose reports ERROR_VALIDATION when the result is not shaped
+      !! (cols, rows). The result is an intent(out) dummy, so on that path it
+      !! is undefined and deliberately not inspected here; what is guaranteed
+      !! is that the input matrix is untouched and that the call returns
+      !! instead of aborting.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: a_int32(2, 3), b_int32(2, 3)
+      integer(int64) :: a_int64(2, 3), b_int64_bad(2, 3), b_int64_good(3, 2)
+      real(sp) :: a_sp(2, 3), b_sp(2, 3)
+      real(dp) :: a_dp(2, 3), b_dp(3, 4)
+
+      a_int32 = 5_int32
+      call pic_transpose(a_int32, b_int32, err=err)
+      call check_validation(error, err, "pic_transpose on int32 matrices")
+      if (allocated(error)) return
+      call check(error, all(a_int32 == 5_int32), "int32 input must be unchanged on mismatch")
+      if (allocated(error)) return
+
+      a_int64 = 5_int64
+      call pic_transpose(a_int64, b_int64_bad, err=err)
+      call check_validation(error, err, "pic_transpose on int64 matrices")
+      if (allocated(error)) return
+      call check(error, all(a_int64 == 5_int64), "int64 input must be unchanged on mismatch")
+      if (allocated(error)) return
+
+      ! a successful call never writes err, so the caller clears it first
+      call err%clear()
+      call pic_transpose(a_int64, b_int64_good, err=err)
+      call check(error,.not. err%has_error(), "a (cols, rows) result must be accepted for int64")
+      if (allocated(error)) return
+      call check(error, all(b_int64_good == 5_int64), "int64 transpose must still copy the values through")
+      if (allocated(error)) return
+
+      a_sp = 5.0_sp
+      call pic_transpose(a_sp, b_sp, err=err)
+      call check_validation(error, err, "pic_transpose on sp matrices")
+      if (allocated(error)) return
+      call check(error, all(is_equal(a_sp, 5.0_sp)), "sp input must be unchanged on mismatch")
+      if (allocated(error)) return
+
+      a_dp = 5.0_dp
+      call pic_transpose(a_dp, b_dp, err=err)
+      call check_validation(error, err, "pic_transpose on dp matrices")
+      if (allocated(error)) return
+      call check(error, all(is_equal(a_dp, 5.0_dp)), "dp input must be unchanged on mismatch")
+      if (allocated(error)) return
+
+   end subroutine test_transpose_err_mismatch
+
+   subroutine test_array_err_untouched_on_success(error)
+      !! On valid input the routines never write to err. A caller-supplied,
+      !! already-clear err therefore stays clear, and an err that already
+      !! carried an unrelated error is deliberately left alone rather than
+      !! cleared behind the caller's back.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: dest_vector(4), source_vector(4)
+      real(dp) :: dest_matrix(2, 3), source_matrix(2, 3)
+      real(dp) :: dest_tensor(2, 2, 2), source_tensor(2, 2, 2)
+      real(dp) :: transposed(3, 2)
+
+      source_vector = 3_int32
+      dest_vector = 0_int32
+      call pic_copy(dest_vector, source_vector, err=err)
+      call check(error,.not. err%has_error(), "a valid vector copy must not set err")
+      if (allocated(error)) return
+      call check(error, err%get_code(), SUCCESS, "a valid vector copy must leave err at SUCCESS")
+      if (allocated(error)) return
+      call check(error, all(dest_vector == 3_int32), "a valid vector copy must still copy")
+      if (allocated(error)) return
+
+      source_matrix = 2.5_dp
+      dest_matrix = 0.0_dp
+      call pic_copy(dest_matrix, source_matrix, err=err)
+      call check(error,.not. err%has_error(), "a valid matrix copy must not set err")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_matrix, 2.5_dp)), "a valid matrix copy must still copy")
+      if (allocated(error)) return
+
+      source_tensor = 1.5_dp
+      dest_tensor = 0.0_dp
+      call pic_copy(dest_tensor, source_tensor, err=err)
+      call check(error,.not. err%has_error(), "a valid tensor copy must not set err")
+      if (allocated(error)) return
+      call check(error, all(is_equal(dest_tensor, 1.5_dp)), "a valid tensor copy must still copy")
+      if (allocated(error)) return
+
+      call pic_transpose(source_matrix, transposed, err=err)
+      call check(error,.not. err%has_error(), "a valid transpose must not set err")
+      if (allocated(error)) return
+      call check(error, all(is_equal(transposed, 2.5_dp)), "a valid transpose must still transpose")
+      if (allocated(error)) return
+
+      call err%set(ERROR_IO, "unrelated failure the caller has not handled yet")
+      call pic_copy(dest_vector, source_vector, err=err)
+      call check(error, err%is(ERROR_IO), "a successful copy must not clear a pre-existing error")
+      if (allocated(error)) return
+
+   end subroutine test_array_err_untouched_on_success
+
+   subroutine test_array_no_err_valid_input(error)
+      !! Backward compatibility: the same calls made without err behave
+      !! exactly as they did before err existed, threaded paths included.
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: dest_vector(4), source_vector(4)
+      real(dp) :: dest_matrix(2, 3), source_matrix(2, 3)
+      real(dp) :: dest_tensor(2, 2, 2), source_tensor(2, 2, 2)
+      real(dp) :: transposed(3, 2)
+
+      source_vector = 3_int32
+      dest_vector = 0_int32
+      call pic_copy(dest_vector, source_vector)
+      call check(error, all(dest_vector == 3_int32), "err-less vector copy must still copy")
+      if (allocated(error)) return
+
+      dest_vector = 0_int32
+      call pic_copy(dest_vector, source_vector, .true.)
+      call check(error, all(dest_vector == 3_int32), "err-less threaded vector copy must still copy")
+      if (allocated(error)) return
+
+      source_matrix = 2.5_dp
+      dest_matrix = 0.0_dp
+      call pic_copy(dest_matrix, source_matrix, .true.)
+      call check(error, all(is_equal(dest_matrix, 2.5_dp)), "err-less threaded matrix copy must still copy")
+      if (allocated(error)) return
+
+      source_tensor = 1.5_dp
+      dest_tensor = 0.0_dp
+      call pic_copy(dest_tensor, source_tensor, .true.)
+      call check(error, all(is_equal(dest_tensor, 1.5_dp)), "err-less threaded tensor copy must still copy")
+      if (allocated(error)) return
+
+      call pic_transpose(source_matrix, transposed, .true.)
+      call check(error, all(is_equal(transposed, 2.5_dp)), "err-less threaded transpose must still transpose")
+      if (allocated(error)) return
+
+   end subroutine test_array_no_err_valid_input
+
+   pure function pure_is_sorted_guard(array) result(sorted)
+      !! Compile-time purity guard. is_sorted is pure, and downstream code is
+      !! allowed to call it from its own pure procedures. If pic_array ever
+      !! loses that purity this wrapper stops compiling, which is the point.
+      integer(int32), intent(in) :: array(:)
+      logical :: sorted
+
+      sorted = is_sorted(array, ASCENDING)
+
+   end function pure_is_sorted_guard
+
+   subroutine test_array_pure_guard(error)
+      !! Exercises the pure wrapper so the guard is linked, not just compiled.
+      type(error_type), allocatable, intent(out) :: error
+
+      call check(error, pure_is_sorted_guard([1_int32, 2_int32, 3_int32]), &
+                 "the pure wrapper must report an ascending array as sorted")
+      if (allocated(error)) return
+
+      call check(error,.not. pure_is_sorted_guard([3_int32, 2_int32, 1_int32]), &
+                 "the pure wrapper must report a descending array as unsorted")
+      if (allocated(error)) return
+
+   end subroutine test_array_pure_guard
 
 end module test_pic_array

@@ -9,6 +9,7 @@ module pic_array
    use pic_types, only: sp, dp, int32, int64, default_int
    use pic_io, only: to_char, to_upper
    use pic_optional_value, only: pic_optional
+   use pic_error, only: error_t, error_raise, ERROR_VALIDATION
    implicit none
    private
 
@@ -72,9 +73,14 @@ module pic_array
   !! if you built pic with BLAS use the copy interface provided there, I will not beat BLAS
   !! copy is implemented for (int32, int64, sp, dp) for 1 and 2d arrays of the same types
   !!
-  !! Usage: call pic_copy(destination, source, [optional] threaded)
+  !! Usage: call pic_copy(destination, source, [optional] threaded, [optional] err)
   !!
   !! This subroutine is threaded for performance purposes if threaded is set to .true.
+  !!
+  !! A destination whose shape differs from the source is a caller error. If the
+  !! optional err argument is present it is set to ERROR_VALIDATION and the
+  !! destination is left unchanged; if err is absent the mismatch aborts the
+  !! program with error stop, which is the historical behaviour.
   !!
   !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
       module procedure copy_vector_int32
@@ -97,9 +103,15 @@ module pic_array
   !!
   !! pic_transpose is implemented for (int32, int64, sp, dp) 2d arrays
   !!
-  !! Usage: call pic_transpose(matrix_to_transpose, result, [optional] threaded)
+  !! Usage: call pic_transpose(matrix_to_transpose, result, [optional] threaded, [optional] err)
   !!
   !! This subroutine is threaded for performance purposes if threaded is set to true
+  !!
+  !! The result must be shaped (cols, rows) for an input shaped (rows, cols). If it
+  !! is not, the optional err argument is set to ERROR_VALIDATION; if err is absent
+  !! the mismatch aborts the program with error stop, which is the historical
+  !! behaviour. The result is intent(out), so on the error path it is undefined and
+  !! the caller must not read it.
   !!
   !! @note If this subroutine is called inside a omp threaded region it will run serially because of nested parallelism
   !!
@@ -583,15 +595,22 @@ contains
 
    end subroutine fill_3d_tensor_dp
 
-   subroutine copy_vector_int32(dest, source, threaded)
+   subroutine copy_vector_int32(dest, source, threaded, err)
         !! copy a vector of datatype int32
       integer(int32), intent(inout) :: dest(:)
       integer(int32), intent(in)    :: source(:)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION on a size mismatch, leaving dest unchanged;
+         !! when absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i
       if (size(dest, 1) /= size(source, 1)) then
-         error stop "Vector size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_copy: vector size mismatch")
+            return
+         end if
+         error stop "pic_copy: vector size mismatch"
       end if
       use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
@@ -605,15 +624,22 @@ contains
       end if
    end subroutine copy_vector_int32
 
-   subroutine copy_vector_int64(dest, source, threaded)
+   subroutine copy_vector_int64(dest, source, threaded, err)
         !! copy a vector of datatype int64
       integer(int64), intent(inout) :: dest(:)
       integer(int64), intent(in)    :: source(:)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION on a size mismatch, leaving dest unchanged;
+         !! when absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i
       if (size(dest, 1) /= size(source, 1)) then
-         error stop "Vector size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_copy: vector size mismatch")
+            return
+         end if
+         error stop "pic_copy: vector size mismatch"
       end if
       use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
@@ -627,15 +653,22 @@ contains
       end if
    end subroutine copy_vector_int64
 
-   subroutine copy_vector_sp(dest, source, threaded)
+   subroutine copy_vector_sp(dest, source, threaded, err)
         !! copy a vector of datatype sp
       real(sp), intent(inout) :: dest(:)
       real(sp), intent(in)    :: source(:)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION on a size mismatch, leaving dest unchanged;
+         !! when absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i
       if (size(dest, 1) /= size(source, 1)) then
-         error stop "Vector size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_copy: vector size mismatch")
+            return
+         end if
+         error stop "pic_copy: vector size mismatch"
       end if
       use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
@@ -649,15 +682,22 @@ contains
       end if
    end subroutine copy_vector_sp
 
-   subroutine copy_vector_dp(dest, source, threaded)
+   subroutine copy_vector_dp(dest, source, threaded, err)
         !! copy a vector of datatype dp
       real(dp), intent(inout) :: dest(:)
       real(dp), intent(in)    :: source(:)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION on a size mismatch, leaving dest unchanged;
+         !! when absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i
       if (size(dest, 1) /= size(source, 1)) then
-         error stop "Vector size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_copy: vector size mismatch")
+            return
+         end if
+         error stop "pic_copy: vector size mismatch"
       end if
       use_threads = pic_optional(threaded, use_threaded_default)
       if (use_threads) then
@@ -671,16 +711,23 @@ contains
       end if
    end subroutine copy_vector_dp
 
-   subroutine copy_matrix_int32(dest, source, threaded)
+   subroutine copy_matrix_int32(dest, source, threaded, err)
         !! copy a matrix of datatype int32
       integer(int32), intent(inout) :: dest(:, :)
       integer(int32), intent(in)    :: source(:, :)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION on a size mismatch, leaving dest unchanged;
+         !! when absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i, j, rows, cols
       integer(default_int) :: ii, jj
       if (size(dest, 1) /= size(source, 1) .or. size(dest, 2) /= size(source, 2)) then
-         error stop "Matrix size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_copy: matrix size mismatch")
+            return
+         end if
+         error stop "pic_copy: matrix size mismatch"
       end if
       rows = size(source, 1)
       cols = size(source, 2)
@@ -702,16 +749,23 @@ contains
       end if
    end subroutine copy_matrix_int32
 
-   subroutine copy_matrix_int64(dest, source, threaded)
+   subroutine copy_matrix_int64(dest, source, threaded, err)
         !! copy a matrix of datatype int64
       integer(int64), intent(inout) :: dest(:, :)
       integer(int64), intent(in)    :: source(:, :)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION on a size mismatch, leaving dest unchanged;
+         !! when absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i, j, rows, cols
       integer(default_int) :: ii, jj
       if (size(dest, 1) /= size(source, 1) .or. size(dest, 2) /= size(source, 2)) then
-         error stop "Matrix size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_copy: matrix size mismatch")
+            return
+         end if
+         error stop "pic_copy: matrix size mismatch"
       end if
       rows = size(source, 1)
       cols = size(source, 2)
@@ -733,16 +787,23 @@ contains
       end if
    end subroutine copy_matrix_int64
 
-   subroutine copy_matrix_sp(dest, source, threaded)
+   subroutine copy_matrix_sp(dest, source, threaded, err)
         !! copy a matrix of datatype sp
       real(sp), intent(inout) :: dest(:, :)
       real(sp), intent(in)    :: source(:, :)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION on a size mismatch, leaving dest unchanged;
+         !! when absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i, j, rows, cols
       integer(default_int) :: ii, jj
       if (size(dest, 1) /= size(source, 1) .or. size(dest, 2) /= size(source, 2)) then
-         error stop "Matrix size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_copy: matrix size mismatch")
+            return
+         end if
+         error stop "pic_copy: matrix size mismatch"
       end if
       rows = size(source, 1)
       cols = size(source, 2)
@@ -764,16 +825,23 @@ contains
       end if
    end subroutine copy_matrix_sp
 
-   subroutine copy_matrix_dp(dest, source, threaded)
+   subroutine copy_matrix_dp(dest, source, threaded, err)
         !! copy a matrix of datatype dp
       real(dp), intent(inout) :: dest(:, :)
       real(dp), intent(in)    :: source(:, :)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION on a size mismatch, leaving dest unchanged;
+         !! when absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i, j, rows, cols
       integer(default_int) :: ii, jj
       if (size(dest, 1) /= size(source, 1) .or. size(dest, 2) /= size(source, 2)) then
-         error stop "Matrix size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_copy: matrix size mismatch")
+            return
+         end if
+         error stop "pic_copy: matrix size mismatch"
       end if
       rows = size(source, 1)
       cols = size(source, 2)
@@ -795,11 +863,14 @@ contains
       end if
    end subroutine copy_matrix_dp
 
-   subroutine copy_3d_tensor_int32(dest, source, threaded)
+   subroutine copy_3d_tensor_int32(dest, source, threaded, err)
      !! copy a tensor of datatype int32
       integer(int32), intent(inout) :: dest(:, :, :)
       integer(int32), intent(in)    :: source(:, :, :)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION on a size mismatch, leaving dest unchanged;
+         !! when absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i, j, k
       integer(default_int) :: ii, jj, kk
@@ -809,7 +880,11 @@ contains
       if (size(dest, 1) /= size(source, 1) &
           .or. size(dest, 2) /= size(source, 2) &
           .or. size(dest, 3) /= size(source, 3)) then
-         error stop "Tensor size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_copy: tensor size mismatch")
+            return
+         end if
+         error stop "pic_copy: tensor size mismatch"
       end if
 
       nx = size(source, 1)
@@ -840,11 +915,14 @@ contains
 
    end subroutine copy_3d_tensor_int32
 
-   subroutine copy_3d_tensor_int64(dest, source, threaded)
+   subroutine copy_3d_tensor_int64(dest, source, threaded, err)
      !! copy a tensor of datatype int64
       integer(int64), intent(inout) :: dest(:, :, :)
       integer(int64), intent(in)    :: source(:, :, :)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION on a size mismatch, leaving dest unchanged;
+         !! when absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i, j, k
       integer(default_int) :: ii, jj, kk
@@ -854,7 +932,11 @@ contains
       if (size(dest, 1) /= size(source, 1) &
           .or. size(dest, 2) /= size(source, 2) &
           .or. size(dest, 3) /= size(source, 3)) then
-         error stop "Tensor size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_copy: tensor size mismatch")
+            return
+         end if
+         error stop "pic_copy: tensor size mismatch"
       end if
 
       nx = size(source, 1)
@@ -885,11 +967,14 @@ contains
 
    end subroutine copy_3d_tensor_int64
 
-   subroutine copy_3d_tensor_sp(dest, source, threaded)
+   subroutine copy_3d_tensor_sp(dest, source, threaded, err)
      !! copy a tensor of datatype sp
       real(sp), intent(inout) :: dest(:, :, :)
       real(sp), intent(in)    :: source(:, :, :)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION on a size mismatch, leaving dest unchanged;
+         !! when absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i, j, k
       integer(default_int) :: ii, jj, kk
@@ -899,7 +984,11 @@ contains
       if (size(dest, 1) /= size(source, 1) &
           .or. size(dest, 2) /= size(source, 2) &
           .or. size(dest, 3) /= size(source, 3)) then
-         error stop "Tensor size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_copy: tensor size mismatch")
+            return
+         end if
+         error stop "pic_copy: tensor size mismatch"
       end if
 
       nx = size(source, 1)
@@ -930,11 +1019,14 @@ contains
 
    end subroutine copy_3d_tensor_sp
 
-   subroutine copy_3d_tensor_dp(dest, source, threaded)
+   subroutine copy_3d_tensor_dp(dest, source, threaded, err)
      !! copy a tensor of datatype dp
       real(dp), intent(inout) :: dest(:, :, :)
       real(dp), intent(in)    :: source(:, :, :)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION on a size mismatch, leaving dest unchanged;
+         !! when absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i, j, k
       integer(default_int) :: ii, jj, kk
@@ -944,7 +1036,11 @@ contains
       if (size(dest, 1) /= size(source, 1) &
           .or. size(dest, 2) /= size(source, 2) &
           .or. size(dest, 3) /= size(source, 3)) then
-         error stop "Tensor size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_copy: tensor size mismatch")
+            return
+         end if
+         error stop "pic_copy: tensor size mismatch"
       end if
 
       nx = size(source, 1)
@@ -975,11 +1071,15 @@ contains
 
    end subroutine copy_3d_tensor_dp
 
-   subroutine transpose_matrix_int32(A, B, threaded)
+   subroutine transpose_matrix_int32(A, B, threaded, err)
          !! transpose a matrix of datatype int32
       integer(int32), intent(in)  :: A(:, :)
       integer(int32), intent(out) :: B(:, :)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION when B is not shaped (cols, rows); B is
+         !! intent(out) and therefore undefined on that path. When err is
+         !! absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i, j, ii, jj, rows, cols
 
@@ -987,7 +1087,11 @@ contains
       cols = size(A, 2)
 
       if (size(B, 1) /= cols .or. size(B, 2) /= rows) then
-         error stop "transpose: size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_transpose: size mismatch")
+            return
+         end if
+         error stop "pic_transpose: size mismatch"
       end if
 
       use_threads = pic_optional(threaded, use_threaded_default)
@@ -1009,11 +1113,15 @@ contains
       end if
    end subroutine transpose_matrix_int32
 
-   subroutine transpose_matrix_int64(A, B, threaded)
+   subroutine transpose_matrix_int64(A, B, threaded, err)
          !! transpose a matrix of datatype int64
       integer(int64), intent(in)  :: A(:, :)
       integer(int64), intent(out) :: B(:, :)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION when B is not shaped (cols, rows); B is
+         !! intent(out) and therefore undefined on that path. When err is
+         !! absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i, j, ii, jj, rows, cols
 
@@ -1021,7 +1129,11 @@ contains
       cols = size(A, 2)
 
       if (size(B, 1) /= cols .or. size(B, 2) /= rows) then
-         error stop "transpose: size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_transpose: size mismatch")
+            return
+         end if
+         error stop "pic_transpose: size mismatch"
       end if
 
       use_threads = pic_optional(threaded, use_threaded_default)
@@ -1043,11 +1155,15 @@ contains
       end if
    end subroutine transpose_matrix_int64
 
-   subroutine transpose_matrix_sp(A, B, threaded)
+   subroutine transpose_matrix_sp(A, B, threaded, err)
          !! transpose a matrix of datatype sp
       real(sp), intent(in)  :: A(:, :)
       real(sp), intent(out) :: B(:, :)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION when B is not shaped (cols, rows); B is
+         !! intent(out) and therefore undefined on that path. When err is
+         !! absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i, j, ii, jj, rows, cols
 
@@ -1055,7 +1171,11 @@ contains
       cols = size(A, 2)
 
       if (size(B, 1) /= cols .or. size(B, 2) /= rows) then
-         error stop "transpose: size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_transpose: size mismatch")
+            return
+         end if
+         error stop "pic_transpose: size mismatch"
       end if
 
       use_threads = pic_optional(threaded, use_threaded_default)
@@ -1077,11 +1197,15 @@ contains
       end if
    end subroutine transpose_matrix_sp
 
-   subroutine transpose_matrix_dp(A, B, threaded)
+   subroutine transpose_matrix_dp(A, B, threaded, err)
          !! transpose a matrix of datatype dp
       real(dp), intent(in)  :: A(:, :)
       real(dp), intent(out) :: B(:, :)
       logical, intent(in), optional :: threaded
+      type(error_t), intent(inout), optional :: err
+         !! set to ERROR_VALIDATION when B is not shaped (cols, rows); B is
+         !! intent(out) and therefore undefined on that path. When err is
+         !! absent a mismatch aborts with error stop
       logical :: use_threads
       integer(default_int) :: i, j, ii, jj, rows, cols
 
@@ -1089,7 +1213,11 @@ contains
       cols = size(A, 2)
 
       if (size(B, 1) /= cols .or. size(B, 2) /= rows) then
-         error stop "transpose: size mismatch"
+         if (present(err)) then
+            call error_raise(err, ERROR_VALIDATION, "pic_transpose: size mismatch")
+            return
+         end if
+         error stop "pic_transpose: size mismatch"
       end if
 
       use_threads = pic_optional(threaded, use_threaded_default)
