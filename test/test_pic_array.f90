@@ -3,7 +3,7 @@ module test_pic_array
    use pic_types, only: sp, dp, int32, int64, default_int
    use pic_array, only: pic_fill, set_threading_mode, get_threading_mode, &
                         pic_transpose, pic_sum, pic_copy, is_sorted, ASCENDING, &
-                        DESCENDING, pic_scramble_array
+                        DESCENDING, pic_scramble_array, pic_print_array
    use pic_error, only: error_t, ERROR_VALIDATION, ERROR_IO, SUCCESS
    use pic_test_helpers, only: is_equal
    implicit none
@@ -114,7 +114,11 @@ contains
                   new_unittest("transpose_err_mismatch", test_transpose_err_mismatch), &
                   new_unittest("array_err_untouched_on_success", test_array_err_untouched_on_success), &
                   new_unittest("array_no_err_valid_input", test_array_no_err_valid_input), &
-                  new_unittest("array_pure_guard", test_array_pure_guard) &
+                  new_unittest("array_pure_guard", test_array_pure_guard), &
+                  new_unittest("print_bad_format_err", test_print_bad_format_err), &
+                  new_unittest("print_packed_bad_size_err", test_print_packed_bad_size_err), &
+                  new_unittest("print_bad_input_without_err", test_print_bad_input_without_err), &
+                  new_unittest("print_valid_input_err_clear", test_print_valid_input_err_clear) &
                   ]
 
       ! Add more tests as needed
@@ -2000,5 +2004,217 @@ contains
       if (allocated(error)) return
 
    end subroutine test_array_pure_guard
+
+   subroutine test_print_bad_format_err(error)
+      !! An unrecognised format string is reported through err as
+      !! ERROR_VALIDATION by every pic_print_array family, and the message
+      !! names the offending string. The array is still printed with NumPy
+      !! brackets on that path, which is visible on stdout rather than
+      !! assertable from here, so err is all the caller has to go on.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: vector_int32(3)
+      integer(int64) :: vector_int64(3)
+      real(sp) :: vector_sp(3)
+      real(dp) :: vector_dp(3)
+      integer(int32) :: matrix_int32(2, 2)
+      real(dp) :: matrix_dp(2, 2)
+      real(sp) :: packed_sp(3)
+      real(dp) :: tensor_dp(2, 2, 2)
+
+      vector_int32 = 1_int32
+      call pic_print_array(vector_int32, "NOT_A_FORMAT", err=err)
+      call check_validation(error, err, "pic_print_array on an int32 vector with a bad format")
+      if (allocated(error)) return
+      call check(error, index(err%get_message(), "NOT_A_FORMAT") > 0, &
+                 "the message must name the unsupported format string")
+      if (allocated(error)) return
+
+      call err%clear()
+      vector_int64 = 1_int64
+      call pic_print_array(vector_int64, "numpyish", err=err)
+      call check_validation(error, err, "pic_print_array on an int64 vector with a bad format")
+      if (allocated(error)) return
+
+      call err%clear()
+      vector_sp = 1.0_sp
+      call pic_print_array(vector_sp, "BOGUS", err=err)
+      call check_validation(error, err, "pic_print_array on an sp vector with a bad format")
+      if (allocated(error)) return
+
+      call err%clear()
+      vector_dp = 1.0_dp
+      call pic_print_array(vector_dp, "BOGUS", err=err)
+      call check_validation(error, err, "pic_print_array on a dp vector with a bad format")
+      if (allocated(error)) return
+
+      call err%clear()
+      matrix_int32 = 2_int32
+      call pic_print_array(matrix_int32, "BOGUS", err=err)
+      call check_validation(error, err, "pic_print_array on an int32 matrix with a bad format")
+      if (allocated(error)) return
+
+      call err%clear()
+      matrix_dp = 2.0_dp
+      call pic_print_array(matrix_dp, "BOGUS", err=err)
+      call check_validation(error, err, "pic_print_array on a dp matrix with a bad format")
+      if (allocated(error)) return
+
+      call err%clear()
+      packed_sp = 1.0_sp
+      call pic_print_array(packed_sp, 3_default_int, "BOGUS", err=err)
+      call check_validation(error, err, "pic_print_array on an sp packed matrix with a bad format")
+      if (allocated(error)) return
+
+      call err%clear()
+      tensor_dp = 3.0_dp
+      call pic_print_array(tensor_dp, "BOGUS", err=err)
+      call check_validation(error, err, "pic_print_array on a dp tensor with a bad format")
+      if (allocated(error)) return
+
+   end subroutine test_print_bad_format_err
+
+   subroutine test_print_packed_bad_size_err(error)
+      !! An n_elements that is not n*(n + 1)/2 for any n is reported as
+      !! ERROR_VALIDATION and nothing is printed. Checked for all four packed
+      !! specialisations, since each carries its own copy of the test.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: packed_int32(4)
+      integer(int64) :: packed_int64(4)
+      real(sp) :: packed_sp(4)
+      real(dp) :: packed_dp(4)
+
+      packed_int32 = 1_int32
+      call pic_print_array(packed_int32, 4_default_int, err=err)
+      call check_validation(error, err, "an int32 packed matrix of 4 elements")
+      if (allocated(error)) return
+      call check(error, index(err%get_message(), "packed triangle") > 0, &
+                 "the message must say the packed triangle size is wrong")
+      if (allocated(error)) return
+
+      call err%clear()
+      packed_int64 = 1_int64
+      call pic_print_array(packed_int64, 4_default_int, "PLAIN", err=err)
+      call check_validation(error, err, "an int64 packed matrix of 4 elements")
+      if (allocated(error)) return
+
+      call err%clear()
+      packed_sp = 1.0_sp
+      call pic_print_array(packed_sp, 2_default_int, "MATHEMATICA", err=err)
+      call check_validation(error, err, "an sp packed matrix of 2 elements")
+      if (allocated(error)) return
+
+      call err%clear()
+      packed_dp = 1.0_dp
+      call pic_print_array(packed_dp, 4_default_int, "NUMPY", err=err)
+      call check_validation(error, err, "a dp packed matrix of 4 elements")
+      if (allocated(error)) return
+
+      call check(error, all(is_equal(packed_dp, 1.0_dp)), "the packed input must be left alone")
+      if (allocated(error)) return
+
+   end subroutine test_print_packed_bad_size_err
+
+   subroutine test_print_bad_input_without_err(error)
+      !! Documented err-less behaviour, unchanged from before err existed:
+      !! both failures report to stdout and return, and neither aborts. These
+      !! calls have no inspectable effect by design, so reaching the assertion
+      !! below is what is being tested - a regression that turned either site
+      !! into an error stop would take the whole test binary down here.
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: vector_int32(3)
+      real(dp) :: matrix_dp(2, 2)
+      real(dp) :: tensor_dp(2, 2, 2)
+      integer(int32) :: packed_int32(4)
+      integer(int64) :: packed_int64(4)
+      real(sp) :: packed_sp(4)
+      real(dp) :: packed_dp(4)
+      integer(default_int) :: calls_survived
+
+      calls_survived = 0
+
+      vector_int32 = 1_int32
+      call pic_print_array(vector_int32, "BOGUS")
+      calls_survived = calls_survived + 1
+
+      matrix_dp = 2.0_dp
+      call pic_print_array(matrix_dp, "BOGUS")
+      calls_survived = calls_survived + 1
+
+      tensor_dp = 3.0_dp
+      call pic_print_array(tensor_dp, "BOGUS")
+      calls_survived = calls_survived + 1
+
+      packed_int32 = 1_int32
+      call pic_print_array(packed_int32, 4_default_int)
+      calls_survived = calls_survived + 1
+
+      packed_int64 = 1_int64
+      call pic_print_array(packed_int64, 4_default_int)
+      calls_survived = calls_survived + 1
+
+      packed_sp = 1.0_sp
+      call pic_print_array(packed_sp, 4_default_int)
+      calls_survived = calls_survived + 1
+
+      packed_dp = 1.0_dp
+      call pic_print_array(packed_dp, 4_default_int)
+      calls_survived = calls_survived + 1
+
+      call check(error, calls_survived, 7_default_int, &
+                 "every err-less bad-input print must return instead of aborting")
+      if (allocated(error)) return
+
+   end subroutine test_print_bad_input_without_err
+
+   subroutine test_print_valid_input_err_clear(error)
+      !! Valid input still prints and never writes err, with err present or
+      !! absent. A packed size that is a genuine triangle is accepted, and a
+      !! pre-existing unrelated error is not cleared behind the caller's back.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      integer(int32) :: vector_int32(3)
+      real(dp) :: matrix_dp(2, 2)
+      real(dp) :: tensor_dp(2, 2, 2)
+      real(dp) :: packed_dp(6)
+
+      vector_int32 = 1_int32
+      call pic_print_array(vector_int32, "PLAIN", err=err)
+      call check(error,.not. err%has_error(), "a supported format must not set err for a vector")
+      if (allocated(error)) return
+      call check(error, err%get_code(), SUCCESS, "err must stay at SUCCESS for a supported format")
+      if (allocated(error)) return
+
+      matrix_dp = 2.0_dp
+      call pic_print_array(matrix_dp, "MATHEMATICA", err=err)
+      call check(error,.not. err%has_error(), "a supported format must not set err for a matrix")
+      if (allocated(error)) return
+
+      tensor_dp = 3.0_dp
+      call pic_print_array(tensor_dp, "NUMPY", err=err)
+      call check(error,.not. err%has_error(), "a supported format must not set err for a tensor")
+      if (allocated(error)) return
+
+      packed_dp = 1.0_dp
+      call pic_print_array(packed_dp, 6_default_int, "NUMPY", err=err)
+      call check(error,.not. err%has_error(), "a valid packed triangle size must not set err")
+      if (allocated(error)) return
+
+      call err%set(ERROR_IO, "unrelated failure the caller has not handled yet")
+      call pic_print_array(packed_dp, 6_default_int, err=err)
+      call check(error, err%is(ERROR_IO), "a successful print must not clear a pre-existing error")
+      if (allocated(error)) return
+
+      ! the same calls without err, which is how every existing caller makes them
+      call pic_print_array(vector_int32, "PLAIN")
+      call pic_print_array(matrix_dp)
+      call pic_print_array(tensor_dp, "NUMPY")
+      call pic_print_array(packed_dp, 6_default_int)
+
+      call check(error, all(is_equal(packed_dp, 1.0_dp)), "printing must not modify the array")
+      if (allocated(error)) return
+
+   end subroutine test_print_valid_input_err_clear
 
 end module test_pic_array
