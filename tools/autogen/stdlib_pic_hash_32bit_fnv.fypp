@@ -28,8 +28,21 @@ module pic_hash_32bit_fnv
    integer, parameter, public :: &
       int_hash = int32
    integer(int_hash), parameter :: &
-      offset_basis = int(z'811C9DC5', int_hash), &
-      prime = int(z'01000193', int_hash)
+      offset_basis = int(z'811C9DC5', int_hash)
+
+! Constants for the FNV multiply. The prime and the reduction constants are
+! int64 rather than int_hash so that hash*prime can be formed without signed
+! integer overflow; see fnv_mul_prime for the construction and why it is
+! bit-identical to a wrapping 32-bit multiply.
+   integer(int64), parameter :: &
+      ! 0x01000193, the 32-bit FNV prime
+      prime = 16777619_int64, &
+      ! 2**32 - 1, i.e. 0xFFFFFFFF
+      mask_32 = 4294967295_int64, &
+      ! 2**32
+      two_pow_32 = 4294967296_int64, &
+      ! huge(0_int32), i.e. 0x7FFFFFFF
+      int32_max = 2147483647_int64
 
 !! The number of bits in the output hash
 
@@ -110,6 +123,43 @@ module pic_hash_32bit_fnv
 
 contains
 
+   pure function fnv_mul_prime(hash_code) result(new_hash)
+!! Multiply a 32-bit FNV state by the FNV prime, modulo 2**32.
+!!
+!! Writing `hash_code*prime` directly in `integer(int32)` overflows for very
+!! nearly every state -- for a five-byte key, every single round overflows.
+!! Signed integer overflow is not defined by the Fortran standard and is
+!! trappable: `-ftrapv`, `-fsanitize=signed-integer-overflow` and Intel's
+!! `-check` all abort on it. It only appears to work because most compilers
+!! choose to wrap. This function gets the same answer by construction.
+!!
+!! 1. The product is formed in `int64`, where it cannot overflow: the state is
+!!    at most 2**31 in magnitude and the prime is below 2**24, so the exact
+!!    product stays below 2**55.
+!! 2. `iand` with `mask_32` reduces it modulo 2**32. `iand` is defined on the
+!!    integer bit model, so a negative `hash_code` widened to `int64` keeps
+!!    its two's-complement bit pattern and the mask yields its correct
+!!    residue as a value in [0, 2**32 - 1].
+!! 3. That residue cannot simply be assigned to `int32`: anything above
+!!    `huge(int32)` is not representable and the conversion would itself be
+!!    undefined. Subtracting 2**32 first -- still in `int64`, where the result
+!!    is exact and in range -- maps [2**31, 2**32 - 1] onto [-2**31, -1],
+!!    which is exactly the bit pattern a wrapping 32-bit multiply leaves
+!!    behind. Only then is the value narrowed, from a range `int32` can hold.
+!!
+!! The result is therefore bit-identical to the old wrapping code on every
+!! two's-complement machine, while being defined on every compiler.
+      integer(int_hash), intent(in) :: hash_code
+      integer(int_hash)             :: new_hash
+
+      integer(int64) :: acc
+
+      acc = iand(int(hash_code, int64)*prime, mask_32)
+      if (acc > int32_max) acc = acc - two_pow_32
+      new_hash = int(acc, int_hash)
+
+   end function fnv_mul_prime
+
    pure module function int8_fnv_1(key) result(hash_code)
 !! The original FNV-1 8-bit key algorithm.
       integer(int8), intent(in)     :: key(:)
@@ -119,7 +169,7 @@ contains
 
       hash_code = offset_basis
       do i = 1_int64, size(key, kind=int64)
-         hash_code = hash_code*prime
+         hash_code = fnv_mul_prime(hash_code)
          if (little_endian) then
             hash_code = ieor(hash_code, &
                              transfer([key(i), 0_int8, 0_int8, 0_int8], &
@@ -177,7 +227,7 @@ contains
                              transfer([0_int8, 0_int8, 0_int8, key(i)], &
                                       0_int_hash))
          end if
-         hash_code = hash_code*prime
+         hash_code = fnv_mul_prime(hash_code)
       end do
 
    end function int8_fnv_1a
