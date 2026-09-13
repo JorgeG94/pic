@@ -1930,13 +1930,13 @@ contains
             character(len=:), allocatable :: buf(:)
             allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
                       stat=stat)
-#ifdef __NVCOMPILER_LLVM__
-
-#else
-            if (stat /= 0) then
-               error stop "Allocation of array failed"
+! Test `allocated` rather than `stat`: nvfortran does not set `stat`
+! reliably for deferred-length character array allocations, while
+! `allocated` always reports the real post-allocation state and is
+! .true. for a legal zero-size buffer (array_size 0 or 1).
+            if (.not. allocated(buf)) then
+               error stop "char_sort_index_default: allocation of character buffer failed."
             end if
-#endif
 
             if (present(iwork)) then
                if (size(iwork, kind=int_index) < array_size/2) then
@@ -4051,13 +4051,13 @@ contains
             character(len=:), allocatable :: buf(:)
             allocate (character(len=len(array)) :: buf(0:array_size/2 - 1), &
                       stat=stat)
-#ifdef __NVCOMPILER_LLVM__
-
-#else
-            if (stat /= 0) then
-               error stop "Allocation of array failed"
+! Test `allocated` rather than `stat`: nvfortran does not set `stat`
+! reliably for deferred-length character array allocations, while
+! `allocated` always reports the real post-allocation state and is
+! .true. for a legal zero-size buffer (array_size 0 or 1).
+            if (.not. allocated(buf)) then
+               error stop "char_sort_index_low: allocation of character buffer failed."
             end if
-#endif
             if (present(iwork)) then
                if (size(iwork, kind=int_index) < array_size/2) then
                   error stop "iwork array is too small."
