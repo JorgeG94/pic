@@ -224,11 +224,24 @@ contains
    subroutine roundtrip(error, text, delim)
       type(error_type), allocatable, intent(out) :: error
       character(len=*), intent(in) :: text, delim
-      character(len=:), allocatable :: rebuilt
+      character(len=:), allocatable :: nested, staged
+      type(string_type), allocatable :: parts(:)
+      character(len=96) :: note
 
-      rebuilt = char(join(split(text, delim), delim))
-      call check(error, rebuilt == text .and. len(rebuilt) == len(text), &
-                 "split then join should rebuild '"//text//"'")
+      ! Two spellings of the same round trip, compared against each other as
+      ! well as against the input: `nested` hands the function result of split
+      ! straight to join, `staged` goes through a named intermediate. The two
+      ! must agree, and the message reports both so a mismatch says what the
+      ! compiler actually produced rather than just that it differed.
+      nested = char(join(split(text, delim), delim))
+      parts = split(text, delim)
+      staged = char(join(parts, delim))
+
+      write (note, '("parts=",I0,"  nested_len=",I0,"  staged_len=",I0,"  want=",I0)') &
+         size(parts), len(nested), len(staged), len(text)
+      call check(error, nested == text .and. len(nested) == len(text) .and. staged == nested, &
+                 "split then join should rebuild '"//text//"' but nested gave '"//nested// &
+                 "' and staged gave '"//staged//"' ["//trim(note)//"]")
    end subroutine roundtrip
 
    subroutine test_tokenize_basic(error)
