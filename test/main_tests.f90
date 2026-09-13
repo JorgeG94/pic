@@ -57,7 +57,7 @@ program pic_tester
    stat = 0_int32
    ! we allocate like this because some compilers will complain about doing on the fly allocation
    ! looking at you lfortran
-   allocate (testsuites(38))
+   allocate (testsuites(37))
    testsuites = [ &
                 new_testsuite("base_utils", collect_suite1), &
                 new_testsuite("pic_string", collect_pic_string_tests), &
@@ -93,7 +93,6 @@ program pic_tester
                 new_testsuite("pic_csr", collect_pic_csr_tests), &
                 new_testsuite("pic_graph", collect_pic_graph_tests), &
                 new_testsuite("pic_serialize", collect_pic_serialize_tests), &
-                new_testsuite("pic_array_hash", collect_pic_array_hash_tests), &
                 new_testsuite("pic_array_hash", collect_pic_array_hash_tests), &
                 new_testsuite("pic_soa", collect_pic_soa_tests), &
                 new_testsuite("pic_soa_particle", collect_pic_soa_particle_tests) &
