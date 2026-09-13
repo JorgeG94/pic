@@ -342,13 +342,31 @@ contains
       type(error_type), allocatable, intent(out) :: error
       type(particle_soa_t) :: p
       type(error_t) :: err
+      logical :: field_is_contiguous
 
       call fill(p, 7_default_int, err)
-      call check(error, is_contiguous(p%x), "the whole real field array is contiguous")
+      ! The `is_contiguous` results go through a local logical rather than
+      ! straight into `check`. `check` is a generic, and LFortran 0.65.0 aborts
+      ! the whole translation unit when an `is_contiguous` reference is an
+      ! actual argument of a generic reference:
+      !   LCompilersException: get_struct_sym_from_struct_expr()
+      !       not implemented for 115
+      ! Reduced to a standalone reproducer (`is_contiguous_generic_mre.f90` in
+      ! this session's notes, not yet filed upstream): a generic with a single
+      ! logical specific, called with
+      ! `is_contiguous(whole_array)`, is enough. Both spellings here are
+      ! standard (F2023 16.9.103 gives `is_contiguous` a default logical scalar
+      ! result) and assert exactly the same thing, so every assertion below
+      ! still runs on every compiler, LFortran included -- nothing is skipped.
+      ! The temporary can go back inline once LFortran resolves the ICE.
+      field_is_contiguous = is_contiguous(p%x)
+      call check(error, field_is_contiguous, "the whole real field array is contiguous")
       if (allocated(error)) return
-      call check(error, is_contiguous(p%id), "so is the whole integer field array")
+      field_is_contiguous = is_contiguous(p%id)
+      call check(error, field_is_contiguous, "so is the whole integer field array")
       if (allocated(error)) return
-      call check(error, is_contiguous(p%active), "so is the whole logical field array")
+      field_is_contiguous = is_contiguous(p%active)
+      call check(error, field_is_contiguous, "so is the whole logical field array")
       if (allocated(error)) return
       call check(error, slice_reaches_callee_contiguous_dp(p%x(1:p%size())), &
                  "the live real slice reaches a callee uncopied")
