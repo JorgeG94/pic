@@ -3,9 +3,14 @@ module test_pic_sorting
    use pic_types, only: sp, dp, int32, int64, default_int
    use pic_sorting, only: sort, sort_index, radix_sort, ord_sort
    use pic_array, only: is_sorted, ascending, DESCENDING, pic_scramble_array
+   use pic_error, only: error_t, ERROR_VALIDATION, ERROR_BOUNDS
    implicit none
    private
    public :: collect_pic_sorting_tests
+
+   ! unsorted fixture shared by the error reporting tests
+   integer(int32), parameter :: SORT_ERR_SRC(8) = [8_int32, 1_int32, 7_int32, 2_int32, &
+                                                   6_int32, 3_int32, 5_int32, 4_int32]
 
 contains
 
@@ -54,7 +59,14 @@ contains
                   new_unittest("test_radix_sort_dp", test_radix_sort_dp), &
                   new_unittest("test_index_sort_char_tiny", test_index_sort_char_tiny), &
                   new_unittest("test_index_sort_char_mapping", test_index_sort_char_mapping), &
-                  new_unittest("test_index_sort_numeric_tiny", test_index_sort_numeric_tiny) &
+                  new_unittest("test_index_sort_numeric_tiny", test_index_sort_numeric_tiny), &
+                  new_unittest("test_sort_from_pure_procedure", test_sort_from_pure_procedure), &
+                  new_unittest("test_err_ord_sort_work_too_small", test_err_ord_sort_work_too_small), &
+                  new_unittest("test_err_radix_sort_work_too_small", test_err_radix_sort_work_too_small), &
+                  new_unittest("test_err_sort_index_work_too_small", test_err_sort_index_work_too_small), &
+                  new_unittest("test_err_sort_index_iwork_too_small", test_err_sort_index_iwork_too_small), &
+                  new_unittest("test_err_sort_index_index_too_small", test_err_sort_index_index_too_small), &
+                  new_unittest("test_err_absent_and_success", test_err_absent_and_success) &
                   ]
 
    end subroutine collect_pic_sorting_tests
@@ -1848,5 +1860,440 @@ contains
       end block
 
    end subroutine test_index_sort_numeric_tiny
+   ! ------------------------------------------------------------------
+   ! error_t reporting
+   ! ------------------------------------------------------------------
+
+   pure subroutine pure_sort_caller(int_array, real_array, err)
+      !! Compile time guard that the sorting routines stay usable from inside a
+      !! `pure` procedure, `err` argument included. If this stops compiling, the
+      !! migration to `error_t` has broken purity for every downstream `pure`
+      !! caller of `sort`/`radix_sort`.
+      integer(int32), intent(inout) :: int_array(:)
+      real(dp), intent(inout) :: real_array(:)
+      type(error_t), intent(inout), optional :: err
+
+      call sort(int_array)
+      call sort(real_array)
+      call radix_sort(int_array, err=err)
+   end subroutine pure_sort_caller
+
+   subroutine test_sort_from_pure_procedure(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: int_array(5)
+      real(dp) :: real_array(5)
+      type(error_t) :: err
+
+      int_array = [5_int32, 4_int32, 3_int32, 2_int32, 1_int32]
+      real_array = [5.0_dp, 4.0_dp, 3.0_dp, 2.0_dp, 1.0_dp]
+
+      call pure_sort_caller(int_array, real_array, err)
+
+      call check(error, is_sorted(int_array), .true., "Pure caller did not sort the integers!")
+      if (allocated(error)) return
+      call check(error, is_sorted(real_array), .true., "Pure caller did not sort the reals!")
+      if (allocated(error)) return
+      call check(error, err%has_error(), .false., "Pure caller reported a spurious error!")
+      if (allocated(error)) return
+   end subroutine test_sort_from_pure_procedure
+
+   subroutine check_raised(error, err, expected_code, label)
+      !! Assert that `err` carries `expected_code` and a non-empty message.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t), intent(in) :: err
+      integer(default_int), intent(in) :: expected_code
+      character(len=*), intent(in) :: label
+
+      call check(error, err%has_error(), .true., label//": no error was reported!")
+      if (allocated(error)) return
+      call check(error, err%get_code() == expected_code, .true., label//": wrong error code!")
+      if (allocated(error)) return
+      call check(error, len_trim(err%get_message()) > 0, .true., label//": empty error message!")
+      if (allocated(error)) return
+   end subroutine check_raised
+
+   subroutine test_err_ord_sort_work_too_small(error)
+      !! A caller supplied `work` shorter than size(array)/2, for every
+      !! `ord_sort` specialisation and both sort directions.
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: i32(8), w32(3)
+      integer(int64) :: i64(8), w64(3)
+      real(sp) :: rsp(8), wsp(3)
+      real(dp) :: rdp(8), wdp(3)
+      character(len=4) :: chr(8), wchr(3)
+      type(error_t) :: err
+      integer(default_int) :: i
+
+      i32 = SORT_ERR_SRC
+      call ord_sort(i32, w32, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int32 ord_sort work")
+      if (allocated(error)) return
+      call check(error, all(i32 == SORT_ERR_SRC), .true., "int32 ord_sort must leave array unchanged!")
+      if (allocated(error)) return
+
+      i64 = int(SORT_ERR_SRC, int64)
+      call ord_sort(i64, w64, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int64 ord_sort work")
+      if (allocated(error)) return
+      call check(error, all(i64 == int(SORT_ERR_SRC, int64)), .true., "int64 ord_sort must leave array unchanged!")
+      if (allocated(error)) return
+
+      rsp = real(SORT_ERR_SRC, sp)
+      call ord_sort(rsp, wsp, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "sp ord_sort work")
+      if (allocated(error)) return
+
+      rdp = real(SORT_ERR_SRC, dp)
+      call ord_sort(rdp, wdp, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "dp ord_sort work")
+      if (allocated(error)) return
+
+      do i = 1, 8
+         write (chr(i), '(i4.4)') SORT_ERR_SRC(i)
+      end do
+      call ord_sort(chr, wchr, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "char ord_sort work")
+      if (allocated(error)) return
+
+      ! the decreasing direction goes through a separate worker routine
+      i32 = SORT_ERR_SRC
+      call ord_sort(i32, w32, reverse=.true., err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int32 ord_sort reverse work")
+      if (allocated(error)) return
+      call check(error, all(i32 == SORT_ERR_SRC), .true., "int32 reverse ord_sort must leave array unchanged!")
+      if (allocated(error)) return
+
+      i64 = int(SORT_ERR_SRC, int64)
+      call ord_sort(i64, w64, reverse=.true., err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int64 ord_sort reverse work")
+      if (allocated(error)) return
+
+      rsp = real(SORT_ERR_SRC, sp)
+      call ord_sort(rsp, wsp, reverse=.true., err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "sp ord_sort reverse work")
+      if (allocated(error)) return
+
+      rdp = real(SORT_ERR_SRC, dp)
+      call ord_sort(rdp, wdp, reverse=.true., err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "dp ord_sort reverse work")
+      if (allocated(error)) return
+
+      call ord_sort(chr, wchr, reverse=.true., err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "char ord_sort reverse work")
+      if (allocated(error)) return
+   end subroutine test_err_ord_sort_work_too_small
+
+   subroutine test_err_radix_sort_work_too_small(error)
+      !! A caller supplied `work` shorter than size(array), for every
+      !! `radix_sort` specialisation.
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: i32(8), w32(3)
+      integer(int64) :: i64(8), w64(3)
+      real(sp) :: rsp(8), wsp(3)
+      real(dp) :: rdp(8), wdp(3)
+      type(error_t) :: err
+
+      i32 = SORT_ERR_SRC
+      call radix_sort(i32, w32, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int32 radix_sort work")
+      if (allocated(error)) return
+      call check(error, all(i32 == SORT_ERR_SRC), .true., "int32 radix_sort must leave array unchanged!")
+      if (allocated(error)) return
+
+      i64 = int(SORT_ERR_SRC, int64)
+      call radix_sort(i64, w64, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int64 radix_sort work")
+      if (allocated(error)) return
+
+      rsp = real(SORT_ERR_SRC, sp)
+      call radix_sort(rsp, wsp, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "sp radix_sort work")
+      if (allocated(error)) return
+
+      rdp = real(SORT_ERR_SRC, dp)
+      call radix_sort(rdp, wdp, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "dp radix_sort work")
+      if (allocated(error)) return
+      call check(error, all(rdp == real(SORT_ERR_SRC, dp)), .true., "dp radix_sort must leave array unchanged!")
+      if (allocated(error)) return
+   end subroutine test_err_radix_sort_work_too_small
+
+   subroutine test_err_sort_index_work_too_small(error)
+      !! `work` shorter than size(array)/2 for all ten `sort_index`
+      !! specialisations (five types x two index kinds).
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: i32(8), w32(3)
+      integer(int64) :: i64(8), w64(3)
+      real(sp) :: rsp(8), wsp(3)
+      real(dp) :: rdp(8), wdp(3)
+      character(len=4) :: chr(8), wchr(3)
+      integer(int32) :: idx_low(8)
+      integer(int64) :: idx_def(8)
+      type(error_t) :: err
+      integer(default_int) :: i
+
+      do i = 1, 8
+         write (chr(i), '(i4.4)') SORT_ERR_SRC(i)
+      end do
+
+      i32 = SORT_ERR_SRC
+      call sort_index(i32, idx_def, w32, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int32 sort_index default work")
+      if (allocated(error)) return
+      call check(error, all(i32 == SORT_ERR_SRC), .true., "sort_index must leave array unchanged!")
+      if (allocated(error)) return
+      call check(error, all(idx_def == [1_int64, 2_int64, 3_int64, 4_int64, &
+                                        5_int64, 6_int64, 7_int64, 8_int64]), .true., &
+                 "sort_index leaves index as the identity permutation!")
+      if (allocated(error)) return
+
+      i32 = SORT_ERR_SRC
+      call sort_index(i32, idx_low, w32, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int32 sort_index low work")
+      if (allocated(error)) return
+
+      i64 = int(SORT_ERR_SRC, int64)
+      call sort_index(i64, idx_def, w64, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int64 sort_index default work")
+      if (allocated(error)) return
+      i64 = int(SORT_ERR_SRC, int64)
+      call sort_index(i64, idx_low, w64, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int64 sort_index low work")
+      if (allocated(error)) return
+
+      rsp = real(SORT_ERR_SRC, sp)
+      call sort_index(rsp, idx_def, wsp, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "sp sort_index default work")
+      if (allocated(error)) return
+      rsp = real(SORT_ERR_SRC, sp)
+      call sort_index(rsp, idx_low, wsp, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "sp sort_index low work")
+      if (allocated(error)) return
+
+      rdp = real(SORT_ERR_SRC, dp)
+      call sort_index(rdp, idx_def, wdp, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "dp sort_index default work")
+      if (allocated(error)) return
+      rdp = real(SORT_ERR_SRC, dp)
+      call sort_index(rdp, idx_low, wdp, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "dp sort_index low work")
+      if (allocated(error)) return
+
+      call sort_index(chr, idx_def, wchr, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "char sort_index default work")
+      if (allocated(error)) return
+      call sort_index(chr, idx_low, wchr, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "char sort_index low work")
+      if (allocated(error)) return
+
+      ! With reverse the array has already been reversed in place by the time the
+      ! failure is detected, and is left reversed. This pins that contract.
+      i32 = SORT_ERR_SRC
+      call sort_index(i32, idx_def, w32, reverse=.true., err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int32 sort_index reverse work")
+      if (allocated(error)) return
+      call check(error, all(i32 == SORT_ERR_SRC(8:1:-1)), .true., &
+                 "reverse sort_index leaves the array reversed on error!")
+      if (allocated(error)) return
+   end subroutine test_err_sort_index_work_too_small
+
+   subroutine test_err_sort_index_iwork_too_small(error)
+      !! `iwork` too small, both with and without a `work` array present: those
+      !! are separate branches, each with its own check.
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: i32(8), w32(8)
+      integer(int64) :: i64(8), w64(8)
+      real(sp) :: rsp(8), wsp(8)
+      real(dp) :: rdp(8), wdp(8)
+      character(len=4) :: chr(8), wchr(8)
+      integer(int32) :: idx_low(8), iw_low(3)
+      integer(int64) :: idx_def(8), iw_def(3)
+      type(error_t) :: err
+      integer(default_int) :: i
+
+      do i = 1, 8
+         write (chr(i), '(i4.4)') SORT_ERR_SRC(i)
+      end do
+
+      ! work present
+      i32 = SORT_ERR_SRC
+      call sort_index(i32, idx_def, w32, iw_def, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int32 sort_index default iwork+work")
+      if (allocated(error)) return
+      call check(error, all(i32 == SORT_ERR_SRC), .true., "sort_index must leave array unchanged!")
+      if (allocated(error)) return
+      i32 = SORT_ERR_SRC
+      call sort_index(i32, idx_low, w32, iw_low, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int32 sort_index low iwork+work")
+      if (allocated(error)) return
+
+      ! work absent: an array buffer is allocated first, then iwork is checked
+      i32 = SORT_ERR_SRC
+      call sort_index(i32, idx_def, iwork=iw_def, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int32 sort_index default iwork only")
+      if (allocated(error)) return
+      i32 = SORT_ERR_SRC
+      call sort_index(i32, idx_low, iwork=iw_low, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int32 sort_index low iwork only")
+      if (allocated(error)) return
+
+      i64 = int(SORT_ERR_SRC, int64)
+      call sort_index(i64, idx_def, w64, iw_def, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int64 sort_index default iwork+work")
+      if (allocated(error)) return
+      i64 = int(SORT_ERR_SRC, int64)
+      call sort_index(i64, idx_low, iwork=iw_low, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "int64 sort_index low iwork only")
+      if (allocated(error)) return
+
+      rsp = real(SORT_ERR_SRC, sp)
+      call sort_index(rsp, idx_def, wsp, iw_def, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "sp sort_index default iwork+work")
+      if (allocated(error)) return
+      rsp = real(SORT_ERR_SRC, sp)
+      call sort_index(rsp, idx_low, iwork=iw_low, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "sp sort_index low iwork only")
+      if (allocated(error)) return
+
+      rdp = real(SORT_ERR_SRC, dp)
+      call sort_index(rdp, idx_def, wdp, iw_def, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "dp sort_index default iwork+work")
+      if (allocated(error)) return
+      rdp = real(SORT_ERR_SRC, dp)
+      call sort_index(rdp, idx_low, iwork=iw_low, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "dp sort_index low iwork only")
+      if (allocated(error)) return
+
+      call sort_index(chr, idx_def, wchr, iw_def, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "char sort_index default iwork+work")
+      if (allocated(error)) return
+      call sort_index(chr, idx_low, iwork=iw_low, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "char sort_index low iwork only")
+      if (allocated(error)) return
+   end subroutine test_err_sort_index_iwork_too_small
+
+   subroutine test_err_sort_index_index_too_small(error)
+      !! An `index` array that cannot hold one entry per element of `array`.
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: i32(8)
+      integer(int64) :: i64(8)
+      real(sp) :: rsp(8)
+      real(dp) :: rdp(8)
+      character(len=4) :: chr(8)
+      integer(int32) :: idx_low(4)
+      integer(int64) :: idx_def(4)
+      type(error_t) :: err
+      integer(default_int) :: i
+
+      do i = 1, 8
+         write (chr(i), '(i4.4)') SORT_ERR_SRC(i)
+      end do
+
+      i32 = SORT_ERR_SRC
+      call sort_index(i32, idx_def, err=err)
+      call check_raised(error, err, ERROR_BOUNDS, "int32 sort_index default index size")
+      if (allocated(error)) return
+      call check(error, all(i32 == SORT_ERR_SRC), .true., "sort_index must leave array unchanged!")
+      if (allocated(error)) return
+
+      i32 = SORT_ERR_SRC
+      call sort_index(i32, idx_low, err=err)
+      call check_raised(error, err, ERROR_BOUNDS, "int32 sort_index low index size")
+      if (allocated(error)) return
+
+      i64 = int(SORT_ERR_SRC, int64)
+      call sort_index(i64, idx_def, err=err)
+      call check_raised(error, err, ERROR_BOUNDS, "int64 sort_index default index size")
+      if (allocated(error)) return
+      i64 = int(SORT_ERR_SRC, int64)
+      call sort_index(i64, idx_low, err=err)
+      call check_raised(error, err, ERROR_BOUNDS, "int64 sort_index low index size")
+      if (allocated(error)) return
+
+      rsp = real(SORT_ERR_SRC, sp)
+      call sort_index(rsp, idx_def, err=err)
+      call check_raised(error, err, ERROR_BOUNDS, "sp sort_index default index size")
+      if (allocated(error)) return
+      rsp = real(SORT_ERR_SRC, sp)
+      call sort_index(rsp, idx_low, err=err)
+      call check_raised(error, err, ERROR_BOUNDS, "sp sort_index low index size")
+      if (allocated(error)) return
+
+      rdp = real(SORT_ERR_SRC, dp)
+      call sort_index(rdp, idx_def, err=err)
+      call check_raised(error, err, ERROR_BOUNDS, "dp sort_index default index size")
+      if (allocated(error)) return
+      rdp = real(SORT_ERR_SRC, dp)
+      call sort_index(rdp, idx_low, err=err)
+      call check_raised(error, err, ERROR_BOUNDS, "dp sort_index low index size")
+      if (allocated(error)) return
+
+      call sort_index(chr, idx_def, err=err)
+      call check_raised(error, err, ERROR_BOUNDS, "char sort_index default index size")
+      if (allocated(error)) return
+      call sort_index(chr, idx_low, err=err)
+      call check_raised(error, err, ERROR_BOUNDS, "char sort_index low index size")
+      if (allocated(error)) return
+   end subroutine test_err_sort_index_index_too_small
+
+   subroutine test_err_absent_and_success(error)
+      !! The optional `err` plumbing must not disturb the existing API: the same
+      !! calls without `err` still sort valid input, and a successful call that
+      !! does pass `err` leaves it clear.
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: i32(8), w32(8), iw_low(8), idx_low(8)
+      real(dp) :: rdp(8), wdp(8)
+      type(error_t) :: err
+
+      ! no err argument at all
+      i32 = SORT_ERR_SRC
+      call ord_sort(i32, w32)
+      call check(error, is_sorted(i32), .true., "ord_sort without err did not sort!")
+      if (allocated(error)) return
+
+      i32 = SORT_ERR_SRC
+      call radix_sort(i32, w32)
+      call check(error, is_sorted(i32), .true., "radix_sort without err did not sort!")
+      if (allocated(error)) return
+
+      i32 = SORT_ERR_SRC
+      call sort_index(i32, idx_low, w32, iw_low)
+      call check(error, is_sorted(i32), .true., "sort_index without err did not sort!")
+      if (allocated(error)) return
+
+      rdp = real(SORT_ERR_SRC, dp)
+      call ord_sort(rdp, wdp)
+      call check(error, is_sorted(rdp), .true., "dp ord_sort without err did not sort!")
+      if (allocated(error)) return
+
+      ! err present, nothing wrong: err must stay clear
+      i32 = SORT_ERR_SRC
+      call ord_sort(i32, w32, err=err)
+      call check(error, err%has_error(), .false., "ord_sort reported a spurious error!")
+      if (allocated(error)) return
+      call check(error, is_sorted(i32), .true., "ord_sort with err did not sort!")
+      if (allocated(error)) return
+
+      i32 = SORT_ERR_SRC
+      call sort_index(i32, idx_low, w32, iw_low, err=err)
+      call check(error, err%has_error(), .false., "sort_index reported a spurious error!")
+      if (allocated(error)) return
+      call check(error, is_sorted(i32), .true., "sort_index with err did not sort!")
+      if (allocated(error)) return
+
+      i32 = SORT_ERR_SRC
+      call radix_sort(i32, w32, reverse=.true., err=err)
+      call check(error, err%has_error(), .false., "radix_sort reported a spurious error!")
+      if (allocated(error)) return
+      call check(error, is_sorted(i32, DESCENDING), .true., "radix_sort with err did not sort!")
+      if (allocated(error)) return
+
+      rdp = real(SORT_ERR_SRC, dp)
+      call radix_sort(rdp, wdp, err=err)
+      call check(error, err%has_error(), .false., "dp radix_sort reported a spurious error!")
+      if (allocated(error)) return
+      call check(error, is_sorted(rdp), .true., "dp radix_sort with err did not sort!")
+      if (allocated(error)) return
+   end subroutine test_err_absent_and_success
 
 end module test_pic_sorting
