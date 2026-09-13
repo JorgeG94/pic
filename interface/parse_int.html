@@ -1,0 +1,783 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>parse_int &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>parse_int
+      <small>Interface</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title="<p> 0.0% of total for procedures.</p>Including implementation: 38 statements,  0.3% of total for procedures.">6 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_tokenizer.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_tokenizer.f90.html'>pic_tokenizer.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_tokenizer.html'>pic_tokenizer</a></li>
+            <li class="breadcrumb-item active" aria-current="page">parse_int</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#modprocs-0"
+         aria-expanded="false" aria-controls="modprocs-0">
+         <h4 class="card-header bg-primary text-white">Module Procedures</h4>
+      </a>
+      <div id="modprocs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../interface/parse_int.html#moduleprocedure-parse_int_int32_char">parse_int_int32_char</a>
+            <a class="list-group-item" href="../interface/parse_int.html#moduleprocedure-parse_int_int32_string">parse_int_int32_string</a>
+            <a class="list-group-item" href="../interface/parse_int.html#moduleprocedure-parse_int_int64_char">parse_int_int64_char</a>
+            <a class="list-group-item" href="../interface/parse_int.html#moduleprocedure-parse_int_int64_string">parse_int_int64_string</a>
+        </div>
+      </div>
+    </div>
+
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <h2>public interface parse_int</h2>
+      <p>Parse a string into an integer, reporting failures through <code>error_t</code>.</p>
+<p>The accepted grammar is optional surrounding whitespace, an optional <code>+</code>
+or <code>-</code> sign and one or more decimal digits, with nothing else. An empty
+or blank string, a missing digit, any stray character (including trailing
+junk such as <code>"12abc"</code>) and a value too large for the requested kind all
+set <code>ERROR_PARSE</code> and leave <code>value</code> at zero.</p>
+<p>Specific procedures exist for <code>int32</code> and <code>int64</code>, so an argument
+declared <code>integer(default_int)</code> resolves correctly in both the default
+and the <code>USE_INT8</code> build.</p>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Calls</h3>
+          </div>
+          <div class="card-body">
+            <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: interface~~parse_int~~CallsGraph Pages: 1 -->
+<svg id="interfaceparse_intCallsGraph" width="641pt" height="124pt"
+ viewBox="0.00 0.00 641.00 124.46" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="interface~~parse_int~~CallsGraph" class="graph" transform="scale(0.79 0.79) rotate(0) translate(4 154.44)">
+<title>interface~~parse_int~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-154.44 812,-154.44 812,4 -4,4"/>
+<!-- interface~parse_int -->
+<g id="interface~~parse_int~~CallsGraph_node1" class="node">
+<title>interface~parse_int</title>
+<polygon fill="none" stroke="black" points="61,-91.44 0,-91.44 0,-67.44 61,-67.44 61,-91.44"/>
+<text text-anchor="middle" x="30.5" y="-77.04" font-family="Helvetica,sans-Serif" font-size="10.50">parse_int</text>
+</g>
+<!-- proc~parse_int_int32_char -->
+<g id="interface~~parse_int~~CallsGraph_node2" class="node">
+<title>proc~parse_int_int32_char</title>
+<g id="a_interface~~parse_int~~CallsGraph_node2"><a xlink:href="../proc/parse_int_int32_char.html" xlink:title="parse_int_int32_char">
+<polygon fill="#d9534f" stroke="#d9534f" points="385,-59.44 262,-59.44 262,-35.44 385,-35.44 385,-59.44"/>
+<text text-anchor="middle" x="323.5" y="-45.04" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parse_int_int32_char</text>
+</a>
+</g>
+</g>
+<!-- interface~parse_int&#45;&gt;proc~parse_int_int32_char -->
+<g id="interface~~parse_int~~CallsGraph_edge1" class="edge">
+<title>interface~parse_int&#45;&gt;proc~parse_int_int32_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M61,-76.2C105.42,-71.31 190.76,-61.93 251.87,-55.21"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="252.28,-58.68 261.84,-54.11 251.52,-51.73 252.28,-58.68"/>
+</g>
+<!-- proc~parse_int_int32_string -->
+<g id="interface~~parse_int~~CallsGraph_node3" class="node">
+<title>proc~parse_int_int32_string</title>
+<g id="a_interface~~parse_int~~CallsGraph_node3"><a xlink:href="../proc/parse_int_int32_string.html" xlink:title="parse_int_int32_string">
+<polygon fill="#d9534f" stroke="#d9534f" points="226,-32.44 97,-32.44 97,-8.44 226,-8.44 226,-32.44"/>
+<text text-anchor="middle" x="161.5" y="-18.04" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parse_int_int32_string</text>
+</a>
+</g>
+</g>
+<!-- interface~parse_int&#45;&gt;proc~parse_int_int32_string -->
+<g id="interface~~parse_int~~CallsGraph_edge2" class="edge">
+<title>interface~parse_int&#45;&gt;proc~parse_int_int32_string</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M54.33,-67.39C66.82,-60.94 82.63,-52.99 97,-46.44 104.48,-43.03 112.53,-39.58 120.31,-36.34"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="121.69,-39.56 129.61,-32.52 119.03,-33.08 121.69,-39.56"/>
+</g>
+<!-- proc~parse_int_int64_char -->
+<g id="interface~~parse_int~~CallsGraph_node4" class="node">
+<title>proc~parse_int_int64_char</title>
+<g id="a_interface~~parse_int~~CallsGraph_node4"><a xlink:href="../proc/parse_int_int64_char.html" xlink:title="parse_int_int64_char">
+<polygon fill="#d9534f" stroke="#d9534f" points="385,-110.44 262,-110.44 262,-86.44 385,-86.44 385,-110.44"/>
+<text text-anchor="middle" x="323.5" y="-96.04" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parse_int_int64_char</text>
+</a>
+</g>
+</g>
+<!-- interface~parse_int&#45;&gt;proc~parse_int_int64_char -->
+<g id="interface~~parse_int~~CallsGraph_edge3" class="edge">
+<title>interface~parse_int&#45;&gt;proc~parse_int_int64_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M61,-81.37C105.33,-84.26 190.41,-89.82 251.49,-93.8"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="251.64,-97.32 261.84,-94.48 252.09,-90.34 251.64,-97.32"/>
+</g>
+<!-- proc~parse_int_int64_string -->
+<g id="interface~~parse_int~~CallsGraph_node5" class="node">
+<title>proc~parse_int_int64_string</title>
+<g id="a_interface~~parse_int~~CallsGraph_node5"><a xlink:href="../proc/parse_int_int64_string.html" xlink:title="parse_int_int64_string">
+<polygon fill="#d9534f" stroke="#d9534f" points="226,-150.44 97,-150.44 97,-126.44 226,-126.44 226,-150.44"/>
+<text text-anchor="middle" x="161.5" y="-136.04" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parse_int_int64_string</text>
+</a>
+</g>
+</g>
+<!-- interface~parse_int&#45;&gt;proc~parse_int_int64_string -->
+<g id="interface~~parse_int~~CallsGraph_edge4" class="edge">
+<title>interface~parse_int&#45;&gt;proc~parse_int_int64_string</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M54.33,-91.49C66.82,-97.95 82.63,-105.89 97,-112.44 104.48,-115.85 112.53,-119.31 120.31,-122.54"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="119.03,-125.8 129.61,-126.36 121.69,-119.32 119.03,-125.8"/>
+</g>
+<!-- interface~strip -->
+<g id="interface~~parse_int~~CallsGraph_node6" class="node">
+<title>interface~strip</title>
+<g id="a_interface~~parse_int~~CallsGraph_node6"><a xlink:href="../interface/strip.html" xlink:title="strip">
+<polygon fill="#a7506f" stroke="#a7506f" points="675.5,-100.44 621.5,-100.44 621.5,-76.44 675.5,-76.44 675.5,-100.44"/>
+<text text-anchor="middle" x="648.5" y="-86.04" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">strip</text>
+</a>
+</g>
+</g>
+<!-- proc~parse_int_int32_char&#45;&gt;interface~strip -->
+<g id="interface~~parse_int~~CallsGraph_edge5" class="edge">
+<title>proc~parse_int_int32_char&#45;&gt;interface~strip</title>
+<path fill="none" stroke="#ff0000" d="M385.25,-55.15C451.87,-63.61 556.55,-76.9 611.33,-83.85"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="610.92,-87.33 621.28,-85.11 611.8,-80.38 610.92,-87.33"/>
+</g>
+<!-- proc~error_has_error -->
+<g id="interface~~parse_int~~CallsGraph_node7" class="node">
+<title>proc~error_has_error</title>
+<g id="a_interface~~parse_int~~CallsGraph_node7"><a xlink:href="../proc/error_has_error.html" xlink:title="error_t%error_has_error">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="560,-40.44 421,-40.44 421,-16.44 560,-16.44 560,-40.44"/>
+<text text-anchor="middle" x="490.5" y="-26.04" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_has_error</text>
+</a>
+</g>
+</g>
+<!-- proc~parse_int_int32_char&#45;&gt;proc~error_has_error -->
+<g id="interface~~parse_int~~CallsGraph_edge6" class="edge">
+<title>proc~parse_int_int32_char&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#ff0000" d="M385,-40.47C393.4,-39.51 402.12,-38.5 410.79,-37.5"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="411.38,-40.96 420.92,-36.34 410.58,-34.01 411.38,-40.96"/>
+</g>
+<!-- proc~error_set -->
+<g id="interface~~parse_int~~CallsGraph_node8" class="node">
+<title>proc~error_set</title>
+<g id="a_interface~~parse_int~~CallsGraph_node8"><a xlink:href="../proc/error_set.html" xlink:title="error_t%error_set">
+<polygon fill="#d9534f" stroke="#d9534f" points="701,-39.44 596,-39.44 596,-15.44 701,-15.44 701,-39.44"/>
+<text text-anchor="middle" x="648.5" y="-25.04" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_set</text>
+</a>
+</g>
+</g>
+<!-- proc~parse_int_int32_char&#45;&gt;proc~error_set -->
+<g id="interface~~parse_int~~CallsGraph_edge7" class="edge">
+<title>proc~parse_int_int32_char&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#ff0000" d="M346.71,-35.28C365.77,-25.57 394.32,-12.75 421,-7.44 481.59,4.62 498.61,-0.51 560,-7.44 571.03,-8.68 582.69,-10.78 593.78,-13.17"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="593.24,-16.63 603.77,-15.42 594.78,-9.8 593.24,-16.63"/>
+</g>
+<!-- proc~parse_integer_wide -->
+<g id="interface~~parse_int~~CallsGraph_node9" class="node">
+<title>proc~parse_integer_wide</title>
+<g id="a_interface~~parse_int~~CallsGraph_node9"><a xlink:href="../proc/parse_integer_wide.html" xlink:title="parse_integer_wide">
+<polygon fill="#d9534f" stroke="#d9534f" points="548.5,-120.44 432.5,-120.44 432.5,-96.44 548.5,-96.44 548.5,-120.44"/>
+<text text-anchor="middle" x="490.5" y="-106.04" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parse_integer_wide</text>
+</a>
+</g>
+</g>
+<!-- proc~parse_int_int32_char&#45;&gt;proc~parse_integer_wide -->
+<g id="interface~~parse_int~~CallsGraph_edge8" class="edge">
+<title>proc~parse_int_int32_char&#45;&gt;proc~parse_integer_wide</title>
+<path fill="none" stroke="#ff0000" d="M357.1,-59.49C382.97,-69.06 419.34,-82.5 447.42,-92.88"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="446.38,-96.23 456.97,-96.41 448.8,-89.66 446.38,-96.23"/>
+</g>
+<!-- proc~parse_int_int32_string&#45;&gt;proc~parse_int_int32_char -->
+<g id="interface~~parse_int~~CallsGraph_edge9" class="edge">
+<title>proc~parse_int_int32_string&#45;&gt;proc~parse_int_int32_char</title>
+<path fill="none" stroke="#7fff00" d="M226.2,-31.19C234.65,-32.62 243.36,-34.09 251.93,-35.53"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="251.44,-39 261.89,-37.21 252.61,-32.1 251.44,-39"/>
+</g>
+<!-- proc~parse_int_int64_char&#45;&gt;proc~parse_integer_wide -->
+<g id="interface~~parse_int~~CallsGraph_edge10" class="edge">
+<title>proc~parse_int_int64_char&#45;&gt;proc~parse_integer_wide</title>
+<path fill="none" stroke="#00ffff" d="M385,-102.11C397.07,-102.84 409.82,-103.61 422.11,-104.36"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="422.1,-107.86 432.3,-104.97 422.53,-100.88 422.1,-107.86"/>
+</g>
+<!-- proc~parse_int_int64_string&#45;&gt;proc~parse_integer_wide -->
+<g id="interface~~parse_int~~CallsGraph_edge11" class="edge">
+<title>proc~parse_int_int64_string&#45;&gt;proc~parse_integer_wide</title>
+<path fill="none" stroke="#7f00ff" d="M226.31,-133.33C270.81,-129.68 331.55,-124.54 385,-119.44 396.99,-118.3 409.74,-117.01 422.07,-115.74"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="422.72,-119.19 432.3,-114.67 421.99,-112.22 422.72,-119.19"/>
+</g>
+<!-- proc~strip_char -->
+<g id="interface~~parse_int~~CallsGraph_node10" class="node">
+<title>proc~strip_char</title>
+<g id="a_interface~~parse_int~~CallsGraph_node10"><a xlink:href="../proc/strip_char.html" xlink:title="strip_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="805,-142.44 740,-142.44 740,-118.44 805,-118.44 805,-142.44"/>
+<text text-anchor="middle" x="772.5" y="-128.04" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">strip_char</text>
+</a>
+</g>
+</g>
+<!-- interface~strip&#45;&gt;proc~strip_char -->
+<g id="interface~~parse_int~~CallsGraph_edge12" class="edge">
+<title>interface~strip&#45;&gt;proc~strip_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M675.67,-97.45C691.5,-102.9 712.04,-109.97 730.04,-116.17"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="729.14,-119.56 739.74,-119.51 731.42,-112.94 729.14,-119.56"/>
+</g>
+<!-- proc~strip_string -->
+<g id="interface~~parse_int~~CallsGraph_node11" class="node">
+<title>proc~strip_string</title>
+<g id="a_interface~~parse_int~~CallsGraph_node11"><a xlink:href="../proc/strip_string.html" xlink:title="strip_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="808,-100.44 737,-100.44 737,-76.44 808,-76.44 808,-100.44"/>
+<text text-anchor="middle" x="772.5" y="-86.04" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">strip_string</text>
+</a>
+</g>
+</g>
+<!-- interface~strip&#45;&gt;proc~strip_string -->
+<g id="interface~~parse_int~~CallsGraph_edge13" class="edge">
+<title>interface~strip&#45;&gt;proc~strip_string</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M675.67,-82.78C690.4,-81.74 709.2,-81.44 726.24,-81.89"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="726.45,-85.4 736.57,-82.27 726.71,-78.41 726.45,-85.4"/>
+</g>
+<!-- proc~parse_integer_wide&#45;&gt;interface~strip -->
+<g id="interface~~parse_int~~CallsGraph_edge14" class="edge">
+<title>proc~parse_integer_wide&#45;&gt;interface~strip</title>
+<path fill="none" stroke="#7f00ff" d="M548.7,-101.11C569.59,-98.43 592.62,-95.48 611.19,-93.1"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="611.81,-96.55 621.28,-91.8 610.92,-89.6 611.81,-96.55"/>
+</g>
+<!-- proc~parse_integer_wide&#45;&gt;proc~error_set -->
+<g id="interface~~parse_int~~CallsGraph_edge15" class="edge">
+<title>proc~parse_integer_wide&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#7f00ff" d="M514.85,-96.31C541.47,-82.5 585.14,-59.82 615.05,-44.29"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="616.98,-47.23 624.24,-39.52 613.75,-41.02 616.98,-47.23"/>
+</g>
+<!-- proc~strip_string&#45;&gt;interface~strip -->
+<g id="interface~~parse_int~~CallsGraph_edge16" class="edge">
+<title>proc~strip_string&#45;&gt;interface~strip</title>
+<path fill="none" stroke="#00ffff" d="M736.57,-94.61C720.66,-95.36 701.84,-95.38 685.77,-94.67"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="685.85,-91.17 675.67,-94.1 685.46,-98.16 685.85,-91.17"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var paninterfaceparse_intCallsGraph = svgPanZoom('#interfaceparse_intCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+<br>
+
+
+        <h2>Module Procedures</h2>
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_int_int32_char"></span> <h3>private pure subroutine <a href='../proc/parse_int_int32_char.html'>parse_int_int32_char</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Parse a character string into a 32 bit integer.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~10"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~28"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+<p>Fixed width on purpose: the narrow specific procedure of the
+generic.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~156"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_int_int32_string"></span> <h3>private pure subroutine <a href='../proc/parse_int_int32_string.html'>parse_int_int32_string</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Parse a <code>string_type</code> into a 32 bit integer.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~11"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~29"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~157"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_int_int64_char"></span> <h3>private pure subroutine <a href='../proc/parse_int_int64_char.html'>parse_int_int64_char</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Parse a character string into a 64 bit integer.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~8"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~26"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+<p>Fixed width on purpose: this is the widest integer the parser
+accumulates in, and the narrower specific procedure range checks
+against it.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~154"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_int_int64_string"></span> <h3>private pure subroutine <a href='../proc/parse_int_int64_string.html'>parse_int_int64_string</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Parse a <code>string_type</code> into a 64 bit integer.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~9"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~27"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~155"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+</div>
+  </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

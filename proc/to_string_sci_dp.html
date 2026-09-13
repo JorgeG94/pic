@@ -1,0 +1,941 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>to_string_sci_dp &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>to_string_sci_dp
+      <small>Function</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.2% of total for procedures.">28 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_format.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_format.f90.html'>pic_format.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_format.html'>pic_format</a></li>
+            <li class="breadcrumb-item active" aria-current="page">to_string_sci_dp</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../proc/to_string_sci_dp.html#variable-bump~2">bump</a>
+            <a class="list-group-item" href="../proc/to_string_sci_dp.html#variable-exact~2">exact</a>
+            <a class="list-group-item" href="../proc/to_string_sci_dp.html#variable-exp10">exp10</a>
+            <a class="list-group-item" href="../proc/to_string_sci_dp.html#variable-n_exact~2">n_exact</a>
+            <a class="list-group-item" href="../proc/to_string_sci_dp.html#variable-n_rounded~2">n_rounded</a>
+            <a class="list-group-item" href="../proc/to_string_sci_dp.html#variable-negative~3">negative</a>
+            <a class="list-group-item" href="../proc/to_string_sci_dp.html#variable-point_pos~2">point_pos</a>
+            <a class="list-group-item" href="../proc/to_string_sci_dp.html#variable-rounded~2">rounded</a>
+            <a class="list-group-item" href="../proc/to_string_sci_dp.html#variable-sig">sig</a>
+            <a class="list-group-item" href="../proc/to_string_sci_dp.html#variable-special~2">special</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/to_string_sci_dp.html#src">to_string_sci_dp</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private pure function to_string_sci_dp(value, sig_digits) result(string)  
+</h2>
+    
+
+    <p>Scientific rendering of a <code>real(dp)</code> value.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~39"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sig_digits~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sig_digits</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <h3>Return Value
+        <small>
+          <span class="anchor" id="variable-string~105"></span>
+          character(len=:), allocatable
+        </small>
+      </h3>
+      
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~to_string_sci_dp~~CallsGraph Pages: 1 -->
+<svg id="procto_string_sci_dpCallsGraph" width="489pt" height="273pt"
+ viewBox="0.00 0.00 489.00 273.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~to_string_sci_dp~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 269)">
+<title>proc~~to_string_sci_dp~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-269 485,-269 485,4 -4,4"/>
+<!-- proc~to_string_sci_dp -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node1" class="node">
+<title>proc~to_string_sci_dp</title>
+<polygon fill="none" stroke="black" points="97,-108 0,-108 0,-84 97,-84 97,-108"/>
+<text text-anchor="middle" x="48.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50">to_string_sci_dp</text>
+</g>
+<!-- proc~expand_exact -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node2" class="node">
+<title>proc~expand_exact</title>
+<g id="a_proc~~to_string_sci_dp~~CallsGraph_node2"><a xlink:href="../proc/expand_exact.html" xlink:title="expand_exact">
+<polygon fill="#d9534f" stroke="#d9534f" points="221,-202 136,-202 136,-178 221,-178 221,-202"/>
+<text text-anchor="middle" x="178.5" y="-187.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">expand_exact</text>
+</a>
+</g>
+</g>
+<!-- proc~to_string_sci_dp&#45;&gt;proc~expand_exact -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_edge1" class="edge">
+<title>proc~to_string_sci_dp&#45;&gt;proc~expand_exact</title>
+<path fill="none" stroke="#ff0000" d="M65.07,-108.02C81.74,-120.83 109.04,-141.62 133,-159 138.84,-163.23 145.17,-167.71 151.17,-171.9"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="149.43,-174.95 159.63,-177.78 153.42,-169.2 149.43,-174.95"/>
+</g>
+<!-- proc~exponent_field -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node3" class="node">
+<title>proc~exponent_field</title>
+<g id="a_proc~~to_string_sci_dp~~CallsGraph_node3"><a xlink:href="../proc/exponent_field.html" xlink:title="exponent_field">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="224,-150 133,-150 133,-126 224,-126 224,-150"/>
+<text text-anchor="middle" x="178.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">exponent_field</text>
+</a>
+</g>
+</g>
+<!-- proc~to_string_sci_dp&#45;&gt;proc~exponent_field -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_edge2" class="edge">
+<title>proc~to_string_sci_dp&#45;&gt;proc~exponent_field</title>
+<path fill="none" stroke="#ff0000" d="M86.18,-108.04C100.24,-112.65 116.46,-117.97 131.3,-122.84"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="130.22,-126.17 140.81,-125.96 132.4,-119.52 130.22,-126.17"/>
+</g>
+<!-- proc~is_negative -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node4" class="node">
+<title>proc~is_negative</title>
+<g id="a_proc~~to_string_sci_dp~~CallsGraph_node4"><a xlink:href="../proc/is_negative.html" xlink:title="is_negative">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="215,-108 142,-108 142,-84 215,-84 215,-108"/>
+<text text-anchor="middle" x="178.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">is_negative</text>
+</a>
+</g>
+</g>
+<!-- proc~to_string_sci_dp&#45;&gt;proc~is_negative -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_edge3" class="edge">
+<title>proc~to_string_sci_dp&#45;&gt;proc~is_negative</title>
+<path fill="none" stroke="#ff0000" d="M97.16,-96C108.48,-96 120.53,-96 131.76,-96"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="131.8,-99.5 141.8,-96 131.8,-92.5 131.8,-99.5"/>
+</g>
+<!-- proc~round_decimal -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node5" class="node">
+<title>proc~round_decimal</title>
+<g id="a_proc~~to_string_sci_dp~~CallsGraph_node5"><a xlink:href="../proc/round_decimal.html" xlink:title="round_decimal">
+<polygon fill="#d9534f" stroke="#d9534f" points="224,-66 133,-66 133,-42 224,-42 224,-66"/>
+<text text-anchor="middle" x="178.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">round_decimal</text>
+</a>
+</g>
+</g>
+<!-- proc~to_string_sci_dp&#45;&gt;proc~round_decimal -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_edge4" class="edge">
+<title>proc~to_string_sci_dp&#45;&gt;proc~round_decimal</title>
+<path fill="none" stroke="#ff0000" d="M86.18,-83.96C100.24,-79.35 116.46,-74.03 131.3,-69.16"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="132.4,-72.48 140.81,-66.04 130.22,-65.83 132.4,-72.48"/>
+</g>
+<!-- proc~special_text -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node6" class="node">
+<title>proc~special_text</title>
+<g id="a_proc~~to_string_sci_dp~~CallsGraph_node6"><a xlink:href="../proc/special_text.html" xlink:title="special_text">
+<polygon fill="#d9534f" stroke="#d9534f" points="216,-24 141,-24 141,0 216,0 216,-24"/>
+<text text-anchor="middle" x="178.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">special_text</text>
+</a>
+</g>
+</g>
+<!-- proc~to_string_sci_dp&#45;&gt;proc~special_text -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_edge5" class="edge">
+<title>proc~to_string_sci_dp&#45;&gt;proc~special_text</title>
+<path fill="none" stroke="#ff0000" d="M63.64,-83.9C79.75,-70.45 107.2,-48.59 133,-33 135.47,-31.51 138.06,-30.05 140.7,-28.63"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="142.42,-31.68 149.74,-24.02 139.24,-25.44 142.42,-31.68"/>
+</g>
+<!-- proc~bd_mul_pow -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node8" class="node">
+<title>proc~bd_mul_pow</title>
+<g id="a_proc~~to_string_sci_dp~~CallsGraph_node8"><a xlink:href="../proc/bd_mul_pow.html" xlink:title="bd_mul_pow">
+<polygon fill="#d9534f" stroke="#d9534f" points="349.5,-265 270.5,-265 270.5,-241 349.5,-241 349.5,-265"/>
+<text text-anchor="middle" x="310" y="-250.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bd_mul_pow</text>
+</a>
+</g>
+</g>
+<!-- proc~expand_exact&#45;&gt;proc~bd_mul_pow -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_edge6" class="edge">
+<title>proc~expand_exact&#45;&gt;proc~bd_mul_pow</title>
+<path fill="none" stroke="#ff0000" d="M201.48,-202.05C217.54,-210.7 239.92,-222.47 260,-232 263.38,-233.6 266.91,-235.22 270.46,-236.81"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="269.25,-240.1 279.82,-240.92 272.07,-233.7 269.25,-240.1"/>
+</g>
+<!-- proc~bd_set -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node9" class="node">
+<title>proc~bd_set</title>
+<g id="a_proc~~to_string_sci_dp~~CallsGraph_node9"><a xlink:href="../proc/bd_set.html" xlink:title="bd_set">
+<polygon fill="#d9534f" stroke="#d9534f" points="337,-223 283,-223 283,-199 337,-199 337,-223"/>
+<text text-anchor="middle" x="310" y="-208.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bd_set</text>
+</a>
+</g>
+</g>
+<!-- proc~expand_exact&#45;&gt;proc~bd_set -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_edge7" class="edge">
+<title>proc~expand_exact&#45;&gt;proc~bd_set</title>
+<path fill="none" stroke="#ff0000" d="M221.19,-196.76C237.81,-199.46 256.76,-202.53 272.79,-205.13"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="272.42,-208.61 282.85,-206.76 273.54,-201.7 272.42,-208.61"/>
+</g>
+<!-- proc~bd_to_digits -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node10" class="node">
+<title>proc~bd_to_digits</title>
+<g id="a_proc~~to_string_sci_dp~~CallsGraph_node10"><a xlink:href="../proc/bd_to_digits.html" xlink:title="bd_to_digits">
+<polygon fill="#d9534f" stroke="#d9534f" points="348,-181 272,-181 272,-157 348,-157 348,-181"/>
+<text text-anchor="middle" x="310" y="-166.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bd_to_digits</text>
+</a>
+</g>
+</g>
+<!-- proc~expand_exact&#45;&gt;proc~bd_to_digits -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_edge8" class="edge">
+<title>proc~expand_exact&#45;&gt;proc~bd_to_digits</title>
+<path fill="none" stroke="#ff0000" d="M221.19,-183.24C234.15,-181.14 248.53,-178.81 261.84,-176.65"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="262.46,-180.09 271.77,-175.04 261.33,-173.18 262.46,-180.09"/>
+</g>
+<!-- interface~to_string -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node7" class="node">
+<title>interface~to_string</title>
+<g id="a_proc~~to_string_sci_dp~~CallsGraph_node7"><a xlink:href="../interface/to_string.html" xlink:title="to_string">
+<polygon fill="#a7506f" stroke="#a7506f" points="339,-139 281,-139 281,-115 339,-115 339,-139"/>
+<text text-anchor="middle" x="310" y="-124.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_string</text>
+</a>
+</g>
+</g>
+<!-- proc~exponent_field&#45;&gt;interface~to_string -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_edge9" class="edge">
+<title>proc~exponent_field&#45;&gt;interface~to_string</title>
+<path fill="none" stroke="#cbff00" d="M224.07,-134.21C239.26,-132.92 256.09,-131.49 270.74,-130.25"/>
+<polygon fill="#cbff00" stroke="#cbff00" points="271.3,-133.72 280.97,-129.38 270.71,-126.74 271.3,-133.72"/>
+</g>
+<!-- proc~increment_digits -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node11" class="node">
+<title>proc~increment_digits</title>
+<g id="a_proc~~to_string_sci_dp~~CallsGraph_node11"><a xlink:href="../proc/increment_digits.html" xlink:title="increment_digits">
+<polygon fill="#d9534f" stroke="#d9534f" points="360,-66 260,-66 260,-42 360,-42 360,-66"/>
+<text text-anchor="middle" x="310" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">increment_digits</text>
+</a>
+</g>
+</g>
+<!-- proc~round_decimal&#45;&gt;proc~increment_digits -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_edge10" class="edge">
+<title>proc~round_decimal&#45;&gt;proc~increment_digits</title>
+<path fill="none" stroke="#0066ff" d="M224.07,-54C232.38,-54 241.18,-54 249.84,-54"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="249.92,-57.5 259.92,-54 249.92,-50.5 249.92,-57.5"/>
+</g>
+<!-- proc~bd_mul_small -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node12" class="node">
+<title>proc~bd_mul_small</title>
+<g id="a_proc~~to_string_sci_dp~~CallsGraph_node12"><a xlink:href="../proc/bd_mul_small.html" xlink:title="bd_mul_small">
+<polygon fill="#d9534f" stroke="#d9534f" points="481,-265 396,-265 396,-241 481,-241 481,-265"/>
+<text text-anchor="middle" x="438.5" y="-250.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bd_mul_small</text>
+</a>
+</g>
+</g>
+<!-- proc~bd_mul_pow&#45;&gt;proc~bd_mul_small -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_edge11" class="edge">
+<title>proc~bd_mul_pow&#45;&gt;proc~bd_mul_small</title>
+<path fill="none" stroke="#cbff00" d="M349.64,-253C360.88,-253 373.35,-253 385.28,-253"/>
+<polygon fill="#cbff00" stroke="#cbff00" points="385.58,-256.5 395.57,-253 385.57,-249.5 385.58,-256.5"/>
+</g>
+<!-- proc~limb_to_digits -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_node13" class="node">
+<title>proc~limb_to_digits</title>
+<g id="a_proc~~to_string_sci_dp~~CallsGraph_node13"><a xlink:href="../proc/limb_to_digits.html" xlink:title="limb_to_digits">
+<polygon fill="#d9534f" stroke="#d9534f" points="481,-181 396,-181 396,-157 481,-157 481,-181"/>
+<text text-anchor="middle" x="438.5" y="-166.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">limb_to_digits</text>
+</a>
+</g>
+</g>
+<!-- proc~bd_to_digits&#45;&gt;proc~limb_to_digits -->
+<g id="proc~~to_string_sci_dp~~CallsGraph_edge12" class="edge">
+<title>proc~bd_to_digits&#45;&gt;proc~limb_to_digits</title>
+<path fill="none" stroke="#0066ff" d="M348.27,-169C359.89,-169 372.92,-169 385.35,-169"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="385.62,-172.5 395.62,-169 385.62,-165.5 385.62,-172.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~to_string_sci_dp~~CalledByGraph Pages: 1 -->
+<svg id="procto_string_sci_dpCalledByGraph" width="350pt" height="52pt"
+ viewBox="0.00 0.00 350.00 52.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~to_string_sci_dp~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 48)">
+<title>proc~~to_string_sci_dp~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-48 346,-48 346,4 -4,4"/>
+<!-- proc~to_string_sci_dp -->
+<g id="proc~~to_string_sci_dp~~CalledByGraph_node1" class="node">
+<title>proc~to_string_sci_dp</title>
+<polygon fill="none" stroke="black" points="342,-44 245,-44 245,-20 342,-20 342,-44"/>
+<text text-anchor="middle" x="293.5" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50">to_string_sci_dp</text>
+</g>
+<!-- interface~to_string_sci -->
+<g id="proc~~to_string_sci_dp~~CalledByGraph_node2" class="node">
+<title>interface~to_string_sci</title>
+<g id="a_proc~~to_string_sci_dp~~CalledByGraph_node2"><a xlink:href="../interface/to_string_sci.html" xlink:title="to_string_sci">
+<polygon fill="#a7506f" stroke="#a7506f" points="78,-44 0,-44 0,-20 78,-20 78,-44"/>
+<text text-anchor="middle" x="39" y="-29.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_string_sci</text>
+</a>
+</g>
+</g>
+<!-- interface~to_string_sci&#45;&gt;proc~to_string_sci_dp -->
+<g id="proc~~to_string_sci_dp~~CalledByGraph_edge2" class="edge">
+<title>interface~to_string_sci&#45;&gt;proc~to_string_sci_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M78.03,-32.61C89.58,-32.77 102.31,-32.92 114,-33 156.22,-33.29 166.78,-33.25 209,-33 217.34,-32.95 226.14,-32.87 234.78,-32.78"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="234.85,-36.28 244.81,-32.67 234.77,-29.28 234.85,-36.28"/>
+</g>
+<!-- proc~to_string_sci_sp -->
+<g id="proc~~to_string_sci_dp~~CalledByGraph_node3" class="node">
+<title>proc~to_string_sci_sp</title>
+<g id="a_proc~~to_string_sci_dp~~CalledByGraph_node3"><a xlink:href="../proc/to_string_sci_sp.html" xlink:title="to_string_sci_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="209,-24 114,-24 114,0 209,0 209,-24"/>
+<text text-anchor="middle" x="161.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_string_sci_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_string_sci&#45;&gt;proc~to_string_sci_sp -->
+<g id="proc~~to_string_sci_dp~~CalledByGraph_edge3" class="edge">
+<title>interface~to_string_sci&#45;&gt;proc~to_string_sci_sp</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M78.13,-25.67C86.25,-24.32 95.01,-22.87 103.66,-21.43"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="104.45,-24.85 113.74,-19.76 103.3,-17.95 104.45,-24.85"/>
+</g>
+<!-- proc~to_string_sci_sp&#45;&gt;proc~to_string_sci_dp -->
+<g id="proc~~to_string_sci_dp~~CalledByGraph_edge1" class="edge">
+<title>proc~to_string_sci_sp&#45;&gt;proc~to_string_sci_dp</title>
+<path fill="none" stroke="#ff0000" d="M209.07,-19.16C217.44,-20.45 226.27,-21.81 234.91,-23.14"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="234.53,-26.62 244.95,-24.68 235.59,-19.7 234.53,-26.62"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    <section>    
+      <h2>Variables</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bump~2"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>bump</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-exact~2"></span>
+              character(len=WORK_LEN),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>exact</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-exp10"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>exp10</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n_exact~2"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n_exact</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n_rounded~2"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n_rounded</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-negative~3"></span>
+              logical,
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>negative</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-point_pos~2"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>point_pos</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rounded~2"></span>
+              character(len=WORK_LEN),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rounded</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sig"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sig</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-special~2"></span>
+              logical,
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>special</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">pure function </span><span class="n">to_string_sci_dp</span><span class="p">(</span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="n">sig_digits</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+<span class="w">      </span><span class="c">!! Scientific rendering of a `real(dp)` value.</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="k">value</span>
+<span class="k">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">sig_digits</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">string</span>
+
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="n">WORK_LEN</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">exact</span><span class="p">,</span><span class="w"> </span><span class="n">rounded</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_exact</span><span class="p">,</span><span class="w"> </span><span class="n">point_pos</span><span class="p">,</span><span class="w"> </span><span class="n">sig</span><span class="p">,</span><span class="w"> </span><span class="n">n_rounded</span><span class="p">,</span><span class="w"> </span><span class="n">bump</span><span class="p">,</span><span class="w"> </span><span class="n">exp10</span>
+<span class="w">      </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">negative</span><span class="p">,</span><span class="w"> </span><span class="n">special</span>
+
+<span class="w">      </span><span class="k">call </span><span class="n">special_text</span><span class="p">(</span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">special</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">special</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+
+<span class="k">      </span><span class="n">sig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="mi">1_default_int</span><span class="p">,</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="n">sig_digits</span><span class="p">,</span><span class="w"> </span><span class="n">PIC_FORMAT_MAX_SIG_DIGITS</span><span class="p">))</span>
+<span class="w">      </span><span class="n">negative</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">is_negative</span><span class="p">(</span><span class="k">value</span><span class="p">)</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">value</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">0.0_dp</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">         </span><span class="c">! Zero never carries a sign. Recognising a negative zero requires SIGN</span>
+<span class="w">         </span><span class="c">! to distinguish the two signed zeros, which Fortran leaves processor</span>
+<span class="w">         </span><span class="c">! dependent (F2018 16.9.165: the result is |A| if the processor cannot</span>
+<span class="w">         </span><span class="c">! distinguish them), and Intel and AOCC do not distinguish them under</span>
+<span class="w">         </span><span class="c">! their default fast floating point model. Emitting "-0.00" would</span>
+<span class="w">         </span><span class="c">! therefore be compiler dependent, which is the one thing this module</span>
+<span class="w">         </span><span class="c">! exists to avoid. A non-zero value that merely rounds to zero does</span>
+<span class="w">         </span><span class="c">! keep its sign: SIGN is well defined for a non-zero argument.</span>
+<span class="w">         </span><span class="n">negative</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">         </span><span class="n">rounded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">repeat</span><span class="p">(</span><span class="s2">"0"</span><span class="p">,</span><span class="w"> </span><span class="n">sig</span><span class="p">)</span>
+<span class="w">         </span><span class="n">exp10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_default_int</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         call </span><span class="n">expand_exact</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="k">value</span><span class="p">),</span><span class="w"> </span><span class="n">exact</span><span class="p">,</span><span class="w"> </span><span class="n">n_exact</span><span class="p">,</span><span class="w"> </span><span class="n">point_pos</span><span class="p">)</span>
+<span class="w">         </span><span class="k">call </span><span class="n">round_decimal</span><span class="p">(</span><span class="n">exact</span><span class="p">,</span><span class="w"> </span><span class="n">n_exact</span><span class="p">,</span><span class="w"> </span><span class="n">sig</span><span class="p">,</span><span class="w"> </span><span class="n">rounded</span><span class="p">,</span><span class="w"> </span><span class="n">n_rounded</span><span class="p">,</span><span class="w"> </span><span class="n">bump</span><span class="p">)</span>
+<span class="w">         </span><span class="c">! A carry out of the leading digit turns "999" into "1000"; only the</span>
+<span class="w">         </span><span class="c">! first sig digits are used, so the extra trailing zero is ignored and</span>
+<span class="w">         </span><span class="c">! the decimal exponent moves up by one instead.</span>
+<span class="w">         </span><span class="n">exp10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">point_pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">bump</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1_default_int</span>
+<span class="w">      </span><span class="k">end if</span>
+
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">sig</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1_default_int</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rounded</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">)</span><span class="o">//</span><span class="s2">"."</span><span class="o">//</span><span class="n">rounded</span><span class="p">(</span><span class="mi">2</span><span class="p">:</span><span class="n">sig</span><span class="p">)</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         </span><span class="n">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rounded</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end if</span>
+<span class="k">      </span><span class="n">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">string</span><span class="o">//</span><span class="s2">"e"</span><span class="o">//</span><span class="n">exponent_field</span><span class="p">(</span><span class="n">exp10</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">negative</span><span class="p">)</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"-"</span><span class="o">//</span><span class="n">string</span>
+
+<span class="w">   </span><span class="k">end function </span><span class="n">to_string_sci_dp</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

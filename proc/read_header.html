@@ -1,0 +1,991 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>read_header &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>read_header
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.3% of total for procedures.">41 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_serialize.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_serialize.f90.html'>pic_serialize.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_serialize.html'>pic_serialize</a></li>
+            <li class="breadcrumb-item active" aria-current="page">read_header</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../proc/read_header.html#variable-ios~7">ios</a>
+            <a class="list-group-item" href="../proc/read_header.html#variable-magic">magic</a>
+            <a class="list-group-item" href="../proc/read_header.html#variable-mark">mark</a>
+            <a class="list-group-item" href="../proc/read_header.html#variable-raw_version">raw_version</a>
+            <a class="list-group-item" href="../proc/read_header.html#variable-reserved~2">reserved</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/read_header.html#src">read_header</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine read_header(unit, version, swapped, err)  
+</h2>
+    
+
+    <p>Read and validate the stream header.</p>
+<p>Reports <code>ERROR_IO</code> when the file is shorter than a header, and
+<code>ERROR_VALIDATION</code> when the magic, the byte order mark or the version
+is not something this build understands.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~27"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+                <p>Stream unit opened for unformatted stream reading.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-version~2"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>version</strong></td>
+            <td>
+                <p>Format version found in the file, 0 if the header was rejected.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~8"></span>
+              logical,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+                <p>True when the file was written by a machine of the opposite byte
+order, so every multi-byte field needs reversing on the way in.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~171"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                <p>Error state.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~read_header~~CallsGraph Pages: 1 -->
+<svg id="procread_headerCallsGraph" width="504pt" height="578pt"
+ viewBox="0.00 0.00 504.00 578.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~read_header~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 574)">
+<title>proc~~read_header~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-574 500,-574 500,4 -4,4"/>
+<!-- proc~read_header -->
+<g id="proc~~read_header~~CallsGraph_node1" class="node">
+<title>proc~read_header</title>
+<polygon fill="none" stroke="black" points="80,-266 0,-266 0,-242 80,-242 80,-266"/>
+<text text-anchor="middle" x="40" y="-251.6" font-family="Helvetica,sans-Serif" font-size="10.50">read_header</text>
+</g>
+<!-- interface~to_char -->
+<g id="proc~~read_header~~CallsGraph_node2" class="node">
+<title>interface~to_char</title>
+<g id="a_proc~~read_header~~CallsGraph_node2"><a xlink:href="../interface/to_char.html" xlink:title="to_char">
+<polygon fill="#a7506f" stroke="#a7506f" points="310.5,-297 256.5,-297 256.5,-273 310.5,-273 310.5,-297"/>
+<text text-anchor="middle" x="283.5" y="-282.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char</text>
+</a>
+</g>
+</g>
+<!-- proc~read_header&#45;&gt;interface~to_char -->
+<g id="proc~~read_header~~CallsGraph_edge1" class="edge">
+<title>proc~read_header&#45;&gt;interface~to_char</title>
+<path fill="none" stroke="#ff0000" d="M56.92,-266.13C71.43,-276.36 93.91,-290.24 116,-296 159.82,-307.43 212.21,-300.8 246.36,-293.9"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="247.3,-297.28 256.35,-291.77 245.84,-290.44 247.3,-297.28"/>
+</g>
+<!-- proc~bswap_int32 -->
+<g id="proc~~read_header~~CallsGraph_node3" class="node">
+<title>proc~bswap_int32</title>
+<g id="a_proc~~read_header~~CallsGraph_node3"><a xlink:href="../proc/bswap_int32.html" xlink:title="bswap_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="195,-287 116,-287 116,-263 195,-263 195,-287"/>
+<text text-anchor="middle" x="155.5" y="-272.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bswap_int32</text>
+</a>
+</g>
+</g>
+<!-- proc~read_header&#45;&gt;proc~bswap_int32 -->
+<g id="proc~~read_header~~CallsGraph_edge2" class="edge">
+<title>proc~read_header&#45;&gt;proc~bswap_int32</title>
+<path fill="none" stroke="#ff0000" d="M80.06,-261.23C88.36,-262.76 97.21,-264.4 105.82,-265.99"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="105.28,-269.45 115.75,-267.83 106.56,-262.57 105.28,-269.45"/>
+</g>
+<!-- proc~check_io -->
+<g id="proc~~read_header~~CallsGraph_node4" class="node">
+<title>proc~check_io</title>
+<g id="a_proc~~read_header~~CallsGraph_node4"><a xlink:href="../proc/check_io.html" xlink:title="check_io">
+<polygon fill="#d9534f" stroke="#d9534f" points="185,-245 126,-245 126,-221 185,-221 185,-245"/>
+<text text-anchor="middle" x="155.5" y="-230.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_io</text>
+</a>
+</g>
+</g>
+<!-- proc~read_header&#45;&gt;proc~check_io -->
+<g id="proc~~read_header~~CallsGraph_edge3" class="edge">
+<title>proc~read_header&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M80.06,-246.77C91.55,-244.65 104.11,-242.32 115.59,-240.2"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="116.57,-243.58 125.77,-238.32 115.3,-236.69 116.57,-243.58"/>
+</g>
+<!-- proc~error_set -->
+<g id="proc~~read_header~~CallsGraph_node5" class="node">
+<title>proc~error_set</title>
+<g id="a_proc~~read_header~~CallsGraph_node5"><a xlink:href="../proc/error_set.html" xlink:title="error_t%error_set">
+<polygon fill="#d9534f" stroke="#d9534f" points="336,-225 231,-225 231,-201 336,-201 336,-225"/>
+<text text-anchor="middle" x="283.5" y="-210.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_set</text>
+</a>
+</g>
+</g>
+<!-- proc~read_header&#45;&gt;proc~error_set -->
+<g id="proc~~read_header~~CallsGraph_edge4" class="edge">
+<title>proc~read_header&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#ff0000" d="M56.92,-241.87C71.43,-231.64 93.91,-217.76 116,-212 149.82,-203.18 188.84,-202.91 220.6,-205.09"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="220.39,-208.58 230.64,-205.87 220.94,-201.6 220.39,-208.58"/>
+</g>
+<!-- proc~to_char_char -->
+<g id="proc~~read_header~~CallsGraph_node6" class="node">
+<title>proc~to_char_char</title>
+<g id="a_proc~~read_header~~CallsGraph_node6"><a xlink:href="../proc/to_char_char.html" xlink:title="to_char_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="475,-570 393,-570 393,-546 475,-546 475,-570"/>
+<text text-anchor="middle" x="434" y="-555.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_char</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_char -->
+<g id="proc~~read_header~~CallsGraph_edge5" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M285.11,-297.19C287.77,-337.34 301.66,-466.85 372,-537 375.44,-540.43 379.46,-543.3 383.77,-545.7"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="382.39,-548.92 392.93,-550 385.36,-542.58 382.39,-548.92"/>
+</g>
+<!-- proc~to_char_dp -->
+<g id="proc~~read_header~~CallsGraph_node7" class="node">
+<title>proc~to_char_dp</title>
+<g id="a_proc~~read_header~~CallsGraph_node7"><a xlink:href="../proc/to_char_dp.html" xlink:title="to_char_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="469.5,-528 398.5,-528 398.5,-504 469.5,-504 469.5,-528"/>
+<text text-anchor="middle" x="434" y="-513.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_dp -->
+<g id="proc~~read_header~~CallsGraph_edge6" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M286.07,-297.15C291.29,-332.79 311.38,-438.1 372,-495 376.77,-499.48 382.54,-503 388.6,-505.78"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="387.68,-509.18 398.27,-509.56 390.23,-502.66 387.68,-509.18"/>
+</g>
+<!-- proc~to_char_int32 -->
+<g id="proc~~read_header~~CallsGraph_node8" class="node">
+<title>proc~to_char_int32</title>
+<g id="a_proc~~read_header~~CallsGraph_node8"><a xlink:href="../proc/to_char_int32.html" xlink:title="to_char_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="476.5,-486 391.5,-486 391.5,-462 476.5,-462 476.5,-486"/>
+<text text-anchor="middle" x="434" y="-471.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_int32 -->
+<g id="proc~~read_header~~CallsGraph_edge7" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_int32</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M287.45,-297.11C295.54,-327.74 320.92,-409 372,-453 375.06,-455.64 378.47,-457.95 382.08,-459.98"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="380.8,-463.25 391.33,-464.44 383.84,-456.94 380.8,-463.25"/>
+</g>
+<!-- proc~to_char_int64 -->
+<g id="proc~~read_header~~CallsGraph_node9" class="node">
+<title>proc~to_char_int64</title>
+<g id="a_proc~~read_header~~CallsGraph_node9"><a xlink:href="../proc/to_char_int64.html" xlink:title="to_char_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="476.5,-444 391.5,-444 391.5,-420 476.5,-420 476.5,-444"/>
+<text text-anchor="middle" x="434" y="-429.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_int64 -->
+<g id="proc~~read_header~~CallsGraph_edge8" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_int64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M289.81,-297.33C301.2,-322.38 330.37,-379.51 372,-411 375.18,-413.4 378.64,-415.54 382.27,-417.45"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="380.95,-420.69 391.5,-421.71 383.89,-414.34 380.95,-420.69"/>
+</g>
+<!-- proc~to_char_logical -->
+<g id="proc~~read_header~~CallsGraph_node10" class="node">
+<title>proc~to_char_logical</title>
+<g id="a_proc~~read_header~~CallsGraph_node10"><a xlink:href="../proc/to_char_logical.html" xlink:title="to_char_logical">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="480.5,-402 387.5,-402 387.5,-378 480.5,-378 480.5,-402"/>
+<text text-anchor="middle" x="434" y="-387.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_logical</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_logical -->
+<g id="proc~~read_header~~CallsGraph_edge9" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_logical</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M294.25,-297.29C309.2,-315.37 339.47,-349.13 372,-369 374.82,-370.72 377.8,-372.33 380.87,-373.82"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="379.68,-377.12 390.25,-377.95 382.51,-370.72 379.68,-377.12"/>
+</g>
+<!-- proc~to_char_matrix_dp -->
+<g id="proc~~read_header~~CallsGraph_node11" class="node">
+<title>proc~to_char_matrix_dp</title>
+<g id="a_proc~~read_header~~CallsGraph_node11"><a xlink:href="../proc/to_char_matrix_dp.html" xlink:title="to_char_matrix_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="489.5,-360 378.5,-360 378.5,-336 489.5,-336 489.5,-360"/>
+<text text-anchor="middle" x="434" y="-345.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_dp -->
+<g id="proc~~read_header~~CallsGraph_edge10" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M307.93,-297.16C325.36,-305.98 349.87,-317.91 372,-327 376.49,-328.84 381.21,-330.66 385.95,-332.42"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="385.05,-335.82 395.65,-335.91 387.42,-329.23 385.05,-335.82"/>
+</g>
+<!-- proc~to_char_matrix_int32 -->
+<g id="proc~~read_header~~CallsGraph_node12" class="node">
+<title>proc~to_char_matrix_int32</title>
+<g id="a_proc~~read_header~~CallsGraph_node12"><a xlink:href="../proc/to_char_matrix_int32.html" xlink:title="to_char_matrix_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="496,-318 372,-318 372,-294 496,-294 496,-318"/>
+<text text-anchor="middle" x="434" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_int32 -->
+<g id="proc~~read_header~~CallsGraph_edge11" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_int32</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M310.71,-288.71C325.04,-290.73 343.56,-293.35 361.82,-295.93"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="361.53,-299.43 371.92,-297.36 362.51,-292.5 361.53,-299.43"/>
+</g>
+<!-- proc~to_char_matrix_int64 -->
+<g id="proc~~read_header~~CallsGraph_node13" class="node">
+<title>proc~to_char_matrix_int64</title>
+<g id="a_proc~~read_header~~CallsGraph_node13"><a xlink:href="../proc/to_char_matrix_int64.html" xlink:title="to_char_matrix_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="496,-276 372,-276 372,-252 496,-252 496,-276"/>
+<text text-anchor="middle" x="434" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_int64 -->
+<g id="proc~~read_header~~CallsGraph_edge12" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_int64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M310.71,-281.29C325.04,-279.27 343.56,-276.65 361.82,-274.07"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="362.51,-277.5 371.92,-272.64 361.53,-270.57 362.51,-277.5"/>
+</g>
+<!-- proc~to_char_matrix_sp -->
+<g id="proc~~read_header~~CallsGraph_node14" class="node">
+<title>proc~to_char_matrix_sp</title>
+<g id="a_proc~~read_header~~CallsGraph_node14"><a xlink:href="../proc/to_char_matrix_sp.html" xlink:title="to_char_matrix_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="488.5,-234 379.5,-234 379.5,-210 488.5,-210 488.5,-234"/>
+<text text-anchor="middle" x="434" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_sp -->
+<g id="proc~~read_header~~CallsGraph_edge13" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_sp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M307.93,-272.84C325.36,-264.02 349.87,-252.09 372,-243 376.49,-241.16 381.21,-239.34 385.95,-237.58"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="387.42,-240.77 395.65,-234.09 385.05,-234.18 387.42,-240.77"/>
+</g>
+<!-- proc~to_char_sp -->
+<g id="proc~~read_header~~CallsGraph_node15" class="node">
+<title>proc~to_char_sp</title>
+<g id="a_proc~~read_header~~CallsGraph_node15"><a xlink:href="../proc/to_char_sp.html" xlink:title="to_char_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="469,-192 399,-192 399,-168 469,-168 469,-192"/>
+<text text-anchor="middle" x="434" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_sp -->
+<g id="proc~~read_header~~CallsGraph_edge14" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_sp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M297,-272.72C320.13,-250.05 367.66,-203.65 372,-201 377.39,-197.71 383.38,-194.84 389.42,-192.38"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="390.76,-195.62 398.9,-188.84 388.31,-189.06 390.76,-195.62"/>
+</g>
+<!-- proc~to_char_vector_dp -->
+<g id="proc~~read_header~~CallsGraph_node16" class="node">
+<title>proc~to_char_vector_dp</title>
+<g id="a_proc~~read_header~~CallsGraph_node16"><a xlink:href="../proc/to_char_vector_dp.html" xlink:title="to_char_vector_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="489,-150 379,-150 379,-126 489,-126 489,-150"/>
+<text text-anchor="middle" x="434" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_dp -->
+<g id="proc~~read_header~~CallsGraph_edge15" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M299.41,-272.73C310.51,-263.05 325.49,-248.76 336,-234 357.45,-203.88 344.38,-183.59 372,-159 373.47,-157.69 375.03,-156.46 376.66,-155.3"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="378.5,-158.28 385.28,-150.14 374.9,-152.28 378.5,-158.28"/>
+</g>
+<!-- proc~to_char_vector_int32 -->
+<g id="proc~~read_header~~CallsGraph_node17" class="node">
+<title>proc~to_char_vector_int32</title>
+<g id="a_proc~~read_header~~CallsGraph_node17"><a xlink:href="../proc/to_char_vector_int32.html" xlink:title="to_char_vector_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="496,-108 372,-108 372,-84 496,-84 496,-108"/>
+<text text-anchor="middle" x="434" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_int32 -->
+<g id="proc~~read_header~~CallsGraph_edge16" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_int32</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M300.54,-272.76C311.91,-263.3 326.75,-249.29 336,-234 364.18,-187.46 334.17,-156.1 372,-117 373.07,-115.89 374.2,-114.84 375.39,-113.85"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="377.56,-116.6 383.84,-108.07 373.61,-110.83 377.56,-116.6"/>
+</g>
+<!-- proc~to_char_vector_int64 -->
+<g id="proc~~read_header~~CallsGraph_node18" class="node">
+<title>proc~to_char_vector_int64</title>
+<g id="a_proc~~read_header~~CallsGraph_node18"><a xlink:href="../proc/to_char_vector_int64.html" xlink:title="to_char_vector_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="496,-66 372,-66 372,-42 496,-42 496,-66"/>
+<text text-anchor="middle" x="434" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_int64 -->
+<g id="proc~~read_header~~CallsGraph_edge17" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_int64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M300.89,-272.96C312.43,-263.61 327.33,-249.63 336,-234 371.15,-170.64 323.63,-128.95 372,-75 372.88,-74.01 373.81,-73.08 374.79,-72.18"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="377,-74.9 382.97,-66.15 372.84,-69.27 377,-74.9"/>
+</g>
+<!-- proc~to_char_vector_sp -->
+<g id="proc~~read_header~~CallsGraph_node19" class="node">
+<title>proc~to_char_vector_sp</title>
+<g id="a_proc~~read_header~~CallsGraph_node19"><a xlink:href="../proc/to_char_vector_sp.html" xlink:title="to_char_vector_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="488.5,-24 379.5,-24 379.5,0 488.5,0 488.5,-24"/>
+<text text-anchor="middle" x="434" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_sp -->
+<g id="proc~~read_header~~CallsGraph_edge18" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_sp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M301.59,-272.68C313.17,-263.39 327.81,-249.6 336,-234 378.21,-153.66 312.96,-101.93 372,-33 372.75,-32.13 373.53,-31.29 374.35,-30.49"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="376.75,-33.06 382.51,-24.18 372.46,-27.53 376.75,-33.06"/>
+</g>
+<!-- proc~check_io&#45;&gt;interface~to_char -->
+<g id="proc~~read_header~~CallsGraph_edge19" class="edge">
+<title>proc~check_io&#45;&gt;interface~to_char</title>
+<path fill="none" stroke="#00ffff" d="M185.09,-244.8C203.35,-252.34 227.18,-262.17 246.69,-270.22"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="245.59,-273.55 256.17,-274.13 248.26,-267.08 245.59,-273.55"/>
+</g>
+<!-- proc~check_io&#45;&gt;proc~error_set -->
+<g id="proc~~read_header~~CallsGraph_edge20" class="edge">
+<title>proc~check_io&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#00ffff" d="M185.09,-228.46C195.8,-226.76 208.43,-224.76 220.98,-222.76"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="221.67,-226.2 230.99,-221.18 220.57,-219.29 221.67,-226.2"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~read_header~~CalledByGraph Pages: 1 -->
+<svg id="procread_headerCalledByGraph" width="496pt" height="32pt"
+ viewBox="0.00 0.00 496.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~read_header~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~read_header~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 492,-28 492,4 -4,4"/>
+<!-- proc~read_header -->
+<g id="proc~~read_header~~CalledByGraph_node1" class="node">
+<title>proc~read_header</title>
+<polygon fill="none" stroke="black" points="488,-24 408,-24 408,0 488,0 488,-24"/>
+<text text-anchor="middle" x="448" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">read_header</text>
+</g>
+<!-- proc~soa_read_prologue -->
+<g id="proc~~read_header~~CalledByGraph_node2" class="node">
+<title>proc~soa_read_prologue</title>
+<g id="a_proc~~read_header~~CalledByGraph_node2"><a xlink:href="../proc/soa_read_prologue.html" xlink:title="soa_read_prologue">
+<polygon fill="#d9534f" stroke="#d9534f" points="372,-24 259,-24 259,0 372,0 372,-24"/>
+<text text-anchor="middle" x="315.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_prologue</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_prologue&#45;&gt;proc~read_header -->
+<g id="proc~~read_header~~CalledByGraph_edge1" class="edge">
+<title>proc~soa_read_prologue&#45;&gt;proc~read_header</title>
+<path fill="none" stroke="#ff0000" d="M372.22,-12C380.6,-12 389.19,-12 397.43,-12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="397.63,-15.5 407.63,-12 397.63,-8.5 397.63,-15.5"/>
+</g>
+<!-- proc~particle_soa_deserialize -->
+<g id="proc~~read_header~~CalledByGraph_node3" class="node">
+<title>proc~particle_soa_deserialize</title>
+<g id="a_proc~~read_header~~CalledByGraph_node3"><a xlink:href="../proc/particle_soa_deserialize.html" xlink:title="particle_soa_t%particle_soa_deserialize">
+<polygon fill="#d9534f" stroke="#d9534f" points="223,-24 0,-24 0,0 223,0 223,-24"/>
+<text text-anchor="middle" x="111.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">particle_soa_t%particle_soa_deserialize</text>
+</a>
+</g>
+</g>
+<!-- proc~particle_soa_deserialize&#45;&gt;proc~soa_read_prologue -->
+<g id="proc~~read_header~~CalledByGraph_edge2" class="edge">
+<title>proc~particle_soa_deserialize&#45;&gt;proc~soa_read_prologue</title>
+<path fill="none" stroke="#ff0000" d="M223.25,-12C231.91,-12 240.47,-12 248.68,-12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="248.87,-15.5 258.87,-12 248.87,-8.5 248.87,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    <section>    
+      <h2>Variables</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ios~7"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ios</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-magic"></span>
+              character(len=len),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>magic</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mark"></span>
+              integer(kind=int32),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mark</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-raw_version"></span>
+              integer(kind=int32),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>raw_version</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-reserved~2"></span>
+              integer(kind=int32),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>reserved</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">read_header</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">version</span><span class="p">,</span><span class="w"> </span><span class="n">swapped</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="c">!! Read and validate the stream header.</span>
+<span class="w">      </span><span class="c">!!</span>
+<span class="w">      </span><span class="c">!! Reports `ERROR_IO` when the file is shorter than a header, and</span>
+<span class="w">      </span><span class="c">!! `ERROR_VALIDATION` when the magic, the byte order mark or the version</span>
+<span class="w">      </span><span class="c">!! is not something this build understands.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">unit</span>
+<span class="w">         </span><span class="c">!! Stream unit opened for unformatted stream reading.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int32</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">version</span>
+<span class="w">         </span><span class="c">!! Format version found in the file, 0 if the header was rejected.</span>
+<span class="w">      </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">swapped</span>
+<span class="w">         </span><span class="c">!! True when the file was written by a machine of the opposite byte</span>
+<span class="w">         </span><span class="c">!! order, so every multi-byte field needs reversing on the way in.</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">error_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">err</span>
+<span class="w">         </span><span class="c">!! Error state.</span>
+
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ios</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">PIC_MAGIC</span><span class="p">))</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">magic</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int32</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">mark</span><span class="p">,</span><span class="w"> </span><span class="n">raw_version</span><span class="p">,</span><span class="w"> </span><span class="n">reserved</span>
+
+<span class="w">      </span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_int32</span>
+<span class="w">      </span><span class="n">swapped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+
+<span class="w">      </span><span class="k">read</span><span class="w"> </span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">iostat</span><span class="o">=</span><span class="n">ios</span><span class="p">)</span><span class="w"> </span><span class="n">magic</span>
+<span class="w">      </span><span class="k">call </span><span class="n">check_io</span><span class="p">(</span><span class="n">ios</span><span class="p">,</span><span class="w"> </span><span class="s2">"unexpected end of stream reading magic"</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ios</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">magic</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">PIC_MAGIC</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">err</span><span class="p">%</span><span class="n">set</span><span class="p">(</span><span class="n">ERROR_VALIDATION</span><span class="p">,</span><span class="w"> </span><span class="s2">"bad magic: expected '"</span><span class="o">//</span><span class="n">PIC_MAGIC</span><span class="o">//</span><span class="s2">"', found '"</span><span class="o">//</span><span class="n">magic</span><span class="o">//</span><span class="s2">"'"</span><span class="p">)</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+
+<span class="k">      read</span><span class="w"> </span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">iostat</span><span class="o">=</span><span class="n">ios</span><span class="p">)</span><span class="w"> </span><span class="n">mark</span>
+<span class="w">      </span><span class="k">call </span><span class="n">check_io</span><span class="p">(</span><span class="n">ios</span><span class="p">,</span><span class="w"> </span><span class="s2">"unexpected end of stream reading byte-order mark"</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ios</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">mark</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">PIC_ENDIAN_MARK</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">swapped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">      </span><span class="k">else if</span><span class="w"> </span><span class="p">(</span><span class="n">mark</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">bswap_int32</span><span class="p">(</span><span class="n">PIC_ENDIAN_MARK</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">swapped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         call </span><span class="n">err</span><span class="p">%</span><span class="n">set</span><span class="p">(</span><span class="n">ERROR_VALIDATION</span><span class="p">,</span><span class="w"> </span><span class="s2">"bad byte-order mark "</span><span class="o">//</span><span class="n">to_char</span><span class="p">(</span><span class="n">mark</span><span class="p">)</span><span class="o">//</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                      </span><span class="s2">", this is not a PIC serialized stream"</span><span class="p">)</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+
+<span class="k">      read</span><span class="w"> </span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">iostat</span><span class="o">=</span><span class="n">ios</span><span class="p">)</span><span class="w"> </span><span class="n">raw_version</span>
+<span class="w">      </span><span class="k">call </span><span class="n">check_io</span><span class="p">(</span><span class="n">ios</span><span class="p">,</span><span class="w"> </span><span class="s2">"unexpected end of stream reading version"</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ios</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">swapped</span><span class="p">)</span><span class="w"> </span><span class="n">raw_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bswap_int32</span><span class="p">(</span><span class="n">raw_version</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">raw_version</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1_int32</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">raw_version</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">PIC_FORMAT_VERSION</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">err</span><span class="p">%</span><span class="n">set</span><span class="p">(</span><span class="n">ERROR_VALIDATION</span><span class="p">,</span><span class="w"> </span><span class="s2">"unsupported format version "</span><span class="o">//</span><span class="n">to_char</span><span class="p">(</span><span class="n">raw_version</span><span class="p">)</span><span class="o">//</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                      </span><span class="s2">", this build understands 1 to "</span><span class="o">//</span><span class="n">to_char</span><span class="p">(</span><span class="n">PIC_FORMAT_VERSION</span><span class="p">))</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+
+<span class="k">      read</span><span class="w"> </span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">iostat</span><span class="o">=</span><span class="n">ios</span><span class="p">)</span><span class="w"> </span><span class="n">reserved</span>
+<span class="w">      </span><span class="k">call </span><span class="n">check_io</span><span class="p">(</span><span class="n">ios</span><span class="p">,</span><span class="w"> </span><span class="s2">"unexpected end of stream reading reserved word"</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ios</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+
+<span class="k">      </span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">raw_version</span>
+<span class="w">   </span><span class="k">end subroutine </span><span class="n">read_header</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

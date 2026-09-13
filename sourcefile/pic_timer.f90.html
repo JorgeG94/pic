@@ -89,7 +89,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.5% of total for source files.">58 statements</a>
+                 title=" 0.3% of total for source files.">59 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -514,16 +514,30 @@ large graphs.</div>
 <a id="ln-109" name="ln-109" href="#ln-109"></a><span class="k">         </span><span class="n">elapsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">stop_time</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">start_time</span>
 <a id="ln-110" name="ln-110" href="#ln-110"></a><span class="w">      </span><span class="k">end if</span>
 <a id="ln-111" name="ln-111" href="#ln-111"></a><span class="cp">#else</span>
-<a id="ln-112" name="ln-112" href="#ln-112"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">is_running</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<a id="ln-113" name="ln-113" href="#ln-113"></a><span class="k">         call </span><span class="nb">system_clock</span><span class="p">(</span><span class="nb">count</span><span class="o">=</span><span class="n">current_count</span><span class="p">)</span>
-<a id="ln-114" name="ln-114" href="#ln-114"></a><span class="w">         </span><span class="n">elapsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">real</span><span class="p">(</span><span class="n">current_count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">start_count</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="p">)</span><span class="o">/</span><span class="kt">real</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">count_rate</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="p">)</span>
-<a id="ln-115" name="ln-115" href="#ln-115"></a><span class="w">      </span><span class="k">else</span>
-<a id="ln-116" name="ln-116" href="#ln-116"></a><span class="k">         </span><span class="n">elapsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">real</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">stop_count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">start_count</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="p">)</span><span class="o">/</span><span class="kt">real</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">count_rate</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="p">)</span>
-<a id="ln-117" name="ln-117" href="#ln-117"></a><span class="w">      </span><span class="k">end if</span>
-<a id="ln-118" name="ln-118" href="#ln-118"></a><span class="cp">#endif</span>
-<a id="ln-119" name="ln-119" href="#ln-119"></a><span class="w">   </span><span class="k">end function </span><span class="n">timer_get_elapsed_time</span>
-<a id="ln-120" name="ln-120" href="#ln-120"></a>
-<a id="ln-121" name="ln-121" href="#ln-121"></a><span class="k">end module </span><span class="n">pic_timer</span>
+<a id="ln-112" name="ln-112" href="#ln-112"></a><span class="w">      </span><span class="c">! F2018 16.9.180: a processor with no clock sets COUNT_RATE to zero (and</span>
+<a id="ln-113" name="ln-113" href="#ln-113"></a><span class="w">      </span><span class="c">! COUNT to -HUGE(COUNT)). Dividing by it would be a zero divide, giving</span>
+<a id="ln-114" name="ln-114" href="#ln-114"></a><span class="w">      </span><span class="c">! Inf or NaN -- or, under -ffast-math, an unconstrained value -- which</span>
+<a id="ln-115" name="ln-115" href="#ln-115"></a><span class="w">      </span><span class="c">! then propagates into every derived figure such as a FLOP rate. There is</span>
+<a id="ln-116" name="ln-116" href="#ln-116"></a><span class="w">      </span><span class="c">! no time to report on such a processor, so report none. `elapsed` is</span>
+<a id="ln-117" name="ln-117" href="#ln-117"></a><span class="w">      </span><span class="c">! already 0.0_dp here.</span>
+<a id="ln-118" name="ln-118" href="#ln-118"></a><span class="w">      </span><span class="c">!</span>
+<a id="ln-119" name="ln-119" href="#ln-119"></a><span class="w">      </span><span class="c">! A caller cannot distinguish "this processor has no clock" from "no</span>
+<a id="ln-120" name="ln-120" href="#ln-120"></a><span class="w">      </span><span class="c">! measurable time passed" from the result alone. That is deliberate:</span>
+<a id="ln-121" name="ln-121" href="#ln-121"></a><span class="w">      </span><span class="c">! get_elapsed_time is a function used inside expressions, so it has</span>
+<a id="ln-122" name="ln-122" href="#ln-122"></a><span class="w">      </span><span class="c">! nowhere to put an error_t, and both cases mean the same thing to the</span>
+<a id="ln-123" name="ln-123" href="#ln-123"></a><span class="w">      </span><span class="c">! arithmetic downstream.</span>
+<a id="ln-124" name="ln-124" href="#ln-124"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">count_rate</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0_int64</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<a id="ln-125" name="ln-125" href="#ln-125"></a>
+<a id="ln-126" name="ln-126" href="#ln-126"></a><span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">is_running</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<a id="ln-127" name="ln-127" href="#ln-127"></a><span class="k">         call </span><span class="nb">system_clock</span><span class="p">(</span><span class="nb">count</span><span class="o">=</span><span class="n">current_count</span><span class="p">)</span>
+<a id="ln-128" name="ln-128" href="#ln-128"></a><span class="w">         </span><span class="n">elapsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">real</span><span class="p">(</span><span class="n">current_count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">start_count</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="p">)</span><span class="o">/</span><span class="kt">real</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">count_rate</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="p">)</span>
+<a id="ln-129" name="ln-129" href="#ln-129"></a><span class="w">      </span><span class="k">else</span>
+<a id="ln-130" name="ln-130" href="#ln-130"></a><span class="k">         </span><span class="n">elapsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">real</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">stop_count</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">start_count</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="p">)</span><span class="o">/</span><span class="kt">real</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">count_rate</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="p">)</span>
+<a id="ln-131" name="ln-131" href="#ln-131"></a><span class="w">      </span><span class="k">end if</span>
+<a id="ln-132" name="ln-132" href="#ln-132"></a><span class="cp">#endif</span>
+<a id="ln-133" name="ln-133" href="#ln-133"></a><span class="w">   </span><span class="k">end function </span><span class="n">timer_get_elapsed_time</span>
+<a id="ln-134" name="ln-134" href="#ln-134"></a>
+<a id="ln-135" name="ln-135" href="#ln-135"></a><span class="k">end module </span><span class="n">pic_timer</span>
 </pre></div>
 
       </section>
@@ -545,7 +559,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-09-13 17:21 +0000             </p>
+ on 2026-09-13 18:10 +0000             </p>
           </div>
         </div>
         <br>

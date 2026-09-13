@@ -1,0 +1,2779 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>pic_tokenizer &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>pic_tokenizer
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.8% of total for modules and submodules.">306 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_tokenizer.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_tokenizer.f90.html'>pic_tokenizer.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">pic_tokenizer</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_tokenizer.html#variable-exponent_markers">EXPONENT_MARKERS</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#variable-signs">SIGNS</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#inters-0"
+         aria-expanded="false" aria-controls="inters-0">
+         <h4 class="card-header bg-primary text-white">Interfaces</h4>
+      </a>
+      <div id="inters-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_tokenizer.html#interface-parse_int">parse_int</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#interface-parse_real">parse_real</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#interface-split">split</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#interface-tokenize">tokenize</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#funcs-0"
+         aria-expanded="false" aria-controls="funcs-0">
+         <h4 class="card-header bg-primary text-white">Functions</h4>
+      </a>
+      <div id="funcs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-split_char_char">split_char_char</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-split_char_string">split_char_string</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-split_string_char">split_string_char</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-split_string_string">split_string_string</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-tokenize_char">tokenize_char</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-tokenize_string">tokenize_string</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#subs-0"
+         aria-expanded="false" aria-controls="subs-0">
+         <h4 class="card-header bg-primary text-white">Subroutines</h4>
+      </a>
+      <div id="subs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-check_exponent">check_exponent</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-parse_int_int32_char">parse_int_int32_char</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-parse_int_int32_string">parse_int_int32_string</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-parse_int_int64_char">parse_int_int64_char</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-parse_int_int64_string">parse_int_int64_string</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-parse_integer_wide">parse_integer_wide</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-parse_real_dp_char">parse_real_dp_char</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-parse_real_dp_string">parse_real_dp_string</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-parse_real_sp_char">parse_real_sp_char</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-parse_real_sp_string">parse_real_sp_string</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-parse_real_wide">parse_real_wide</a>
+            <a class="list-group-item" href="../module/pic_tokenizer.html#proc-skip_sign">skip_sign</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <p>Splitting of character data into tokens and parsing of those tokens into
+numbers with explicit error reporting through <code>error_t</code>.</p>
+<p>The parsing routines never fail silently: every malformed input produces
+an <code>ERROR_PARSE</code> error with a human readable message, and the output
+value is set to zero. They deliberately do <strong>not</strong> use list directed
+internal reads, because those accept input that is almost never what the
+caller meant (<code>"1,2"</code> reads as 1, <code>"3*7"</code> is a repeat count, <code>"nan"</code> and
+<code>"infinity"</code> are accepted, and trailing junk after a separator is
+ignored). Every accepted form is checked against an explicit grammar
+first.</p>
+<h3 id="empty-field-policy-of-split">Empty field policy of <code>split</code></h3>
+<p><code>split</code> keeps empty fields, so the number of returned elements is always
+the number of delimiter occurrences plus one:</p>
+<ul>
+<li><code>split("a,,b", ",")</code> returns three elements, <code>"a"</code>, <code>""</code> and <code>"b"</code></li>
+<li><code>split("", ",")</code> returns one element, the empty string</li>
+<li><code>split(",a", ",")</code> returns <code>""</code> and <code>"a"</code>, <code>split("a,", ",")</code> returns
+  <code>"a"</code> and <code>""</code></li>
+<li><code>split("abc", ",")</code> returns one element, <code>"abc"</code></li>
+</ul>
+<p>This makes <code>join(split(text, delim), delim)</code> reproduce <code>text</code> exactly
+(for fields without trailing blanks) and keeps positional data such as
+CSV records aligned. Use <code>tokenize</code> for the other common policy, where
+runs of separators collapse and empty fields are dropped.</p>
+<p>A zero length delimiter cannot match anything, so <code>split(text, "")</code>
+returns the whole of <code>text</code> as a single element.</p>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='pic_error.html'>pic_error</a></li>
+                  <li class="list-inline-item"><a href='pic_strings.html'>pic_strings</a></li>
+                  <li class="list-inline-item"><a href='pic_string_type.html'>pic_string_type</a></li>
+                  <li class="list-inline-item"><a href='pic_types.html'>pic_types</a></li>
+                  <li class="list-inline-item"><a href='pic_ascii.html'>pic_ascii</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~pic_tokenizer~~UsesGraph Pages: 1 -->
+<svg id="modulepic_tokenizerUsesGraph" width="641pt" height="214pt"
+ viewBox="0.00 0.00 641.00 214.05" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_tokenizer~~UsesGraph" class="graph" transform="scale(0.9 0.9) rotate(0) translate(4 234.76)">
+<title>module~~pic_tokenizer~~UsesGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-234.76 711,-234.76 711,4 -4,4"/>
+<!-- module~pic_tokenizer -->
+<g id="module~~pic_tokenizer~~UsesGraph_node1" class="node">
+<title>module~pic_tokenizer</title>
+<polygon fill="none" stroke="black" points="707,-126 624,-126 624,-102 707,-102 707,-126"/>
+<text text-anchor="middle" x="665.5" y="-111.6" font-family="Helvetica,sans-Serif" font-size="10.50">pic_tokenizer</text>
+</g>
+<!-- module~pic_ascii -->
+<g id="module~~pic_tokenizer~~UsesGraph_node2" class="node">
+<title>module~pic_ascii</title>
+<g id="a_module~~pic_tokenizer~~UsesGraph_node2"><a xlink:href="../module/pic_ascii.html" xlink:title="pic_ascii">
+<polygon fill="#337ab7" stroke="#337ab7" points="320.5,-144 262.5,-144 262.5,-120 320.5,-120 320.5,-144"/>
+<text text-anchor="middle" x="291.5" y="-129.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_ascii</text>
+</a>
+</g>
+</g>
+<!-- module~pic_tokenizer&#45;&gt;module~pic_ascii -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge1" class="edge">
+<title>module~pic_tokenizer&#45;&gt;module~pic_ascii</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M552.5,-134C502.37,-142.78 488.73,-130.03 438,-134"/>
+</g>
+<!-- module~pic_error -->
+<g id="module~~pic_tokenizer~~UsesGraph_node3" class="node">
+<title>module~pic_error</title>
+<g id="a_module~~pic_tokenizer~~UsesGraph_node3"><a xlink:href="../module/pic_error.html" xlink:title="pic_error">
+<polygon fill="#337ab7" stroke="#337ab7" points="467,-186 407,-186 407,-162 467,-162 467,-186"/>
+<text text-anchor="middle" x="437" y="-171.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_error</text>
+</a>
+</g>
+</g>
+<!-- module~pic_tokenizer&#45;&gt;module~pic_error -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge2" class="edge">
+<title>module~pic_tokenizer&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M552.5,-134C525.4,-138.75 496.13,-149.07 473.97,-158.04"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="472.53,-154.85 464.63,-161.91 475.21,-161.31 472.53,-154.85"/>
+</g>
+<!-- module~pic_string_type -->
+<g id="module~~pic_tokenizer~~UsesGraph_node4" class="node">
+<title>module~pic_string_type</title>
+<g id="a_module~~pic_tokenizer~~UsesGraph_node4"><a xlink:href="../module/pic_string_type.html" xlink:title="pic_string_type">
+<polygon fill="#337ab7" stroke="#337ab7" points="483,-106 391,-106 391,-82 483,-82 483,-106"/>
+<text text-anchor="middle" x="437" y="-91.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_string_type</text>
+</a>
+</g>
+</g>
+<!-- module~pic_tokenizer&#45;&gt;module~pic_string_type -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge3" class="edge">
+<title>module~pic_tokenizer&#45;&gt;module~pic_string_type</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M623.78,-121.53C603.05,-125.34 577.44,-129.98 554.5,-134"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M552.5,-134C536.92,-136.73 500.17,-122.47 472.48,-110.23"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="473.67,-106.92 463.11,-106.01 470.79,-113.31 473.67,-106.92"/>
+</g>
+<!-- module~pic_strings -->
+<g id="module~~pic_tokenizer~~UsesGraph_node5" class="node">
+<title>module~pic_strings</title>
+<g id="a_module~~pic_tokenizer~~UsesGraph_node5"><a xlink:href="../module/pic_strings.html" xlink:title="pic_strings">
+<polygon fill="#337ab7" stroke="#337ab7" points="588,-106 519,-106 519,-82 588,-82 588,-106"/>
+<text text-anchor="middle" x="553.5" y="-91.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_strings</text>
+</a>
+</g>
+</g>
+<!-- module~pic_tokenizer&#45;&gt;module~pic_strings -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge4" class="edge">
+<title>module~pic_tokenizer&#45;&gt;module~pic_strings</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M623.85,-106.61C615.5,-105.09 606.67,-103.49 598.21,-101.95"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="598.6,-98.46 588.14,-100.12 597.35,-105.35 598.6,-98.46"/>
+</g>
+<!-- module~pic_types -->
+<g id="module~~pic_tokenizer~~UsesGraph_node6" class="node">
+<title>module~pic_types</title>
+<g id="a_module~~pic_tokenizer~~UsesGraph_node6"><a xlink:href="../module/pic_types.html" xlink:title="pic_types">
+<polygon fill="#337ab7" stroke="#337ab7" points="192,-64 130,-64 130,-40 192,-40 192,-64"/>
+<text text-anchor="middle" x="161" y="-49.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_types</text>
+</a>
+</g>
+</g>
+<!-- module~pic_tokenizer&#45;&gt;module~pic_types -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge5" class="edge">
+<title>module~pic_tokenizer&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M552.5,-134C512.02,-141.09 520.69,-178.62 483,-195 404.96,-228.91 371.58,-245.41 292.5,-214"/>
+</g>
+<!-- module~pic_ascii&#45;&gt;module~pic_types -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge6" class="edge">
+<title>module~pic_ascii&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M262.28,-122.28C251.24,-117.96 238.68,-112.4 228,-106 211.54,-96.13 194.83,-82.42 182.34,-71.28"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="184.54,-68.54 174.79,-64.39 179.82,-73.72 184.54,-68.54"/>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_types -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge8" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#cbff00" stroke-dasharray="5,2" d="M408,-186.11C372.53,-200.72 313.47,-222.33 292.5,-214"/>
+<path fill="none" stroke="#cbff00" stroke-dasharray="5,2" d="M290.5,-214C263.52,-203.28 249.89,-214.07 228,-195 191.12,-162.86 173.55,-105.8 166.32,-74.35"/>
+<polygon fill="#cbff00" stroke="#cbff00" points="169.7,-73.42 164.17,-64.38 162.85,-74.89 169.7,-73.42"/>
+</g>
+<!-- module~pic_global_definitions -->
+<g id="module~~pic_tokenizer~~UsesGraph_node9" class="node">
+<title>module~pic_global_definitions</title>
+<g id="a_module~~pic_tokenizer~~UsesGraph_node9"><a xlink:href="../module/pic_global_definitions.html" xlink:title="pic_global_definitions">
+<polygon fill="#337ab7" stroke="#337ab7" points="355,-186 228,-186 228,-162 355,-162 355,-186"/>
+<text text-anchor="middle" x="291.5" y="-171.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_global_definitions</text>
+</a>
+</g>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_global_definitions -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge7" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_global_definitions</title>
+<path fill="none" stroke="#cbff00" stroke-dasharray="5,2" d="M406.96,-174C394.85,-174 380.19,-174 365.46,-174"/>
+<polygon fill="#cbff00" stroke="#cbff00" points="365.28,-170.5 355.28,-174 365.28,-177.5 365.28,-170.5"/>
+</g>
+<!-- module~pic_string_type&#45;&gt;module~pic_ascii -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge9" class="edge">
+<title>module~pic_string_type&#45;&gt;module~pic_ascii</title>
+<path fill="none" stroke="#00ff66" stroke-dasharray="5,2" d="M390.99,-105.92C371.57,-111.06 349.1,-117.01 330.53,-121.93"/>
+<polygon fill="#00ff66" stroke="#00ff66" points="329.43,-118.6 320.66,-124.54 331.23,-125.37 329.43,-118.6"/>
+</g>
+<!-- module~pic_string_type&#45;&gt;module~pic_types -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge11" class="edge">
+<title>module~pic_string_type&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#00ff66" stroke-dasharray="5,2" d="M390.96,-92.15C348.55,-89.77 283.44,-84.49 228,-73 219.45,-71.23 210.45,-68.77 201.93,-66.16"/>
+<polygon fill="#00ff66" stroke="#00ff66" points="202.8,-62.77 192.21,-63.06 200.67,-69.44 202.8,-62.77"/>
+</g>
+<!-- module~pic_optional_value -->
+<g id="module~~pic_tokenizer~~UsesGraph_node10" class="node">
+<title>module~pic_optional_value</title>
+<g id="a_module~~pic_tokenizer~~UsesGraph_node10"><a xlink:href="../module/pic_optional_value.html" xlink:title="pic_optional_value">
+<polygon fill="#337ab7" stroke="#337ab7" points="347.5,-64 235.5,-64 235.5,-40 347.5,-40 347.5,-64"/>
+<text text-anchor="middle" x="291.5" y="-49.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_optional_value</text>
+</a>
+</g>
+</g>
+<!-- module~pic_string_type&#45;&gt;module~pic_optional_value -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge10" class="edge">
+<title>module~pic_string_type&#45;&gt;module~pic_optional_value</title>
+<path fill="none" stroke="#00ff66" stroke-dasharray="5,2" d="M394.88,-81.96C378.82,-77.26 360.23,-71.82 343.34,-66.88"/>
+<polygon fill="#00ff66" stroke="#00ff66" points="344.21,-63.49 333.63,-64.04 342.24,-70.21 344.21,-63.49"/>
+</g>
+<!-- module~pic_strings&#45;&gt;module~pic_ascii -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge13" class="edge">
+<title>module~pic_strings&#45;&gt;module~pic_ascii</title>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M529.16,-106.16C506.56,-116.96 470.96,-131.42 438,-134"/>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M436,-134C400.38,-136.79 359.64,-135.83 330.7,-134.44"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="330.76,-130.94 320.6,-133.92 330.4,-137.93 330.76,-130.94"/>
+</g>
+<!-- module~pic_strings&#45;&gt;module~pic_string_type -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge15" class="edge">
+<title>module~pic_strings&#45;&gt;module~pic_string_type</title>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M518.77,-94C510.8,-94 502.1,-94 493.45,-94"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="493.38,-90.5 483.38,-94 493.38,-97.5 493.38,-90.5"/>
+</g>
+<!-- module~pic_strings&#45;&gt;module~pic_types -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge16" class="edge">
+<title>module~pic_strings&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M290.5,-12C258.21,-14.46 223.22,-25.98 197.91,-36.03"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="196.31,-32.91 188.38,-39.93 198.96,-39.38 196.31,-32.91"/>
+</g>
+<!-- iso_c_binding -->
+<g id="module~~pic_tokenizer~~UsesGraph_node7" class="node">
+<title>iso_c_binding</title>
+<g id="a_module~~pic_tokenizer~~UsesGraph_node7"><a xlink:href="http://fortranwiki.org/fortran/show/iso_c_binding" xlink:title="iso_c_binding">
+<polygon fill="#337ab7" stroke="#337ab7" points="89,-24 5,-24 5,0 89,0 89,-24"/>
+<text text-anchor="middle" x="47" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_c_binding</text>
+</a>
+</g>
+</g>
+<!-- module~pic_strings&#45;&gt;iso_c_binding -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge12" class="edge">
+<title>module~pic_strings&#45;&gt;iso_c_binding</title>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M541.71,-81.69C523.05,-61.57 482.43,-22.8 438,-12"/>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M436,-12C374.03,3.06 356.09,-7.16 292.5,-12"/>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M290.5,-12C224.66,-17.02 148.47,-15.89 99.33,-14.26"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="99.38,-10.76 89.26,-13.9 99.13,-17.75 99.38,-10.76"/>
+</g>
+<!-- module~pic_strings&#45;&gt;module~pic_optional_value -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge14" class="edge">
+<title>module~pic_strings&#45;&gt;module~pic_optional_value</title>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M436,-12C416.36,-7.23 367.21,-23.19 331.9,-36.35"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="330.46,-33.16 322.35,-39.97 332.94,-39.7 330.46,-33.16"/>
+</g>
+<!-- module~pic_types&#45;&gt;iso_c_binding -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge17" class="edge">
+<title>module~pic_types&#45;&gt;iso_c_binding</title>
+<path fill="none" stroke="#cc00ff" stroke-dasharray="5,2" d="M129.99,-41.28C118.11,-37.04 104.23,-32.08 91.3,-27.47"/>
+<polygon fill="#cc00ff" stroke="#cc00ff" points="92.25,-24.09 81.65,-24.02 89.89,-30.68 92.25,-24.09"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~pic_tokenizer~~UsesGraph_node8" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~pic_tokenizer~~UsesGraph_node8"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-66 0,-66 0,-42 94,-42 94,-66"/>
+<text text-anchor="middle" x="47" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_fortran_env -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge18" class="edge">
+<title>module~pic_types&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#cc00ff" stroke-dasharray="5,2" d="M129.99,-52.54C121.98,-52.68 113.07,-52.84 104.15,-53"/>
+<polygon fill="#cc00ff" stroke="#cc00ff" points="104.06,-49.5 94.13,-53.18 104.19,-56.5 104.06,-49.5"/>
+</g>
+<!-- module~pic_global_definitions&#45;&gt;module~pic_types -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge19" class="edge">
+<title>module~pic_global_definitions&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M243.02,-161.89C237.67,-159.43 232.53,-156.5 228,-153 200.72,-131.91 181.23,-96.17 170.79,-73.35"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="173.98,-71.91 166.76,-64.16 167.57,-74.72 173.98,-71.91"/>
+</g>
+<!-- module~pic_optional_value&#45;&gt;module~pic_types -->
+<g id="module~~pic_tokenizer~~UsesGraph_edge20" class="edge">
+<title>module~pic_optional_value&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#7f00ff" stroke-dasharray="5,2" d="M235.26,-52C224.14,-52 212.65,-52 202.16,-52"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="202.06,-48.5 192.06,-52 202.06,-55.5 202.06,-48.5"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panmodulepic_tokenizerUsesGraph = svgPanZoom('#modulepic_tokenizerUsesGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      
+      <br>
+
+
+        <section>
+          <h2>Variables</h2>
+            <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-exponent_markers"></span>
+              character(len=*),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>EXPONENT_MARKERS</strong></td>
+<td> =</td>
+                <td>&#34;eEdD&#34;</td>
+            <td>
+                <p>Exponent letters accepted by <code>parse_real</code>; <code>q</code>/<code>Q</code> is not accepted</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-signs"></span>
+              character(len=*),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>SIGNS</strong></td>
+<td> =</td>
+                <td>&#34;+-&#34;</td>
+            <td>
+                <p>Characters accepted as a leading sign of a number or of an exponent</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-parse_int"></span>
+      <h3>public        interface <a href='../interface/parse_int.html'>parse_int</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Parse a string into an integer, reporting failures through <code>error_t</code>.</p>
+<p>The accepted grammar is optional surrounding whitespace, an optional <code>+</code>
+or <code>-</code> sign and one or more decimal digits, with nothing else. An empty
+or blank string, a missing digit, any stray character (including trailing
+junk such as <code>"12abc"</code>) and a value too large for the requested kind all
+set <code>ERROR_PARSE</code> and leave <code>value</code> at zero.</p>
+<p>Specific procedures exist for <code>int32</code> and <code>int64</code>, so an argument
+declared <code>integer(default_int)</code> resolves correctly in both the default
+and the <code>USE_INT8</code> build.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure subroutine <a href='../proc/parse_int_int32_char.html'>parse_int_int32_char</a>(str, value, err)  
+
+    </h3>
+    
+  <p>Parse a character string into a 32 bit integer.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~10"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~28"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+<p>Fixed width on purpose: the narrow specific procedure of the
+generic.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~156"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure subroutine <a href='../proc/parse_int_int32_string.html'>parse_int_int32_string</a>(str, value, err)  
+
+    </h3>
+    
+  <p>Parse a <code>string_type</code> into a 32 bit integer.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~11"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~29"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~157"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure subroutine <a href='../proc/parse_int_int64_char.html'>parse_int_int64_char</a>(str, value, err)  
+
+    </h3>
+    
+  <p>Parse a character string into a 64 bit integer.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~8"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~26"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+<p>Fixed width on purpose: this is the widest integer the parser
+accumulates in, and the narrower specific procedure range checks
+against it.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~154"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure subroutine <a href='../proc/parse_int_int64_string.html'>parse_int_int64_string</a>(str, value, err)  
+
+    </h3>
+    
+  <p>Parse a <code>string_type</code> into a 64 bit integer.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~9"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~27"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~155"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-parse_real"></span>
+      <h3>public        interface <a href='../interface/parse_real.html'>parse_real</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Parse a string into a real, reporting failures through <code>error_t</code>.</p>
+<p>The accepted grammar is optional surrounding whitespace, an optional
+sign, a mantissa holding at least one digit and at most one decimal point
+(so both <code>".5"</code> and <code>"5."</code> are accepted, <code>"."</code> is not), and an optional
+exponent introduced by <code>e</code>, <code>E</code>, <code>d</code> or <code>D</code> with an optional sign and at
+least one digit.</p>
+<p>Everything else is rejected, in particular the spellings that a list
+directed read would happily accept: <code>"nan"</code>, <code>"inf"</code>, <code>"infinity"</code>,
+repeat counts such as <code>"3*7"</code>, comma separated values such as <code>"1,2"</code>,
+and any trailing junk. Values that overflow the requested kind are
+rejected as well instead of becoming infinity.</p>
+<p>Specific procedures exist for <code>sp</code> and <code>dp</code>.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/parse_real_sp_char.html'>parse_real_sp_char</a>(str, value, err)  
+
+    </h3>
+    
+  <p>Parse a character string into a single precision real.</p>
+<p>The conversion is done in double precision and then range checked, so
+a value that is finite in <code>dp</code> but too large for <code>sp</code> is reported as
+an error instead of becoming infinity.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~15"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~33"></span>
+              real(kind=sp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~161"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/parse_real_sp_string.html'>parse_real_sp_string</a>(str, value, err)  
+
+    </h3>
+    
+  <p>Parse a <code>string_type</code> into a single precision real.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~16"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~34"></span>
+              real(kind=sp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~162"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/parse_real_dp_char.html'>parse_real_dp_char</a>(str, value, err)  
+
+    </h3>
+    
+  <p>Parse a character string into a double precision real.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~13"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~31"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~159"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/parse_real_dp_string.html'>parse_real_dp_string</a>(str, value, err)  
+
+    </h3>
+    
+  <p>Parse a <code>string_type</code> into a double precision real.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~14"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~32"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~160"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-split"></span>
+      <h3>public        interface <a href='../interface/split.html'>split</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Split a string on every occurrence of a delimiter, keeping empty fields.</p>
+<p>The result always holds one more element than there are delimiter
+occurrences, so an empty input yields one empty element. See the module
+documentation for the full policy.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure function <a href='../proc/split_char_char.html'>split_char_char</a>(string, delimiter) result(parts)  
+
+    </h3>
+    
+  <p>Split a character string on a character delimiter.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~96"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-delimiter"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>delimiter</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/string_type.html'>string_type</a>), allocatable, (:)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure function <a href='../proc/split_char_string.html'>split_char_string</a>(string, delimiter) result(parts)  
+
+    </h3>
+    
+  <p>Split a character string on a <code>string_type</code> delimiter.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~97"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-delimiter~2"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>delimiter</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/string_type.html'>string_type</a>), allocatable, (:)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure function <a href='../proc/split_string_char.html'>split_string_char</a>(string, delimiter) result(parts)  
+
+    </h3>
+    
+  <p>Split a <code>string_type</code> on a character delimiter.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~98"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-delimiter~3"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>delimiter</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/string_type.html'>string_type</a>), allocatable, (:)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure function <a href='../proc/split_string_string.html'>split_string_string</a>(string, delimiter) result(parts)  
+
+    </h3>
+    
+  <p>Split a <code>string_type</code> on a <code>string_type</code> delimiter.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~99"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-delimiter~4"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>delimiter</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/string_type.html'>string_type</a>), allocatable, (:)</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-tokenize"></span>
+      <h3>public        interface <a href='../interface/tokenize.html'>tokenize</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Split a string into whitespace separated words.</p>
+<p>Runs of whitespace are treated as a single separator and empty fields are
+discarded, so a string that is empty or entirely whitespace yields a zero
+sized result. Whitespace is the set defined by <code>pic_ascii</code>, that is space,
+horizontal tab, vertical tab, carriage return, line feed and form feed.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private pure function <a href='../proc/tokenize_char.html'>tokenize_char</a>(string) result(tokens)  
+
+    </h3>
+    
+  <p>Split a character string into whitespace separated words.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~100"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/string_type.html'>string_type</a>), allocatable, (:)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private pure function <a href='../proc/tokenize_string.html'>tokenize_string</a>(string) result(tokens)  
+
+    </h3>
+    
+  <p>Split a <code>string_type</code> into whitespace separated words.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~101"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/string_type.html'>string_type</a>), allocatable, (:)</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+        </section>
+        <br>
+
+
+
+        <section>
+          <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-split_char_char"></span> <h3>private pure function <a href='../proc/split_char_char.html'>split_char_char</a>(string, delimiter) result(parts)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Split a character string on a character delimiter.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~96"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-delimiter"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>delimiter</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/string_type.html'>string_type</a>), allocatable, (:)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-split_char_string"></span> <h3>private pure function <a href='../proc/split_char_string.html'>split_char_string</a>(string, delimiter) result(parts)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Split a character string on a <code>string_type</code> delimiter.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~97"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-delimiter~2"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>delimiter</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/string_type.html'>string_type</a>), allocatable, (:)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-split_string_char"></span> <h3>private pure function <a href='../proc/split_string_char.html'>split_string_char</a>(string, delimiter) result(parts)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Split a <code>string_type</code> on a character delimiter.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~98"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-delimiter~3"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>delimiter</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/string_type.html'>string_type</a>), allocatable, (:)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-split_string_string"></span> <h3>private pure function <a href='../proc/split_string_string.html'>split_string_string</a>(string, delimiter) result(parts)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Split a <code>string_type</code> on a <code>string_type</code> delimiter.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~99"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-delimiter~4"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>delimiter</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/string_type.html'>string_type</a>), allocatable, (:)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-tokenize_char"></span> <h3>private pure function <a href='../proc/tokenize_char.html'>tokenize_char</a>(string) result(tokens)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Split a character string into whitespace separated words.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~100"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/string_type.html'>string_type</a>), allocatable, (:)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-tokenize_string"></span> <h3>private pure function <a href='../proc/tokenize_string.html'>tokenize_string</a>(string) result(tokens)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Split a <code>string_type</code> into whitespace separated words.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-string~101"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>string</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>type(<a href='../type/string_type.html'>string_type</a>), allocatable, (:)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Subroutines</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-check_exponent"></span> <h3>private pure subroutine <a href='../proc/check_exponent.html'>check_exponent</a>(text, pos, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Validate the exponent part of a real, starting at <code>pos</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-text~4"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>text</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pos~19"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>pos</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~164"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_int_int32_char"></span> <h3>private pure subroutine <a href='../proc/parse_int_int32_char.html'>parse_int_int32_char</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Parse a character string into a 32 bit integer.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~10"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~28"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+<p>Fixed width on purpose: the narrow specific procedure of the
+generic.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~156"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_int_int32_string"></span> <h3>private pure subroutine <a href='../proc/parse_int_int32_string.html'>parse_int_int32_string</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Parse a <code>string_type</code> into a 32 bit integer.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~11"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~29"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~157"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_int_int64_char"></span> <h3>private pure subroutine <a href='../proc/parse_int_int64_char.html'>parse_int_int64_char</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Parse a character string into a 64 bit integer.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~8"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~26"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+<p>Fixed width on purpose: this is the widest integer the parser
+accumulates in, and the narrower specific procedure range checks
+against it.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~154"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_int_int64_string"></span> <h3>private pure subroutine <a href='../proc/parse_int_int64_string.html'>parse_int_int64_string</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Parse a <code>string_type</code> into a 64 bit integer.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~9"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~27"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~155"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_integer_wide"></span> <h3>private pure subroutine <a href='../proc/parse_integer_wide.html'>parse_integer_wide</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Core integer parser, accumulating in <code>int64</code>.</p><a href="../proc/parse_integer_wide.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~12"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~30"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~158"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_real_dp_char"></span> <h3>private  subroutine <a href='../proc/parse_real_dp_char.html'>parse_real_dp_char</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Parse a character string into a double precision real.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~13"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~31"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~159"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_real_dp_string"></span> <h3>private  subroutine <a href='../proc/parse_real_dp_string.html'>parse_real_dp_string</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Parse a <code>string_type</code> into a double precision real.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~14"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~32"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~160"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_real_sp_char"></span> <h3>private  subroutine <a href='../proc/parse_real_sp_char.html'>parse_real_sp_char</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Parse a character string into a single precision real.</p><a href="../proc/parse_real_sp_char.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~15"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~33"></span>
+              real(kind=sp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~161"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_real_sp_string"></span> <h3>private  subroutine <a href='../proc/parse_real_sp_string.html'>parse_real_sp_string</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Parse a <code>string_type</code> into a single precision real.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~16"></span>
+              type(<a href='../type/string_type.html'>string_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~34"></span>
+              real(kind=sp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~162"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-parse_real_wide"></span> <h3>private  subroutine <a href='../proc/parse_real_wide.html'>parse_real_wide</a>(str, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Core real parser.</p><a href="../proc/parse_real_wide.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~17"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~35"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~163"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-skip_sign"></span> <h3>private pure subroutine <a href='../proc/skip_sign.html'>skip_sign</a>(text, pos)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Advance <code>pos</code> past a leading <code>+</code> or <code>-</code> if one is present.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-text~5"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>text</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pos~20"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>pos</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

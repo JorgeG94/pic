@@ -1,0 +1,1394 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>soa_resize_field &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>soa_resize_field
+      <small>Interface</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title="<p> 0.1% of total for procedures.</p>Including implementation: 122 statements,  1.0% of total for procedures.">7 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_soa.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_soa.f90.html'>pic_soa.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_soa.html'>pic_soa</a></li>
+            <li class="breadcrumb-item active" aria-current="page">soa_resize_field</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#modprocs-0"
+         aria-expanded="false" aria-controls="modprocs-0">
+         <h4 class="card-header bg-primary text-white">Module Procedures</h4>
+      </a>
+      <div id="modprocs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../interface/soa_resize_field.html#moduleprocedure-soa_resize_int32_field">soa_resize_int32_field</a>
+            <a class="list-group-item" href="../interface/soa_resize_field.html#moduleprocedure-soa_resize_int64_field">soa_resize_int64_field</a>
+            <a class="list-group-item" href="../interface/soa_resize_field.html#moduleprocedure-soa_resize_real_sp_field">soa_resize_real_sp_field</a>
+            <a class="list-group-item" href="../interface/soa_resize_field.html#moduleprocedure-soa_resize_real_dp_field">soa_resize_real_dp_field</a>
+            <a class="list-group-item" href="../interface/soa_resize_field.html#moduleprocedure-soa_resize_logical_field">soa_resize_logical_field</a>
+        </div>
+      </div>
+    </div>
+
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <h2>public interface soa_resize_field</h2>
+      <p>Give one field array a new allocated length, preserving a prefix.</p>
+<p>Usage: <code>call soa_resize_field(values, new_capacity, keep, fill_to, err)</code></p>
+<p><code>values(1:keep)</code> survives the call. Indices <code>keep+1 .. fill_to</code> are set
+to the zero value of the type; indices above <code>fill_to</code> are left
+unspecified. When <code>values</code> already has exactly <code>new_capacity</code> elements
+no reallocation happens and only the fill is performed, which is what
+makes a shrink followed by a grow free.</p>
+<p>Fails with <code>ERROR_VALIDATION</code> on inconsistent arguments and with
+<code>ERROR_ALLOC</code> if the new array cannot be allocated.</p>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Calls</h3>
+          </div>
+          <div class="card-body">
+            <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: interface~~soa_resize_field~~CallsGraph Pages: 1 -->
+<svg id="interfacesoa_resize_fieldCallsGraph" width="641pt" height="490pt"
+ viewBox="0.00 0.00 641.00 490.08" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="interface~~soa_resize_field~~CallsGraph" class="graph" transform="scale(0.85 0.85) rotate(0) translate(4 574)">
+<title>interface~~soa_resize_field~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-574 752,-574 752,4 -4,4"/>
+<!-- interface~soa_resize_field -->
+<g id="interface~~soa_resize_field~~CallsGraph_node1" class="node">
+<title>interface~soa_resize_field</title>
+<polygon fill="none" stroke="black" points="96,-297 0,-297 0,-273 96,-273 96,-297"/>
+<text text-anchor="middle" x="48" y="-282.6" font-family="Helvetica,sans-Serif" font-size="10.50">soa_resize_field</text>
+</g>
+<!-- proc~soa_resize_int32_field -->
+<g id="interface~~soa_resize_field~~CallsGraph_node2" class="node">
+<title>proc~soa_resize_int32_field</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node2"><a xlink:href="../proc/soa_resize_int32_field.html" xlink:title="soa_resize_int32_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="266,-339 138,-339 138,-315 266,-315 266,-339"/>
+<text text-anchor="middle" x="202" y="-324.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_resize_int32_field</text>
+</a>
+</g>
+</g>
+<!-- interface~soa_resize_field&#45;&gt;proc~soa_resize_int32_field -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge1" class="edge">
+<title>interface~soa_resize_field&#45;&gt;proc~soa_resize_int32_field</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M92.56,-297.04C109.73,-301.78 129.62,-307.28 147.65,-312.26"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="146.87,-315.67 157.44,-314.96 148.73,-308.93 146.87,-315.67"/>
+</g>
+<!-- proc~soa_resize_int64_field -->
+<g id="interface~~soa_resize_field~~CallsGraph_node3" class="node">
+<title>proc~soa_resize_int64_field</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node3"><a xlink:href="../proc/soa_resize_int64_field.html" xlink:title="soa_resize_int64_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="266,-297 138,-297 138,-273 266,-273 266,-297"/>
+<text text-anchor="middle" x="202" y="-282.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_resize_int64_field</text>
+</a>
+</g>
+</g>
+<!-- interface~soa_resize_field&#45;&gt;proc~soa_resize_int64_field -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge2" class="edge">
+<title>interface~soa_resize_field&#45;&gt;proc~soa_resize_int64_field</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M96.26,-285C106.23,-285 116.98,-285 127.66,-285"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="127.84,-288.5 137.84,-285 127.84,-281.5 127.84,-288.5"/>
+</g>
+<!-- proc~soa_resize_logical_field -->
+<g id="interface~~soa_resize_field~~CallsGraph_node4" class="node">
+<title>proc~soa_resize_logical_field</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node4"><a xlink:href="../proc/soa_resize_logical_field.html" xlink:title="soa_resize_logical_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="270,-255 134,-255 134,-231 270,-231 270,-255"/>
+<text text-anchor="middle" x="202" y="-240.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_resize_logical_field</text>
+</a>
+</g>
+</g>
+<!-- interface~soa_resize_field&#45;&gt;proc~soa_resize_logical_field -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge3" class="edge">
+<title>interface~soa_resize_field&#45;&gt;proc~soa_resize_logical_field</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M92.56,-272.96C109.73,-268.22 129.62,-262.72 147.65,-257.74"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="148.73,-261.07 157.44,-255.04 146.87,-254.33 148.73,-261.07"/>
+</g>
+<!-- proc~soa_resize_real_dp_field -->
+<g id="interface~~soa_resize_field~~CallsGraph_node5" class="node">
+<title>proc~soa_resize_real_dp_field</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node5"><a xlink:href="../proc/soa_resize_real_dp_field.html" xlink:title="soa_resize_real_dp_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="272,-213 132,-213 132,-189 272,-189 272,-213"/>
+<text text-anchor="middle" x="202" y="-198.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_resize_real_dp_field</text>
+</a>
+</g>
+</g>
+<!-- interface~soa_resize_field&#45;&gt;proc~soa_resize_real_dp_field -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge4" class="edge">
+<title>interface~soa_resize_field&#45;&gt;proc~soa_resize_real_dp_field</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M61.81,-272.94C77.32,-258.91 104.77,-235.91 132,-222 135.76,-220.08 139.73,-218.3 143.79,-216.65"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="145.22,-219.85 153.36,-213.07 142.77,-213.3 145.22,-219.85"/>
+</g>
+<!-- proc~soa_resize_real_sp_field -->
+<g id="interface~~soa_resize_field~~CallsGraph_node6" class="node">
+<title>proc~soa_resize_real_sp_field</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node6"><a xlink:href="../proc/soa_resize_real_sp_field.html" xlink:title="soa_resize_real_sp_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="271.5,-381 132.5,-381 132.5,-357 271.5,-357 271.5,-381"/>
+<text text-anchor="middle" x="202" y="-366.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_resize_real_sp_field</text>
+</a>
+</g>
+</g>
+<!-- interface~soa_resize_field&#45;&gt;proc~soa_resize_real_sp_field -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge5" class="edge">
+<title>interface~soa_resize_field&#45;&gt;proc~soa_resize_real_sp_field</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M61.81,-297.06C77.32,-311.09 104.77,-334.09 132,-348 135.76,-349.92 139.73,-351.7 143.79,-353.35"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="142.77,-356.7 153.36,-356.93 145.22,-350.15 142.77,-356.7"/>
+</g>
+<!-- proc~error_has_error -->
+<g id="interface~~soa_resize_field~~CallsGraph_node7" class="node">
+<title>proc~error_has_error</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node7"><a xlink:href="../proc/error_has_error.html" xlink:title="error_t%error_has_error">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="447,-339 308,-339 308,-315 447,-315 447,-339"/>
+<text text-anchor="middle" x="377.5" y="-324.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_has_error</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_resize_int32_field&#45;&gt;proc~error_has_error -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge6" class="edge">
+<title>proc~soa_resize_int32_field&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#ff0000" d="M266.13,-327C276.41,-327 287.17,-327 297.76,-327"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="297.85,-330.5 307.85,-327 297.85,-323.5 297.85,-330.5"/>
+</g>
+<!-- proc~soa_check_alloc -->
+<g id="interface~~soa_resize_field~~CallsGraph_node8" class="node">
+<title>proc~soa_check_alloc</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node8"><a xlink:href="../proc/soa_check_alloc.html" xlink:title="soa_check_alloc">
+<polygon fill="#d9534f" stroke="#d9534f" points="427,-255 328,-255 328,-231 427,-231 427,-255"/>
+<text text-anchor="middle" x="377.5" y="-240.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_check_alloc</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_resize_int32_field&#45;&gt;proc~soa_check_alloc -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge7" class="edge">
+<title>proc~soa_resize_int32_field&#45;&gt;proc~soa_check_alloc</title>
+<path fill="none" stroke="#ff0000" d="M254.59,-314.89C260.7,-312.43 266.65,-309.49 272,-306 292.58,-292.55 287.43,-277.47 308,-264 311.3,-261.84 314.83,-259.89 318.49,-258.14"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="319.97,-261.31 327.79,-254.16 317.22,-254.88 319.97,-261.31"/>
+</g>
+<!-- proc~soa_check_resize_args -->
+<g id="interface~~soa_resize_field~~CallsGraph_node9" class="node">
+<title>proc~soa_check_resize_args</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node9"><a xlink:href="../proc/soa_check_resize_args.html" xlink:title="soa_check_resize_args">
+<polygon fill="#d9534f" stroke="#d9534f" points="444,-297 311,-297 311,-273 444,-273 444,-297"/>
+<text text-anchor="middle" x="377.5" y="-282.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_check_resize_args</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_resize_int32_field&#45;&gt;proc~soa_check_resize_args -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge8" class="edge">
+<title>proc~soa_resize_int32_field&#45;&gt;proc~soa_check_resize_args</title>
+<path fill="none" stroke="#ff0000" d="M252.72,-314.96C272.77,-310.11 296.08,-304.47 317.02,-299.4"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="317.88,-302.79 326.77,-297.04 316.23,-295.99 317.88,-302.79"/>
+</g>
+<!-- proc~soa_resize_int64_field&#45;&gt;proc~error_has_error -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge9" class="edge">
+<title>proc~soa_resize_int64_field&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#cbff00" d="M252.72,-297.04C272.77,-301.89 296.08,-307.53 317.02,-312.6"/>
+<polygon fill="#cbff00" stroke="#cbff00" points="316.23,-316.01 326.77,-314.96 317.88,-309.21 316.23,-316.01"/>
+</g>
+<!-- proc~soa_resize_int64_field&#45;&gt;proc~soa_check_alloc -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge10" class="edge">
+<title>proc~soa_resize_int64_field&#45;&gt;proc~soa_check_alloc</title>
+<path fill="none" stroke="#cbff00" d="M252.72,-272.96C273.12,-268.03 296.88,-262.27 318.1,-257.14"/>
+<polygon fill="#cbff00" stroke="#cbff00" points="319.08,-260.5 327.97,-254.75 317.43,-253.7 319.08,-260.5"/>
+</g>
+<!-- proc~soa_resize_int64_field&#45;&gt;proc~soa_check_resize_args -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge11" class="edge">
+<title>proc~soa_resize_int64_field&#45;&gt;proc~soa_check_resize_args</title>
+<path fill="none" stroke="#cbff00" d="M266.13,-285C277.37,-285 289.18,-285 300.73,-285"/>
+<polygon fill="#cbff00" stroke="#cbff00" points="300.79,-288.5 310.79,-285 300.79,-281.5 300.79,-288.5"/>
+</g>
+<!-- proc~soa_resize_logical_field&#45;&gt;proc~error_has_error -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge12" class="edge">
+<title>proc~soa_resize_logical_field&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#00ff66" d="M254.59,-255.11C260.7,-257.57 266.65,-260.51 272,-264 292.58,-277.45 287.43,-292.53 308,-306 310.62,-307.72 313.39,-309.3 316.25,-310.76"/>
+<polygon fill="#00ff66" stroke="#00ff66" points="315.08,-314.07 325.64,-315 317.97,-307.69 315.08,-314.07"/>
+</g>
+<!-- proc~soa_resize_logical_field&#45;&gt;proc~soa_check_alloc -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge13" class="edge">
+<title>proc~soa_resize_logical_field&#45;&gt;proc~soa_check_alloc</title>
+<path fill="none" stroke="#00ff66" d="M270.08,-243C285.73,-243 302.28,-243 317.55,-243"/>
+<polygon fill="#00ff66" stroke="#00ff66" points="317.89,-246.5 327.89,-243 317.89,-239.5 317.89,-246.5"/>
+</g>
+<!-- proc~soa_resize_logical_field&#45;&gt;proc~soa_check_resize_args -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge14" class="edge">
+<title>proc~soa_resize_logical_field&#45;&gt;proc~soa_check_resize_args</title>
+<path fill="none" stroke="#00ff66" d="M252.72,-255.04C272.77,-259.89 296.08,-265.53 317.02,-270.6"/>
+<polygon fill="#00ff66" stroke="#00ff66" points="316.23,-274.01 326.77,-272.96 317.88,-267.21 316.23,-274.01"/>
+</g>
+<!-- proc~soa_resize_real_dp_field&#45;&gt;proc~error_has_error -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge15" class="edge">
+<title>proc~soa_resize_real_dp_field&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#0066ff" d="M258.83,-213.13C263.59,-215.57 268.08,-218.49 272,-222 302.25,-249.11 277.78,-278.86 308,-306 309.34,-307.2 310.74,-308.33 312.2,-309.4"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="310.72,-312.6 321.08,-314.83 314.37,-306.62 310.72,-312.6"/>
+</g>
+<!-- proc~soa_resize_real_dp_field&#45;&gt;proc~soa_check_alloc -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge16" class="edge">
+<title>proc~soa_resize_real_dp_field&#45;&gt;proc~soa_check_alloc</title>
+<path fill="none" stroke="#0066ff" d="M252.72,-213.04C273.12,-217.97 296.88,-223.73 318.1,-228.86"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="317.43,-232.3 327.97,-231.25 319.08,-225.5 317.43,-232.3"/>
+</g>
+<!-- proc~soa_resize_real_dp_field&#45;&gt;proc~soa_check_resize_args -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge17" class="edge">
+<title>proc~soa_resize_real_dp_field&#45;&gt;proc~soa_check_resize_args</title>
+<path fill="none" stroke="#0066ff" d="M254.59,-213.11C260.7,-215.57 266.65,-218.51 272,-222 292.58,-235.45 287.43,-250.53 308,-264 310.62,-265.72 313.39,-267.3 316.25,-268.76"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="315.08,-272.07 325.64,-273 317.97,-265.69 315.08,-272.07"/>
+</g>
+<!-- proc~soa_resize_real_sp_field&#45;&gt;proc~error_has_error -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge18" class="edge">
+<title>proc~soa_resize_real_sp_field&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#cc00ff" d="M252.72,-356.96C272.77,-352.11 296.08,-346.47 317.02,-341.4"/>
+<polygon fill="#cc00ff" stroke="#cc00ff" points="317.88,-344.79 326.77,-339.04 316.23,-337.99 317.88,-344.79"/>
+</g>
+<!-- proc~soa_resize_real_sp_field&#45;&gt;proc~soa_check_alloc -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge19" class="edge">
+<title>proc~soa_resize_real_sp_field&#45;&gt;proc~soa_check_alloc</title>
+<path fill="none" stroke="#cc00ff" d="M258.83,-356.87C263.59,-354.43 268.08,-351.51 272,-348 302.25,-320.89 277.78,-291.14 308,-264 311.23,-261.1 314.85,-258.6 318.69,-256.45"/>
+<polygon fill="#cc00ff" stroke="#cc00ff" points="320.47,-259.48 327.99,-252.02 317.46,-253.16 320.47,-259.48"/>
+</g>
+<!-- proc~soa_resize_real_sp_field&#45;&gt;proc~soa_check_resize_args -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge20" class="edge">
+<title>proc~soa_resize_real_sp_field&#45;&gt;proc~soa_check_resize_args</title>
+<path fill="none" stroke="#cc00ff" d="M254.59,-356.89C260.7,-354.43 266.65,-351.49 272,-348 292.58,-334.55 287.43,-319.47 308,-306 310.62,-304.28 313.39,-302.7 316.25,-301.24"/>
+<polygon fill="#cc00ff" stroke="#cc00ff" points="317.97,-304.31 325.64,-297 315.08,-297.93 317.97,-304.31"/>
+</g>
+<!-- interface~to_char -->
+<g id="interface~~soa_resize_field~~CallsGraph_node10" class="node">
+<title>interface~to_char</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node10"><a xlink:href="../interface/to_char.html" xlink:title="to_char">
+<polygon fill="#a7506f" stroke="#a7506f" points="562.5,-297 508.5,-297 508.5,-273 562.5,-273 562.5,-297"/>
+<text text-anchor="middle" x="535.5" y="-282.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_check_alloc&#45;&gt;interface~to_char -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge21" class="edge">
+<title>proc~soa_check_alloc&#45;&gt;interface~to_char</title>
+<path fill="none" stroke="#00ff00" d="M423.2,-255.04C447.09,-261.47 476.12,-269.28 498.53,-275.32"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="497.76,-278.73 508.33,-277.95 499.58,-271.97 497.76,-278.73"/>
+</g>
+<!-- proc~error_set -->
+<g id="interface~~soa_resize_field~~CallsGraph_node11" class="node">
+<title>proc~error_set</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node11"><a xlink:href="../proc/error_set.html" xlink:title="error_t%error_set">
+<polygon fill="#d9534f" stroke="#d9534f" points="588,-255 483,-255 483,-231 588,-231 588,-255"/>
+<text text-anchor="middle" x="535.5" y="-240.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_set</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_check_alloc&#45;&gt;proc~error_set -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge22" class="edge">
+<title>proc~soa_check_alloc&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#00ff00" d="M427,-243C441.39,-243 457.35,-243 472.48,-243"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="472.78,-246.5 482.78,-243 472.78,-239.5 472.78,-246.5"/>
+</g>
+<!-- proc~soa_check_resize_args&#45;&gt;interface~to_char -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge23" class="edge">
+<title>proc~soa_check_resize_args&#45;&gt;interface~to_char</title>
+<path fill="none" stroke="#0000ff" d="M444.21,-285C462.65,-285 482.03,-285 498.09,-285"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="498.12,-288.5 508.12,-285 498.12,-281.5 498.12,-288.5"/>
+</g>
+<!-- proc~soa_check_resize_args&#45;&gt;proc~error_set -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge24" class="edge">
+<title>proc~soa_check_resize_args&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#0000ff" d="M423.2,-272.96C440.91,-268.2 461.43,-262.67 480,-257.67"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="481.04,-261.02 489.79,-255.04 479.22,-254.26 481.04,-261.02"/>
+</g>
+<!-- proc~to_char_char -->
+<g id="interface~~soa_resize_field~~CallsGraph_node12" class="node">
+<title>proc~to_char_char</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node12"><a xlink:href="../proc/to_char_char.html" xlink:title="to_char_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="727,-570 645,-570 645,-546 727,-546 727,-570"/>
+<text text-anchor="middle" x="686" y="-555.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_char</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_char -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge25" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M537.11,-297.19C539.77,-337.34 553.66,-466.85 624,-537 627.44,-540.43 631.46,-543.3 635.77,-545.7"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="634.39,-548.92 644.93,-550 637.36,-542.58 634.39,-548.92"/>
+</g>
+<!-- proc~to_char_dp -->
+<g id="interface~~soa_resize_field~~CallsGraph_node13" class="node">
+<title>proc~to_char_dp</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node13"><a xlink:href="../proc/to_char_dp.html" xlink:title="to_char_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="721.5,-528 650.5,-528 650.5,-504 721.5,-504 721.5,-528"/>
+<text text-anchor="middle" x="686" y="-513.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_dp -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge26" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M538.07,-297.15C543.29,-332.79 563.38,-438.1 624,-495 628.77,-499.48 634.54,-503 640.6,-505.78"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="639.68,-509.18 650.27,-509.56 642.23,-502.66 639.68,-509.18"/>
+</g>
+<!-- proc~to_char_int32 -->
+<g id="interface~~soa_resize_field~~CallsGraph_node14" class="node">
+<title>proc~to_char_int32</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node14"><a xlink:href="../proc/to_char_int32.html" xlink:title="to_char_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="728.5,-486 643.5,-486 643.5,-462 728.5,-462 728.5,-486"/>
+<text text-anchor="middle" x="686" y="-471.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_int32 -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge27" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_int32</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M539.45,-297.11C547.54,-327.74 572.92,-409 624,-453 627.06,-455.64 630.47,-457.95 634.08,-459.98"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="632.8,-463.25 643.33,-464.44 635.84,-456.94 632.8,-463.25"/>
+</g>
+<!-- proc~to_char_int64 -->
+<g id="interface~~soa_resize_field~~CallsGraph_node15" class="node">
+<title>proc~to_char_int64</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node15"><a xlink:href="../proc/to_char_int64.html" xlink:title="to_char_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="728.5,-444 643.5,-444 643.5,-420 728.5,-420 728.5,-444"/>
+<text text-anchor="middle" x="686" y="-429.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_int64 -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge28" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_int64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M541.81,-297.33C553.2,-322.38 582.37,-379.51 624,-411 627.18,-413.4 630.64,-415.54 634.27,-417.45"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="632.95,-420.69 643.5,-421.71 635.89,-414.34 632.95,-420.69"/>
+</g>
+<!-- proc~to_char_logical -->
+<g id="interface~~soa_resize_field~~CallsGraph_node16" class="node">
+<title>proc~to_char_logical</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node16"><a xlink:href="../proc/to_char_logical.html" xlink:title="to_char_logical">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="732.5,-402 639.5,-402 639.5,-378 732.5,-378 732.5,-402"/>
+<text text-anchor="middle" x="686" y="-387.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_logical</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_logical -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge29" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_logical</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M546.25,-297.29C561.2,-315.37 591.47,-349.13 624,-369 626.82,-370.72 629.8,-372.33 632.87,-373.82"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="631.68,-377.12 642.25,-377.95 634.51,-370.72 631.68,-377.12"/>
+</g>
+<!-- proc~to_char_matrix_dp -->
+<g id="interface~~soa_resize_field~~CallsGraph_node17" class="node">
+<title>proc~to_char_matrix_dp</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node17"><a xlink:href="../proc/to_char_matrix_dp.html" xlink:title="to_char_matrix_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="741.5,-360 630.5,-360 630.5,-336 741.5,-336 741.5,-360"/>
+<text text-anchor="middle" x="686" y="-345.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_dp -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge30" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M559.93,-297.16C577.36,-305.98 601.87,-317.91 624,-327 628.49,-328.84 633.21,-330.66 637.95,-332.42"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="637.05,-335.82 647.65,-335.91 639.42,-329.23 637.05,-335.82"/>
+</g>
+<!-- proc~to_char_matrix_int32 -->
+<g id="interface~~soa_resize_field~~CallsGraph_node18" class="node">
+<title>proc~to_char_matrix_int32</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node18"><a xlink:href="../proc/to_char_matrix_int32.html" xlink:title="to_char_matrix_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="748,-318 624,-318 624,-294 748,-294 748,-318"/>
+<text text-anchor="middle" x="686" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_int32 -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge31" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_int32</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M562.71,-288.71C577.04,-290.73 595.56,-293.35 613.82,-295.93"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="613.53,-299.43 623.92,-297.36 614.51,-292.5 613.53,-299.43"/>
+</g>
+<!-- proc~to_char_matrix_int64 -->
+<g id="interface~~soa_resize_field~~CallsGraph_node19" class="node">
+<title>proc~to_char_matrix_int64</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node19"><a xlink:href="../proc/to_char_matrix_int64.html" xlink:title="to_char_matrix_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="748,-276 624,-276 624,-252 748,-252 748,-276"/>
+<text text-anchor="middle" x="686" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_int64 -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge32" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_int64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M562.71,-281.29C577.04,-279.27 595.56,-276.65 613.82,-274.07"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="614.51,-277.5 623.92,-272.64 613.53,-270.57 614.51,-277.5"/>
+</g>
+<!-- proc~to_char_matrix_sp -->
+<g id="interface~~soa_resize_field~~CallsGraph_node20" class="node">
+<title>proc~to_char_matrix_sp</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node20"><a xlink:href="../proc/to_char_matrix_sp.html" xlink:title="to_char_matrix_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="740.5,-234 631.5,-234 631.5,-210 740.5,-210 740.5,-234"/>
+<text text-anchor="middle" x="686" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_sp -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge33" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_sp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M562.75,-275.13C570.94,-271.82 579.94,-267.97 588,-264 604.62,-255.82 607.16,-250.72 624,-243 628.06,-241.14 632.34,-239.35 636.66,-237.65"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="638.02,-240.88 646.15,-234.09 635.56,-234.33 638.02,-240.88"/>
+</g>
+<!-- proc~to_char_sp -->
+<g id="interface~~soa_resize_field~~CallsGraph_node21" class="node">
+<title>proc~to_char_sp</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node21"><a xlink:href="../proc/to_char_sp.html" xlink:title="to_char_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="721,-192 651,-192 651,-168 721,-168 721,-192"/>
+<text text-anchor="middle" x="686" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_sp -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge34" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_sp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M562.74,-278.1C571.48,-274.87 580.81,-270.3 588,-264 612.26,-242.75 599.16,-221.57 624,-201 629.04,-196.83 634.95,-193.47 641.08,-190.76"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="642.71,-193.89 650.79,-187.03 640.2,-187.35 642.71,-193.89"/>
+</g>
+<!-- proc~to_char_vector_dp -->
+<g id="interface~~soa_resize_field~~CallsGraph_node22" class="node">
+<title>proc~to_char_vector_dp</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node22"><a xlink:href="../proc/to_char_vector_dp.html" xlink:title="to_char_vector_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="741,-150 631,-150 631,-126 741,-126 741,-150"/>
+<text text-anchor="middle" x="686" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_dp -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge35" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M562.65,-279.12C571.69,-275.95 581.24,-271.16 588,-264 621.88,-228.14 589.14,-193.91 624,-159 625.22,-157.77 626.52,-156.62 627.88,-155.53"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="629.83,-158.44 636.25,-150.01 625.98,-152.6 629.83,-158.44"/>
+</g>
+<!-- proc~to_char_vector_int32 -->
+<g id="interface~~soa_resize_field~~CallsGraph_node23" class="node">
+<title>proc~to_char_vector_int32</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node23"><a xlink:href="../proc/to_char_vector_int32.html" xlink:title="to_char_vector_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="748,-108 624,-108 624,-84 748,-84 748,-108"/>
+<text text-anchor="middle" x="686" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_int32 -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge36" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_int32</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M562.74,-279.53C571.9,-276.4 581.5,-271.53 588,-264 631.94,-213.07 578.66,-166.69 624,-117 624.91,-116 625.88,-115.05 626.88,-114.14"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="629.27,-116.73 635.33,-108.03 625.17,-111.06 629.27,-116.73"/>
+</g>
+<!-- proc~to_char_vector_int64 -->
+<g id="interface~~soa_resize_field~~CallsGraph_node24" class="node">
+<title>proc~to_char_vector_int64</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node24"><a xlink:href="../proc/to_char_vector_int64.html" xlink:title="to_char_vector_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="748,-66 624,-66 624,-42 748,-42 748,-66"/>
+<text text-anchor="middle" x="686" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_int64 -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge37" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_int64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M562.68,-279.8C571.95,-276.69 581.64,-271.77 588,-264 642.16,-197.83 568.02,-139.64 624,-75 624.87,-74 625.78,-73.05 626.74,-72.14"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="628.96,-74.85 634.84,-66.04 624.75,-69.26 628.96,-74.85"/>
+</g>
+<!-- proc~to_char_vector_sp -->
+<g id="interface~~soa_resize_field~~CallsGraph_node25" class="node">
+<title>proc~to_char_vector_sp</title>
+<g id="a_interface~~soa_resize_field~~CallsGraph_node25"><a xlink:href="../proc/to_char_vector_sp.html" xlink:title="to_char_vector_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="740.5,-24 631.5,-24 631.5,0 740.5,0 740.5,-24"/>
+<text text-anchor="middle" x="686" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_sp -->
+<g id="interface~~soa_resize_field~~CallsGraph_edge38" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_sp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M562.55,-280C571.92,-276.91 581.71,-271.95 588,-264 652.45,-182.5 557.31,-112.68 624,-33 624.74,-32.12 625.51,-31.28 626.32,-30.47"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="628.72,-33.03 634.43,-24.11 624.4,-27.53 628.72,-33.03"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var paninterfacesoa_resize_fieldCallsGraph = svgPanZoom('#interfacesoa_resize_fieldCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Called by</h3>
+          </div>
+          <div class="card-body">
+            <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: interface~~soa_resize_field~~CalledByGraph Pages: 1 -->
+<svg id="interfacesoa_resize_fieldCalledByGraph" width="580pt" height="32pt"
+ viewBox="0.00 0.00 580.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="interface~~soa_resize_field~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>interface~~soa_resize_field~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 576,-28 576,4 -4,4"/>
+<!-- interface~soa_resize_field -->
+<g id="interface~~soa_resize_field~~CalledByGraph_node1" class="node">
+<title>interface~soa_resize_field</title>
+<polygon fill="none" stroke="black" points="572,-24 476,-24 476,0 572,0 572,-24"/>
+<text text-anchor="middle" x="524" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">soa_resize_field</text>
+</g>
+<!-- proc~particle_soa_resize -->
+<g id="interface~~soa_resize_field~~CalledByGraph_node2" class="node">
+<title>proc~particle_soa_resize</title>
+<g id="a_interface~~soa_resize_field~~CalledByGraph_node2"><a xlink:href="../proc/particle_soa_resize.html" xlink:title="particle_soa_t%particle_soa_resize">
+<polygon fill="#d9534f" stroke="#d9534f" points="440,-24 244,-24 244,0 440,0 440,-24"/>
+<text text-anchor="middle" x="342" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">particle_soa_t%particle_soa_resize</text>
+</a>
+</g>
+</g>
+<!-- proc~particle_soa_resize&#45;&gt;interface~soa_resize_field -->
+<g id="interface~~soa_resize_field~~CalledByGraph_edge1" class="edge">
+<title>proc~particle_soa_resize&#45;&gt;interface~soa_resize_field</title>
+<path fill="none" stroke="#ff0000" d="M440.11,-12C448.87,-12 457.54,-12 465.78,-12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="465.96,-15.5 475.96,-12 465.96,-8.5 465.96,-15.5"/>
+</g>
+<!-- proc~particle_soa_allocate -->
+<g id="interface~~soa_resize_field~~CalledByGraph_node3" class="node">
+<title>proc~particle_soa_allocate</title>
+<g id="a_interface~~soa_resize_field~~CalledByGraph_node3"><a xlink:href="../proc/particle_soa_allocate.html" xlink:title="particle_soa_t%particle_soa_allocate">
+<polygon fill="#d9534f" stroke="#d9534f" points="208,-24 0,-24 0,0 208,0 208,-24"/>
+<text text-anchor="middle" x="104" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">particle_soa_t%particle_soa_allocate</text>
+</a>
+</g>
+</g>
+<!-- proc~particle_soa_allocate&#45;&gt;proc~particle_soa_resize -->
+<g id="interface~~soa_resize_field~~CalledByGraph_edge2" class="edge">
+<title>proc~particle_soa_allocate&#45;&gt;proc~particle_soa_resize</title>
+<path fill="none" stroke="#ff0000" d="M208.17,-12C216.55,-12 225.02,-12 233.43,-12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="233.64,-15.5 243.64,-12 233.64,-8.5 233.64,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+<br>
+
+
+        <h2>Module Procedures</h2>
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_resize_int32_field"></span> <h3>private  subroutine <a href='../proc/soa_resize_int32_field.html'>soa_resize_int32_field</a>(values, new_capacity, keep, fill_to, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Resize an <code>integer(int32)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~4"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~62"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_resize_int64_field"></span> <h3>private  subroutine <a href='../proc/soa_resize_int64_field.html'>soa_resize_int64_field</a>(values, new_capacity, keep, fill_to, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Resize an <code>integer(int64)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~2"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~3"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~63"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_resize_real_sp_field"></span> <h3>private  subroutine <a href='../proc/soa_resize_real_sp_field.html'>soa_resize_real_sp_field</a>(values, new_capacity, keep, fill_to, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Resize a <code>real(sp)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~3"></span>
+              real(kind=sp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~7"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~4"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~64"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_resize_real_dp_field"></span> <h3>private  subroutine <a href='../proc/soa_resize_real_dp_field.html'>soa_resize_real_dp_field</a>(values, new_capacity, keep, fill_to, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Resize a <code>real(dp)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~4"></span>
+              real(kind=dp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~8"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~7"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~65"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_resize_logical_field"></span> <h3>private  subroutine <a href='../proc/soa_resize_logical_field.html'>soa_resize_logical_field</a>(values, new_capacity, keep, fill_to, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Resize a default <code>logical</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~5"></span>
+              logical,
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~9"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~8"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~66"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+</div>
+  </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

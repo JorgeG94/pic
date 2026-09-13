@@ -89,7 +89,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 1.4% of total for modules and submodules.">175 statements</a>
+                 title=" 1.1% of total for modules and submodules.">195 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -198,6 +198,46 @@
  better than <code>quicksort</code> performance. <code>UNORD_SOORT</code> is about 25%
  more efficient than <code>ORD_SORT</code> at sorting purely random data, but af an
  order of <code>Ln(N)</code> less efficient at sorting partially sorted data.</p>
+<h3 id="reporting-failures-through-error_t">Reporting failures through <code>error_t</code></h3>
+<p><code>ORD_SORT</code>, <code>SORT_INDEX</code> and <code>RADIX_SORT</code> accept an optional <code>err</code>
+ argument of type <code>error_t</code> from <code>pic_error</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="k">use </span><span class="n">pic_error</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="n">error_t</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">error_t</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">err</span>
+<span class="w">    </span><span class="k">call </span><span class="n">ord_sort</span><span class="p">(</span><span class="w"> </span><span class="k">array</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="o">=</span><span class="n">err</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="p">%</span><span class="n">has_error</span><span class="p">())</span><span class="w"> </span><span class="k">call </span><span class="n">err</span><span class="p">%</span><span class="n">print_trace</span><span class="p">()</span>
+</code></pre></div>
+
+<p>When <code>err</code> is present a detected failure sets it and the routine returns
+ early without completing the sort. When <code>err</code> is absent the routine keeps
+ its historical behaviour and aborts the process with <code>error stop</code>: these
+ routines are (or contain) <code>pure</code> code, and a <code>pure</code> procedure can neither
+ perform output nor <code>error stop</code> with a run-time message, so there is no
+ way to report a failure other than through <code>err</code>.</p>
+<p>The codes used are</p>
+<ul>
+<li><code>ERROR_VALIDATION</code> - a caller supplied <code>work</code> or <code>iwork</code> scratch array
+   is too small for <code>array</code>;</li>
+<li><code>ERROR_BOUNDS</code> - <code>index</code> is too small for <code>array</code>, or <code>array</code> has more
+   elements than the kind of <code>index</code> can number;</li>
+<li><code>ERROR_ALLOC</code> - an internal scratch buffer could not be allocated;</li>
+<li><code>ERROR_INTERNAL</code> - an internal invariant of the merge sort was violated.
+   That is a bug in PIC, not bad input.</li>
+</ul>
+<p>State of the arguments when <code>err</code> has been set:</p>
+<ul>
+<li>For <code>ERROR_VALIDATION</code>, <code>ERROR_BOUNDS</code> and <code>ERROR_ALLOC</code> the failure is
+   detected before any merging begins, so <code>array</code> still holds its input
+   values - except that <code>SORT_INDEX</code> called with <code>reverse = .true.</code> has
+   already reversed <code>array</code> in place and leaves it reversed.</li>
+<li><code>ERROR_INTERNAL</code> is raised after merging, so <code>array</code> is then an
+   unspecified permutation of its input.</li>
+<li><code>index</code>, <code>work</code> and <code>iwork</code> are <code>intent(out)</code>, so they are undefined
+   whenever <code>err</code> is set. <code>SORT_INDEX</code> happens to leave <code>index</code> holding the
+   identity permutation on a <code>work</code>/<code>iwork</code>/allocation failure, but callers
+   must not rely on that.</li>
+</ul>
+<p><code>SORT</code> takes no <code>err</code> argument: it allocates nothing and validates nothing,
+ so it has no failure to report.</p>
 <p>The generic subroutine implementing the <code>SORT</code> algorithm to return
  an input array with its elements sorted in order of (non-)decreasing
  value. Its use has the syntax:</p>
@@ -237,6 +277,7 @@
             <li class="list-group-item">
               <ul class="list-inline">
                   <li class="list-inline-item"><a href='pic_types.html'>pic_types</a></li>
+                  <li class="list-inline-item"><a href='pic_error.html'>pic_error</a></li>
                   <li class="list-inline-item"><a href='pic_optional_value.html'>pic_optional_value</a></li>
               </ul>
             </li>
@@ -247,82 +288,125 @@
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
 <!-- Title: module~~pic_sorting~~UsesGraph Pages: 1 -->
-<svg id="modulepic_sortingUsesGraph" width="454pt" height="74pt"
- viewBox="0.00 0.00 454.00 74.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="module~~pic_sorting~~UsesGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 70)">
+<svg id="modulepic_sortingUsesGraph" width="565pt" height="127pt"
+ viewBox="0.00 0.00 565.00 126.68" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_sorting~~UsesGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 122.68)">
 <title>module~~pic_sorting~~UsesGraph</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-70 450,-70 450,4 -4,4"/>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-122.68 561,-122.68 561,4 -4,4"/>
 <!-- module~pic_sorting -->
 <g id="module~~pic_sorting~~UsesGraph_node1" class="node">
 <title>module~pic_sorting</title>
-<polygon fill="none" stroke="black" points="446,-45 376,-45 376,-21 446,-21 446,-45"/>
-<text text-anchor="middle" x="411" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50">pic_sorting</text>
+<polygon fill="none" stroke="black" points="557,-59.04 487,-59.04 487,-35.04 557,-35.04 557,-59.04"/>
+<text text-anchor="middle" x="522" y="-44.64" font-family="Helvetica,sans-Serif" font-size="10.50">pic_sorting</text>
+</g>
+<!-- module~pic_error -->
+<g id="module~~pic_sorting~~UsesGraph_node2" class="node">
+<title>module~pic_error</title>
+<g id="a_module~~pic_sorting~~UsesGraph_node2"><a xlink:href="../module/pic_error.html" xlink:title="pic_error">
+<polygon fill="#337ab7" stroke="#337ab7" points="451,-100.04 391,-100.04 391,-76.04 451,-76.04 451,-100.04"/>
+<text text-anchor="middle" x="421" y="-85.64" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_error</text>
+</a>
+</g>
+</g>
+<!-- module~pic_sorting&#45;&gt;module~pic_error -->
+<g id="module~~pic_sorting~~UsesGraph_edge1" class="edge">
+<title>module~pic_sorting&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M491.83,-59.12C482.05,-63.17 470.99,-67.75 460.6,-72.05"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="459.2,-68.84 451.3,-75.9 461.88,-75.31 459.2,-68.84"/>
 </g>
 <!-- module~pic_optional_value -->
-<g id="module~~pic_sorting~~UsesGraph_node2" class="node">
+<g id="module~~pic_sorting~~UsesGraph_node3" class="node">
 <title>module~pic_optional_value</title>
-<g id="a_module~~pic_sorting~~UsesGraph_node2"><a xlink:href="../module/pic_optional_value.html" xlink:title="pic_optional_value">
-<polygon fill="#337ab7" stroke="#337ab7" points="340,-65 228,-65 228,-41 340,-41 340,-65"/>
-<text text-anchor="middle" x="284" y="-50.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_optional_value</text>
+<g id="a_module~~pic_sorting~~UsesGraph_node3"><a xlink:href="../module/pic_optional_value.html" xlink:title="pic_optional_value">
+<polygon fill="#337ab7" stroke="#337ab7" points="347.5,-58.04 235.5,-58.04 235.5,-34.04 347.5,-34.04 347.5,-58.04"/>
+<text text-anchor="middle" x="291.5" y="-43.64" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_optional_value</text>
 </a>
 </g>
 </g>
 <!-- module~pic_sorting&#45;&gt;module~pic_optional_value -->
-<g id="module~~pic_sorting~~UsesGraph_edge1" class="edge">
+<g id="module~~pic_sorting~~UsesGraph_edge2" class="edge">
 <title>module~pic_sorting&#45;&gt;module~pic_optional_value</title>
-<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M375.84,-38.47C367.86,-39.74 359.09,-41.14 350.26,-42.56"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="349.6,-39.12 340.28,-44.15 350.71,-46.03 349.6,-39.12"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M420,-6.04C402.69,-4.02 361.78,-18.14 330.94,-30.16"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="329.33,-27.03 321.32,-33.97 331.91,-33.54 329.33,-27.03"/>
 </g>
 <!-- module~pic_types -->
-<g id="module~~pic_sorting~~UsesGraph_node3" class="node">
+<g id="module~~pic_sorting~~UsesGraph_node4" class="node">
 <title>module~pic_types</title>
-<g id="a_module~~pic_sorting~~UsesGraph_node3"><a xlink:href="../module/pic_types.html" xlink:title="pic_types">
-<polygon fill="#337ab7" stroke="#337ab7" points="192,-45 130,-45 130,-21 192,-21 192,-45"/>
-<text text-anchor="middle" x="161" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_types</text>
+<g id="a_module~~pic_sorting~~UsesGraph_node4"><a xlink:href="../module/pic_types.html" xlink:title="pic_types">
+<polygon fill="#337ab7" stroke="#337ab7" points="192,-79.04 130,-79.04 130,-55.04 192,-55.04 192,-79.04"/>
+<text text-anchor="middle" x="161" y="-64.64" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_types</text>
 </a>
 </g>
 </g>
 <!-- module~pic_sorting&#45;&gt;module~pic_types -->
-<g id="module~~pic_sorting~~UsesGraph_edge2" class="edge">
+<g id="module~~pic_sorting~~UsesGraph_edge3" class="edge">
 <title>module~pic_sorting&#45;&gt;module~pic_types</title>
-<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M375.82,-32.41C364.43,-32.24 351.67,-32.08 340,-32 290.22,-31.64 277.78,-31.62 228,-32 219.69,-32.06 210.79,-32.17 202.31,-32.29"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="202.17,-28.79 192.23,-32.45 202.28,-35.79 202.17,-28.79"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M501.05,-34.9C481.67,-24.08 451.01,-9.42 422,-6.04"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M420,-6.04C334.83,3.91 309.05,2.97 228,-25.04 212.4,-30.43 196.74,-40.16 184.59,-48.9"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="182.33,-46.22 176.42,-55.02 186.52,-51.83 182.33,-46.22"/>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_types -->
+<g id="module~~pic_sorting~~UsesGraph_edge5" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M390.71,-99.65C379.69,-103.44 366.95,-107.15 355,-109.04 299.24,-117.82 282.19,-124.82 228,-109.04 212.05,-104.39 196.28,-94.6 184.15,-85.63"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="186.06,-82.69 176.01,-79.34 181.78,-88.23 186.06,-82.69"/>
+</g>
+<!-- module~pic_global_definitions -->
+<g id="module~~pic_sorting~~UsesGraph_node7" class="node">
+<title>module~pic_global_definitions</title>
+<g id="a_module~~pic_sorting~~UsesGraph_node7"><a xlink:href="../module/pic_global_definitions.html" xlink:title="pic_global_definitions">
+<polygon fill="#337ab7" stroke="#337ab7" points="355,-100.04 228,-100.04 228,-76.04 355,-76.04 355,-100.04"/>
+<text text-anchor="middle" x="291.5" y="-85.64" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_global_definitions</text>
+</a>
+</g>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_global_definitions -->
+<g id="module~~pic_sorting~~UsesGraph_edge4" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_global_definitions</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M390.75,-88.04C383,-88.04 374.29,-88.04 365.32,-88.04"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="365.14,-84.54 355.14,-88.04 365.14,-91.54 365.14,-84.54"/>
 </g>
 <!-- module~pic_optional_value&#45;&gt;module~pic_types -->
-<g id="module~~pic_sorting~~UsesGraph_edge3" class="edge">
+<g id="module~~pic_sorting~~UsesGraph_edge6" class="edge">
 <title>module~pic_optional_value&#45;&gt;module~pic_types</title>
-<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M227.81,-43.88C219.22,-42.46 210.49,-41.01 202.31,-39.66"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="202.74,-36.19 192.3,-38.01 201.6,-43.09 202.74,-36.19"/>
+<path fill="none" stroke="#00ff00" stroke-dasharray="5,2" d="M235.26,-55.06C224.14,-56.88 212.65,-58.76 202.16,-60.47"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="201.36,-57.06 192.06,-62.12 202.49,-63.97 201.36,-57.06"/>
 </g>
 <!-- iso_c_binding -->
-<g id="module~~pic_sorting~~UsesGraph_node4" class="node">
+<g id="module~~pic_sorting~~UsesGraph_node5" class="node">
 <title>iso_c_binding</title>
-<g id="a_module~~pic_sorting~~UsesGraph_node4"><a xlink:href="http://fortranwiki.org/fortran/show/iso_c_binding" xlink:title="iso_c_binding">
-<polygon fill="#337ab7" stroke="#337ab7" points="89,-66 5,-66 5,-42 89,-42 89,-66"/>
-<text text-anchor="middle" x="47" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_c_binding</text>
+<g id="a_module~~pic_sorting~~UsesGraph_node5"><a xlink:href="http://fortranwiki.org/fortran/show/iso_c_binding" xlink:title="iso_c_binding">
+<polygon fill="#337ab7" stroke="#337ab7" points="89,-100.04 5,-100.04 5,-76.04 89,-76.04 89,-100.04"/>
+<text text-anchor="middle" x="47" y="-85.64" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_c_binding</text>
 </a>
 </g>
 </g>
 <!-- module~pic_types&#45;&gt;iso_c_binding -->
-<g id="module~~pic_sorting~~UsesGraph_edge4" class="edge">
+<g id="module~~pic_sorting~~UsesGraph_edge7" class="edge">
 <title>module~pic_types&#45;&gt;iso_c_binding</title>
-<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M129.99,-38.63C120.46,-40.41 109.64,-42.44 99.07,-44.43"/>
-<polygon fill="#00ffff" stroke="#00ffff" points="98.23,-41.02 89.05,-46.3 99.52,-47.9 98.23,-41.02"/>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M129.99,-72.66C120.46,-74.45 109.64,-76.48 99.07,-78.46"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="98.23,-75.06 89.05,-80.34 99.52,-81.94 98.23,-75.06"/>
 </g>
 <!-- iso_fortran_env -->
-<g id="module~~pic_sorting~~UsesGraph_node5" class="node">
+<g id="module~~pic_sorting~~UsesGraph_node6" class="node">
 <title>iso_fortran_env</title>
-<g id="a_module~~pic_sorting~~UsesGraph_node5"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
-<polygon fill="#337ab7" stroke="#337ab7" points="94,-24 0,-24 0,0 94,0 94,-24"/>
-<text text-anchor="middle" x="47" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+<g id="a_module~~pic_sorting~~UsesGraph_node6"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-58.04 0,-58.04 0,-34.04 94,-34.04 94,-58.04"/>
+<text text-anchor="middle" x="47" y="-43.64" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
 </a>
 </g>
 </g>
 <!-- module~pic_types&#45;&gt;iso_fortran_env -->
-<g id="module~~pic_sorting~~UsesGraph_edge5" class="edge">
+<g id="module~~pic_sorting~~UsesGraph_edge8" class="edge">
 <title>module~pic_types&#45;&gt;iso_fortran_env</title>
-<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M129.99,-27.37C121.98,-25.87 113.07,-24.2 104.15,-22.53"/>
-<polygon fill="#00ffff" stroke="#00ffff" points="104.6,-19.05 94.13,-20.65 103.31,-25.93 104.6,-19.05"/>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M129.99,-61.41C121.98,-59.91 113.07,-58.24 104.15,-56.56"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="104.6,-53.09 94.13,-54.68 103.31,-59.97 104.6,-53.09"/>
+</g>
+<!-- module~pic_global_definitions&#45;&gt;module~pic_types -->
+<g id="module~~pic_sorting~~UsesGraph_edge9" class="edge">
+<title>module~pic_global_definitions&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M227.76,-77.78C219.07,-76.36 210.34,-74.94 202.21,-73.61"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="202.72,-70.14 192.28,-71.99 201.59,-77.05 202.72,-70.14"/>
 </g>
 </g>
 </svg>
@@ -617,7 +701,7 @@ non-decreasing data.</p>
     <ul class="list-group">
           <li class="list-group-item">
                 <h3>
-    private module subroutine char_ord_sort(array, work, reverse)  
+    private module subroutine char_ord_sort(array, work, reverse, err)  
     <a href="../proc/char_ord_sort.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -637,7 +721,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~238"></span>
+              <span class="anchor" id="variable-array~89"></span>
               character(len=*),
             </td>
 <td>intent(inout)</td>
@@ -652,7 +736,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~44"></span>
+              <span class="anchor" id="variable-work~34"></span>
               character(len=len),
             </td>
 <td>intent(out),</td>
@@ -667,7 +751,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~44"></span>
+              <span class="anchor" id="variable-reverse~29"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -680,6 +764,21 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~52"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -687,7 +786,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine dp_ord_sort(array, work, reverse)  
+    private module subroutine dp_ord_sort(array, work, reverse, err)  
     <a href="../proc/dp_ord_sort.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -707,7 +806,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~237"></span>
+              <span class="anchor" id="variable-array~88"></span>
               real(kind=dp),
             </td>
 <td>intent(inout)</td>
@@ -722,7 +821,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~43"></span>
+              <span class="anchor" id="variable-work~33"></span>
               real(kind=dp),
             </td>
 <td>intent(out),</td>
@@ -737,7 +836,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~43"></span>
+              <span class="anchor" id="variable-reverse~28"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -750,6 +849,21 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~51"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -757,7 +871,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine int32_ord_sort(array, work, reverse)  
+    private module subroutine int32_ord_sort(array, work, reverse, err)  
     <a href="../proc/int32_ord_sort.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -777,7 +891,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~234"></span>
+              <span class="anchor" id="variable-array~85"></span>
               integer(kind=int32),
             </td>
 <td>intent(inout)</td>
@@ -792,7 +906,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~40"></span>
+              <span class="anchor" id="variable-work~30"></span>
               integer(kind=int32),
             </td>
 <td>intent(out),</td>
@@ -807,7 +921,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~40"></span>
+              <span class="anchor" id="variable-reverse~25"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -820,6 +934,21 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~48"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -827,7 +956,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine int64_ord_sort(array, work, reverse)  
+    private module subroutine int64_ord_sort(array, work, reverse, err)  
     <a href="../proc/int64_ord_sort.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -847,7 +976,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~235"></span>
+              <span class="anchor" id="variable-array~86"></span>
               integer(kind=int64),
             </td>
 <td>intent(inout)</td>
@@ -862,7 +991,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~41"></span>
+              <span class="anchor" id="variable-work~31"></span>
               integer(kind=int64),
             </td>
 <td>intent(out),</td>
@@ -877,7 +1006,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~41"></span>
+              <span class="anchor" id="variable-reverse~26"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -890,6 +1019,21 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~49"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -897,7 +1041,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine sp_ord_sort(array, work, reverse)  
+    private module subroutine sp_ord_sort(array, work, reverse, err)  
     <a href="../proc/sp_ord_sort.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -917,7 +1061,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~236"></span>
+              <span class="anchor" id="variable-array~87"></span>
               real(kind=sp),
             </td>
 <td>intent(inout)</td>
@@ -932,7 +1076,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~42"></span>
+              <span class="anchor" id="variable-work~32"></span>
               real(kind=sp),
             </td>
 <td>intent(out),</td>
@@ -947,7 +1091,7 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~42"></span>
+              <span class="anchor" id="variable-reverse~27"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -956,6 +1100,21 @@ using a hybrid sort based on the <code>"Rust" sort</code> algorithm found in <co
             </td>
             <td>::</td>
             <td><strong>reverse</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~50"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
             <td>
                 
             </td>
@@ -983,7 +1142,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
     <ul class="list-group">
           <li class="list-group-item">
                 <h3>
-    private module subroutine dp_radix_sort(array, work, reverse)  
+    private module subroutine dp_radix_sort(array, work, reverse, err)  
     <a href="../proc/dp_radix_sort.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -1002,7 +1161,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~233"></span>
+              <span class="anchor" id="variable-array~84"></span>
               real(kind=dp),
             </td>
 <td>intent(inout),</td>
@@ -1017,7 +1176,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~39"></span>
+              <span class="anchor" id="variable-work~29"></span>
               real(kind=dp),
             </td>
 <td>intent(inout),</td>
@@ -1032,7 +1191,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~39"></span>
+              <span class="anchor" id="variable-reverse~24"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1045,6 +1204,21 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~47"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1052,7 +1226,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
           </li>
           <li class="list-group-item">
                 <h3>
-    private pure module subroutine int32_radix_sort(array, work, reverse)  
+    private pure module subroutine int32_radix_sort(array, work, reverse, err)  
     <a href="../proc/int32_radix_sort.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -1071,7 +1245,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~230"></span>
+              <span class="anchor" id="variable-array~81"></span>
               integer(kind=int32),
             </td>
 <td>intent(inout),</td>
@@ -1086,7 +1260,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~36"></span>
+              <span class="anchor" id="variable-work~26"></span>
               integer(kind=int32),
             </td>
 <td>intent(inout),</td>
@@ -1101,7 +1275,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~36"></span>
+              <span class="anchor" id="variable-reverse~21"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1114,6 +1288,21 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~44"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1121,7 +1310,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
           </li>
           <li class="list-group-item">
                 <h3>
-    private pure module subroutine int64_radix_sort(array, work, reverse)  
+    private pure module subroutine int64_radix_sort(array, work, reverse, err)  
     <a href="../proc/int64_radix_sort.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -1140,7 +1329,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~231"></span>
+              <span class="anchor" id="variable-array~82"></span>
               integer(kind=int64),
             </td>
 <td>intent(inout),</td>
@@ -1155,7 +1344,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~37"></span>
+              <span class="anchor" id="variable-work~27"></span>
               integer(kind=int64),
             </td>
 <td>intent(inout),</td>
@@ -1170,7 +1359,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~37"></span>
+              <span class="anchor" id="variable-reverse~22"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1183,6 +1372,21 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~45"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1190,7 +1394,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine sp_radix_sort(array, work, reverse)  
+    private module subroutine sp_radix_sort(array, work, reverse, err)  
     <a href="../proc/sp_radix_sort.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -1209,7 +1413,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~232"></span>
+              <span class="anchor" id="variable-array~83"></span>
               real(kind=sp),
             </td>
 <td>intent(inout),</td>
@@ -1224,7 +1428,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~38"></span>
+              <span class="anchor" id="variable-work~28"></span>
               real(kind=sp),
             </td>
 <td>intent(inout),</td>
@@ -1239,7 +1443,7 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~38"></span>
+              <span class="anchor" id="variable-reverse~23"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1248,6 +1452,21 @@ It is always O(N) in sorting random data, but need a O(N) buffer.
             </td>
             <td>::</td>
             <td><strong>reverse</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~46"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
             <td>
                 
             </td>
@@ -1297,7 +1516,7 @@ behavior is small for random data compared to other sorting algorithms.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~219"></span>
+              <span class="anchor" id="variable-array~70"></span>
               character(len=*),
             </td>
 <td>intent(inout)</td>
@@ -1312,7 +1531,7 @@ behavior is small for random data compared to other sorting algorithms.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~25"></span>
+              <span class="anchor" id="variable-reverse~10"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1355,7 +1574,7 @@ behavior is small for random data compared to other sorting algorithms.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~218"></span>
+              <span class="anchor" id="variable-array~69"></span>
               real(kind=dp),
             </td>
 <td>intent(inout)</td>
@@ -1370,7 +1589,7 @@ behavior is small for random data compared to other sorting algorithms.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~24"></span>
+              <span class="anchor" id="variable-reverse~9"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1413,7 +1632,7 @@ behavior is small for random data compared to other sorting algorithms.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~215"></span>
+              <span class="anchor" id="variable-array~66"></span>
               integer(kind=int32),
             </td>
 <td>intent(inout)</td>
@@ -1428,7 +1647,7 @@ behavior is small for random data compared to other sorting algorithms.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~21"></span>
+              <span class="anchor" id="variable-reverse~6"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1471,7 +1690,7 @@ behavior is small for random data compared to other sorting algorithms.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~216"></span>
+              <span class="anchor" id="variable-array~67"></span>
               integer(kind=int64),
             </td>
 <td>intent(inout)</td>
@@ -1486,7 +1705,7 @@ behavior is small for random data compared to other sorting algorithms.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~22"></span>
+              <span class="anchor" id="variable-reverse~7"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1529,7 +1748,7 @@ behavior is small for random data compared to other sorting algorithms.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~217"></span>
+              <span class="anchor" id="variable-array~68"></span>
               real(kind=sp),
             </td>
 <td>intent(inout)</td>
@@ -1544,7 +1763,7 @@ behavior is small for random data compared to other sorting algorithms.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~23"></span>
+              <span class="anchor" id="variable-reverse~8"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1584,7 +1803,7 @@ with a value of <code>.TRUE.</code> the indices correspond to a non-increasing s
     <ul class="list-group">
           <li class="list-group-item">
                 <h3>
-    private module subroutine char_sort_index_default(array, index, work, iwork, reverse)  
+    private module subroutine char_sort_index_default(array, index, work, iwork, reverse, err)  
     <a href="../proc/char_sort_index_default.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -1607,7 +1826,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~224"></span>
+              <span class="anchor" id="variable-array~75"></span>
               character(len=*),
             </td>
 <td>intent(inout)</td>
@@ -1622,7 +1841,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-index~85"></span>
+              <span class="anchor" id="variable-index~5"></span>
               integer(kind=int_index),
             </td>
 <td>intent(out)</td>
@@ -1637,7 +1856,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~30"></span>
+              <span class="anchor" id="variable-work~20"></span>
               character(len=len),
             </td>
 <td>intent(out),</td>
@@ -1652,7 +1871,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iwork~15"></span>
+              <span class="anchor" id="variable-iwork~5"></span>
               integer(kind=int_index),
             </td>
 <td>intent(out),</td>
@@ -1667,7 +1886,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~30"></span>
+              <span class="anchor" id="variable-reverse~15"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1680,6 +1899,21 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~38"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1687,7 +1921,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine char_sort_index_low(array, index, work, iwork, reverse)  
+    private module subroutine char_sort_index_low(array, index, work, iwork, reverse, err)  
     <a href="../proc/char_sort_index_low.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -1710,7 +1944,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~229"></span>
+              <span class="anchor" id="variable-array~80"></span>
               character(len=*),
             </td>
 <td>intent(inout)</td>
@@ -1725,7 +1959,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-index~90"></span>
+              <span class="anchor" id="variable-index~10"></span>
               integer(kind=int_index_low),
             </td>
 <td>intent(out)</td>
@@ -1740,7 +1974,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~35"></span>
+              <span class="anchor" id="variable-work~25"></span>
               character(len=len),
             </td>
 <td>intent(out),</td>
@@ -1755,7 +1989,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iwork~20"></span>
+              <span class="anchor" id="variable-iwork~10"></span>
               integer(kind=int_index_low),
             </td>
 <td>intent(out),</td>
@@ -1770,7 +2004,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~35"></span>
+              <span class="anchor" id="variable-reverse~20"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1783,6 +2017,21 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~43"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1790,7 +2039,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine dp_sort_index_default(array, index, work, iwork, reverse)  
+    private module subroutine dp_sort_index_default(array, index, work, iwork, reverse, err)  
     <a href="../proc/dp_sort_index_default.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -1813,7 +2062,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~223"></span>
+              <span class="anchor" id="variable-array~74"></span>
               real(kind=dp),
             </td>
 <td>intent(inout)</td>
@@ -1828,7 +2077,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-index~84"></span>
+              <span class="anchor" id="variable-index~4"></span>
               integer(kind=int_index),
             </td>
 <td>intent(out)</td>
@@ -1843,7 +2092,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~29"></span>
+              <span class="anchor" id="variable-work~19"></span>
               real(kind=dp),
             </td>
 <td>intent(out),</td>
@@ -1858,7 +2107,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iwork~14"></span>
+              <span class="anchor" id="variable-iwork~4"></span>
               integer(kind=int_index),
             </td>
 <td>intent(out),</td>
@@ -1873,7 +2122,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~29"></span>
+              <span class="anchor" id="variable-reverse~14"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1886,6 +2135,21 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~37"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1893,7 +2157,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine dp_sort_index_low(array, index, work, iwork, reverse)  
+    private module subroutine dp_sort_index_low(array, index, work, iwork, reverse, err)  
     <a href="../proc/dp_sort_index_low.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -1916,7 +2180,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~228"></span>
+              <span class="anchor" id="variable-array~79"></span>
               real(kind=dp),
             </td>
 <td>intent(inout)</td>
@@ -1931,7 +2195,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-index~89"></span>
+              <span class="anchor" id="variable-index~9"></span>
               integer(kind=int_index_low),
             </td>
 <td>intent(out)</td>
@@ -1946,7 +2210,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~34"></span>
+              <span class="anchor" id="variable-work~24"></span>
               real(kind=dp),
             </td>
 <td>intent(out),</td>
@@ -1961,7 +2225,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iwork~19"></span>
+              <span class="anchor" id="variable-iwork~9"></span>
               integer(kind=int_index_low),
             </td>
 <td>intent(out),</td>
@@ -1976,7 +2240,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~34"></span>
+              <span class="anchor" id="variable-reverse~19"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -1989,6 +2253,21 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~42"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -1996,7 +2275,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine int32_sort_index_default(array, index, work, iwork, reverse)  
+    private module subroutine int32_sort_index_default(array, index, work, iwork, reverse, err)  
     <a href="../proc/int32_sort_index_default.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -2019,7 +2298,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~220"></span>
+              <span class="anchor" id="variable-array~71"></span>
               integer(kind=int32),
             </td>
 <td>intent(inout)</td>
@@ -2034,7 +2313,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-index~81"></span>
+              <span class="anchor" id="variable-index"></span>
               integer(kind=int_index),
             </td>
 <td>intent(out)</td>
@@ -2049,7 +2328,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~26"></span>
+              <span class="anchor" id="variable-work~16"></span>
               integer(kind=int32),
             </td>
 <td>intent(out),</td>
@@ -2064,7 +2343,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iwork~11"></span>
+              <span class="anchor" id="variable-iwork"></span>
               integer(kind=int_index),
             </td>
 <td>intent(out),</td>
@@ -2079,7 +2358,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~26"></span>
+              <span class="anchor" id="variable-reverse~11"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -2092,6 +2371,21 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~34"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -2099,7 +2393,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine int32_sort_index_low(array, index, work, iwork, reverse)  
+    private module subroutine int32_sort_index_low(array, index, work, iwork, reverse, err)  
     <a href="../proc/int32_sort_index_low.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -2122,7 +2416,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~225"></span>
+              <span class="anchor" id="variable-array~76"></span>
               integer(kind=int32),
             </td>
 <td>intent(inout)</td>
@@ -2137,7 +2431,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-index~86"></span>
+              <span class="anchor" id="variable-index~6"></span>
               integer(kind=int_index_low),
             </td>
 <td>intent(out)</td>
@@ -2152,7 +2446,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~31"></span>
+              <span class="anchor" id="variable-work~21"></span>
               integer(kind=int32),
             </td>
 <td>intent(out),</td>
@@ -2167,7 +2461,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iwork~16"></span>
+              <span class="anchor" id="variable-iwork~6"></span>
               integer(kind=int_index_low),
             </td>
 <td>intent(out),</td>
@@ -2182,7 +2476,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~31"></span>
+              <span class="anchor" id="variable-reverse~16"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -2195,6 +2489,21 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~39"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -2202,7 +2511,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine int64_sort_index_default(array, index, work, iwork, reverse)  
+    private module subroutine int64_sort_index_default(array, index, work, iwork, reverse, err)  
     <a href="../proc/int64_sort_index_default.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -2225,7 +2534,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~221"></span>
+              <span class="anchor" id="variable-array~72"></span>
               integer(kind=int64),
             </td>
 <td>intent(inout)</td>
@@ -2240,7 +2549,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-index~82"></span>
+              <span class="anchor" id="variable-index~2"></span>
               integer(kind=int_index),
             </td>
 <td>intent(out)</td>
@@ -2255,7 +2564,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~27"></span>
+              <span class="anchor" id="variable-work~17"></span>
               integer(kind=int64),
             </td>
 <td>intent(out),</td>
@@ -2270,7 +2579,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iwork~12"></span>
+              <span class="anchor" id="variable-iwork~2"></span>
               integer(kind=int_index),
             </td>
 <td>intent(out),</td>
@@ -2285,7 +2594,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~27"></span>
+              <span class="anchor" id="variable-reverse~12"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -2298,6 +2607,21 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~35"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -2305,7 +2629,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine int64_sort_index_low(array, index, work, iwork, reverse)  
+    private module subroutine int64_sort_index_low(array, index, work, iwork, reverse, err)  
     <a href="../proc/int64_sort_index_low.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -2328,7 +2652,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~226"></span>
+              <span class="anchor" id="variable-array~77"></span>
               integer(kind=int64),
             </td>
 <td>intent(inout)</td>
@@ -2343,7 +2667,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-index~87"></span>
+              <span class="anchor" id="variable-index~7"></span>
               integer(kind=int_index_low),
             </td>
 <td>intent(out)</td>
@@ -2358,7 +2682,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~32"></span>
+              <span class="anchor" id="variable-work~22"></span>
               integer(kind=int64),
             </td>
 <td>intent(out),</td>
@@ -2373,7 +2697,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iwork~17"></span>
+              <span class="anchor" id="variable-iwork~7"></span>
               integer(kind=int_index_low),
             </td>
 <td>intent(out),</td>
@@ -2388,7 +2712,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~32"></span>
+              <span class="anchor" id="variable-reverse~17"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -2401,6 +2725,21 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~40"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -2408,7 +2747,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine sp_sort_index_default(array, index, work, iwork, reverse)  
+    private module subroutine sp_sort_index_default(array, index, work, iwork, reverse, err)  
     <a href="../proc/sp_sort_index_default.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -2431,7 +2770,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~222"></span>
+              <span class="anchor" id="variable-array~73"></span>
               real(kind=sp),
             </td>
 <td>intent(inout)</td>
@@ -2446,7 +2785,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-index~83"></span>
+              <span class="anchor" id="variable-index~3"></span>
               integer(kind=int_index),
             </td>
 <td>intent(out)</td>
@@ -2461,7 +2800,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~28"></span>
+              <span class="anchor" id="variable-work~18"></span>
               real(kind=sp),
             </td>
 <td>intent(out),</td>
@@ -2476,7 +2815,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iwork~13"></span>
+              <span class="anchor" id="variable-iwork~3"></span>
               integer(kind=int_index),
             </td>
 <td>intent(out),</td>
@@ -2491,7 +2830,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~28"></span>
+              <span class="anchor" id="variable-reverse~13"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -2504,6 +2843,21 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~36"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
@@ -2511,7 +2865,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
           </li>
           <li class="list-group-item">
                 <h3>
-    private module subroutine sp_sort_index_low(array, index, work, iwork, reverse)  
+    private module subroutine sp_sort_index_low(array, index, work, iwork, reverse, err)  
     <a href="../proc/sp_sort_index_low.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
 
     </h3>
@@ -2534,7 +2888,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~227"></span>
+              <span class="anchor" id="variable-array~78"></span>
               real(kind=sp),
             </td>
 <td>intent(inout)</td>
@@ -2549,7 +2903,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-index~88"></span>
+              <span class="anchor" id="variable-index~8"></span>
               integer(kind=int_index_low),
             </td>
 <td>intent(out)</td>
@@ -2564,7 +2918,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-work~33"></span>
+              <span class="anchor" id="variable-work~23"></span>
               real(kind=sp),
             </td>
 <td>intent(out),</td>
@@ -2579,7 +2933,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-iwork~18"></span>
+              <span class="anchor" id="variable-iwork~8"></span>
               integer(kind=int_index_low),
             </td>
 <td>intent(out),</td>
@@ -2594,7 +2948,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-reverse~33"></span>
+              <span class="anchor" id="variable-reverse~18"></span>
               logical,
             </td>
 <td>intent(in),</td>
@@ -2603,6 +2957,21 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
             </td>
             <td>::</td>
             <td><strong>reverse</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~41"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
             <td>
                 
             </td>
@@ -2642,7 +3011,7 @@ order that would sort the input <code>ARRAY</code> in the desired direction.</p>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-09-13 17:21 +0000             </p>
+ on 2026-09-13 18:10 +0000             </p>
           </div>
         </div>
         <br>

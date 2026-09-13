@@ -1,0 +1,1443 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>check_io &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>check_io
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.0% of total for procedures.">6 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_serialize.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_serialize.f90.html'>pic_serialize.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_serialize.html'>pic_serialize</a></li>
+            <li class="breadcrumb-item active" aria-current="page">check_io</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/check_io.html#src">check_io</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private  subroutine check_io(ios, context, err)  
+</h2>
+    
+
+    <p>Turn a non zero <code>iostat</code> into an <code>ERROR_IO</code> carrying the raw value.
+Every I/O statement in this module funnels its status through here so
+that the failure message always names both the operation and the
+<code>iostat</code> the runtime produced.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ios~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ios</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-context~2"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>context</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~166"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~check_io~~CallsGraph Pages: 1 -->
+<svg id="proccheck_ioCallsGraph" width="368pt" height="578pt"
+ viewBox="0.00 0.00 368.00 578.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~check_io~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 574)">
+<title>proc~~check_io~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-574 364,-574 364,4 -4,4"/>
+<!-- proc~check_io -->
+<g id="proc~~check_io~~CallsGraph_node1" class="node">
+<title>proc~check_io</title>
+<polygon fill="none" stroke="black" points="59,-276 0,-276 0,-252 59,-252 59,-276"/>
+<text text-anchor="middle" x="29.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50">check_io</text>
+</g>
+<!-- interface~to_char -->
+<g id="proc~~check_io~~CallsGraph_node2" class="node">
+<title>interface~to_char</title>
+<g id="a_proc~~check_io~~CallsGraph_node2"><a xlink:href="../interface/to_char.html" xlink:title="to_char">
+<polygon fill="#a7506f" stroke="#a7506f" points="174.5,-297 120.5,-297 120.5,-273 174.5,-273 174.5,-297"/>
+<text text-anchor="middle" x="147.5" y="-282.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char</text>
+</a>
+</g>
+</g>
+<!-- proc~check_io&#45;&gt;interface~to_char -->
+<g id="proc~~check_io~~CallsGraph_edge1" class="edge">
+<title>proc~check_io&#45;&gt;interface~to_char</title>
+<path fill="none" stroke="#ff0000" d="M59.17,-269.19C74.62,-271.99 93.83,-275.47 110.3,-278.45"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="109.68,-281.89 120.14,-280.23 110.92,-275 109.68,-281.89"/>
+</g>
+<!-- proc~error_set -->
+<g id="proc~~check_io~~CallsGraph_node3" class="node">
+<title>proc~error_set</title>
+<g id="a_proc~~check_io~~CallsGraph_node3"><a xlink:href="../proc/error_set.html" xlink:title="error_t%error_set">
+<polygon fill="#d9534f" stroke="#d9534f" points="200,-255 95,-255 95,-231 200,-231 200,-255"/>
+<text text-anchor="middle" x="147.5" y="-240.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_set</text>
+</a>
+</g>
+</g>
+<!-- proc~check_io&#45;&gt;proc~error_set -->
+<g id="proc~~check_io~~CallsGraph_edge2" class="edge">
+<title>proc~check_io&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#ff0000" d="M59.17,-258.81C66.97,-257.4 75.73,-255.81 84.61,-254.2"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="85.43,-257.61 94.65,-252.39 84.19,-250.72 85.43,-257.61"/>
+</g>
+<!-- proc~to_char_char -->
+<g id="proc~~check_io~~CallsGraph_node4" class="node">
+<title>proc~to_char_char</title>
+<g id="a_proc~~check_io~~CallsGraph_node4"><a xlink:href="../proc/to_char_char.html" xlink:title="to_char_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="339,-570 257,-570 257,-546 339,-546 339,-570"/>
+<text text-anchor="middle" x="298" y="-555.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_char</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_char -->
+<g id="proc~~check_io~~CallsGraph_edge3" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M149.11,-297.19C151.77,-337.34 165.66,-466.85 236,-537 239.44,-540.43 243.46,-543.3 247.77,-545.7"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="246.39,-548.92 256.93,-550 249.36,-542.58 246.39,-548.92"/>
+</g>
+<!-- proc~to_char_dp -->
+<g id="proc~~check_io~~CallsGraph_node5" class="node">
+<title>proc~to_char_dp</title>
+<g id="a_proc~~check_io~~CallsGraph_node5"><a xlink:href="../proc/to_char_dp.html" xlink:title="to_char_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="333.5,-528 262.5,-528 262.5,-504 333.5,-504 333.5,-528"/>
+<text text-anchor="middle" x="298" y="-513.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_dp -->
+<g id="proc~~check_io~~CallsGraph_edge4" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M150.07,-297.15C155.29,-332.79 175.38,-438.1 236,-495 240.77,-499.48 246.54,-503 252.6,-505.78"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="251.68,-509.18 262.27,-509.56 254.23,-502.66 251.68,-509.18"/>
+</g>
+<!-- proc~to_char_int32 -->
+<g id="proc~~check_io~~CallsGraph_node6" class="node">
+<title>proc~to_char_int32</title>
+<g id="a_proc~~check_io~~CallsGraph_node6"><a xlink:href="../proc/to_char_int32.html" xlink:title="to_char_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="340.5,-486 255.5,-486 255.5,-462 340.5,-462 340.5,-486"/>
+<text text-anchor="middle" x="298" y="-471.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_int32 -->
+<g id="proc~~check_io~~CallsGraph_edge5" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_int32</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M151.45,-297.11C159.54,-327.74 184.92,-409 236,-453 239.06,-455.64 242.47,-457.95 246.08,-459.98"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="244.8,-463.25 255.33,-464.44 247.84,-456.94 244.8,-463.25"/>
+</g>
+<!-- proc~to_char_int64 -->
+<g id="proc~~check_io~~CallsGraph_node7" class="node">
+<title>proc~to_char_int64</title>
+<g id="a_proc~~check_io~~CallsGraph_node7"><a xlink:href="../proc/to_char_int64.html" xlink:title="to_char_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="340.5,-444 255.5,-444 255.5,-420 340.5,-420 340.5,-444"/>
+<text text-anchor="middle" x="298" y="-429.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_int64 -->
+<g id="proc~~check_io~~CallsGraph_edge6" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_int64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M153.81,-297.33C165.2,-322.38 194.37,-379.51 236,-411 239.18,-413.4 242.64,-415.54 246.27,-417.45"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="244.95,-420.69 255.5,-421.71 247.89,-414.34 244.95,-420.69"/>
+</g>
+<!-- proc~to_char_logical -->
+<g id="proc~~check_io~~CallsGraph_node8" class="node">
+<title>proc~to_char_logical</title>
+<g id="a_proc~~check_io~~CallsGraph_node8"><a xlink:href="../proc/to_char_logical.html" xlink:title="to_char_logical">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="344.5,-402 251.5,-402 251.5,-378 344.5,-378 344.5,-402"/>
+<text text-anchor="middle" x="298" y="-387.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_logical</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_logical -->
+<g id="proc~~check_io~~CallsGraph_edge7" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_logical</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M158.25,-297.29C173.2,-315.37 203.47,-349.13 236,-369 238.82,-370.72 241.8,-372.33 244.87,-373.82"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="243.68,-377.12 254.25,-377.95 246.51,-370.72 243.68,-377.12"/>
+</g>
+<!-- proc~to_char_matrix_dp -->
+<g id="proc~~check_io~~CallsGraph_node9" class="node">
+<title>proc~to_char_matrix_dp</title>
+<g id="a_proc~~check_io~~CallsGraph_node9"><a xlink:href="../proc/to_char_matrix_dp.html" xlink:title="to_char_matrix_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="353.5,-360 242.5,-360 242.5,-336 353.5,-336 353.5,-360"/>
+<text text-anchor="middle" x="298" y="-345.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_dp -->
+<g id="proc~~check_io~~CallsGraph_edge8" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M171.93,-297.16C189.36,-305.98 213.87,-317.91 236,-327 240.49,-328.84 245.21,-330.66 249.95,-332.42"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="249.05,-335.82 259.65,-335.91 251.42,-329.23 249.05,-335.82"/>
+</g>
+<!-- proc~to_char_matrix_int32 -->
+<g id="proc~~check_io~~CallsGraph_node10" class="node">
+<title>proc~to_char_matrix_int32</title>
+<g id="a_proc~~check_io~~CallsGraph_node10"><a xlink:href="../proc/to_char_matrix_int32.html" xlink:title="to_char_matrix_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="360,-318 236,-318 236,-294 360,-294 360,-318"/>
+<text text-anchor="middle" x="298" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_int32 -->
+<g id="proc~~check_io~~CallsGraph_edge9" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_int32</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M174.71,-288.71C189.04,-290.73 207.56,-293.35 225.82,-295.93"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="225.53,-299.43 235.92,-297.36 226.51,-292.5 225.53,-299.43"/>
+</g>
+<!-- proc~to_char_matrix_int64 -->
+<g id="proc~~check_io~~CallsGraph_node11" class="node">
+<title>proc~to_char_matrix_int64</title>
+<g id="a_proc~~check_io~~CallsGraph_node11"><a xlink:href="../proc/to_char_matrix_int64.html" xlink:title="to_char_matrix_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="360,-276 236,-276 236,-252 360,-252 360,-276"/>
+<text text-anchor="middle" x="298" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_int64 -->
+<g id="proc~~check_io~~CallsGraph_edge10" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_int64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M174.71,-281.29C189.04,-279.27 207.56,-276.65 225.82,-274.07"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="226.51,-277.5 235.92,-272.64 225.53,-270.57 226.51,-277.5"/>
+</g>
+<!-- proc~to_char_matrix_sp -->
+<g id="proc~~check_io~~CallsGraph_node12" class="node">
+<title>proc~to_char_matrix_sp</title>
+<g id="a_proc~~check_io~~CallsGraph_node12"><a xlink:href="../proc/to_char_matrix_sp.html" xlink:title="to_char_matrix_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="352.5,-234 243.5,-234 243.5,-210 352.5,-210 352.5,-234"/>
+<text text-anchor="middle" x="298" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_sp -->
+<g id="proc~~check_io~~CallsGraph_edge11" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_sp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M174.75,-275.13C182.94,-271.82 191.94,-267.97 200,-264 216.62,-255.82 219.16,-250.72 236,-243 240.06,-241.14 244.34,-239.35 248.66,-237.65"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="250.02,-240.88 258.15,-234.09 247.56,-234.33 250.02,-240.88"/>
+</g>
+<!-- proc~to_char_sp -->
+<g id="proc~~check_io~~CallsGraph_node13" class="node">
+<title>proc~to_char_sp</title>
+<g id="a_proc~~check_io~~CallsGraph_node13"><a xlink:href="../proc/to_char_sp.html" xlink:title="to_char_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="333,-192 263,-192 263,-168 333,-168 333,-192"/>
+<text text-anchor="middle" x="298" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_sp -->
+<g id="proc~~check_io~~CallsGraph_edge12" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_sp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M174.74,-278.1C183.48,-274.87 192.81,-270.3 200,-264 224.26,-242.75 211.16,-221.57 236,-201 241.04,-196.83 246.95,-193.47 253.08,-190.76"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="254.71,-193.89 262.79,-187.03 252.2,-187.35 254.71,-193.89"/>
+</g>
+<!-- proc~to_char_vector_dp -->
+<g id="proc~~check_io~~CallsGraph_node14" class="node">
+<title>proc~to_char_vector_dp</title>
+<g id="a_proc~~check_io~~CallsGraph_node14"><a xlink:href="../proc/to_char_vector_dp.html" xlink:title="to_char_vector_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="353,-150 243,-150 243,-126 353,-126 353,-150"/>
+<text text-anchor="middle" x="298" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_dp -->
+<g id="proc~~check_io~~CallsGraph_edge13" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M174.65,-279.12C183.69,-275.95 193.24,-271.16 200,-264 233.88,-228.14 201.14,-193.91 236,-159 237.22,-157.77 238.52,-156.62 239.88,-155.53"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="241.83,-158.44 248.25,-150.01 237.98,-152.6 241.83,-158.44"/>
+</g>
+<!-- proc~to_char_vector_int32 -->
+<g id="proc~~check_io~~CallsGraph_node15" class="node">
+<title>proc~to_char_vector_int32</title>
+<g id="a_proc~~check_io~~CallsGraph_node15"><a xlink:href="../proc/to_char_vector_int32.html" xlink:title="to_char_vector_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="360,-108 236,-108 236,-84 360,-84 360,-108"/>
+<text text-anchor="middle" x="298" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_int32 -->
+<g id="proc~~check_io~~CallsGraph_edge14" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_int32</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M174.74,-279.53C183.9,-276.4 193.5,-271.53 200,-264 243.94,-213.07 190.66,-166.69 236,-117 236.91,-116 237.88,-115.05 238.88,-114.14"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="241.27,-116.73 247.33,-108.03 237.17,-111.06 241.27,-116.73"/>
+</g>
+<!-- proc~to_char_vector_int64 -->
+<g id="proc~~check_io~~CallsGraph_node16" class="node">
+<title>proc~to_char_vector_int64</title>
+<g id="a_proc~~check_io~~CallsGraph_node16"><a xlink:href="../proc/to_char_vector_int64.html" xlink:title="to_char_vector_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="360,-66 236,-66 236,-42 360,-42 360,-66"/>
+<text text-anchor="middle" x="298" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_int64 -->
+<g id="proc~~check_io~~CallsGraph_edge15" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_int64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M174.68,-279.8C183.95,-276.69 193.64,-271.77 200,-264 254.16,-197.83 180.02,-139.64 236,-75 236.87,-74 237.78,-73.05 238.74,-72.14"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="240.96,-74.85 246.84,-66.04 236.75,-69.26 240.96,-74.85"/>
+</g>
+<!-- proc~to_char_vector_sp -->
+<g id="proc~~check_io~~CallsGraph_node17" class="node">
+<title>proc~to_char_vector_sp</title>
+<g id="a_proc~~check_io~~CallsGraph_node17"><a xlink:href="../proc/to_char_vector_sp.html" xlink:title="to_char_vector_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="352.5,-24 243.5,-24 243.5,0 352.5,0 352.5,-24"/>
+<text text-anchor="middle" x="298" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_sp -->
+<g id="proc~~check_io~~CallsGraph_edge16" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_sp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M174.55,-280C183.92,-276.91 193.71,-271.95 200,-264 264.45,-182.5 169.31,-112.68 236,-33 236.74,-32.12 237.51,-31.28 238.32,-30.47"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="240.72,-33.03 246.43,-24.11 236.4,-27.53 240.72,-33.03"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~check_io~~CalledByGraph Pages: 1 -->
+<svg id="proccheck_ioCalledByGraph" width="641pt" height="394pt"
+ viewBox="0.00 0.00 641.00 394.35" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~check_io~~CalledByGraph" class="graph" transform="scale(0.61 0.61) rotate(0) translate(4 644.42)">
+<title>proc~~check_io~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-644.42 1050,-644.42 1050,4 -4,4"/>
+<!-- proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_node1" class="node">
+<title>proc~check_io</title>
+<polygon fill="none" stroke="black" points="1046,-316 987,-316 987,-292 1046,-292 1046,-316"/>
+<text text-anchor="middle" x="1016.5" y="-301.6" font-family="Helvetica,sans-Serif" font-size="10.50">check_io</text>
+</g>
+<!-- proc~read_char_record -->
+<g id="proc~~check_io~~CalledByGraph_node2" class="node">
+<title>proc~read_char_record</title>
+<g id="a_proc~~check_io~~CalledByGraph_node2"><a xlink:href="../proc/read_char_record.html" xlink:title="read_char_record">
+<polygon fill="#d9534f" stroke="#d9534f" points="787.5,-547 681.5,-547 681.5,-523 787.5,-523 787.5,-547"/>
+<text text-anchor="middle" x="734.5" y="-532.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_char_record</text>
+</a>
+</g>
+</g>
+<!-- proc~read_char_record&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge1" class="edge">
+<title>proc~read_char_record&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M784.76,-547.07C832.48,-555.67 904.3,-560 951,-523 982.33,-498.18 1004.33,-376.52 1012.25,-326.03"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1015.72,-326.54 1013.77,-316.13 1008.8,-325.49 1015.72,-326.54"/>
+</g>
+<!-- proc~read_record_header -->
+<g id="proc~~check_io~~CalledByGraph_node8" class="node">
+<title>proc~read_record_header</title>
+<g id="a_proc~~check_io~~CalledByGraph_node8"><a xlink:href="../proc/read_record_header.html" xlink:title="read_record_header">
+<polygon fill="#d9534f" stroke="#d9534f" points="950,-514 830,-514 830,-490 950,-490 950,-514"/>
+<text text-anchor="middle" x="890" y="-499.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_record_header</text>
+</a>
+</g>
+</g>
+<!-- proc~read_char_record&#45;&gt;proc~read_record_header -->
+<g id="proc~~check_io~~CalledByGraph_edge24" class="edge">
+<title>proc~read_char_record&#45;&gt;proc~read_record_header</title>
+<path fill="none" stroke="#00ff1e" d="M787.9,-523.74C799.3,-521.28 811.49,-518.66 823.33,-516.12"/>
+<polygon fill="#00ff1e" stroke="#00ff1e" points="824.13,-519.53 833.17,-514 822.66,-512.68 824.13,-519.53"/>
+</g>
+<!-- proc~read_header -->
+<g id="proc~~check_io~~CalledByGraph_node3" class="node">
+<title>proc~read_header</title>
+<g id="a_proc~~check_io~~CalledByGraph_node3"><a xlink:href="../proc/read_header.html" xlink:title="read_header">
+<polygon fill="#d9534f" stroke="#d9534f" points="639,-630 559,-630 559,-606 639,-606 639,-630"/>
+<text text-anchor="middle" x="599" y="-615.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_header</text>
+</a>
+</g>
+</g>
+<!-- proc~read_header&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge2" class="edge">
+<title>proc~read_header&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M639.13,-627.26C710.62,-641.67 863.06,-660.36 951,-583 989.75,-548.91 1008.07,-386.61 1013.61,-326.48"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1017.13,-326.45 1014.53,-316.18 1010.15,-325.84 1017.13,-326.45"/>
+</g>
+<!-- proc~read_int32_array -->
+<g id="proc~~check_io~~CalledByGraph_node4" class="node">
+<title>proc~read_int32_array</title>
+<g id="a_proc~~check_io~~CalledByGraph_node4"><a xlink:href="../proc/read_int32_array.html" xlink:title="read_int32_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="786,-505 683,-505 683,-481 786,-481 786,-505"/>
+<text text-anchor="middle" x="734.5" y="-490.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_int32_array</text>
+</a>
+</g>
+</g>
+<!-- proc~read_int32_array&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge3" class="edge">
+<title>proc~read_int32_array&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M786.46,-483.77C841.89,-472.87 925.98,-453.63 951,-433 984.92,-405.04 1002.65,-354.76 1010.45,-325.92"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1013.89,-326.56 1012.96,-316.01 1007.11,-324.84 1013.89,-326.56"/>
+</g>
+<!-- proc~read_int32_array&#45;&gt;proc~read_record_header -->
+<g id="proc~~check_io~~CalledByGraph_edge25" class="edge">
+<title>proc~read_int32_array&#45;&gt;proc~read_record_header</title>
+<path fill="none" stroke="#00ff1e" d="M786.19,-495.97C796.88,-496.6 808.35,-497.27 819.6,-497.93"/>
+<polygon fill="#00ff1e" stroke="#00ff1e" points="819.66,-501.44 829.85,-498.53 820.07,-494.45 819.66,-501.44"/>
+</g>
+<!-- proc~read_int64_array -->
+<g id="proc~~check_io~~CalledByGraph_node5" class="node">
+<title>proc~read_int64_array</title>
+<g id="a_proc~~check_io~~CalledByGraph_node5"><a xlink:href="../proc/read_int64_array.html" xlink:title="read_int64_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="786,-463 683,-463 683,-439 786,-439 786,-463"/>
+<text text-anchor="middle" x="734.5" y="-448.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_int64_array</text>
+</a>
+</g>
+</g>
+<!-- proc~read_int64_array&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge4" class="edge">
+<title>proc~read_int64_array&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M786.28,-448.67C832.81,-444.32 901.73,-432.09 951,-398 977.27,-379.82 996.06,-347.19 1006.35,-325.56"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1009.65,-326.77 1010.6,-316.22 1003.28,-323.87 1009.65,-326.77"/>
+</g>
+<!-- proc~read_int64_array&#45;&gt;proc~read_record_header -->
+<g id="proc~~check_io~~CalledByGraph_edge26" class="edge">
+<title>proc~read_int64_array&#45;&gt;proc~read_record_header</title>
+<path fill="none" stroke="#00ff1e" d="M771.88,-463.09C793.12,-470.14 820.12,-479.11 842.84,-486.66"/>
+<polygon fill="#00ff1e" stroke="#00ff1e" points="842.02,-490.08 852.62,-489.91 844.23,-483.44 842.02,-490.08"/>
+</g>
+<!-- proc~read_real_dp_array -->
+<g id="proc~~check_io~~CalledByGraph_node6" class="node">
+<title>proc~read_real_dp_array</title>
+<g id="a_proc~~check_io~~CalledByGraph_node6"><a xlink:href="../proc/read_real_dp_array.html" xlink:title="read_real_dp_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="792,-421 677,-421 677,-397 792,-397 792,-421"/>
+<text text-anchor="middle" x="734.5" y="-406.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_real_dp_array</text>
+</a>
+</g>
+</g>
+<!-- proc~read_real_dp_array&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge5" class="edge">
+<title>proc~read_real_dp_array&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M792.45,-406.8C837.69,-403.01 901.38,-393.03 951,-367 970.82,-356.61 988.61,-338.18 1000.47,-323.93"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1003.21,-326.1 1006.73,-316.11 997.74,-321.73 1003.21,-326.1"/>
+</g>
+<!-- proc~read_real_dp_array&#45;&gt;proc~read_record_header -->
+<g id="proc~~check_io~~CalledByGraph_edge27" class="edge">
+<title>proc~read_real_dp_array&#45;&gt;proc~read_record_header</title>
+<path fill="none" stroke="#00ff1e" d="M773.32,-421.01C780.03,-423.64 786.83,-426.66 793,-430 820.76,-445.05 849.3,-467.52 867.97,-483.35"/>
+<polygon fill="#00ff1e" stroke="#00ff1e" points="865.71,-486.02 875.57,-489.89 870.27,-480.71 865.71,-486.02"/>
+</g>
+<!-- proc~read_real_sp_array -->
+<g id="proc~~check_io~~CalledByGraph_node7" class="node">
+<title>proc~read_real_sp_array</title>
+<g id="a_proc~~check_io~~CalledByGraph_node7"><a xlink:href="../proc/read_real_sp_array.html" xlink:title="read_real_sp_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="791,-589 678,-589 678,-565 791,-565 791,-589"/>
+<text text-anchor="middle" x="734.5" y="-574.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_real_sp_array</text>
+</a>
+</g>
+</g>
+<!-- proc~read_real_sp_array&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge6" class="edge">
+<title>proc~read_real_sp_array&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M791.46,-586.22C839.52,-590.79 907.71,-588.8 951,-551 985.12,-521.21 1005.88,-381.5 1012.86,-326.42"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1016.35,-326.65 1014.1,-316.3 1009.41,-325.79 1016.35,-326.65"/>
+</g>
+<!-- proc~read_real_sp_array&#45;&gt;proc~read_record_header -->
+<g id="proc~~check_io~~CalledByGraph_edge28" class="edge">
+<title>proc~read_real_sp_array&#45;&gt;proc~read_record_header</title>
+<path fill="none" stroke="#00ff1e" d="M771.45,-564.89C778.67,-562.17 786.15,-559.15 793,-556 816.59,-545.15 842.16,-530.61 860.98,-519.36"/>
+<polygon fill="#00ff1e" stroke="#00ff1e" points="862.88,-522.3 869.63,-514.13 859.26,-516.31 862.88,-522.3"/>
+</g>
+<!-- proc~read_record_header&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge7" class="edge">
+<title>proc~read_record_header&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M931.32,-489.89C938.56,-486.31 945.52,-481.76 951,-476 991.83,-433.07 1007.37,-361.86 1012.82,-326.03"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1016.29,-326.51 1014.2,-316.12 1009.36,-325.54 1016.29,-326.51"/>
+</g>
+<!-- proc~serialize_close -->
+<g id="proc~~check_io~~CalledByGraph_node9" class="node">
+<title>proc~serialize_close</title>
+<g id="a_proc~~check_io~~CalledByGraph_node9"><a xlink:href="../proc/serialize_close.html" xlink:title="serialize_close">
+<polygon fill="#d9534f" stroke="#d9534f" points="935,-358 845,-358 845,-334 935,-334 935,-358"/>
+<text text-anchor="middle" x="890" y="-343.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">serialize_close</text>
+</a>
+</g>
+</g>
+<!-- proc~serialize_close&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge8" class="edge">
+<title>proc~serialize_close&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M926.68,-333.96C942.5,-328.62 961.15,-322.33 977.27,-316.9"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="978.57,-320.15 986.93,-313.64 976.33,-313.52 978.57,-320.15"/>
+</g>
+<!-- proc~serialize_open_read -->
+<g id="proc~~check_io~~CalledByGraph_node10" class="node">
+<title>proc~serialize_open_read</title>
+<g id="a_proc~~check_io~~CalledByGraph_node10"><a xlink:href="../proc/serialize_open_read.html" xlink:title="serialize_open_read">
+<polygon fill="#d9534f" stroke="#d9534f" points="949,-316 831,-316 831,-292 949,-292 949,-316"/>
+<text text-anchor="middle" x="890" y="-301.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">serialize_open_read</text>
+</a>
+</g>
+</g>
+<!-- proc~serialize_open_read&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge9" class="edge">
+<title>proc~serialize_open_read&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M949.24,-304C958.51,-304 967.9,-304 976.58,-304"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="976.76,-307.5 986.76,-304 976.76,-300.5 976.76,-307.5"/>
+</g>
+<!-- proc~serialize_open_write -->
+<g id="proc~~check_io~~CalledByGraph_node11" class="node">
+<title>proc~serialize_open_write</title>
+<g id="a_proc~~check_io~~CalledByGraph_node11"><a xlink:href="../proc/serialize_open_write.html" xlink:title="serialize_open_write">
+<polygon fill="#d9534f" stroke="#d9534f" points="950.5,-274 829.5,-274 829.5,-250 950.5,-250 950.5,-274"/>
+<text text-anchor="middle" x="890" y="-259.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">serialize_open_write</text>
+</a>
+</g>
+</g>
+<!-- proc~serialize_open_write&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge10" class="edge">
+<title>proc~serialize_open_write&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M926.68,-274.04C942.5,-279.38 961.15,-285.67 977.27,-291.1"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="976.33,-294.48 986.93,-294.36 978.57,-287.85 976.33,-294.48"/>
+</g>
+<!-- proc~write_char_record -->
+<g id="proc~~check_io~~CalledByGraph_node12" class="node">
+<title>proc~write_char_record</title>
+<g id="a_proc~~check_io~~CalledByGraph_node12"><a xlink:href="../proc/write_char_record.html" xlink:title="write_char_record">
+<polygon fill="#d9534f" stroke="#d9534f" points="788.5,-151 680.5,-151 680.5,-127 788.5,-127 788.5,-151"/>
+<text text-anchor="middle" x="734.5" y="-136.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">write_char_record</text>
+</a>
+</g>
+</g>
+<!-- proc~write_char_record&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge11" class="edge">
+<title>proc~write_char_record&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M788.51,-134.09C835.6,-132.54 904.04,-137.47 951,-172 987.42,-198.78 1004.33,-251.75 1011.28,-281.81"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1007.9,-282.71 1013.41,-291.75 1014.74,-281.24 1007.9,-282.71"/>
+</g>
+<!-- proc~write_record_header -->
+<g id="proc~~check_io~~CalledByGraph_node18" class="node">
+<title>proc~write_record_header</title>
+<g id="a_proc~~check_io~~CalledByGraph_node18"><a xlink:href="../proc/write_record_header.html" xlink:title="write_record_header">
+<polygon fill="#d9534f" stroke="#d9534f" points="951,-118 829,-118 829,-94 951,-94 951,-118"/>
+<text text-anchor="middle" x="890" y="-103.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">write_record_header</text>
+</a>
+</g>
+</g>
+<!-- proc~write_char_record&#45;&gt;proc~write_record_header -->
+<g id="proc~~check_io~~CalledByGraph_edge35" class="edge">
+<title>proc~write_char_record&#45;&gt;proc~write_record_header</title>
+<path fill="none" stroke="#ff005a" d="M788.76,-127.55C799.81,-125.18 811.58,-122.64 823.02,-120.18"/>
+<polygon fill="#ff005a" stroke="#ff005a" points="823.93,-123.57 832.97,-118.05 822.45,-116.73 823.93,-123.57"/>
+</g>
+<!-- proc~write_header -->
+<g id="proc~~check_io~~CalledByGraph_node13" class="node">
+<title>proc~write_header</title>
+<g id="a_proc~~check_io~~CalledByGraph_node13"><a xlink:href="../proc/write_header.html" xlink:title="write_header">
+<polygon fill="#d9534f" stroke="#d9534f" points="640,-234 558,-234 558,-210 640,-210 640,-234"/>
+<text text-anchor="middle" x="599" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">write_header</text>
+</a>
+</g>
+</g>
+<!-- proc~write_header&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge12" class="edge">
+<title>proc~write_header&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M640.25,-215.36C707.76,-206.09 846.65,-195.17 951,-241 971.73,-250.1 989.62,-269.03 1001.27,-283.77"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="998.56,-285.99 1007.37,-291.86 1004.14,-281.77 998.56,-285.99"/>
+</g>
+<!-- proc~write_int32_array -->
+<g id="proc~~check_io~~CalledByGraph_node14" class="node">
+<title>proc~write_int32_array</title>
+<g id="a_proc~~check_io~~CalledByGraph_node14"><a xlink:href="../proc/write_int32_array.html" xlink:title="write_int32_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="787,-109 682,-109 682,-85 787,-85 787,-109"/>
+<text text-anchor="middle" x="734.5" y="-94.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">write_int32_array</text>
+</a>
+</g>
+</g>
+<!-- proc~write_int32_array&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge13" class="edge">
+<title>proc~write_int32_array&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M787.44,-86.69C842.88,-76.95 926.09,-66.37 951,-85 983.01,-108.94 1004.62,-231.11 1012.35,-281.85"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1008.89,-282.42 1013.82,-291.8 1015.82,-281.4 1008.89,-282.42"/>
+</g>
+<!-- proc~write_int32_array&#45;&gt;proc~write_record_header -->
+<g id="proc~~check_io~~CalledByGraph_edge36" class="edge">
+<title>proc~write_int32_array&#45;&gt;proc~write_record_header</title>
+<path fill="none" stroke="#ff005a" d="M787.04,-100.02C797.2,-100.62 808.03,-101.25 818.69,-101.88"/>
+<polygon fill="#ff005a" stroke="#ff005a" points="818.65,-105.38 828.84,-102.47 819.06,-98.39 818.65,-105.38"/>
+</g>
+<!-- proc~write_int64_array -->
+<g id="proc~~check_io~~CalledByGraph_node15" class="node">
+<title>proc~write_int64_array</title>
+<g id="a_proc~~check_io~~CalledByGraph_node15"><a xlink:href="../proc/write_int64_array.html" xlink:title="write_int64_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="787,-67 682,-67 682,-43 787,-43 787,-67"/>
+<text text-anchor="middle" x="734.5" y="-52.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">write_int64_array</text>
+</a>
+</g>
+</g>
+<!-- proc~write_int64_array&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge14" class="edge">
+<title>proc~write_int64_array&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M787.29,-43.49C835.19,-36.06 905.62,-33.74 951,-71 983.94,-98.04 1005.2,-228.78 1012.59,-281.7"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1009.14,-282.3 1013.96,-291.74 1016.08,-281.36 1009.14,-282.3"/>
+</g>
+<!-- proc~write_int64_array&#45;&gt;proc~write_record_header -->
+<g id="proc~~check_io~~CalledByGraph_edge37" class="edge">
+<title>proc~write_int64_array&#45;&gt;proc~write_record_header</title>
+<path fill="none" stroke="#ff005a" d="M771.88,-67.09C793.12,-74.14 820.12,-83.11 842.84,-90.66"/>
+<polygon fill="#ff005a" stroke="#ff005a" points="842.02,-94.08 852.62,-93.91 844.23,-87.44 842.02,-94.08"/>
+</g>
+<!-- proc~write_real_dp_array -->
+<g id="proc~~check_io~~CalledByGraph_node16" class="node">
+<title>proc~write_real_dp_array</title>
+<g id="a_proc~~check_io~~CalledByGraph_node16"><a xlink:href="../proc/write_real_dp_array.html" xlink:title="write_real_dp_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="793,-25 676,-25 676,-1 793,-1 793,-25"/>
+<text text-anchor="middle" x="734.5" y="-10.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">write_real_dp_array</text>
+</a>
+</g>
+</g>
+<!-- proc~write_real_dp_array&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge15" class="edge">
+<title>proc~write_real_dp_array&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M793.45,-2.46C841.45,2.74 908.45,1.36 951,-36 988.25,-68.7 1007.45,-223.96 1013.42,-282.02"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1009.94,-282.37 1014.41,-291.98 1016.9,-281.68 1009.94,-282.37"/>
+</g>
+<!-- proc~write_real_dp_array&#45;&gt;proc~write_record_header -->
+<g id="proc~~check_io~~CalledByGraph_edge38" class="edge">
+<title>proc~write_real_dp_array&#45;&gt;proc~write_record_header</title>
+<path fill="none" stroke="#ff005a" d="M773.32,-25.01C780.03,-27.64 786.83,-30.66 793,-34 820.76,-49.05 849.3,-71.52 867.97,-87.35"/>
+<polygon fill="#ff005a" stroke="#ff005a" points="865.71,-90.02 875.57,-93.89 870.27,-84.71 865.71,-90.02"/>
+</g>
+<!-- proc~write_real_sp_array -->
+<g id="proc~~check_io~~CalledByGraph_node17" class="node">
+<title>proc~write_real_sp_array</title>
+<g id="a_proc~~check_io~~CalledByGraph_node17"><a xlink:href="../proc/write_real_sp_array.html" xlink:title="write_real_sp_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="792,-193 677,-193 677,-169 792,-169 792,-193"/>
+<text text-anchor="middle" x="734.5" y="-178.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">write_real_sp_array</text>
+</a>
+</g>
+</g>
+<!-- proc~write_real_sp_array&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge16" class="edge">
+<title>proc~write_real_sp_array&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M792.36,-175.75C838.44,-174.26 903.32,-178.64 951,-208 979.02,-225.26 997.6,-259.77 1007.34,-282.36"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1004.18,-283.87 1011.2,-291.8 1010.66,-281.22 1004.18,-283.87"/>
+</g>
+<!-- proc~write_real_sp_array&#45;&gt;proc~write_record_header -->
+<g id="proc~~check_io~~CalledByGraph_edge39" class="edge">
+<title>proc~write_real_sp_array&#45;&gt;proc~write_record_header</title>
+<path fill="none" stroke="#ff005a" d="M771.45,-168.89C778.67,-166.17 786.15,-163.15 793,-160 816.59,-149.15 842.16,-134.61 860.98,-123.36"/>
+<polygon fill="#ff005a" stroke="#ff005a" points="862.88,-126.3 869.63,-118.13 859.26,-120.31 862.88,-126.3"/>
+</g>
+<!-- proc~write_record_header&#45;&gt;proc~check_io -->
+<g id="proc~~check_io~~CalledByGraph_edge17" class="edge">
+<title>proc~write_record_header&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff0000" d="M931.32,-118.11C938.56,-121.69 945.52,-126.24 951,-132 991.83,-174.93 1007.37,-246.14 1012.82,-281.97"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1009.36,-282.46 1014.2,-291.88 1016.29,-281.49 1009.36,-282.46"/>
+</g>
+<!-- interface~read_array -->
+<g id="proc~~check_io~~CalledByGraph_node19" class="node">
+<title>interface~read_array</title>
+<g id="a_proc~~check_io~~CalledByGraph_node19"><a xlink:href="../interface/read_array.html" xlink:title="read_array">
+<polygon fill="#a7506f" stroke="#a7506f" points="634,-505 564,-505 564,-481 634,-481 634,-505"/>
+<text text-anchor="middle" x="599" y="-490.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_array</text>
+</a>
+</g>
+</g>
+<!-- interface~read_array&#45;&gt;proc~read_char_record -->
+<g id="proc~~check_io~~CalledByGraph_edge18" class="edge">
+<title>interface~read_array&#45;&gt;proc~read_char_record</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M634.03,-503.71C649.66,-508.62 668.47,-514.54 685.5,-519.9"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="684.7,-523.32 695.29,-522.98 686.8,-516.64 684.7,-523.32"/>
+</g>
+<!-- interface~read_array&#45;&gt;proc~read_int32_array -->
+<g id="proc~~check_io~~CalledByGraph_edge20" class="edge">
+<title>interface~read_array&#45;&gt;proc~read_int32_array</title>
+<path fill="none" stroke="#ffb300" stroke-dasharray="5,2" d="M634.03,-493C645.85,-493 659.49,-493 672.8,-493"/>
+<polygon fill="#ffb300" stroke="#ffb300" points="672.89,-496.5 682.89,-493 672.89,-489.5 672.89,-496.5"/>
+</g>
+<!-- interface~read_array&#45;&gt;proc~read_int64_array -->
+<g id="proc~~check_io~~CalledByGraph_edge21" class="edge">
+<title>interface~read_array&#45;&gt;proc~read_int64_array</title>
+<path fill="none" stroke="#f0ff00" stroke-dasharray="5,2" d="M634.03,-482.29C649.66,-477.38 668.47,-471.46 685.5,-466.1"/>
+<polygon fill="#f0ff00" stroke="#f0ff00" points="686.8,-469.36 695.29,-463.02 684.7,-462.68 686.8,-469.36"/>
+</g>
+<!-- interface~read_array&#45;&gt;proc~read_real_dp_array -->
+<g id="proc~~check_io~~CalledByGraph_edge22" class="edge">
+<title>interface~read_array&#45;&gt;proc~read_real_dp_array</title>
+<path fill="none" stroke="#96ff00" stroke-dasharray="5,2" d="M611.92,-480.87C626.1,-466.99 651.03,-444.34 676,-430 679.04,-428.25 682.25,-426.61 685.54,-425.07"/>
+<polygon fill="#96ff00" stroke="#96ff00" points="687.15,-428.19 694.94,-421 684.37,-421.76 687.15,-428.19"/>
+</g>
+<!-- interface~read_array&#45;&gt;proc~read_real_sp_array -->
+<g id="proc~~check_io~~CalledByGraph_edge23" class="edge">
+<title>interface~read_array&#45;&gt;proc~read_real_sp_array</title>
+<path fill="none" stroke="#3cff00" stroke-dasharray="5,2" d="M611.92,-505.13C626.1,-519.01 651.03,-541.66 676,-556 679.04,-557.75 682.25,-559.39 685.54,-560.93"/>
+<polygon fill="#3cff00" stroke="#3cff00" points="684.37,-564.24 694.94,-565 687.15,-557.81 684.37,-564.24"/>
+</g>
+<!-- interface~write_array -->
+<g id="proc~~check_io~~CalledByGraph_node20" class="node">
+<title>interface~write_array</title>
+<g id="a_proc~~check_io~~CalledByGraph_node20"><a xlink:href="../interface/write_array.html" xlink:title="write_array">
+<polygon fill="#a7506f" stroke="#a7506f" points="635.5,-109 562.5,-109 562.5,-85 635.5,-85 635.5,-109"/>
+<text text-anchor="middle" x="599" y="-94.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">write_array</text>
+</a>
+</g>
+</g>
+<!-- interface~write_array&#45;&gt;proc~write_char_record -->
+<g id="proc~~check_io~~CalledByGraph_edge29" class="edge">
+<title>interface~write_array&#45;&gt;proc~write_char_record</title>
+<path fill="none" stroke="#0078ff" stroke-dasharray="5,2" d="M635.78,-108.26C651,-113.04 668.98,-118.7 685.35,-123.85"/>
+<polygon fill="#0078ff" stroke="#0078ff" points="684.7,-127.32 695.29,-126.98 686.8,-120.64 684.7,-127.32"/>
+</g>
+<!-- interface~write_array&#45;&gt;proc~write_int32_array -->
+<g id="proc~~check_io~~CalledByGraph_edge31" class="edge">
+<title>interface~write_array&#45;&gt;proc~write_int32_array</title>
+<path fill="none" stroke="#3c00ff" stroke-dasharray="5,2" d="M635.78,-97C646.82,-97 659.31,-97 671.59,-97"/>
+<polygon fill="#3c00ff" stroke="#3c00ff" points="671.81,-100.5 681.81,-97 671.81,-93.5 671.81,-100.5"/>
+</g>
+<!-- interface~write_array&#45;&gt;proc~write_int64_array -->
+<g id="proc~~check_io~~CalledByGraph_edge32" class="edge">
+<title>interface~write_array&#45;&gt;proc~write_int64_array</title>
+<path fill="none" stroke="#9500ff" stroke-dasharray="5,2" d="M635.78,-85.74C651,-80.96 668.98,-75.3 685.35,-70.15"/>
+<polygon fill="#9500ff" stroke="#9500ff" points="686.8,-73.36 695.29,-67.02 684.7,-66.68 686.8,-73.36"/>
+</g>
+<!-- interface~write_array&#45;&gt;proc~write_real_dp_array -->
+<g id="proc~~check_io~~CalledByGraph_edge33" class="edge">
+<title>interface~write_array&#45;&gt;proc~write_real_dp_array</title>
+<path fill="none" stroke="#f000ff" stroke-dasharray="5,2" d="M611.92,-84.87C626.1,-70.99 651.03,-48.34 676,-34 679.04,-32.25 682.25,-30.61 685.54,-29.07"/>
+<polygon fill="#f000ff" stroke="#f000ff" points="687.15,-32.19 694.94,-25 684.37,-25.76 687.15,-32.19"/>
+</g>
+<!-- interface~write_array&#45;&gt;proc~write_real_sp_array -->
+<g id="proc~~check_io~~CalledByGraph_edge34" class="edge">
+<title>interface~write_array&#45;&gt;proc~write_real_sp_array</title>
+<path fill="none" stroke="#ff00b4" stroke-dasharray="5,2" d="M611.92,-109.13C626.1,-123.01 651.03,-145.66 676,-160 679.04,-161.75 682.25,-163.39 685.54,-164.93"/>
+<polygon fill="#ff00b4" stroke="#ff00b4" points="684.37,-168.24 694.94,-169 687.15,-161.81 684.37,-168.24"/>
+</g>
+<!-- proc~soa_read_prologue -->
+<g id="proc~~check_io~~CalledByGraph_node21" class="node">
+<title>proc~soa_read_prologue</title>
+<g id="a_proc~~check_io~~CalledByGraph_node21"><a xlink:href="../proc/soa_read_prologue.html" xlink:title="soa_read_prologue">
+<polygon fill="#d9534f" stroke="#d9534f" points="510.5,-630 397.5,-630 397.5,-606 510.5,-606 510.5,-630"/>
+<text text-anchor="middle" x="454" y="-615.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_prologue</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_prologue&#45;&gt;proc~read_header -->
+<g id="proc~~check_io~~CalledByGraph_edge19" class="edge">
+<title>proc~soa_read_prologue&#45;&gt;proc~read_header</title>
+<path fill="none" stroke="#ff5900" d="M510.7,-618C523.2,-618 536.37,-618 548.59,-618"/>
+<polygon fill="#ff5900" stroke="#ff5900" points="548.6,-621.5 558.6,-618 548.6,-614.5 548.6,-621.5"/>
+</g>
+<!-- proc~soa_read_prologue&#45;&gt;interface~read_array -->
+<g id="proc~~check_io~~CalledByGraph_edge43" class="edge">
+<title>proc~soa_read_prologue&#45;&gt;interface~read_array</title>
+<path fill="none" stroke="#ff0000" d="M505.71,-605.99C511.47,-603.51 517.05,-600.55 522,-597 552.22,-575.35 575.24,-537.96 587.67,-514.4"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="590.92,-515.74 592.34,-505.24 584.68,-512.56 590.92,-515.74"/>
+</g>
+<!-- proc~soa_write_prologue -->
+<g id="proc~~check_io~~CalledByGraph_node22" class="node">
+<title>proc~soa_write_prologue</title>
+<g id="a_proc~~check_io~~CalledByGraph_node22"><a xlink:href="../proc/soa_write_prologue.html" xlink:title="soa_write_prologue">
+<polygon fill="#d9534f" stroke="#d9534f" points="511.5,-234 396.5,-234 396.5,-210 511.5,-210 511.5,-234"/>
+<text text-anchor="middle" x="454" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_write_prologue</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_write_prologue&#45;&gt;proc~write_header -->
+<g id="proc~~check_io~~CalledByGraph_edge30" class="edge">
+<title>proc~soa_write_prologue&#45;&gt;proc~write_header</title>
+<path fill="none" stroke="#001dff" d="M511.52,-222C523.47,-222 536.01,-222 547.72,-222"/>
+<polygon fill="#001dff" stroke="#001dff" points="547.76,-225.5 557.76,-222 547.76,-218.5 547.76,-225.5"/>
+</g>
+<!-- proc~soa_write_prologue&#45;&gt;interface~write_array -->
+<g id="proc~~check_io~~CalledByGraph_edge49" class="edge">
+<title>proc~soa_write_prologue&#45;&gt;interface~write_array</title>
+<path fill="none" stroke="#7fff00" d="M505.71,-209.99C511.47,-207.51 517.05,-204.55 522,-201 552.22,-179.35 575.24,-141.96 587.67,-118.4"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="590.92,-119.74 592.34,-109.24 584.68,-116.56 590.92,-119.74"/>
+</g>
+<!-- proc~particle_soa_deserialize -->
+<g id="proc~~check_io~~CalledByGraph_node23" class="node">
+<title>proc~particle_soa_deserialize</title>
+<g id="a_proc~~check_io~~CalledByGraph_node23"><a xlink:href="../proc/particle_soa_deserialize.html" xlink:title="particle_soa_t%particle_soa_deserialize">
+<polygon fill="#d9534f" stroke="#d9534f" points="223,-545 0,-545 0,-521 223,-521 223,-545"/>
+<text text-anchor="middle" x="111.5" y="-530.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">particle_soa_t%particle_soa_deserialize</text>
+</a>
+</g>
+</g>
+<!-- proc~particle_soa_deserialize&#45;&gt;proc~soa_read_prologue -->
+<g id="proc~~check_io~~CalledByGraph_edge52" class="edge">
+<title>proc~particle_soa_deserialize&#45;&gt;proc~soa_read_prologue</title>
+<path fill="none" stroke="#00ffff" d="M160.92,-545.09C222.57,-560.48 328.97,-587.04 394.92,-603.5"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="394.19,-606.93 404.74,-605.95 395.89,-600.14 394.19,-606.93"/>
+</g>
+<!-- interface~soa_read_field -->
+<g id="proc~~check_io~~CalledByGraph_node35" class="node">
+<title>interface~soa_read_field</title>
+<g id="a_proc~~check_io~~CalledByGraph_node35"><a xlink:href="../interface/soa_read_field.html" xlink:title="soa_read_field">
+<polygon fill="#a7506f" stroke="#a7506f" points="349,-525 260,-525 260,-501 349,-501 349,-525"/>
+<text text-anchor="middle" x="304.5" y="-510.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_field</text>
+</a>
+</g>
+</g>
+<!-- proc~particle_soa_deserialize&#45;&gt;interface~soa_read_field -->
+<g id="proc~~check_io~~CalledByGraph_edge64" class="edge">
+<title>proc~particle_soa_deserialize&#45;&gt;interface~soa_read_field</title>
+<path fill="none" stroke="#ff0000" d="M223.05,-521.42C232.2,-520.47 241.16,-519.53 249.59,-518.65"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="249.99,-522.12 259.57,-517.6 249.26,-515.16 249.99,-522.12"/>
+</g>
+<!-- proc~particle_soa_serialize -->
+<g id="proc~~check_io~~CalledByGraph_node24" class="node">
+<title>proc~particle_soa_serialize</title>
+<g id="a_proc~~check_io~~CalledByGraph_node24"><a xlink:href="../proc/particle_soa_serialize.html" xlink:title="particle_soa_t%particle_soa_serialize">
+<polygon fill="#d9534f" stroke="#d9534f" points="216.5,-166 6.5,-166 6.5,-142 216.5,-142 216.5,-166"/>
+<text text-anchor="middle" x="111.5" y="-151.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">particle_soa_t%particle_soa_serialize</text>
+</a>
+</g>
+</g>
+<!-- proc~particle_soa_serialize&#45;&gt;proc~soa_write_prologue -->
+<g id="proc~~check_io~~CalledByGraph_edge53" class="edge">
+<title>proc~particle_soa_serialize&#45;&gt;proc~soa_write_prologue</title>
+<path fill="none" stroke="#7f00ff" d="M172.59,-166C232.45,-177.96 324.16,-196.27 386.25,-208.67"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="385.85,-212.16 396.34,-210.68 387.22,-205.29 385.85,-212.16"/>
+</g>
+<!-- interface~soa_write_field -->
+<g id="proc~~check_io~~CalledByGraph_node36" class="node">
+<title>interface~soa_write_field</title>
+<g id="a_proc~~check_io~~CalledByGraph_node36"><a xlink:href="../interface/soa_write_field.html" xlink:title="soa_write_field">
+<polygon fill="#a7506f" stroke="#a7506f" points="350,-129 259,-129 259,-105 350,-105 350,-129"/>
+<text text-anchor="middle" x="304.5" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_write_field</text>
+</a>
+</g>
+</g>
+<!-- proc~particle_soa_serialize&#45;&gt;interface~soa_write_field -->
+<g id="proc~~check_io~~CalledByGraph_edge65" class="edge">
+<title>proc~particle_soa_serialize&#45;&gt;interface~soa_write_field</title>
+<path fill="none" stroke="#00ffff" d="M174.51,-141.99C198.42,-137.36 225.54,-132.1 248.72,-127.61"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="249.58,-131.01 258.73,-125.67 248.25,-124.14 249.58,-131.01"/>
+</g>
+<!-- proc~soa_read_int32_field -->
+<g id="proc~~check_io~~CalledByGraph_node25" class="node">
+<title>proc~soa_read_int32_field</title>
+<g id="a_proc~~check_io~~CalledByGraph_node25"><a xlink:href="../proc/soa_read_int32_field.html" xlink:title="soa_read_int32_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="514.5,-504 393.5,-504 393.5,-480 514.5,-480 514.5,-504"/>
+<text text-anchor="middle" x="454" y="-489.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_int32_field</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_int32_field&#45;&gt;interface~read_array -->
+<g id="proc~~check_io~~CalledByGraph_edge40" class="edge">
+<title>proc~soa_read_int32_field&#45;&gt;interface~read_array</title>
+<path fill="none" stroke="#ff0000" d="M514.82,-492.42C527.72,-492.51 541.15,-492.6 553.35,-492.69"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="553.7,-496.19 563.72,-492.76 553.74,-489.19 553.7,-496.19"/>
+</g>
+<!-- proc~soa_read_int64_field -->
+<g id="proc~~check_io~~CalledByGraph_node26" class="node">
+<title>proc~soa_read_int64_field</title>
+<g id="a_proc~~check_io~~CalledByGraph_node26"><a xlink:href="../proc/soa_read_int64_field.html" xlink:title="soa_read_int64_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="514.5,-462 393.5,-462 393.5,-438 514.5,-438 514.5,-462"/>
+<text text-anchor="middle" x="454" y="-447.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_int64_field</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_int64_field&#45;&gt;interface~read_array -->
+<g id="proc~~check_io~~CalledByGraph_edge41" class="edge">
+<title>proc~soa_read_int64_field&#45;&gt;interface~read_array</title>
+<path fill="none" stroke="#ff0000" d="M495.21,-462.09C513.56,-467.61 535.33,-474.16 554.1,-479.8"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="553.31,-483.22 563.89,-482.74 555.33,-476.51 553.31,-483.22"/>
+</g>
+<!-- proc~soa_read_logical_field -->
+<g id="proc~~check_io~~CalledByGraph_node27" class="node">
+<title>proc~soa_read_logical_field</title>
+<g id="a_proc~~check_io~~CalledByGraph_node27"><a xlink:href="../proc/soa_read_logical_field.html" xlink:title="soa_read_logical_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="519,-420 389,-420 389,-396 519,-396 519,-420"/>
+<text text-anchor="middle" x="454" y="-405.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_logical_field</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_logical_field&#45;&gt;interface~read_array -->
+<g id="proc~~check_io~~CalledByGraph_edge42" class="edge">
+<title>proc~soa_read_logical_field&#45;&gt;interface~read_array</title>
+<path fill="none" stroke="#ff0000" d="M501.76,-420.02C508.74,-422.56 515.69,-425.54 522,-429 543.69,-440.9 564.94,-459.56 579.42,-473.66"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="577.18,-476.38 586.74,-480.96 582.13,-471.42 577.18,-476.38"/>
+</g>
+<!-- proc~soa_read_real_dp_field -->
+<g id="proc~~check_io~~CalledByGraph_node28" class="node">
+<title>proc~soa_read_real_dp_field</title>
+<g id="a_proc~~check_io~~CalledByGraph_node28"><a xlink:href="../proc/soa_read_real_dp_field.html" xlink:title="soa_read_real_dp_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="520.5,-588 387.5,-588 387.5,-564 520.5,-564 520.5,-588"/>
+<text text-anchor="middle" x="454" y="-573.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_real_dp_field</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_real_dp_field&#45;&gt;interface~read_array -->
+<g id="proc~~check_io~~CalledByGraph_edge44" class="edge">
+<title>proc~soa_read_real_dp_field&#45;&gt;interface~read_array</title>
+<path fill="none" stroke="#ff0000" d="M501.71,-563.89C508.7,-561.36 515.67,-558.41 522,-555 543.25,-543.55 564.27,-525.78 578.8,-512.19"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="581.36,-514.58 586.16,-505.13 576.52,-509.52 581.36,-514.58"/>
+</g>
+<!-- proc~soa_read_real_sp_field -->
+<g id="proc~~check_io~~CalledByGraph_node29" class="node">
+<title>proc~soa_read_real_sp_field</title>
+<g id="a_proc~~check_io~~CalledByGraph_node29"><a xlink:href="../proc/soa_read_real_sp_field.html" xlink:title="soa_read_real_sp_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="520,-546 388,-546 388,-522 520,-522 520,-546"/>
+<text text-anchor="middle" x="454" y="-531.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_real_sp_field</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_real_sp_field&#45;&gt;interface~read_array -->
+<g id="proc~~check_io~~CalledByGraph_edge45" class="edge">
+<title>proc~soa_read_real_sp_field&#45;&gt;interface~read_array</title>
+<path fill="none" stroke="#ff0000" d="M497.13,-521.92C515.07,-516.78 535.98,-510.78 554.11,-505.58"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="555.2,-508.91 563.85,-502.79 553.27,-502.18 555.2,-508.91"/>
+</g>
+<!-- proc~soa_write_int32_field -->
+<g id="proc~~check_io~~CalledByGraph_node30" class="node">
+<title>proc~soa_write_int32_field</title>
+<g id="a_proc~~check_io~~CalledByGraph_node30"><a xlink:href="../proc/soa_write_int32_field.html" xlink:title="soa_write_int32_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="516,-108 392,-108 392,-84 516,-84 516,-108"/>
+<text text-anchor="middle" x="454" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_write_int32_field</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_write_int32_field&#45;&gt;interface~write_array -->
+<g id="proc~~check_io~~CalledByGraph_edge46" class="edge">
+<title>proc~soa_write_int32_field&#45;&gt;interface~write_array</title>
+<path fill="none" stroke="#7fff00" d="M516.06,-96.43C528.15,-96.51 540.64,-96.6 552.12,-96.68"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="552.32,-100.18 562.34,-96.75 552.37,-93.18 552.32,-100.18"/>
+</g>
+<!-- proc~soa_write_int64_field -->
+<g id="proc~~check_io~~CalledByGraph_node31" class="node">
+<title>proc~soa_write_int64_field</title>
+<g id="a_proc~~check_io~~CalledByGraph_node31"><a xlink:href="../proc/soa_write_int64_field.html" xlink:title="soa_write_int64_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="516,-66 392,-66 392,-42 516,-42 516,-66"/>
+<text text-anchor="middle" x="454" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_write_int64_field</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_write_int64_field&#45;&gt;interface~write_array -->
+<g id="proc~~check_io~~CalledByGraph_edge47" class="edge">
+<title>proc~soa_write_int64_field&#45;&gt;interface~write_array</title>
+<path fill="none" stroke="#7fff00" d="M495.21,-66.09C513.14,-71.48 534.33,-77.86 552.81,-83.41"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="551.88,-86.79 562.47,-86.32 553.9,-80.08 551.88,-86.79"/>
+</g>
+<!-- proc~soa_write_logical_field -->
+<g id="proc~~check_io~~CalledByGraph_node32" class="node">
+<title>proc~soa_write_logical_field</title>
+<g id="a_proc~~check_io~~CalledByGraph_node32"><a xlink:href="../proc/soa_write_logical_field.html" xlink:title="soa_write_logical_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="520,-24 388,-24 388,0 520,0 520,-24"/>
+<text text-anchor="middle" x="454" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_write_logical_field</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_write_logical_field&#45;&gt;interface~write_array -->
+<g id="proc~~check_io~~CalledByGraph_edge48" class="edge">
+<title>proc~soa_write_logical_field&#45;&gt;interface~write_array</title>
+<path fill="none" stroke="#7fff00" d="M501.76,-24.02C508.74,-26.56 515.69,-29.54 522,-33 543.69,-44.9 564.94,-63.56 579.42,-77.66"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="577.18,-80.38 586.74,-84.96 582.13,-75.42 577.18,-80.38"/>
+</g>
+<!-- proc~soa_write_real_dp_field -->
+<g id="proc~~check_io~~CalledByGraph_node33" class="node">
+<title>proc~soa_write_real_dp_field</title>
+<g id="a_proc~~check_io~~CalledByGraph_node33"><a xlink:href="../proc/soa_write_real_dp_field.html" xlink:title="soa_write_real_dp_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="522,-192 386,-192 386,-168 522,-168 522,-192"/>
+<text text-anchor="middle" x="454" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_write_real_dp_field</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_write_real_dp_field&#45;&gt;interface~write_array -->
+<g id="proc~~check_io~~CalledByGraph_edge50" class="edge">
+<title>proc~soa_write_real_dp_field&#45;&gt;interface~write_array</title>
+<path fill="none" stroke="#7fff00" d="M501.71,-167.89C508.7,-165.36 515.67,-162.41 522,-159 543.25,-147.55 564.27,-129.78 578.8,-116.19"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="581.36,-118.58 586.16,-109.13 576.52,-113.52 581.36,-118.58"/>
+</g>
+<!-- proc~soa_write_real_sp_field -->
+<g id="proc~~check_io~~CalledByGraph_node34" class="node">
+<title>proc~soa_write_real_sp_field</title>
+<g id="a_proc~~check_io~~CalledByGraph_node34"><a xlink:href="../proc/soa_write_real_sp_field.html" xlink:title="soa_write_real_sp_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="521,-150 387,-150 387,-126 521,-126 521,-150"/>
+<text text-anchor="middle" x="454" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_write_real_sp_field</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_write_real_sp_field&#45;&gt;interface~write_array -->
+<g id="proc~~check_io~~CalledByGraph_edge51" class="edge">
+<title>proc~soa_write_real_sp_field&#45;&gt;interface~write_array</title>
+<path fill="none" stroke="#7fff00" d="M497.13,-125.92C514.49,-120.94 534.64,-115.17 552.34,-110.09"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="553.8,-113.31 562.44,-107.19 551.87,-106.59 553.8,-113.31"/>
+</g>
+<!-- interface~soa_read_field&#45;&gt;proc~soa_read_int32_field -->
+<g id="proc~~check_io~~CalledByGraph_edge54" class="edge">
+<title>interface~soa_read_field&#45;&gt;proc~soa_read_int32_field</title>
+<path fill="none" stroke="#ffff00" stroke-dasharray="5,2" d="M349.36,-506.76C360.06,-505.23 371.78,-503.56 383.36,-501.91"/>
+<polygon fill="#ffff00" stroke="#ffff00" points="384.07,-505.35 393.48,-500.47 383.08,-498.42 384.07,-505.35"/>
+</g>
+<!-- interface~soa_read_field&#45;&gt;proc~soa_read_int64_field -->
+<g id="proc~~check_io~~CalledByGraph_edge55" class="edge">
+<title>interface~soa_read_field&#45;&gt;proc~soa_read_int64_field</title>
+<path fill="none" stroke="#7fff00" stroke-dasharray="5,2" d="M326.2,-500.9C342.18,-491.88 365.03,-479.68 386,-471 390.74,-469.04 395.72,-467.16 400.75,-465.38"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="402.08,-468.63 410.42,-462.1 399.83,-462 402.08,-468.63"/>
+</g>
+<!-- interface~soa_read_field&#45;&gt;proc~soa_read_logical_field -->
+<g id="proc~~check_io~~CalledByGraph_edge56" class="edge">
+<title>interface~soa_read_field&#45;&gt;proc~soa_read_logical_field</title>
+<path fill="none" stroke="#00ff00" stroke-dasharray="5,2" d="M313.96,-500.86C327.25,-482.66 354.76,-448.38 386,-429 388.8,-427.27 391.75,-425.66 394.79,-424.18"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="396.37,-427.32 404.13,-420.11 393.57,-420.9 396.37,-427.32"/>
+</g>
+<!-- interface~soa_read_field&#45;&gt;proc~soa_read_real_dp_field -->
+<g id="proc~~check_io~~CalledByGraph_edge57" class="edge">
+<title>interface~soa_read_field&#45;&gt;proc~soa_read_real_dp_field</title>
+<path fill="none" stroke="#00ff7f" stroke-dasharray="5,2" d="M326.2,-525.1C342.18,-534.12 365.03,-546.32 386,-555 390.74,-556.96 395.72,-558.84 400.75,-560.62"/>
+<polygon fill="#00ff7f" stroke="#00ff7f" points="399.83,-564 410.42,-563.9 402.08,-557.37 399.83,-564"/>
+</g>
+<!-- interface~soa_read_field&#45;&gt;proc~soa_read_real_sp_field -->
+<g id="proc~~check_io~~CalledByGraph_edge58" class="edge">
+<title>interface~soa_read_field&#45;&gt;proc~soa_read_real_sp_field</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M349.36,-519.24C358.31,-520.52 367.96,-521.89 377.66,-523.27"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="377.35,-526.76 387.74,-524.71 378.34,-519.83 377.35,-526.76"/>
+</g>
+<!-- interface~soa_write_field&#45;&gt;proc~soa_write_int32_field -->
+<g id="proc~~check_io~~CalledByGraph_edge59" class="edge">
+<title>interface~soa_write_field&#45;&gt;proc~soa_write_int32_field</title>
+<path fill="none" stroke="#007fff" stroke-dasharray="5,2" d="M350.16,-110.64C360.22,-109.21 371.14,-107.65 381.98,-106.11"/>
+<polygon fill="#007fff" stroke="#007fff" points="382.49,-109.57 391.89,-104.7 381.5,-102.64 382.49,-109.57"/>
+</g>
+<!-- interface~soa_write_field&#45;&gt;proc~soa_write_int64_field -->
+<g id="proc~~check_io~~CalledByGraph_edge60" class="edge">
+<title>interface~soa_write_field&#45;&gt;proc~soa_write_int64_field</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M326.2,-104.9C342.18,-95.88 365.03,-83.68 386,-75 390.74,-73.04 395.72,-71.16 400.75,-69.38"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="402.08,-72.63 410.42,-66.1 399.83,-66 402.08,-72.63"/>
+</g>
+<!-- interface~soa_write_field&#45;&gt;proc~soa_write_logical_field -->
+<g id="proc~~check_io~~CalledByGraph_edge61" class="edge">
+<title>interface~soa_write_field&#45;&gt;proc~soa_write_logical_field</title>
+<path fill="none" stroke="#7f00ff" stroke-dasharray="5,2" d="M313.96,-104.86C327.25,-86.66 354.76,-52.38 386,-33 388.8,-31.27 391.75,-29.66 394.79,-28.18"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="396.37,-31.32 404.13,-24.11 393.57,-24.9 396.37,-31.32"/>
+</g>
+<!-- interface~soa_write_field&#45;&gt;proc~soa_write_real_dp_field -->
+<g id="proc~~check_io~~CalledByGraph_edge62" class="edge">
+<title>interface~soa_write_field&#45;&gt;proc~soa_write_real_dp_field</title>
+<path fill="none" stroke="#ff00ff" stroke-dasharray="5,2" d="M326.2,-129.1C342.18,-138.12 365.03,-150.32 386,-159 390.74,-160.96 395.72,-162.84 400.75,-164.62"/>
+<polygon fill="#ff00ff" stroke="#ff00ff" points="399.83,-168 410.42,-167.9 402.08,-161.37 399.83,-168"/>
+</g>
+<!-- interface~soa_write_field&#45;&gt;proc~soa_write_real_sp_field -->
+<g id="proc~~check_io~~CalledByGraph_edge63" class="edge">
+<title>interface~soa_write_field&#45;&gt;proc~soa_write_real_sp_field</title>
+<path fill="none" stroke="#ff007f" stroke-dasharray="5,2" d="M350.16,-123.36C358.69,-124.57 367.84,-125.87 377.03,-127.18"/>
+<polygon fill="#ff007f" stroke="#ff007f" points="376.61,-130.66 387,-128.6 377.59,-123.73 376.61,-130.66"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panproccheck_ioCalledByGraph = svgPanZoom('#proccheck_ioCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">check_io</span><span class="p">(</span><span class="n">ios</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="c">!! Turn a non zero `iostat` into an `ERROR_IO` carrying the raw value.</span>
+<span class="w">      </span><span class="c">!! Every I/O statement in this module funnels its status through here so</span>
+<span class="w">      </span><span class="c">!! that the failure message always names both the operation and the</span>
+<span class="w">      </span><span class="c">!! `iostat` the runtime produced.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ios</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">context</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">error_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">err</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ios</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">call </span><span class="n">err</span><span class="p">%</span><span class="n">set</span><span class="p">(</span><span class="n">ERROR_IO</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="o">//</span><span class="s2">", iostat="</span><span class="o">//</span><span class="n">to_char</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ios</span><span class="p">,</span><span class="w"> </span><span class="n">int32</span><span class="p">)))</span>
+<span class="w">   </span><span class="k">end subroutine </span><span class="n">check_io</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

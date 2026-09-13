@@ -1,0 +1,2558 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>pic_rng &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>pic_rng
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.5% of total for modules and submodules.">253 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_rng.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_rng.f90.html'>pic_rng.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">pic_rng</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_rng.html#variable-golden_gamma">GOLDEN_GAMMA</a>
+            <a class="list-group-item" href="../module/pic_rng.html#variable-mask16">MASK16</a>
+            <a class="list-group-item" href="../module/pic_rng.html#variable-mask32">MASK32</a>
+            <a class="list-group-item" href="../module/pic_rng.html#variable-mix_c1">MIX_C1</a>
+            <a class="list-group-item" href="../module/pic_rng.html#variable-mix_c2">MIX_C2</a>
+            <a class="list-group-item" href="../module/pic_rng.html#variable-pcg_default_increment">PCG_DEFAULT_INCREMENT</a>
+            <a class="list-group-item" href="../module/pic_rng.html#variable-pcg_multiplier">PCG_MULTIPLIER</a>
+            <a class="list-group-item" href="../module/pic_rng.html#variable-two_to_31">TWO_TO_31</a>
+            <a class="list-group-item" href="../module/pic_rng.html#variable-two_to_32">TWO_TO_32</a>
+            <a class="list-group-item" href="../module/pic_rng.html#variable-two_to_minus_53">TWO_TO_MINUS_53</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#inters-0"
+         aria-expanded="false" aria-controls="inters-0">
+         <h4 class="card-header bg-primary text-white">Interfaces</h4>
+      </a>
+      <div id="inters-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_rng.html#interface-next_below">next_below</a>
+            <a class="list-group-item" href="../module/pic_rng.html#interface-next_real_dp">next_real_dp</a>
+            <a class="list-group-item" href="../module/pic_rng.html#interface-stream_for">stream_for</a>
+        </div>
+      </div>
+    </div>
+
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#types-0"
+         aria-expanded="false" aria-controls="types-0">
+         <h4 class="card-header bg-primary text-white">Derived Types</h4>
+      </a>
+      <div id="types-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_rng.html#type-pcg32_t">pcg32_t</a>
+            <a class="list-group-item" href="../module/pic_rng.html#type-splitmix64_t">splitmix64_t</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#funcs-0"
+         aria-expanded="false" aria-controls="funcs-0">
+         <h4 class="card-header bg-primary text-white">Functions</h4>
+      </a>
+      <div id="funcs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_rng.html#proc-mix64">mix64</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-pcg32_next">pcg32_next</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-pcg32_next_below">pcg32_next_below</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-pcg32_next_real_dp">pcg32_next_real_dp</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-pcg32_next_u64">pcg32_next_u64</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-pcg32_step">pcg32_step</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-real_from_word">real_from_word</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-rejection_mask">rejection_mask</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-rotate_right32">rotate_right32</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-shr64">shr64</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-splitmix64_next">splitmix64_next</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-splitmix64_next_below">splitmix64_next_below</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-splitmix64_next_real_dp">splitmix64_next_real_dp</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-splitmix64_next_u64">splitmix64_next_u64</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-stream_seed">stream_seed</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-u32_to_int32">u32_to_int32</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-u64_add">u64_add</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-u64_mul">u64_mul</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#subs-0"
+         aria-expanded="false" aria-controls="subs-0">
+         <h4 class="card-header bg-primary text-white">Subroutines</h4>
+      </a>
+      <div id="subs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_rng.html#proc-pcg32_seed">pcg32_seed</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-splitmix64_seed">splitmix64_seed</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-stream_for_pcg32">stream_for_pcg32</a>
+            <a class="list-group-item" href="../module/pic_rng.html#proc-stream_for_splitmix64">stream_for_splitmix64</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <p>Portable, reproducible pseudo-random number generators.</p>
+<p>Two engines are provided:</p>
+<ul>
+<li><code>splitmix64_t</code> - SplitMix64 (Steele, Lea and Flood, 2014; reference
+  implementation by Sebastiano Vigna, public domain). A 64-bit counter
+  plus a strong finalising mix. Tiny, fast, and ideal for seeding other
+  generators.</li>
+<li><code>pcg32_t</code> - PCG-XSH-RR 64/32 (O&rsquo;Neill, 2014). A 64-bit LCG whose output
+  is a permuted 32-bit word. Supports 2**63 distinct streams through its
+  increment.</li>
+</ul>
+<p>Both types expose <code>seed</code>, <code>next</code> and <code>next_u64</code>, and both work with the
+module-level generics <code>next_real_dp</code>, <code>next_below</code> and <code>stream_for</code>.</p>
+<h3 id="portability-notes-the-whole-reason-this-module-exists">Portability notes (the whole reason this module exists)</h3>
+<ol>
+<li><strong>No BOZ literals anywhere.</strong> The 64-bit constants of SplitMix64 have
+   their top bit set, so <code>z'9E3779B97F4A7C15'</code> is not representable as a
+   positive <code>integer(int64)</code>. Compilers disagree on BOZ literals appearing
+   in initialisation expressions (gfortran, ifx and nvfortran all differ in
+   what they accept and what they warn about). Every constant below is
+   therefore written as an ordinary signed decimal literal equal to the
+   two&rsquo;s-complement interpretation of the intended bit pattern, with the
+   hexadecimal value given in a comment.</li>
+<li><strong>No reliance on signed overflow.</strong> Fortran has no unsigned integer
+   type, and signed overflow is not defined by the standard: a build with
+   <code>-ftrapv</code> or <code>-fsanitize=signed-integer-overflow</code> may abort on it. All
+   modular arithmetic goes through <code>u64_add</code> and <code>u64_mul</code>, which split
+   their operands into 16-bit limbs with <code>ibits</code> so that every intermediate
+   product stays below 2**35 and every accumulation stays well inside the
+   signed 64-bit range. The results are reassembled with <code>ior</code>/<code>ishft</code>,
+   which are bit-model intrinsics and are exactly defined for every bit
+   pattern, sign bit included.</li>
+<li><strong>No <code>transfer</code> between reals and integers.</strong> nvfortran and LFortran do
+   not agree on the result of bit-casting a double to an integer. Reals are
+   built arithmetically instead (see <code>next_real_dp</code>).</li>
+<li><strong>No right shift by a negative count and no F2008 shift intrinsics.</strong>
+   <code>ishft(x, -n)</code> is standard but its interaction with the sign bit is a
+   recurring source of confusion, and <code>shiftr</code>/<code>shifta</code> are Fortran 2008
+   and not uniformly available on the older compilers PIC targets. Every
+   logical right shift here is written as <code>ibits(x, n, 64 - n)</code>, which is
+   Fortran 90, zero-filling by definition, and correct for negative <code>x</code>.
+   <code>ishft</code> is used only with non-negative (left-shift) counts.</li>
+</ol>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='pic_types.html'>pic_types</a></li>
+                  <li class="list-inline-item"><a href='pic_error.html'>pic_error</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~pic_rng~~UsesGraph Pages: 1 -->
+<svg id="modulepic_rngUsesGraph" width="549pt" height="74pt"
+ viewBox="0.00 0.00 549.00 74.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_rng~~UsesGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 70)">
+<title>module~~pic_rng~~UsesGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-70 545,-70 545,4 -4,4"/>
+<!-- module~pic_rng -->
+<g id="module~~pic_rng~~UsesGraph_node1" class="node">
+<title>module~pic_rng</title>
+<polygon fill="none" stroke="black" points="541,-25 487,-25 487,-1 541,-1 541,-25"/>
+<text text-anchor="middle" x="514" y="-10.6" font-family="Helvetica,sans-Serif" font-size="10.50">pic_rng</text>
+</g>
+<!-- module~pic_error -->
+<g id="module~~pic_rng~~UsesGraph_node2" class="node">
+<title>module~pic_error</title>
+<g id="a_module~~pic_rng~~UsesGraph_node2"><a xlink:href="../module/pic_error.html" xlink:title="pic_error">
+<polygon fill="#337ab7" stroke="#337ab7" points="451,-45 391,-45 391,-21 451,-21 451,-45"/>
+<text text-anchor="middle" x="421" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_error</text>
+</a>
+</g>
+</g>
+<!-- module~pic_rng&#45;&gt;module~pic_error -->
+<g id="module~~pic_rng~~UsesGraph_edge1" class="edge">
+<title>module~pic_rng&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M486.68,-18.78C478.68,-20.54 469.71,-22.51 461.06,-24.41"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="460.15,-21.03 451.13,-26.6 461.65,-27.87 460.15,-21.03"/>
+</g>
+<!-- module~pic_types -->
+<g id="module~~pic_rng~~UsesGraph_node3" class="node">
+<title>module~pic_types</title>
+<g id="a_module~~pic_rng~~UsesGraph_node3"><a xlink:href="../module/pic_types.html" xlink:title="pic_types">
+<polygon fill="#337ab7" stroke="#337ab7" points="192,-45 130,-45 130,-21 192,-21 192,-45"/>
+<text text-anchor="middle" x="161" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_types</text>
+</a>
+</g>
+</g>
+<!-- module~pic_rng&#45;&gt;module~pic_types -->
+<g id="module~~pic_rng~~UsesGraph_edge2" class="edge">
+<title>module~pic_rng&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M486.86,-10.19C436.43,-5.36 322.36,2.65 228,-12 219.37,-13.34 210.33,-15.61 201.81,-18.17"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="200.55,-14.9 192.09,-21.28 202.68,-21.57 200.55,-14.9"/>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_types -->
+<g id="module~~pic_rng~~UsesGraph_edge4" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M390.71,-44.61C379.69,-48.4 366.95,-52.12 355,-54 299.24,-62.78 283.78,-62.66 228,-54 219.37,-52.66 210.33,-50.39 201.81,-47.83"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="202.68,-44.43 192.09,-44.72 200.55,-51.1 202.68,-44.43"/>
+</g>
+<!-- module~pic_global_definitions -->
+<g id="module~~pic_rng~~UsesGraph_node6" class="node">
+<title>module~pic_global_definitions</title>
+<g id="a_module~~pic_rng~~UsesGraph_node6"><a xlink:href="../module/pic_global_definitions.html" xlink:title="pic_global_definitions">
+<polygon fill="#337ab7" stroke="#337ab7" points="355,-45 228,-45 228,-21 355,-21 355,-45"/>
+<text text-anchor="middle" x="291.5" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_global_definitions</text>
+</a>
+</g>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_global_definitions -->
+<g id="module~~pic_rng~~UsesGraph_edge3" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_global_definitions</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M390.75,-33C383,-33 374.29,-33 365.32,-33"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="365.14,-29.5 355.14,-33 365.14,-36.5 365.14,-29.5"/>
+</g>
+<!-- iso_c_binding -->
+<g id="module~~pic_rng~~UsesGraph_node4" class="node">
+<title>iso_c_binding</title>
+<g id="a_module~~pic_rng~~UsesGraph_node4"><a xlink:href="http://fortranwiki.org/fortran/show/iso_c_binding" xlink:title="iso_c_binding">
+<polygon fill="#337ab7" stroke="#337ab7" points="89,-66 5,-66 5,-42 89,-42 89,-66"/>
+<text text-anchor="middle" x="47" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_c_binding</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_c_binding -->
+<g id="module~~pic_rng~~UsesGraph_edge5" class="edge">
+<title>module~pic_types&#45;&gt;iso_c_binding</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M129.99,-38.63C120.46,-40.41 109.64,-42.44 99.07,-44.43"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="98.23,-41.02 89.05,-46.3 99.52,-47.9 98.23,-41.02"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~pic_rng~~UsesGraph_node5" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~pic_rng~~UsesGraph_node5"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-24 0,-24 0,0 94,0 94,-24"/>
+<text text-anchor="middle" x="47" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_fortran_env -->
+<g id="module~~pic_rng~~UsesGraph_edge6" class="edge">
+<title>module~pic_types&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M129.99,-27.37C121.98,-25.87 113.07,-24.2 104.15,-22.53"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="104.6,-19.05 94.13,-20.65 103.31,-25.93 104.6,-19.05"/>
+</g>
+<!-- module~pic_global_definitions&#45;&gt;module~pic_types -->
+<g id="module~~pic_rng~~UsesGraph_edge7" class="edge">
+<title>module~pic_global_definitions&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M227.76,-33C219.16,-33 210.53,-33 202.48,-33"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="202.28,-29.5 192.28,-33 202.28,-36.5 202.28,-29.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      
+      <br>
+
+
+        <section>
+          <h2>Variables</h2>
+            <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-golden_gamma"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>GOLDEN_GAMMA</strong></td>
+<td> =</td>
+                <td>-7046029254386353131_int64</td>
+            <td>
+                <p>SplitMix64 additive constant, bit pattern 0x9E3779B97F4A7C15.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mask16"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>MASK16</strong></td>
+<td> =</td>
+                <td>65535_int64</td>
+            <td>
+                <p>Low 16-bit mask, used by the limb arithmetic helpers.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mask32"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>MASK32</strong></td>
+<td> =</td>
+                <td>4294967295_int64</td>
+            <td>
+                <p>Low 32-bit mask (2**32 - 1).</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mix_c1"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>MIX_C1</strong></td>
+<td> =</td>
+                <td>-4658895280553007687_int64</td>
+            <td>
+                <p>SplitMix64 first multiplier, bit pattern 0xBF58476D1CE4E5B9.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mix_c2"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>MIX_C2</strong></td>
+<td> =</td>
+                <td>-7723592293110705685_int64</td>
+            <td>
+                <p>SplitMix64 second multiplier, bit pattern 0x94D049BB133111EB.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pcg_default_increment"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PCG_DEFAULT_INCREMENT</strong></td>
+<td> =</td>
+                <td>1442695040888963407_int64</td>
+            <td>
+                <p>Default PCG stream increment, bit pattern 0x14057B7EF767814F.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pcg_multiplier"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PCG_MULTIPLIER</strong></td>
+<td> =</td>
+                <td>6364136223846793005_int64</td>
+            <td>
+                <p>PCG 64-bit LCG multiplier, bit pattern 0x5851F42D4C957F2D.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-two_to_31"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>TWO_TO_31</strong></td>
+<td> =</td>
+                <td>2147483648_int64</td>
+            <td>
+                <p>2**31, the first value that does not fit in a signed 32-bit integer.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-two_to_32"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>TWO_TO_32</strong></td>
+<td> =</td>
+                <td>4294967296_int64</td>
+            <td>
+                <p>2**32, used to fold an unsigned 32-bit value into <code>int32</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-two_to_minus_53"></span>
+              real(kind=dp),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>TWO_TO_MINUS_53</strong></td>
+<td> =</td>
+                <td>1.0_dp/9007199254740992.0_dp</td>
+            <td>
+                <p>2**-53, exactly representable in IEEE binary64.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-next_below"></span>
+      <h3>public        interface <a href='../interface/next_below.html'>next_below</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Draw a uniform integer in [0, n) by rejection sampling.</p>
+<p>The naive <code>mod(next(), n)</code> is biased whenever <code>n</code> does not divide the
+generator&rsquo;s period: the first <code>2**64 mod n</code> residues each get one extra
+preimage, so for large <code>n</code> some outcomes are measurably more likely.
+Instead a mask of the smallest <code>2**k - 1</code> at least <code>n - 1</code> is applied to
+a fresh 64-bit word and values at or above <code>n</code> are rejected and redrawn.
+Every accepted value has exactly one preimage per draw, so the result is
+exactly uniform. The acceptance probability is above 1/2, so the
+expected number of draws is below 2 and the loop terminates with
+probability one.</p>
+<p><code>n == 1</code> returns 0 without consuming a draw. <code>n &lt;= 0</code> is a usage error:
+it returns 0 and, if <code>error</code> is present, sets <code>ERROR_VALIDATION</code>.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/splitmix64_next_below.html'>splitmix64_next_below</a>(gen, n, error) result(r)  
+
+    </h3>
+    
+  <p>Uniform integer in [0, n) from a SplitMix64 generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~3"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~104"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-error~2"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>error</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/pcg32_next_below.html'>pcg32_next_below</a>(gen, n, error) result(r)  
+
+    </h3>
+    
+  <p>Uniform integer in [0, n) from a PCG32 generator. Each attempt consumes
+two 32-bit outputs, so the stream stays word aligned no matter how many
+rejections occur.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~4"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~105"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-error~3"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>error</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-next_real_dp"></span>
+      <h3>public        interface <a href='../interface/next_real_dp.html'>next_real_dp</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Draw a uniform <code>real(dp)</code> in [0, 1).</p>
+<p>Construction, identical for both engines and on every compiler: take a
+fresh 64-bit word <code>w</code> from the generator, keep its top 53 bits
+<code>u = ibits(w, 11, 53)</code> (an integer in [0, 2<strong>53)), and return
+<code>real(u, dp) * 2**-53</code>. Every integer below 2</strong>53 is exact in IEEE
+binary64 and 2<strong>-53 is a power of two, so the product is exact: no
+rounding, no compiler-dependent fused multiply-add, and the result can
+never reach 1.0. Values are therefore multiples of 2</strong>-53 in
+[0, 1 - 2**-53].</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/splitmix64_next_real_dp.html'>splitmix64_next_real_dp</a>(gen) result(r)  
+
+    </h3>
+    
+  <p>Uniform <code>real(dp)</code> in [0, 1) from a SplitMix64 generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/pcg32_next_real_dp.html'>pcg32_next_real_dp</a>(gen) result(r)  
+
+    </h3>
+    
+  <p>Uniform <code>real(dp)</code> in [0, 1) from a PCG32 generator. Consumes two
+32-bit outputs.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~2"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-stream_for"></span>
+      <h3>public        interface <a href='../interface/stream_for.html'>stream_for</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Derive an independent, reproducible generator for a stream id.</p>
+<p>Parallel codes must not let the seed of a task depend on scheduling
+order. <code>stream_for</code> maps <code>(master_seed, stream_id)</code> to a generator
+through two SplitMix64 finalisers, so stream 7 is the same sequence
+whether it runs first, last or on another rank, and different ids give
+uncorrelated sequences.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/stream_for_splitmix64.html'>stream_for_splitmix64</a>(master_seed, stream_id, gen)  
+
+    </h3>
+    
+  <p>Build the SplitMix64 generator belonging to <code>stream_id</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-master_seed~2"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>master_seed</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-stream_id~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>stream_id</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~5"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/stream_for_pcg32.html'>stream_for_pcg32</a>(master_seed, stream_id, gen)  
+
+    </h3>
+    
+  <p>Build the PCG32 generator belonging to <code>stream_id</code>. The derived seed
+drives a local SplitMix64 which supplies both the LCG state and the
+stream selector.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-master_seed~3"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>master_seed</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-stream_id~3"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>stream_id</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~6"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Derived Types</h2>
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-pcg32_t"></span>
+      <h3>
+        type, public&nbsp;::&nbsp;
+        <a href='../type/pcg32_t.html'>pcg32_t</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>PCG-XSH-RR 64/32 generator: 64-bit LCG state with a 32-bit output
+permutation, plus a per-stream odd increment.</p>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-increment"></span>
+              integer(kind=int64),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>increment</strong></td>
+<td> =</td>
+                <td>PCG_DEFAULT_INCREMENT</td>
+            <td>
+<p>Stream increment; always odd, which is what makes streams distinct.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-state~39"></span>
+              integer(kind=int64),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>state</strong></td>
+<td> =</td>
+                <td>0_int64</td>
+            <td>
+<p>Explicit 64-bit LCG state (fixed width, not <code>default_int</code>).</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+
+        <h4>Type-Bound Procedures</h4>
+        <table class="table table-striped varlist">
+          <tbody>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/pcg32_t.html#boundprocedure-next~2'>next</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/pcg32_next.html'>pcg32_next</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/pcg32_t.html#boundprocedure-next_u64~2'>next_u64</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/pcg32_next_u64.html'>pcg32_next_u64</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/pcg32_t.html#boundprocedure-seed~4'>seed</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/pcg32_seed.html'>pcg32_seed</a></td>
+                  <td></td>
+              </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-splitmix64_t"></span>
+      <h3>
+        type, public&nbsp;::&nbsp;
+        <a href='../type/splitmix64_t.html'>splitmix64_t</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>SplitMix64 generator: a 64-bit counter run through a strong finaliser.</p>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-state~38"></span>
+              integer(kind=int64),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>state</strong></td>
+<td> =</td>
+                <td>0_int64</td>
+            <td>
+<p>Explicit 64-bit state. Fixed width on purpose: the algorithm is
+defined on 64-bit words and must not follow <code>default_int</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+
+        <h4>Type-Bound Procedures</h4>
+        <table class="table table-striped varlist">
+          <tbody>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/splitmix64_t.html#boundprocedure-next'>next</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/splitmix64_next.html'>splitmix64_next</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/splitmix64_t.html#boundprocedure-next_u64'>next_u64</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/splitmix64_next_u64.html'>splitmix64_next_u64</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/splitmix64_t.html#boundprocedure-seed~3'>seed</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/splitmix64_seed.html'>splitmix64_seed</a></td>
+                  <td></td>
+              </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-mix64"></span> <h3>private pure function <a href='../proc/mix64.html'>mix64</a>(x) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>The SplitMix64 finalising mix (the &ldquo;MurmurHash3-style&rdquo; avalanche used
+by <code>splitmix64.c</code>). Used both as the generator output stage and as the
+seed derivation function for <code>stream_for</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~24"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_next"></span> <h3>private  function <a href='../proc/pcg32_next.html'>pcg32_next</a>(self) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Next 32-bit output, returned as the <code>int32</code> with the same bit pattern
+as the reference implementation&rsquo;s <code>uint32_t</code> result. Roughly half of
+the returned values are therefore negative; use <code>next_real_dp</code> or
+<code>next_below</code> if a magnitude is wanted.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~72"></span>
+              class(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_next_below"></span> <h3>private  function <a href='../proc/pcg32_next_below.html'>pcg32_next_below</a>(gen, n, error) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Uniform integer in [0, n) from a PCG32 generator. Each attempt consumes
+two 32-bit outputs, so the stream stays word aligned no matter how many
+rejections occur.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~4"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~105"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-error~3"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>error</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_next_real_dp"></span> <h3>private  function <a href='../proc/pcg32_next_real_dp.html'>pcg32_next_real_dp</a>(gen) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Uniform <code>real(dp)</code> in [0, 1) from a PCG32 generator. Consumes two
+32-bit outputs.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~2"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_next_u64"></span> <h3>private  function <a href='../proc/pcg32_next_u64.html'>pcg32_next_u64</a>(self) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Full 64-bit random word built from two consecutive 32-bit outputs; the
+first output supplies the high half. Fixing the order here is what makes
+<code>next_real_dp</code> and <code>next_below</code> reproducible for this engine.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~73"></span>
+              class(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_step"></span> <h3>private  function <a href='../proc/pcg32_step.html'>pcg32_step</a>(self) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Advance the LCG one step and return the XSH-RR permutation of the
+<em>previous</em> state as an unsigned value in [0, 2**32).</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~71"></span>
+              class(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-real_from_word"></span> <h3>private pure function <a href='../proc/real_from_word.html'>real_from_word</a>(word) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Turn a 64-bit random word into a <code>real(dp)</code> in [0, 1) using its top 53
+bits. See the <code>next_real_dp</code> interface documentation for the exactness
+argument.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-word"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>word</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-rejection_mask"></span> <h3>private pure function <a href='../proc/rejection_mask.html'>rejection_mask</a>(n) result(mask)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Smallest <code>2**k - 1</code> that is at least <code>n - 1</code>, for <code>n &gt;= 1</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~103"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-rotate_right32"></span> <h3>private pure function <a href='../proc/rotate_right32.html'>rotate_right32</a>(x, rot) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Rotate the low 32 bits of <code>x</code> right by <code>rot</code> bits, <code>0 &lt;= rot &lt;= 31</code>.
+Branch free: when <code>rot</code> is zero the left-shifted term is shifted clean
+out of the low 32 bits and the mask removes it.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~25"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rot"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rot</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-shr64"></span> <h3>private pure function <a href='../proc/shr64.html'>shr64</a>(x, n) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Logical (zero-filling) right shift of a 64-bit word by <code>n</code> bits,
+<code>0 &lt;= n &lt;= 63</code>. Written with <code>ibits</code> rather than <code>ishft(x, -n)</code> or the
+Fortran 2008 <code>shiftr</code> for the portability reasons given in the module
+documentation.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~23"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~102"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-splitmix64_next"></span> <h3>private  function <a href='../proc/splitmix64_next.html'>splitmix64_next</a>(self) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Advance the state by the golden-ratio increment and return the mixed
+64-bit output.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~68"></span>
+              class(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-splitmix64_next_below"></span> <h3>private  function <a href='../proc/splitmix64_next_below.html'>splitmix64_next_below</a>(gen, n, error) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Uniform integer in [0, n) from a SplitMix64 generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~3"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~104"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-error~2"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>error</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-splitmix64_next_real_dp"></span> <h3>private  function <a href='../proc/splitmix64_next_real_dp.html'>splitmix64_next_real_dp</a>(gen) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Uniform <code>real(dp)</code> in [0, 1) from a SplitMix64 generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-splitmix64_next_u64"></span> <h3>private  function <a href='../proc/splitmix64_next_u64.html'>splitmix64_next_u64</a>(self) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Full 64-bit random word. For SplitMix64 this is simply <code>next</code>; it
+exists so that both engines present the same interface to the shared
+real and bounded-integer conversions.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~69"></span>
+              class(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-stream_seed"></span> <h3>private pure function <a href='../proc/stream_seed.html'>stream_seed</a>(master_seed, stream_id) result(s)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Deterministic seed for <code>stream_id</code> under <code>master_seed</code>.</p><a href="../proc/stream_seed.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-master_seed"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>master_seed</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-stream_id"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>stream_id</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-u32_to_int32"></span> <h3>private pure function <a href='../proc/u32_to_int32.html'>u32_to_int32</a>(u) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Reinterpret an unsigned 32-bit value held in [0, 2**32) as the signed
+<code>int32</code> with the same bit pattern. Done arithmetically rather than with
+<code>transfer</code>, and without ever passing an out-of-range value to <code>int</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-u~17"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>u</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-u64_add"></span> <h3>private pure function <a href='../proc/u64_add.html'>u64_add</a>(a, b) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p><code>(a + b)</code> reduced modulo 2<strong>64, without ever overflowing a signed
+64-bit integer. Operands are split into 32-bit halves with <code>ibits</code>, so
+each half sum stays below 2</strong>33.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~5"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>a</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-b~7"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>b</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-u64_mul"></span> <h3>private pure function <a href='../proc/u64_mul.html'>u64_mul</a>(a, b) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p><code>(a * b)</code> reduced modulo 2**64, without ever overflowing a signed
+64-bit integer.</p><a href="../proc/u64_mul.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-a~6"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>a</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-b~8"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>b</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Subroutines</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_seed"></span> <h3>private  subroutine <a href='../proc/pcg32_seed.html'>pcg32_seed</a>(self, state, seq)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Seed the generator, following the reference <code>pcg32_srandom_r</code>: the
+stream selector is shifted left and forced odd to become the LCG
+increment, then the state is warmed up, offset by the requested state
+and warmed up again.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~70"></span>
+              class(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-state~40"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>state</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-seq"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>seq</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-splitmix64_seed"></span> <h3>private  subroutine <a href='../proc/splitmix64_seed.html'>splitmix64_seed</a>(self, s)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Set the generator state. Any 64-bit value is a valid seed, including
+zero: SplitMix64 has no degenerate state.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~67"></span>
+              class(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-s~3"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>s</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-stream_for_pcg32"></span> <h3>private  subroutine <a href='../proc/stream_for_pcg32.html'>stream_for_pcg32</a>(master_seed, stream_id, gen)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Build the PCG32 generator belonging to <code>stream_id</code>. The derived seed
+drives a local SplitMix64 which supplies both the LCG state and the
+stream selector.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-master_seed~3"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>master_seed</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-stream_id~3"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>stream_id</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~6"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-stream_for_splitmix64"></span> <h3>private  subroutine <a href='../proc/stream_for_splitmix64.html'>stream_for_splitmix64</a>(master_seed, stream_id, gen)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Build the SplitMix64 generator belonging to <code>stream_id</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-master_seed~2"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>master_seed</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-stream_id~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>stream_id</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~5"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

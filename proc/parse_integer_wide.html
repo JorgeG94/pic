@@ -1,0 +1,878 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>parse_integer_wide &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>parse_integer_wide
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.4% of total for procedures.">51 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_tokenizer.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_tokenizer.f90.html'>pic_tokenizer.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_tokenizer.html'>pic_tokenizer</a></li>
+            <li class="breadcrumb-item active" aria-current="page">parse_integer_wide</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../proc/parse_integer_wide.html#variable-accumulator">accumulator</a>
+            <a class="list-group-item" href="../proc/parse_integer_wide.html#variable-digit">digit</a>
+            <a class="list-group-item" href="../proc/parse_integer_wide.html#variable-i_char">i_char</a>
+            <a class="list-group-item" href="../proc/parse_integer_wide.html#variable-limit">limit</a>
+            <a class="list-group-item" href="../proc/parse_integer_wide.html#variable-mult_limit">mult_limit</a>
+            <a class="list-group-item" href="../proc/parse_integer_wide.html#variable-negative">negative</a>
+            <a class="list-group-item" href="../proc/parse_integer_wide.html#variable-pos~17">pos</a>
+            <a class="list-group-item" href="../proc/parse_integer_wide.html#variable-text~2">text</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/parse_integer_wide.html#src">parse_integer_wide</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private pure subroutine parse_integer_wide(str, value, err)  
+</h2>
+    
+
+    <p>Core integer parser, accumulating in <code>int64</code>.</p>
+<p>The accumulation runs in the negative half of the integer range so
+that the most negative representable value can be parsed without ever
+evaluating an expression that overflows.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-str~12"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>str</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~30"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~158"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~parse_integer_wide~~CallsGraph Pages: 1 -->
+<svg id="procparse_integer_wideCallsGraph" width="372pt" height="116pt"
+ viewBox="0.00 0.00 372.00 116.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~parse_integer_wide~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 112)">
+<title>proc~~parse_integer_wide~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-112 368,-112 368,4 -4,4"/>
+<!-- proc~parse_integer_wide -->
+<g id="proc~~parse_integer_wide~~CallsGraph_node1" class="node">
+<title>proc~parse_integer_wide</title>
+<polygon fill="none" stroke="black" points="116,-45 0,-45 0,-21 116,-21 116,-45"/>
+<text text-anchor="middle" x="58" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50">parse_integer_wide</text>
+</g>
+<!-- interface~strip -->
+<g id="proc~~parse_integer_wide~~CallsGraph_node2" class="node">
+<title>interface~strip</title>
+<g id="a_proc~~parse_integer_wide~~CallsGraph_node2"><a xlink:href="../interface/strip.html" xlink:title="strip">
+<polygon fill="#a7506f" stroke="#a7506f" points="231.5,-66 177.5,-66 177.5,-42 231.5,-42 231.5,-66"/>
+<text text-anchor="middle" x="204.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">strip</text>
+</a>
+</g>
+</g>
+<!-- proc~parse_integer_wide&#45;&gt;interface~strip -->
+<g id="proc~~parse_integer_wide~~CallsGraph_edge1" class="edge">
+<title>proc~parse_integer_wide&#45;&gt;interface~strip</title>
+<path fill="none" stroke="#ff0000" d="M116.11,-41.3C133.29,-43.8 151.66,-46.47 167.11,-48.71"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="166.88,-52.21 177.28,-50.19 167.89,-45.29 166.88,-52.21"/>
+</g>
+<!-- proc~error_set -->
+<g id="proc~~parse_integer_wide~~CallsGraph_node3" class="node">
+<title>proc~error_set</title>
+<g id="a_proc~~parse_integer_wide~~CallsGraph_node3"><a xlink:href="../proc/error_set.html" xlink:title="error_t%error_set">
+<polygon fill="#d9534f" stroke="#d9534f" points="257,-24 152,-24 152,0 257,0 257,-24"/>
+<text text-anchor="middle" x="204.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_set</text>
+</a>
+</g>
+</g>
+<!-- proc~parse_integer_wide&#45;&gt;proc~error_set -->
+<g id="proc~~parse_integer_wide~~CallsGraph_edge2" class="edge">
+<title>proc~parse_integer_wide&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#ff0000" d="M116.11,-24.7C124.62,-23.46 133.41,-22.19 142,-20.94"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="142.57,-24.39 151.96,-19.49 141.56,-17.46 142.57,-24.39"/>
+</g>
+<!-- proc~strip_char -->
+<g id="proc~~parse_integer_wide~~CallsGraph_node4" class="node">
+<title>proc~strip_char</title>
+<g id="a_proc~~parse_integer_wide~~CallsGraph_node4"><a xlink:href="../proc/strip_char.html" xlink:title="strip_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="361,-108 296,-108 296,-84 361,-84 361,-108"/>
+<text text-anchor="middle" x="328.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">strip_char</text>
+</a>
+</g>
+</g>
+<!-- interface~strip&#45;&gt;proc~strip_char -->
+<g id="proc~~parse_integer_wide~~CallsGraph_edge3" class="edge">
+<title>interface~strip&#45;&gt;proc~strip_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M231.67,-63.01C247.5,-68.46 268.04,-75.53 286.04,-81.73"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="285.14,-85.12 295.74,-85.07 287.42,-78.5 285.14,-85.12"/>
+</g>
+<!-- proc~strip_string -->
+<g id="proc~~parse_integer_wide~~CallsGraph_node5" class="node">
+<title>proc~strip_string</title>
+<g id="a_proc~~parse_integer_wide~~CallsGraph_node5"><a xlink:href="../proc/strip_string.html" xlink:title="strip_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="364,-66 293,-66 293,-42 364,-42 364,-66"/>
+<text text-anchor="middle" x="328.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">strip_string</text>
+</a>
+</g>
+</g>
+<!-- interface~strip&#45;&gt;proc~strip_string -->
+<g id="proc~~parse_integer_wide~~CallsGraph_edge4" class="edge">
+<title>interface~strip&#45;&gt;proc~strip_string</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M231.67,-48.34C246.4,-47.3 265.2,-47 282.24,-47.45"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="282.45,-50.96 292.57,-47.83 282.71,-43.97 282.45,-50.96"/>
+</g>
+<!-- proc~strip_string&#45;&gt;interface~strip -->
+<g id="proc~~parse_integer_wide~~CallsGraph_edge5" class="edge">
+<title>proc~strip_string&#45;&gt;interface~strip</title>
+<path fill="none" stroke="#00ffff" d="M292.57,-60.17C276.66,-60.92 257.84,-60.94 241.77,-60.23"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="241.85,-56.73 231.67,-59.66 241.46,-63.72 241.85,-56.73"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~parse_integer_wide~~CalledByGraph Pages: 1 -->
+<svg id="procparse_integer_wideCalledByGraph" width="545pt" height="130pt"
+ viewBox="0.00 0.00 545.00 130.11" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~parse_integer_wide~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 126.11)">
+<title>proc~~parse_integer_wide~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-126.11 541,-126.11 541,4 -4,4"/>
+<!-- proc~parse_integer_wide -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_node1" class="node">
+<title>proc~parse_integer_wide</title>
+<polygon fill="none" stroke="black" points="537,-64 421,-64 421,-40 537,-40 537,-64"/>
+<text text-anchor="middle" x="479" y="-49.6" font-family="Helvetica,sans-Serif" font-size="10.50">parse_integer_wide</text>
+</g>
+<!-- proc~parse_int_int32_char -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_node2" class="node">
+<title>proc~parse_int_int32_char</title>
+<g id="a_proc~~parse_integer_wide~~CalledByGraph_node2"><a xlink:href="../proc/parse_int_int32_char.html" xlink:title="parse_int_int32_char">
+<polygon fill="#d9534f" stroke="#d9534f" points="385,-106 262,-106 262,-82 385,-82 385,-106"/>
+<text text-anchor="middle" x="323.5" y="-91.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parse_int_int32_char</text>
+</a>
+</g>
+</g>
+<!-- proc~parse_int_int32_char&#45;&gt;proc~parse_integer_wide -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_edge1" class="edge">
+<title>proc~parse_int_int32_char&#45;&gt;proc~parse_integer_wide</title>
+<path fill="none" stroke="#ff0000" d="M368.49,-81.96C385.83,-77.22 405.92,-71.72 424.12,-66.74"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="425.28,-70.05 434.01,-64.04 423.44,-63.3 425.28,-70.05"/>
+</g>
+<!-- proc~parse_int_int64_char -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_node3" class="node">
+<title>proc~parse_int_int64_char</title>
+<g id="a_proc~~parse_integer_wide~~CalledByGraph_node3"><a xlink:href="../proc/parse_int_int64_char.html" xlink:title="parse_int_int64_char">
+<polygon fill="#d9534f" stroke="#d9534f" points="385,-64 262,-64 262,-40 385,-40 385,-64"/>
+<text text-anchor="middle" x="323.5" y="-49.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parse_int_int64_char</text>
+</a>
+</g>
+</g>
+<!-- proc~parse_int_int64_char&#45;&gt;proc~parse_integer_wide -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_edge2" class="edge">
+<title>proc~parse_int_int64_char&#45;&gt;proc~parse_integer_wide</title>
+<path fill="none" stroke="#ff0000" d="M385.17,-52C393.51,-52 402.11,-52 410.57,-52"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="410.77,-55.5 420.77,-52 410.77,-48.5 410.77,-55.5"/>
+</g>
+<!-- proc~parse_int_int64_string -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_node4" class="node">
+<title>proc~parse_int_int64_string</title>
+<g id="a_proc~~parse_integer_wide~~CalledByGraph_node4"><a xlink:href="../proc/parse_int_int64_string.html" xlink:title="parse_int_int64_string">
+<polygon fill="#d9534f" stroke="#d9534f" points="226,-24 97,-24 97,0 226,0 226,-24"/>
+<text text-anchor="middle" x="161.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parse_int_int64_string</text>
+</a>
+</g>
+</g>
+<!-- proc~parse_int_int64_string&#45;&gt;proc~parse_integer_wide -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_edge3" class="edge">
+<title>proc~parse_int_int64_string&#45;&gt;proc~parse_integer_wide</title>
+<path fill="none" stroke="#ff0000" d="M226.07,-15.11C270.73,-17.86 331.75,-22.75 385,-31 396.51,-32.78 408.72,-35.17 420.38,-37.7"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="419.93,-41.19 430.45,-39.95 421.45,-34.35 419.93,-41.19"/>
+</g>
+<!-- interface~parse_int -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_node5" class="node">
+<title>interface~parse_int</title>
+<g id="a_proc~~parse_integer_wide~~CalledByGraph_node5"><a xlink:href="../interface/parse_int.html" xlink:title="parse_int">
+<polygon fill="#a7506f" stroke="#a7506f" points="61,-84 0,-84 0,-60 61,-60 61,-84"/>
+<text text-anchor="middle" x="30.5" y="-69.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parse_int</text>
+</a>
+</g>
+</g>
+<!-- interface~parse_int&#45;&gt;proc~parse_int_int32_char -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_edge5" class="edge">
+<title>interface~parse_int&#45;&gt;proc~parse_int_int32_char</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M45.44,-84.02C57.98,-93.97 77.4,-107.37 97,-113 155.4,-129.77 225.54,-119.34 271.92,-108.46"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="272.84,-111.84 281.73,-106.07 271.18,-105.04 272.84,-111.84"/>
+</g>
+<!-- interface~parse_int&#45;&gt;proc~parse_int_int64_char -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_edge6" class="edge">
+<title>interface~parse_int&#45;&gt;proc~parse_int_int64_char</title>
+<path fill="none" stroke="#00ff00" stroke-dasharray="5,2" d="M61,-69.97C105.33,-66.93 190.41,-61.08 251.49,-56.88"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="252.11,-60.35 261.84,-56.17 251.63,-53.36 252.11,-60.35"/>
+</g>
+<!-- interface~parse_int&#45;&gt;proc~parse_int_int64_string -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_edge7" class="edge">
+<title>interface~parse_int&#45;&gt;proc~parse_int_int64_string</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M53.68,-59.85C66.26,-53.13 82.35,-44.78 97,-38 104.45,-34.55 112.5,-31.07 120.28,-27.83"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="121.65,-31.05 129.58,-24.01 119,-24.57 121.65,-31.05"/>
+</g>
+<!-- proc~parse_int_int32_string -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_node6" class="node">
+<title>proc~parse_int_int32_string</title>
+<g id="a_proc~~parse_integer_wide~~CalledByGraph_node6"><a xlink:href="../proc/parse_int_int32_string.html" xlink:title="parse_int_int32_string">
+<polygon fill="#d9534f" stroke="#d9534f" points="226,-104 97,-104 97,-80 226,-80 226,-104"/>
+<text text-anchor="middle" x="161.5" y="-89.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parse_int_int32_string</text>
+</a>
+</g>
+</g>
+<!-- interface~parse_int&#45;&gt;proc~parse_int_int32_string -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_edge8" class="edge">
+<title>interface~parse_int&#45;&gt;proc~parse_int_int32_string</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M61.1,-76.59C68.96,-77.81 77.82,-79.18 86.92,-80.59"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="86.44,-84.06 96.86,-82.13 87.52,-77.14 86.44,-84.06"/>
+</g>
+<!-- proc~parse_int_int32_string&#45;&gt;proc~parse_int_int32_char -->
+<g id="proc~~parse_integer_wide~~CalledByGraph_edge4" class="edge">
+<title>proc~parse_int_int32_string&#45;&gt;proc~parse_int_int32_char</title>
+<path fill="none" stroke="#ff0000" d="M226.2,-92.8C234.56,-92.9 243.17,-93.01 251.65,-93.11"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="251.84,-96.62 261.89,-93.24 251.93,-89.62 251.84,-96.62"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    <section>    
+      <h2>Variables</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-accumulator"></span>
+              integer(kind=int64),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>accumulator</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-digit"></span>
+              integer(kind=int64),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>digit</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-i_char"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i_char</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-limit"></span>
+              integer(kind=int64),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>limit</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mult_limit"></span>
+              integer(kind=int64),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mult_limit</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-negative"></span>
+              logical,
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>negative</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pos~17"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>pos</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-text~2"></span>
+              character(len=:),
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>text</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">pure subroutine </span><span class="n">parse_integer_wide</span><span class="p">(</span><span class="n">str</span><span class="p">,</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="c">!! Core integer parser, accumulating in `int64`.</span>
+<span class="w">      </span><span class="c">!!</span>
+<span class="w">      </span><span class="c">!! The accumulation runs in the negative half of the integer range so</span>
+<span class="w">      </span><span class="c">!! that the most negative representable value can be parsed without ever</span>
+<span class="w">      </span><span class="c">!! evaluating an expression that overflows.</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">str</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="k">value</span>
+<span class="k">      type</span><span class="p">(</span><span class="n">error_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">err</span>
+
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">text</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">pos</span><span class="p">,</span><span class="w"> </span><span class="n">i_char</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">accumulator</span><span class="p">,</span><span class="w"> </span><span class="n">limit</span><span class="p">,</span><span class="w"> </span><span class="n">mult_limit</span><span class="p">,</span><span class="w"> </span><span class="n">digit</span>
+<span class="w">      </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">negative</span>
+
+<span class="w">      </span><span class="k">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_int64</span>
+<span class="w">      </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strip</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">err</span><span class="p">%</span><span class="n">set</span><span class="p">(</span><span class="n">ERROR_PARSE</span><span class="p">,</span><span class="w"> </span><span class="s2">"cannot parse an empty string as an integer"</span><span class="p">)</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+
+<span class="k">      </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="n">negative</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"-"</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">index</span><span class="p">(</span><span class="n">SIGNS</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pos</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">err</span><span class="p">%</span><span class="n">set</span><span class="p">(</span><span class="n">ERROR_PARSE</span><span class="p">,</span><span class="w"> </span><span class="s2">"no digits after the sign in '"</span><span class="o">//</span><span class="n">text</span><span class="o">//</span><span class="s2">"'"</span><span class="p">)</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">negative</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="nb">huge</span><span class="p">(</span><span class="n">accumulator</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1_int64</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         </span><span class="n">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="nb">huge</span><span class="p">(</span><span class="n">accumulator</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end if</span>
+<span class="k">      </span><span class="n">mult_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">limit</span><span class="o">/</span><span class="mi">10_int64</span>
+<span class="w">      </span><span class="n">accumulator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_int64</span>
+
+<span class="w">      </span><span class="k">do </span><span class="n">i_char</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pos</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="w">         </span><span class="n">digit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="nb">index</span><span class="p">(</span><span class="nb">digits</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="p">(</span><span class="n">i_char</span><span class="p">:</span><span class="n">i_char</span><span class="p">)),</span><span class="w"> </span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1_int64</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">digit</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0_int64</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            call </span><span class="n">err</span><span class="p">%</span><span class="n">set</span><span class="p">(</span><span class="n">ERROR_PARSE</span><span class="p">,</span><span class="w"> </span><span class="s2">"invalid character '"</span><span class="o">//</span><span class="n">text</span><span class="p">(</span><span class="n">i_char</span><span class="p">:</span><span class="n">i_char</span><span class="p">)</span><span class="o">//</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                         </span><span class="s2">"' while parsing the integer '"</span><span class="o">//</span><span class="n">text</span><span class="o">//</span><span class="s2">"'"</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">         end if</span>
+<span class="k">         if</span><span class="w"> </span><span class="p">(</span><span class="n">accumulator</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">mult_limit</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            call </span><span class="n">err</span><span class="p">%</span><span class="n">set</span><span class="p">(</span><span class="n">ERROR_PARSE</span><span class="p">,</span><span class="w"> </span><span class="s2">"integer overflow while parsing '"</span><span class="o">//</span><span class="n">text</span><span class="o">//</span><span class="s2">"'"</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">         end if</span>
+<span class="k">         </span><span class="n">accumulator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">accumulator</span><span class="o">*</span><span class="mi">10_int64</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">accumulator</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">limit</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">digit</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            call </span><span class="n">err</span><span class="p">%</span><span class="n">set</span><span class="p">(</span><span class="n">ERROR_PARSE</span><span class="p">,</span><span class="w"> </span><span class="s2">"integer overflow while parsing '"</span><span class="o">//</span><span class="n">text</span><span class="o">//</span><span class="s2">"'"</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">         end if</span>
+<span class="k">         </span><span class="n">accumulator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">accumulator</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">digit</span>
+<span class="w">      </span><span class="k">end do</span>
+
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">negative</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">accumulator</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="k">         value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">accumulator</span>
+<span class="w">      </span><span class="k">end if</span>
+
+<span class="k">   end subroutine </span><span class="n">parse_integer_wide</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

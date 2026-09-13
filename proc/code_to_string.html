@@ -89,7 +89,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.2% of total for procedures.">20 statements</a>
+                 title=" 0.2% of total for procedures.">29 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -156,12 +156,19 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public pure function code_to_string(code) result(name)  
+    <h2>public pure function code_to_string(code, user_name) result(name)  
 </h2>
     
 
     <p>Map an error code to a human-readable name</p>
 <p>Usage: print *, code_to_string(ERROR_IO)  ! &ldquo;ERROR_IO&rdquo;</p>
+<p><code>user_name</code> is an optional name for a code PIC does not know about,
+so that downstream libraries owning codes above PIC_ERROR_CODE_MAX
+still get readable output:
+  print *, code_to_string(MYLIB_ERROR_SOCKET, &ldquo;MYLIB_ERROR_SOCKET&rdquo;)
+It is ignored for codes PIC recognises, so it can be passed
+unconditionally. Unknown codes without a <code>user_name</code> still render as
+&ldquo;UNKNOWN&rdquo;.</p>
 
 
     <h3>Arguments</h3>
@@ -177,7 +184,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-code~2"></span>
+              <span class="anchor" id="variable-code~4"></span>
               integer(kind=default_int),
             </td>
 <td>intent(in)</td>
@@ -190,12 +197,27 @@
                 
             </td>
         </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-user_name"></span>
+              character(len=*),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>user_name</strong></td>
+            <td>
+                
+            </td>
+        </tr>
     </tbody>
   </table>
 
       <h3>Return Value
         <small>
-          <span class="anchor" id="variable-name"></span>
+          <span class="anchor" id="variable-name~14"></span>
           character(len=:), allocatable
         </small>
       </h3>
@@ -365,11 +387,20 @@ large graphs.</div>
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">pure function </span><span class="n">code_to_string</span><span class="p">(</span><span class="n">code</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">pure function </span><span class="n">code_to_string</span><span class="p">(</span><span class="n">code</span><span class="p">,</span><span class="w"> </span><span class="n">user_name</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 <span class="w">      </span><span class="c">!! Map an error code to a human-readable name</span>
 <span class="w">      </span><span class="c">!!</span>
 <span class="w">      </span><span class="c">!! Usage: print *, code_to_string(ERROR_IO)  ! "ERROR_IO"</span>
+<span class="w">      </span><span class="c">!!</span>
+<span class="w">      </span><span class="c">!! `user_name` is an optional name for a code PIC does not know about,</span>
+<span class="w">      </span><span class="c">!! so that downstream libraries owning codes above PIC_ERROR_CODE_MAX</span>
+<span class="w">      </span><span class="c">!! still get readable output:</span>
+<span class="w">      </span><span class="c">!!   print *, code_to_string(MYLIB_ERROR_SOCKET, "MYLIB_ERROR_SOCKET")</span>
+<span class="w">      </span><span class="c">!! It is ignored for codes PIC recognises, so it can be passed</span>
+<span class="w">      </span><span class="c">!! unconditionally. Unknown codes without a `user_name` still render as</span>
+<span class="w">      </span><span class="c">!! "UNKNOWN".</span>
 <span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">code</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">user_name</span>
 <span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">name</span>
 
 <span class="w">      </span><span class="k">select case</span><span class="w"> </span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
@@ -385,9 +416,17 @@ large graphs.</div>
 <span class="w">         </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ERROR_VALIDATION"</span>
 <span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">ERROR_ALLOC</span><span class="p">)</span>
 <span class="w">         </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ERROR_ALLOC"</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">ERROR_INTERNAL</span><span class="p">)</span>
+<span class="w">         </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ERROR_INTERNAL"</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">ERROR_BOUNDS</span><span class="p">)</span>
+<span class="w">         </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"ERROR_BOUNDS"</span>
 <span class="w">      </span><span class="k">case </span><span class="n">default</span>
-<span class="w">         </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"UNKNOWN"</span>
-<span class="w">      </span><span class="k">end select</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">user_name</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">trim</span><span class="p">(</span><span class="n">user_name</span><span class="p">)</span>
+<span class="w">         </span><span class="k">else</span>
+<span class="k">            </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"UNKNOWN"</span>
+<span class="w">         </span><span class="k">end if</span>
+<span class="k">      end select</span>
 <span class="k">   end function </span><span class="n">code_to_string</span>
 </pre></div>
 
@@ -412,7 +451,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-09-13 17:21 +0000             </p>
+ on 2026-09-13 18:10 +0000             </p>
           </div>
         </div>
         <br>

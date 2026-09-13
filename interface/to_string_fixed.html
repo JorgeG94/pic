@@ -1,0 +1,631 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>to_string_fixed &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>to_string_fixed
+      <small>Interface</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title="<p> 0.0% of total for procedures.</p>Including implementation: 34 statements,  0.3% of total for procedures.">4 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_format.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_format.f90.html'>pic_format.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_format.html'>pic_format</a></li>
+            <li class="breadcrumb-item active" aria-current="page">to_string_fixed</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#modprocs-0"
+         aria-expanded="false" aria-controls="modprocs-0">
+         <h4 class="card-header bg-primary text-white">Module Procedures</h4>
+      </a>
+      <div id="modprocs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../interface/to_string_fixed.html#moduleprocedure-to_string_fixed_sp">to_string_fixed_sp</a>
+            <a class="list-group-item" href="../interface/to_string_fixed.html#moduleprocedure-to_string_fixed_dp">to_string_fixed_dp</a>
+        </div>
+      </div>
+    </div>
+
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <h2>public interface to_string_fixed</h2>
+      <p>Render a real in fixed point notation with an exact number of decimals.
+Fixed point rendering, never an exponent.</p>
+<p>The result carries exactly <code>decimals</code> digits after the decimal point,
+correctly rounded round half to even from the exact binary value. A
+leading <code>0</code> is always written for magnitudes below one, and <code>decimals</code>
+equal to zero produces no trailing decimal point. <code>decimals</code> is clamped
+to the range <code>[0, PIC_FORMAT_MAX_DECIMALS]</code>.</p>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Calls</h3>
+          </div>
+          <div class="card-body">
+            <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: interface~~to_string_fixed~~CallsGraph Pages: 1 -->
+<svg id="interfaceto_string_fixedCallsGraph" width="641pt" height="166pt"
+ viewBox="0.00 0.00 641.00 165.63" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="interface~~to_string_fixed~~CallsGraph" class="graph" transform="scale(0.83 0.83) rotate(0) translate(4 196)">
+<title>interface~~to_string_fixed~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-196 770,-196 770,4 -4,4"/>
+<!-- interface~to_string_fixed -->
+<g id="interface~~to_string_fixed~~CallsGraph_node1" class="node">
+<title>interface~to_string_fixed</title>
+<polygon fill="none" stroke="black" points="90,-108 0,-108 0,-84 90,-84 90,-108"/>
+<text text-anchor="middle" x="45" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50">to_string_fixed</text>
+</g>
+<!-- proc~to_string_fixed_dp -->
+<g id="interface~~to_string_fixed~~CallsGraph_node2" class="node">
+<title>proc~to_string_fixed_dp</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node2"><a xlink:href="../proc/to_string_fixed_dp.html" xlink:title="to_string_fixed_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="378,-108 269,-108 269,-84 378,-84 378,-108"/>
+<text text-anchor="middle" x="323.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_string_fixed_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_string_fixed&#45;&gt;proc~to_string_fixed_dp -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge1" class="edge">
+<title>interface~to_string_fixed&#45;&gt;proc~to_string_fixed_dp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M90.01,-96.65C101.71,-96.79 114.33,-96.93 126,-97 173.55,-97.3 185.45,-97.27 233,-97 241.26,-96.95 249.96,-96.88 258.55,-96.8"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="258.58,-100.3 268.55,-96.7 258.51,-93.3 258.58,-100.3"/>
+</g>
+<!-- proc~to_string_fixed_sp -->
+<g id="interface~~to_string_fixed~~CallsGraph_node3" class="node">
+<title>proc~to_string_fixed_sp</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node3"><a xlink:href="../proc/to_string_fixed_sp.html" xlink:title="to_string_fixed_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="233,-88 126,-88 126,-64 233,-64 233,-88"/>
+<text text-anchor="middle" x="179.5" y="-73.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_string_fixed_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_string_fixed&#45;&gt;proc~to_string_fixed_sp -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge2" class="edge">
+<title>interface~to_string_fixed&#45;&gt;proc~to_string_fixed_sp</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M90.12,-89.34C98.35,-88.1 107.08,-86.78 115.74,-85.47"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="116.47,-88.9 125.84,-83.95 115.42,-81.98 116.47,-88.9"/>
+</g>
+<!-- proc~assemble_fixed -->
+<g id="interface~~to_string_fixed~~CallsGraph_node4" class="node">
+<title>proc~assemble_fixed</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node4"><a xlink:href="../proc/assemble_fixed.html" xlink:title="assemble_fixed">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="509,-192 414,-192 414,-168 509,-168 509,-192"/>
+<text text-anchor="middle" x="461.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">assemble_fixed</text>
+</a>
+</g>
+</g>
+<!-- proc~to_string_fixed_dp&#45;&gt;proc~assemble_fixed -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge3" class="edge">
+<title>proc~to_string_fixed_dp&#45;&gt;proc~assemble_fixed</title>
+<path fill="none" stroke="#ff0000" d="M339.75,-108.09C357.11,-121.51 386.61,-143.36 414,-159 416.68,-160.53 419.5,-162.04 422.36,-163.49"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="421.02,-166.73 431.55,-167.95 424.08,-160.44 421.02,-166.73"/>
+</g>
+<!-- proc~expand_exact -->
+<g id="interface~~to_string_fixed~~CallsGraph_node5" class="node">
+<title>proc~expand_exact</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node5"><a xlink:href="../proc/expand_exact.html" xlink:title="expand_exact">
+<polygon fill="#d9534f" stroke="#d9534f" points="504,-150 419,-150 419,-126 504,-126 504,-150"/>
+<text text-anchor="middle" x="461.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">expand_exact</text>
+</a>
+</g>
+</g>
+<!-- proc~to_string_fixed_dp&#45;&gt;proc~expand_exact -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge4" class="edge">
+<title>proc~to_string_fixed_dp&#45;&gt;proc~expand_exact</title>
+<path fill="none" stroke="#ff0000" d="M363.47,-108.04C378.55,-112.69 395.98,-118.07 411.86,-122.98"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="410.93,-126.36 421.52,-125.96 413,-119.67 410.93,-126.36"/>
+</g>
+<!-- proc~is_negative -->
+<g id="interface~~to_string_fixed~~CallsGraph_node6" class="node">
+<title>proc~is_negative</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node6"><a xlink:href="../proc/is_negative.html" xlink:title="is_negative">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="498,-108 425,-108 425,-84 498,-84 498,-108"/>
+<text text-anchor="middle" x="461.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">is_negative</text>
+</a>
+</g>
+</g>
+<!-- proc~to_string_fixed_dp&#45;&gt;proc~is_negative -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge5" class="edge">
+<title>proc~to_string_fixed_dp&#45;&gt;proc~is_negative</title>
+<path fill="none" stroke="#ff0000" d="M378.25,-96C390.19,-96 402.74,-96 414.34,-96"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="414.68,-99.5 424.68,-96 414.68,-92.5 414.68,-99.5"/>
+</g>
+<!-- proc~round_decimal -->
+<g id="interface~~to_string_fixed~~CallsGraph_node7" class="node">
+<title>proc~round_decimal</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node7"><a xlink:href="../proc/round_decimal.html" xlink:title="round_decimal">
+<polygon fill="#d9534f" stroke="#d9534f" points="507,-66 416,-66 416,-42 507,-42 507,-66"/>
+<text text-anchor="middle" x="461.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">round_decimal</text>
+</a>
+</g>
+</g>
+<!-- proc~to_string_fixed_dp&#45;&gt;proc~round_decimal -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge6" class="edge">
+<title>proc~to_string_fixed_dp&#45;&gt;proc~round_decimal</title>
+<path fill="none" stroke="#ff0000" d="M363.47,-83.96C378.55,-79.31 395.98,-73.93 411.86,-69.02"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="413,-72.33 421.52,-66.04 410.93,-65.64 413,-72.33"/>
+</g>
+<!-- proc~special_text -->
+<g id="interface~~to_string_fixed~~CallsGraph_node8" class="node">
+<title>proc~special_text</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node8"><a xlink:href="../proc/special_text.html" xlink:title="special_text">
+<polygon fill="#d9534f" stroke="#d9534f" points="499,-24 424,-24 424,0 499,0 499,-24"/>
+<text text-anchor="middle" x="461.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">special_text</text>
+</a>
+</g>
+</g>
+<!-- proc~to_string_fixed_dp&#45;&gt;proc~special_text -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge7" class="edge">
+<title>proc~to_string_fixed_dp&#45;&gt;proc~special_text</title>
+<path fill="none" stroke="#ff0000" d="M339.75,-83.91C357.11,-70.49 386.61,-48.64 414,-33 416.68,-31.47 419.5,-29.96 422.36,-28.51"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="424.08,-31.56 431.55,-24.05 421.02,-25.27 424.08,-31.56"/>
+</g>
+<!-- proc~to_string_fixed_sp&#45;&gt;proc~to_string_fixed_dp -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge8" class="edge">
+<title>proc~to_string_fixed_sp&#45;&gt;proc~to_string_fixed_dp</title>
+<path fill="none" stroke="#00ffff" d="M233.38,-83.45C241.56,-84.6 250.09,-85.8 258.49,-86.98"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="258.24,-90.48 268.63,-88.41 259.22,-83.55 258.24,-90.48"/>
+</g>
+<!-- proc~bd_mul_pow -->
+<g id="interface~~to_string_fixed~~CallsGraph_node9" class="node">
+<title>proc~bd_mul_pow</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node9"><a xlink:href="../proc/bd_mul_pow.html" xlink:title="bd_mul_pow">
+<polygon fill="#d9534f" stroke="#d9534f" points="634.5,-192 555.5,-192 555.5,-168 634.5,-168 634.5,-192"/>
+<text text-anchor="middle" x="595" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bd_mul_pow</text>
+</a>
+</g>
+</g>
+<!-- proc~expand_exact&#45;&gt;proc~bd_mul_pow -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge9" class="edge">
+<title>proc~expand_exact&#45;&gt;proc~bd_mul_pow</title>
+<path fill="none" stroke="#cbff00" d="M500.18,-150.04C514.63,-154.65 531.29,-159.97 546.54,-164.84"/>
+<polygon fill="#cbff00" stroke="#cbff00" points="545.72,-168.25 556.31,-167.96 547.85,-161.59 545.72,-168.25"/>
+</g>
+<!-- proc~bd_set -->
+<g id="interface~~to_string_fixed~~CallsGraph_node10" class="node">
+<title>proc~bd_set</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node10"><a xlink:href="../proc/bd_set.html" xlink:title="bd_set">
+<polygon fill="#d9534f" stroke="#d9534f" points="622,-150 568,-150 568,-126 622,-126 622,-150"/>
+<text text-anchor="middle" x="595" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bd_set</text>
+</a>
+</g>
+</g>
+<!-- proc~expand_exact&#45;&gt;proc~bd_set -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge10" class="edge">
+<title>proc~expand_exact&#45;&gt;proc~bd_set</title>
+<path fill="none" stroke="#cbff00" d="M504.11,-138C521.27,-138 540.97,-138 557.55,-138"/>
+<polygon fill="#cbff00" stroke="#cbff00" points="557.94,-141.5 567.94,-138 557.94,-134.5 557.94,-141.5"/>
+</g>
+<!-- proc~bd_to_digits -->
+<g id="interface~~to_string_fixed~~CallsGraph_node11" class="node">
+<title>proc~bd_to_digits</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node11"><a xlink:href="../proc/bd_to_digits.html" xlink:title="bd_to_digits">
+<polygon fill="#d9534f" stroke="#d9534f" points="633,-108 557,-108 557,-84 633,-84 633,-108"/>
+<text text-anchor="middle" x="595" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bd_to_digits</text>
+</a>
+</g>
+</g>
+<!-- proc~expand_exact&#45;&gt;proc~bd_to_digits -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge11" class="edge">
+<title>proc~expand_exact&#45;&gt;proc~bd_to_digits</title>
+<path fill="none" stroke="#cbff00" d="M500.18,-125.96C514.75,-121.31 531.58,-115.94 546.93,-111.03"/>
+<polygon fill="#cbff00" stroke="#cbff00" points="548.31,-114.27 556.77,-107.89 546.18,-107.6 548.31,-114.27"/>
+</g>
+<!-- proc~increment_digits -->
+<g id="interface~~to_string_fixed~~CallsGraph_node12" class="node">
+<title>proc~increment_digits</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node12"><a xlink:href="../proc/increment_digits.html" xlink:title="increment_digits">
+<polygon fill="#d9534f" stroke="#d9534f" points="645,-66 545,-66 545,-42 645,-42 645,-66"/>
+<text text-anchor="middle" x="595" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">increment_digits</text>
+</a>
+</g>
+</g>
+<!-- proc~round_decimal&#45;&gt;proc~increment_digits -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge12" class="edge">
+<title>proc~round_decimal&#45;&gt;proc~increment_digits</title>
+<path fill="none" stroke="#0066ff" d="M507.02,-54C515.79,-54 525.12,-54 534.3,-54"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="534.55,-57.5 544.55,-54 534.55,-50.5 534.55,-57.5"/>
+</g>
+<!-- proc~bd_mul_small -->
+<g id="interface~~to_string_fixed~~CallsGraph_node13" class="node">
+<title>proc~bd_mul_small</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node13"><a xlink:href="../proc/bd_mul_small.html" xlink:title="bd_mul_small">
+<polygon fill="#d9534f" stroke="#d9534f" points="766,-192 681,-192 681,-168 766,-168 766,-192"/>
+<text text-anchor="middle" x="723.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bd_mul_small</text>
+</a>
+</g>
+</g>
+<!-- proc~bd_mul_pow&#45;&gt;proc~bd_mul_small -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge13" class="edge">
+<title>proc~bd_mul_pow&#45;&gt;proc~bd_mul_small</title>
+<path fill="none" stroke="#ff0000" d="M634.64,-180C645.88,-180 658.35,-180 670.28,-180"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="670.58,-183.5 680.57,-180 670.57,-176.5 670.58,-183.5"/>
+</g>
+<!-- proc~limb_to_digits -->
+<g id="interface~~to_string_fixed~~CallsGraph_node14" class="node">
+<title>proc~limb_to_digits</title>
+<g id="a_interface~~to_string_fixed~~CallsGraph_node14"><a xlink:href="../proc/limb_to_digits.html" xlink:title="limb_to_digits">
+<polygon fill="#d9534f" stroke="#d9534f" points="766,-108 681,-108 681,-84 766,-84 766,-108"/>
+<text text-anchor="middle" x="723.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">limb_to_digits</text>
+</a>
+</g>
+</g>
+<!-- proc~bd_to_digits&#45;&gt;proc~limb_to_digits -->
+<g id="interface~~to_string_fixed~~CallsGraph_edge14" class="edge">
+<title>proc~bd_to_digits&#45;&gt;proc~limb_to_digits</title>
+<path fill="none" stroke="#00ffff" d="M633.27,-96C644.89,-96 657.92,-96 670.35,-96"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="670.62,-99.5 680.62,-96 670.62,-92.5 670.62,-99.5"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var paninterfaceto_string_fixedCallsGraph = svgPanZoom('#interfaceto_string_fixedCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+<br>
+
+
+        <h2>Module Procedures</h2>
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-to_string_fixed_sp"></span> <h3>private pure function <a href='../proc/to_string_fixed_sp.html'>to_string_fixed_sp</a>(value, decimals) result(string)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Fixed point rendering of a <code>real(sp)</code> value.</p><a href="../proc/to_string_fixed_sp.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~36"></span>
+              real(kind=sp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-decimals"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>decimals</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>character(len=:), allocatable</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+            <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-to_string_fixed_dp"></span> <h3>private pure function <a href='../proc/to_string_fixed_dp.html'>to_string_fixed_dp</a>(value, decimals) result(string)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Fixed point rendering of a <code>real(dp)</code> value.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~37"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-decimals~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>decimals</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>character(len=:), allocatable</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+</div>
+  </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

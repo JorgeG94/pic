@@ -1,0 +1,5712 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>pic_soa &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>pic_soa
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 3.4% of total for modules and submodules.">584 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_soa.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_soa.f90.html'>pic_soa.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">pic_soa</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_soa.html#variable-soa_field_int32">SOA_FIELD_INT32</a>
+            <a class="list-group-item" href="../module/pic_soa.html#variable-soa_field_int64">SOA_FIELD_INT64</a>
+            <a class="list-group-item" href="../module/pic_soa.html#variable-soa_field_logical">SOA_FIELD_LOGICAL</a>
+            <a class="list-group-item" href="../module/pic_soa.html#variable-soa_field_real_dp">SOA_FIELD_REAL_DP</a>
+            <a class="list-group-item" href="../module/pic_soa.html#variable-soa_field_real_sp">SOA_FIELD_REAL_SP</a>
+            <a class="list-group-item" href="../module/pic_soa.html#variable-soa_growth_factor">SOA_GROWTH_FACTOR</a>
+            <a class="list-group-item" href="../module/pic_soa.html#variable-soa_min_capacity">SOA_MIN_CAPACITY</a>
+            <a class="list-group-item" href="../module/pic_soa.html#variable-soa_schema_prefix">SOA_SCHEMA_PREFIX</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#inters-0"
+         aria-expanded="false" aria-controls="inters-0">
+         <h4 class="card-header bg-primary text-white">Interfaces</h4>
+      </a>
+      <div id="inters-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_soa.html#interface-soa_hash_field">soa_hash_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#interface-soa_read_field">soa_read_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#interface-soa_resize_field">soa_resize_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#interface-soa_write_field">soa_write_field</a>
+        </div>
+      </div>
+    </div>
+
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#types-0"
+         aria-expanded="false" aria-controls="types-0">
+         <h4 class="card-header bg-primary text-white">Derived Types</h4>
+      </a>
+      <div id="types-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_soa.html#type-soa_extent_t">soa_extent_t</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#funcs-0"
+         aria-expanded="false" aria-controls="funcs-0">
+         <h4 class="card-header bg-primary text-white">Functions</h4>
+      </a>
+      <div id="funcs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_field_code">soa_field_code</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_grow_capacity">soa_grow_capacity</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_stream_bytes">soa_stream_bytes</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_field_tag">soa_field_tag</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#subs-0"
+         aria-expanded="false" aria-controls="subs-0">
+         <h4 class="card-header bg-primary text-white">Subroutines</h4>
+      </a>
+      <div id="subs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_check_alloc">soa_check_alloc</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_check_field_count">soa_check_field_count</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_check_live_count">soa_check_live_count</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_check_resize_args">soa_check_resize_args</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_hash_begin">soa_hash_begin</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_plan_resize">soa_plan_resize</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_read_prologue">soa_read_prologue</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_write_prologue">soa_write_prologue</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_hash_int32_field">soa_hash_int32_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_hash_int64_field">soa_hash_int64_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_hash_logical_field">soa_hash_logical_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_hash_real_dp_field">soa_hash_real_dp_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_hash_real_sp_field">soa_hash_real_sp_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_read_int32_field">soa_read_int32_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_read_int64_field">soa_read_int64_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_read_logical_field">soa_read_logical_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_read_real_dp_field">soa_read_real_dp_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_read_real_sp_field">soa_read_real_sp_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_resize_int32_field">soa_resize_int32_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_resize_int64_field">soa_resize_int64_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_resize_logical_field">soa_resize_logical_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_resize_real_dp_field">soa_resize_real_dp_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_resize_real_sp_field">soa_resize_real_sp_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_write_int32_field">soa_write_int32_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_write_int64_field">soa_write_int64_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_write_logical_field">soa_write_logical_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_write_real_dp_field">soa_write_real_dp_field</a>
+            <a class="list-group-item" href="../module/pic_soa.html#proc-soa_write_real_sp_field">soa_write_real_sp_field</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <p>Growth, resize, serialization and state-hash primitives shared by every
+struct-of-arrays container.</p>
+<h2 id="what-an-soa-container-looks-like">What an SoA container looks like</h2>
+<p>A container holds one contiguous rank-1 array per field, all of the same
+logical length, plus a <code>soa_extent_t</code> recording how many elements are
+live (<code>used</code>) and how many are allocated (<code>capacity</code>).</p>
+<div class="codehilite"><pre><span></span><code><span class="k">type</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">particle_soa_t</span>
+<span class="w">   </span><span class="k">type</span><span class="p">(</span><span class="n">soa_extent_t</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">extent</span>
+<span class="w">   </span><span class="kt">integer</span><span class="p">(</span><span class="n">int32</span><span class="p">),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">id</span><span class="p">(:)</span>
+<span class="w">   </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="p">(:)</span>
+<span class="k">end type </span><span class="n">particle_soa_t</span>
+</code></pre></div>
+
+<p>Every field array is a plain <code>allocatable</code> rank-1 array, so <code>p%x</code> is
+contiguous and <code>p%x(1:p%size())</code> is a contiguous slice of it. Both can be
+handed straight to BLAS or to a vectorised loop with no copy: that is the
+entire point of the layout and nothing in this module disturbs it.</p>
+<h2 id="capacity-and-growth">Capacity and growth</h2>
+<p><code>capacity</code> is the allocated length of every field array, <code>used</code> is the
+number of live elements, and <code>used &lt;= capacity</code> always holds. Growth is
+geometric with factor <code>SOA_GROWTH_FACTOR</code> (2), starting at
+<code>SOA_MIN_CAPACITY</code> (8), so appending n elements one at a time costs
+O(n) copies in total rather than O(n**2).</p>
+<p><strong>Capacity never shrinks on a resize.</strong> Resizing down only lowers <code>used</code>;
+the memory stays with the container so that a shrink followed by a grow
+does not reallocate. Release it with the container&rsquo;s <code>deallocate</code>
+binding, which frees every field array and zeroes both counters.</p>
+<p>Elements that a resize newly exposes &ndash; indices <code>keep+1 .. new_size</code>,
+where <code>keep = min(old_size, new_size)</code> &ndash; are set to the zero value of
+their type (<code>0</code>, <code>0.0</code>, <code>.false.</code>). This is deliberate: it makes the
+state of a container a function of the operations applied to it, so two
+runs that perform the same resizes produce the same <code>state_hash</code>.
+Elements past <code>used</code> and below <code>capacity</code> are <em>not</em> specified and must
+not be read.</p>
+<h2 id="supported-field-types">Supported field types</h2>
+<p><code>integer(int32)</code>, <code>integer(int64)</code>, <code>real(sp)</code>, <code>real(dp)</code> and default
+<code>logical</code>.</p>
+<p>A field of kind <code>default_int</code> is deliberately <strong>not</strong> supported. Its
+width changes with <code>PIC_DEFAULT_INT8</code>, which would make a checkpoint
+written by one build unreadable by the other. Fixed-width field types are
+the whole reason the serialized layout is build independent; pick
+<code>int32</code> or <code>int64</code> explicitly.</p>
+<h2 id="serialized-layout">Serialized layout</h2>
+<p>A container is written as a <code>pic_serialize</code> stream:</p>
+<table>
+<thead>
+<tr>
+<th>order</th>
+<th>record</th>
+<th>contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>stream header, 16 bytes</td>
+<td>magic, byte-order mark, version</td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>PIC_TAG_CHAR</code></td>
+<td>the schema string, see below</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>PIC_TAG_INT64</code>, 1 element</td>
+<td>element count <code>n</code></td>
+</tr>
+<tr>
+<td>3..</td>
+<td>one record per field</td>
+<td><code>n</code> elements, declaration order</td>
+</tr>
+</tbody>
+</table>
+<p>Records 1 and 2 are the <em>prologue</em>, written by <code>soa_write_prologue</code> and
+validated by <code>soa_read_prologue</code>. Field records follow in declaration
+order, one per field, each holding exactly <code>n</code> elements. A <code>logical</code>
+field travels as a <code>PIC_TAG_INT32</code> record of 0/1 codes, because the
+envelope has no logical tag and because the storage size of a Fortran
+<code>logical</code> is not fixed by the standard.</p>
+<p>Nothing in the stream depends on <code>default_int</code>: the element count is an
+explicit <code>int64</code> and every field record carries an explicit fixed-width
+tag. A file written by a <code>PIC_DEFAULT_INT8=ON</code> build is byte identical to
+one written by a default build.</p>
+<h2 id="the-schema-string-and-why-it-matters">The schema string, and why it matters</h2>
+<p>The prologue carries a schema string that names the container and every
+field, in order, with its type:</p>
+<div class="codehilite"><pre><span></span><code>pic_soa/1;particle;id:i32,x:r64,y:r64,z:r64,mass:r64,active:bool
+</code></pre></div>
+
+<p><code>soa_read_prologue</code> compares it against the schema of the type being read
+into and fails with <code>ERROR_VALIDATION</code> when they differ, naming both. Any
+change to the field list &ndash; a renamed field, a retyped field, a reordered
+field, an added or removed field &ndash; changes the string, so an old
+checkpoint read by new code is rejected loudly instead of being decoded
+as garbage. The <code>pic_soa/1</code> prefix (<code>SOA_SCHEMA_PREFIX</code>) versions the SoA
+layout itself, independently of the <code>pic_serialize</code> envelope version.</p>
+<p>The same string is folded into <code>state_hash</code> first (see
+<code>soa_hash_begin</code>), so two containers with different field lists cannot
+collide even when their numeric payloads happen to agree.</p>
+<h2 id="error-contract">Error contract</h2>
+<p>Every procedure here takes <code>type(error_t), intent(inout) :: err</code> and
+writes it <em>only on failure</em>, never clearing it on entry. This matches
+<code>pic_serialize</code>, which this module is layered on. Pass a fresh or cleared
+<code>error_t</code> and check it after each call.</p>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='pic_error.html'>pic_error</a></li>
+                  <li class="list-inline-item"><a href='pic_array_hash.html'>pic_array_hash</a></li>
+                  <li class="list-inline-item"><a href='pic_io.html'>pic_io</a></li>
+                  <li class="list-inline-item"><a href='pic_types.html'>pic_types</a></li>
+                  <li class="list-inline-item"><a href='pic_serialize.html'>pic_serialize</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~pic_soa~~UsesGraph Pages: 1 -->
+<svg id="modulepic_soaUsesGraph" width="641pt" height="189pt"
+ viewBox="0.00 0.00 641.00 188.67" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_soa~~UsesGraph" class="graph" transform="scale(0.95 0.95) rotate(0) translate(4 195.56)">
+<title>module~~pic_soa~~UsesGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-195.56 674,-195.56 674,4 -4,4"/>
+<!-- module~pic_soa -->
+<g id="module~~pic_soa~~UsesGraph_node1" class="node">
+<title>module~pic_soa</title>
+<polygon fill="none" stroke="black" points="670,-131.56 616,-131.56 616,-107.56 670,-107.56 670,-131.56"/>
+<text text-anchor="middle" x="643" y="-117.16" font-family="Helvetica,sans-Serif" font-size="10.50">pic_soa</text>
+</g>
+<!-- module~pic_array_hash -->
+<g id="module~~pic_soa~~UsesGraph_node2" class="node">
+<title>module~pic_array_hash</title>
+<g id="a_module~~pic_soa~~UsesGraph_node2"><a xlink:href="../module/pic_array_hash.html" xlink:title="pic_array_hash">
+<polygon fill="#337ab7" stroke="#337ab7" points="580,-191.56 487,-191.56 487,-167.56 580,-167.56 580,-191.56"/>
+<text text-anchor="middle" x="533.5" y="-177.16" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_array_hash</text>
+</a>
+</g>
+</g>
+<!-- module~pic_soa&#45;&gt;module~pic_array_hash -->
+<g id="module~~pic_soa~~UsesGraph_edge1" class="edge">
+<title>module~pic_soa&#45;&gt;module~pic_array_hash</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M620.25,-131.7C604.36,-140.56 582.62,-152.7 565.01,-162.53"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="563.25,-159.5 556.22,-167.43 566.66,-165.62 563.25,-159.5"/>
+</g>
+<!-- module~pic_error -->
+<g id="module~~pic_soa~~UsesGraph_node3" class="node">
+<title>module~pic_error</title>
+<g id="a_module~~pic_soa~~UsesGraph_node3"><a xlink:href="../module/pic_error.html" xlink:title="pic_error">
+<polygon fill="#337ab7" stroke="#337ab7" points="451,-151.56 391,-151.56 391,-127.56 451,-127.56 451,-151.56"/>
+<text text-anchor="middle" x="421" y="-137.16" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_error</text>
+</a>
+</g>
+</g>
+<!-- module~pic_soa&#45;&gt;module~pic_error -->
+<g id="module~~pic_soa~~UsesGraph_edge2" class="edge">
+<title>module~pic_soa&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M615.9,-121.93C577.65,-125.41 506.08,-131.91 461.4,-135.98"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="460.85,-132.51 451.21,-136.9 461.48,-139.48 460.85,-132.51"/>
+</g>
+<!-- module~pic_io -->
+<g id="module~~pic_soa~~UsesGraph_node4" class="node">
+<title>module~pic_io</title>
+<g id="a_module~~pic_soa~~UsesGraph_node4"><a xlink:href="../module/pic_io.html" xlink:title="pic_io">
+<polygon fill="#337ab7" stroke="#337ab7" points="448,-71.56 394,-71.56 394,-47.56 448,-47.56 448,-71.56"/>
+<text text-anchor="middle" x="421" y="-57.16" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_io</text>
+</a>
+</g>
+</g>
+<!-- module~pic_soa&#45;&gt;module~pic_io -->
+<g id="module~~pic_soa~~UsesGraph_edge3" class="edge">
+<title>module~pic_soa&#45;&gt;module~pic_io</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M532.5,-19.56C502.19,-10.77 468.16,-27.21 445.98,-41.59"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="443.82,-38.83 437.52,-47.35 447.76,-44.62 443.82,-38.83"/>
+</g>
+<!-- module~pic_serialize -->
+<g id="module~~pic_soa~~UsesGraph_node5" class="node">
+<title>module~pic_serialize</title>
+<g id="a_module~~pic_soa~~UsesGraph_node5"><a xlink:href="../module/pic_serialize.html" xlink:title="pic_serialize">
+<polygon fill="#337ab7" stroke="#337ab7" points="572.5,-111.56 494.5,-111.56 494.5,-87.56 572.5,-87.56 572.5,-111.56"/>
+<text text-anchor="middle" x="533.5" y="-97.16" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_serialize</text>
+</a>
+</g>
+</g>
+<!-- module~pic_soa&#45;&gt;module~pic_serialize -->
+<g id="module~~pic_soa~~UsesGraph_edge4" class="edge">
+<title>module~pic_soa&#45;&gt;module~pic_serialize</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M615.98,-114.72C605.98,-112.86 594.22,-110.67 582.8,-108.54"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="583.36,-105.09 572.89,-106.7 582.08,-111.97 583.36,-105.09"/>
+</g>
+<!-- module~pic_types -->
+<g id="module~~pic_soa~~UsesGraph_node6" class="node">
+<title>module~pic_types</title>
+<g id="a_module~~pic_soa~~UsesGraph_node6"><a xlink:href="../module/pic_types.html" xlink:title="pic_types">
+<polygon fill="#337ab7" stroke="#337ab7" points="192,-111.56 130,-111.56 130,-87.56 192,-87.56 192,-111.56"/>
+<text text-anchor="middle" x="161" y="-97.16" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_types</text>
+</a>
+</g>
+</g>
+<!-- module~pic_soa&#45;&gt;module~pic_types -->
+<g id="module~~pic_soa~~UsesGraph_edge5" class="edge">
+<title>module~pic_soa&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M634.5,-107.22C619.24,-83.65 582,-33.32 534.5,-19.56"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M532.5,-19.56C430.05,10.13 397.08,1.46 292.5,-19.56"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M290.5,-19.56C262.25,-26.25 253.19,-24.12 228,-38.56 209.17,-49.36 191.31,-66.43 178.93,-79.78"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="176.06,-77.74 171.97,-87.51 181.26,-82.42 176.06,-77.74"/>
+</g>
+<!-- module~pic_array_hash&#45;&gt;module~pic_types -->
+<g id="module~~pic_soa~~UsesGraph_edge6" class="edge">
+<title>module~pic_array_hash&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M486.99,-185.89C425.49,-192.45 313.71,-197.22 228,-160.56 207.49,-151.79 189.31,-133.79 177.25,-119.61"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="179.91,-117.34 170.88,-111.8 174.49,-121.76 179.91,-117.34"/>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_types -->
+<g id="module~~pic_soa~~UsesGraph_edge8" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#cbff00" stroke-dasharray="5,2" d="M393.84,-127.49C368.54,-116.76 328.82,-102.35 292.5,-99.56"/>
+</g>
+<!-- module~pic_global_definitions -->
+<g id="module~~pic_soa~~UsesGraph_node10" class="node">
+<title>module~pic_global_definitions</title>
+<g id="a_module~~pic_soa~~UsesGraph_node10"><a xlink:href="../module/pic_global_definitions.html" xlink:title="pic_global_definitions">
+<polygon fill="#337ab7" stroke="#337ab7" points="355,-151.56 228,-151.56 228,-127.56 355,-127.56 355,-151.56"/>
+<text text-anchor="middle" x="291.5" y="-137.16" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_global_definitions</text>
+</a>
+</g>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_global_definitions -->
+<g id="module~~pic_soa~~UsesGraph_edge7" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_global_definitions</title>
+<path fill="none" stroke="#cbff00" stroke-dasharray="5,2" d="M390.75,-139.56C383,-139.56 374.29,-139.56 365.32,-139.56"/>
+<polygon fill="#cbff00" stroke="#cbff00" points="365.14,-136.06 355.14,-139.56 365.14,-143.06 365.14,-136.06"/>
+</g>
+<!-- module~pic_io&#45;&gt;module~pic_types -->
+<g id="module~~pic_soa~~UsesGraph_edge10" class="edge">
+<title>module~pic_io&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#00ff66" stroke-dasharray="5,2" d="M401.32,-47.43C376.75,-32.94 332.08,-11.6 292.5,-19.56"/>
+</g>
+<!-- module~pic_ascii -->
+<g id="module~~pic_soa~~UsesGraph_node9" class="node">
+<title>module~pic_ascii</title>
+<g id="a_module~~pic_soa~~UsesGraph_node9"><a xlink:href="../module/pic_ascii.html" xlink:title="pic_ascii">
+<polygon fill="#337ab7" stroke="#337ab7" points="320.5,-71.56 262.5,-71.56 262.5,-47.56 320.5,-47.56 320.5,-71.56"/>
+<text text-anchor="middle" x="291.5" y="-57.16" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_ascii</text>
+</a>
+</g>
+</g>
+<!-- module~pic_io&#45;&gt;module~pic_ascii -->
+<g id="module~~pic_soa~~UsesGraph_edge9" class="edge">
+<title>module~pic_io&#45;&gt;module~pic_ascii</title>
+<path fill="none" stroke="#00ff66" stroke-dasharray="5,2" d="M393.89,-59.56C375.77,-59.56 351.34,-59.56 331,-59.56"/>
+<polygon fill="#00ff66" stroke="#00ff66" points="330.79,-56.06 320.79,-59.56 330.79,-63.06 330.79,-56.06"/>
+</g>
+<!-- module~pic_serialize&#45;&gt;module~pic_error -->
+<g id="module~~pic_soa~~UsesGraph_edge11" class="edge">
+<title>module~pic_serialize&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M499.35,-111.56C487.21,-115.95 473.36,-120.96 460.78,-125.52"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="459.22,-122.36 451.01,-129.06 461.6,-128.94 459.22,-122.36"/>
+</g>
+<!-- module~pic_serialize&#45;&gt;module~pic_io -->
+<g id="module~~pic_soa~~UsesGraph_edge12" class="edge">
+<title>module~pic_serialize&#45;&gt;module~pic_io</title>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M499.35,-87.56C486.15,-82.78 470.94,-77.27 457.51,-72.41"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="458.7,-69.12 448.11,-69.01 456.32,-75.7 458.7,-69.12"/>
+</g>
+<!-- module~pic_serialize&#45;&gt;module~pic_types -->
+<g id="module~~pic_soa~~UsesGraph_edge13" class="edge">
+<title>module~pic_serialize&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M494.19,-101.36C446.76,-103.18 363.54,-105.01 292.5,-99.56"/>
+<path fill="none" stroke="#0066ff" stroke-dasharray="5,2" d="M290.5,-99.56C260.99,-97.13 227.54,-97.21 202.17,-97.87"/>
+<polygon fill="#0066ff" stroke="#0066ff" points="202.07,-94.37 192.18,-98.16 202.27,-101.36 202.07,-94.37"/>
+</g>
+<!-- iso_c_binding -->
+<g id="module~~pic_soa~~UsesGraph_node7" class="node">
+<title>iso_c_binding</title>
+<g id="a_module~~pic_soa~~UsesGraph_node7"><a xlink:href="http://fortranwiki.org/fortran/show/iso_c_binding" xlink:title="iso_c_binding">
+<polygon fill="#337ab7" stroke="#337ab7" points="89,-132.56 5,-132.56 5,-108.56 89,-108.56 89,-132.56"/>
+<text text-anchor="middle" x="47" y="-118.16" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_c_binding</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_c_binding -->
+<g id="module~~pic_soa~~UsesGraph_edge14" class="edge">
+<title>module~pic_types&#45;&gt;iso_c_binding</title>
+<path fill="none" stroke="#cc00ff" stroke-dasharray="5,2" d="M129.99,-105.19C120.46,-106.97 109.64,-109 99.07,-110.98"/>
+<polygon fill="#cc00ff" stroke="#cc00ff" points="98.23,-107.58 89.05,-112.86 99.52,-114.46 98.23,-107.58"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~pic_soa~~UsesGraph_node8" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~pic_soa~~UsesGraph_node8"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-90.56 0,-90.56 0,-66.56 94,-66.56 94,-90.56"/>
+<text text-anchor="middle" x="47" y="-76.16" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_fortran_env -->
+<g id="module~~pic_soa~~UsesGraph_edge15" class="edge">
+<title>module~pic_types&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#cc00ff" stroke-dasharray="5,2" d="M129.99,-93.93C121.98,-92.43 113.07,-90.76 104.15,-89.09"/>
+<polygon fill="#cc00ff" stroke="#cc00ff" points="104.6,-85.61 94.13,-87.21 103.31,-92.49 104.6,-85.61"/>
+</g>
+<!-- module~pic_ascii&#45;&gt;module~pic_types -->
+<g id="module~~pic_soa~~UsesGraph_edge16" class="edge">
+<title>module~pic_ascii&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M262.3,-68.34C244.6,-73.84 221.51,-81.03 201.95,-87.12"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="200.88,-83.79 192.38,-90.1 202.96,-90.47 200.88,-83.79"/>
+</g>
+<!-- module~pic_global_definitions&#45;&gt;module~pic_types -->
+<g id="module~~pic_soa~~UsesGraph_edge17" class="edge">
+<title>module~pic_global_definitions&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#7f00ff" stroke-dasharray="5,2" d="M251.95,-127.56C236.15,-122.64 217.88,-116.95 201.94,-111.99"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="202.95,-108.64 192.36,-109.01 200.87,-115.32 202.95,-108.64"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panmodulepic_soaUsesGraph = svgPanZoom('#modulepic_soaUsesGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+          <div class="card">
+      <h3 class="card-header card-title bg-light">Used by</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~pic_soa~~UsedByGraph Pages: 1 -->
+<svg id="modulepic_soaUsedByGraph" width="196pt" height="32pt"
+ viewBox="0.00 0.00 196.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_soa~~UsedByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>module~~pic_soa~~UsedByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 192,-28 192,4 -4,4"/>
+<!-- module~pic_soa -->
+<g id="module~~pic_soa~~UsedByGraph_node1" class="node">
+<title>module~pic_soa</title>
+<polygon fill="none" stroke="black" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">pic_soa</text>
+</g>
+<!-- module~pic_soa_particle -->
+<g id="module~~pic_soa~~UsedByGraph_node2" class="node">
+<title>module~pic_soa_particle</title>
+<g id="a_module~~pic_soa~~UsedByGraph_node2"><a xlink:href="../module/pic_soa_particle.html" xlink:title="pic_soa_particle">
+<polygon fill="#337ab7" stroke="#337ab7" points="188,-24 90,-24 90,0 188,0 188,-24"/>
+<text text-anchor="middle" x="139" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_soa_particle</text>
+</a>
+</g>
+</g>
+<!-- module~pic_soa_particle&#45;&gt;module~pic_soa -->
+<g id="module~~pic_soa~~UsedByGraph_edge1" class="edge">
+<title>module~pic_soa_particle&#45;&gt;module~pic_soa</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M89.75,-12C81.24,-12 72.52,-12 64.4,-12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="64.15,-8.5 54.15,-12 64.15,-15.5 64.15,-8.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsedByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsedByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      <br>
+
+
+        <section>
+          <h2>Variables</h2>
+            <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-soa_field_int32"></span>
+              integer(kind=int32),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>SOA_FIELD_INT32</strong></td>
+<td> =</td>
+                <td>1_int32</td>
+            <td>
+                <p>Field kind code for an <code>integer(int32)</code> field. Fixed-width <code>int32</code>
+because these codes describe the on-disk record tags.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-soa_field_int64"></span>
+              integer(kind=int32),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>SOA_FIELD_INT64</strong></td>
+<td> =</td>
+                <td>2_int32</td>
+            <td>
+                <p>Field kind code for an <code>integer(int64)</code> field.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-soa_field_logical"></span>
+              integer(kind=int32),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>SOA_FIELD_LOGICAL</strong></td>
+<td> =</td>
+                <td>5_int32</td>
+            <td>
+                <p>Field kind code for a default <code>logical</code> field, stored on disk as an
+<code>int32</code> record of 0/1 codes.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-soa_field_real_dp"></span>
+              integer(kind=int32),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>SOA_FIELD_REAL_DP</strong></td>
+<td> =</td>
+                <td>4_int32</td>
+            <td>
+                <p>Field kind code for a <code>real(dp)</code> field.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-soa_field_real_sp"></span>
+              integer(kind=int32),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>SOA_FIELD_REAL_SP</strong></td>
+<td> =</td>
+                <td>3_int32</td>
+            <td>
+                <p>Field kind code for a <code>real(sp)</code> field.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-soa_growth_factor"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>SOA_GROWTH_FACTOR</strong></td>
+<td> =</td>
+                <td>2</td>
+            <td>
+                <p>Geometric growth factor. Capacity doubles until it covers the request,
+which amortises a sequence of single-element appends to O(1) copies
+each.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-soa_min_capacity"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>SOA_MIN_CAPACITY</strong></td>
+<td> =</td>
+                <td>8</td>
+            <td>
+                <p>Capacity a container jumps to on its first growth, so that small
+containers do not reallocate on every one of the first few appends.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-soa_schema_prefix"></span>
+              character(len=*),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>SOA_SCHEMA_PREFIX</strong></td>
+<td> =</td>
+                <td>&#34;pic_soa/1;&#34;</td>
+            <td>
+                <p>Prefix every schema string starts with. Bump the number here when the
+SoA record layout itself changes, which retires every older
+checkpoint through the ordinary schema mismatch path.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-soa_hash_field"></span>
+      <h3>public        interface <a href='../interface/soa_hash_field.html'>soa_hash_field</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Fold the first <code>n</code> elements of one field into a hash accumulator.</p>
+<p>Usage: <code>call soa_hash_field(hasher, this%x, n)</code></p>
+<p>Takes the field whole as an <code>allocatable</code>, for the same reason
+<code>soa_write_field</code> does: a container that has never been allocated has
+unallocated fields and no slice of one may be formed. An unallocated
+field, and a zero live count, both contribute nothing, which is the
+same thing a zero-sized <code>update</code> would do.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_hash_int32_field.html'>soa_hash_int32_field</a>(hasher, values, n)  
+
+    </h3>
+    
+  <p>Fold the first <code>n</code> elements of an <code>integer(int32)</code> field into a hash.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hasher~2"></span>
+              type(<a href='../type/array_hash_t.html'>array_hash_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hasher</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~11"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~40"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_hash_int64_field.html'>soa_hash_int64_field</a>(hasher, values, n)  
+
+    </h3>
+    
+  <p>Fold the first <code>n</code> elements of an <code>integer(int64)</code> field into a hash.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hasher~3"></span>
+              type(<a href='../type/array_hash_t.html'>array_hash_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hasher</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~12"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~41"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_hash_real_sp_field.html'>soa_hash_real_sp_field</a>(hasher, values, n)  
+
+    </h3>
+    
+  <p>Fold the first <code>n</code> elements of a <code>real(sp)</code> field into a hash.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hasher~4"></span>
+              type(<a href='../type/array_hash_t.html'>array_hash_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hasher</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~13"></span>
+              real(kind=sp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~42"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_hash_real_dp_field.html'>soa_hash_real_dp_field</a>(hasher, values, n)  
+
+    </h3>
+    
+  <p>Fold the first <code>n</code> elements of a <code>real(dp)</code> field into a hash.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hasher~5"></span>
+              type(<a href='../type/array_hash_t.html'>array_hash_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hasher</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~14"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~43"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_hash_logical_field.html'>soa_hash_logical_field</a>(hasher, values, n)  
+
+    </h3>
+    
+  <p>Fold the first <code>n</code> elements of a default <code>logical</code> field into a hash.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hasher~6"></span>
+              type(<a href='../type/array_hash_t.html'>array_hash_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hasher</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~15"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~44"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-soa_read_field"></span>
+      <h3>public        interface <a href='../interface/soa_read_field.html'>soa_read_field</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Read one field record back and check its length.</p>
+<p>Usage: <code>call soa_read_field(unit, name, values, n, swapped, err)</code></p>
+<p><code>values</code> is reallocated to exactly <code>n</code> elements. <code>name</code> appears in the
+error message so a mismatch names the offending field. <code>swapped</code> is
+the flag returned by <code>soa_read_prologue</code>.</p>
+<p>Fails with <code>ERROR_VALIDATION</code> when the record holds a number of
+elements other than <code>n</code>, or when a logical record holds a code other
+than 0 or 1, and with <code>ERROR_IO</code> when the stream is truncated.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_read_int32_field.html'>soa_read_int32_field</a>(unit, name, values, n, swapped, err)  
+
+    </h3>
+    
+  <p>Read an <code>integer(int32)</code> field record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~9"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~9"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~16"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~45"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~2"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~72"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_read_int64_field.html'>soa_read_int64_field</a>(unit, name, values, n, swapped, err)  
+
+    </h3>
+    
+  <p>Read an <code>integer(int64)</code> field record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~10"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~10"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~17"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~46"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~3"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~73"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_read_real_sp_field.html'>soa_read_real_sp_field</a>(unit, name, values, n, swapped, err)  
+
+    </h3>
+    
+  <p>Read a <code>real(sp)</code> field record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~11"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~11"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~18"></span>
+              real(kind=sp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~47"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~4"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~74"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_read_real_dp_field.html'>soa_read_real_dp_field</a>(unit, name, values, n, swapped, err)  
+
+    </h3>
+    
+  <p>Read a <code>real(dp)</code> field record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~12"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~12"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~19"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~48"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~5"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~75"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_read_logical_field.html'>soa_read_logical_field</a>(unit, name, values, n, swapped, err)  
+
+    </h3>
+    
+  <p>Read a default <code>logical</code> field from an <code>int32</code> record of 0/1 codes.</p>
+<p>Any code other than 0 or 1 is rejected rather than being coerced to
+true: a record that did not come from <code>soa_write_field</code> is more likely
+to be a mislabelled integer field than a sloppy boolean.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~13"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~13"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~20"></span>
+              logical,
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~49"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~6"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~76"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-soa_resize_field"></span>
+      <h3>public        interface <a href='../interface/soa_resize_field.html'>soa_resize_field</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Give one field array a new allocated length, preserving a prefix.</p>
+<p>Usage: <code>call soa_resize_field(values, new_capacity, keep, fill_to, err)</code></p>
+<p><code>values(1:keep)</code> survives the call. Indices <code>keep+1 .. fill_to</code> are set
+to the zero value of the type; indices above <code>fill_to</code> are left
+unspecified. When <code>values</code> already has exactly <code>new_capacity</code> elements
+no reallocation happens and only the fill is performed, which is what
+makes a shrink followed by a grow free.</p>
+<p>Fails with <code>ERROR_VALIDATION</code> on inconsistent arguments and with
+<code>ERROR_ALLOC</code> if the new array cannot be allocated.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_resize_int32_field.html'>soa_resize_int32_field</a>(values, new_capacity, keep, fill_to, err)  
+
+    </h3>
+    
+  <p>Resize an <code>integer(int32)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~4"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~62"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_resize_int64_field.html'>soa_resize_int64_field</a>(values, new_capacity, keep, fill_to, err)  
+
+    </h3>
+    
+  <p>Resize an <code>integer(int64)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~2"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~3"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~63"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_resize_real_sp_field.html'>soa_resize_real_sp_field</a>(values, new_capacity, keep, fill_to, err)  
+
+    </h3>
+    
+  <p>Resize a <code>real(sp)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~3"></span>
+              real(kind=sp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~7"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~4"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~64"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_resize_real_dp_field.html'>soa_resize_real_dp_field</a>(values, new_capacity, keep, fill_to, err)  
+
+    </h3>
+    
+  <p>Resize a <code>real(dp)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~4"></span>
+              real(kind=dp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~8"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~7"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~65"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_resize_logical_field.html'>soa_resize_logical_field</a>(values, new_capacity, keep, fill_to, err)  
+
+    </h3>
+    
+  <p>Resize a default <code>logical</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~5"></span>
+              logical,
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~9"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~8"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~66"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-soa_write_field"></span>
+      <h3>public        interface <a href='../interface/soa_write_field.html'>soa_write_field</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Write the first <code>n</code> elements of one field as a stream record.</p>
+<p>Usage: <code>call soa_write_field(unit, this%x, n, err)</code></p>
+<p>The field array is taken whole, as an <code>allocatable</code>, together with the
+live count: a container that has never been allocated has unallocated
+field arrays, and forming the slice <code>this%x(1:0)</code> on one of those
+would be a reference to an unallocated variable. Handling that here
+keeps every generated container safe by construction. An unallocated
+field is legal and writes an empty record, provided <code>n</code> is zero.</p>
+<p>The prologue must already have been written. A <code>logical</code> field is
+encoded as an <code>int32</code> record of 0/1 codes; every other type maps
+straight onto the matching <code>pic_serialize</code> record.</p>
+<p>Fails with <code>ERROR_VALIDATION</code> when <code>n</code> is negative or larger than the
+field actually holds.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_write_int32_field.html'>soa_write_int32_field</a>(unit, values, n, err)  
+
+    </h3>
+    
+  <p>Write the first <code>n</code> elements of an <code>integer(int32)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~4"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~6"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~35"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~67"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_write_int64_field.html'>soa_write_int64_field</a>(unit, values, n, err)  
+
+    </h3>
+    
+  <p>Write the first <code>n</code> elements of an <code>integer(int64)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~7"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~36"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~68"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_write_real_sp_field.html'>soa_write_real_sp_field</a>(unit, values, n, err)  
+
+    </h3>
+    
+  <p>Write the first <code>n</code> elements of a <code>real(sp)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~8"></span>
+              real(kind=sp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~37"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~69"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_write_real_dp_field.html'>soa_write_real_dp_field</a>(unit, values, n, err)  
+
+    </h3>
+    
+  <p>Write the first <code>n</code> elements of a <code>real(dp)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~7"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~9"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~38"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~70"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/soa_write_logical_field.html'>soa_write_logical_field</a>(unit, values, n, err)  
+
+    </h3>
+    
+  <p>Write the first <code>n</code> elements of a default <code>logical</code> field as an
+<code>int32</code> record of 0/1 codes.</p>
+<p>The envelope has no logical tag, and the storage size of a Fortran
+<code>logical</code> is not fixed by the standard, so an explicit 0/1 encoding is
+the only portable thing to put in a file.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~8"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~10"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~39"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~71"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Derived Types</h2>
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-soa_extent_t"></span>
+      <h3>
+        type, public&nbsp;::&nbsp;
+        <a href='../type/soa_extent_t.html'>soa_extent_t</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>Size and capacity bookkeeping for one SoA container.</p><a href="../type/soa_extent_t.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-capacity~2"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>capacity</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>Allocated length of every field array.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-used"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>used</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>Number of live elements. This is what <code>size()</code> returns.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_field_code"></span> <h3>public pure function <a href='../proc/soa_field_code.html'>soa_field_code</a>(field_kind) result(code)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Short schema spelling of a field kind code, or <code>"?"</code> if unknown.</p><a href="../proc/soa_field_code.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-field_kind"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>field_kind</strong></td>
+            <td>
+<p>One of the <code>SOA_FIELD_*</code> constants.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>character(len=:), allocatable</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_grow_capacity"></span> <h3>public pure function <a href='../proc/soa_grow_capacity.html'>soa_grow_capacity</a>(current_capacity, required) result(new_capacity)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Capacity that covers <code>required</code> elements under the geometric policy.</p><a href="../proc/soa_grow_capacity.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-current_capacity"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>current_capacity</strong></td>
+            <td>
+<p>Capacity the container has now.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-required"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>required</strong></td>
+            <td>
+<p>Number of elements that must fit.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_stream_bytes"></span> <h3>public pure function <a href='../proc/soa_stream_bytes.html'>soa_stream_bytes</a>(schema, n, field_kinds) result(nbytes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Exact size in bytes of the stream a container of <code>n</code> elements writes.</p><a href="../proc/soa_stream_bytes.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-schema"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>schema</strong></td>
+            <td>
+<p>The container&rsquo;s schema string.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~50"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+<p>Number of live elements.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-field_kinds"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>field_kinds</strong>(:)</td>
+            <td>
+<p>One <code>SOA_FIELD_*</code> code per field, in declaration order.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_field_tag"></span> <h3>private pure function <a href='../proc/soa_field_tag.html'>soa_field_tag</a>(field_kind) result(tag)  
+</h3></div>
+    <div class="card-body">
+          
+  <p><code>pic_serialize</code> record tag a field kind is stored as, or -1 if the
+kind is unknown. A <code>logical</code> field maps onto the <code>int32</code> tag.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-field_kind~2"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>field_kind</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Subroutines</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_check_alloc"></span> <h3>public  subroutine <a href='../proc/soa_check_alloc.html'>soa_check_alloc</a>(stat, context, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Turn a non-zero <code>stat=</code> from an <code>allocate</code> into <code>ERROR_ALLOC</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-stat~11"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>stat</strong></td>
+            <td>
+<p>Value returned by <code>allocate(..., stat=stat)</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-context"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>context</strong></td>
+            <td>
+<p>What was being allocated, for the message.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~57"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Error state, written only when <code>stat</code> is non-zero.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_check_field_count"></span> <h3>public  subroutine <a href='../proc/soa_check_field_count.html'>soa_check_field_count</a>(name, actual, expected, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Verify that a field record read back holds the expected element count.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~8"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+<p>Field name, for the message.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-actual"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>actual</strong></td>
+            <td>
+<p>Elements found in the record.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expected"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>expected</strong></td>
+            <td>
+<p>Elements the prologue said the container has.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~59"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Error state, <code>ERROR_VALIDATION</code> on a mismatch.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_check_live_count"></span> <h3>public  subroutine <a href='../proc/soa_check_live_count.html'>soa_check_live_count</a>(n, allocated_size, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Verify that <code>n</code> live elements really exist in a field array.</p><a href="../proc/soa_check_live_count.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~34"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+<p>Number of live elements the container claims to have.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-allocated_size"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>allocated_size</strong></td>
+            <td>
+<p>Allocated length of the field array, or -1 if it is unallocated.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~60"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Error state, <code>ERROR_VALIDATION</code> when the claim cannot hold.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_check_resize_args"></span> <h3>public  subroutine <a href='../proc/soa_check_resize_args.html'>soa_check_resize_args</a>(new_capacity, keep, fill_to, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Validate the arguments of a field resize.</p><a href="../proc/soa_check_resize_args.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+<p>Requested allocated length.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+<p>Number of leading elements to preserve.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+<p>Highest index to zero-fill above <code>keep</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~58"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Error state, <code>ERROR_VALIDATION</code> on an inconsistent request.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_hash_begin"></span> <h3>public  subroutine <a href='../proc/soa_hash_begin.html'>soa_hash_begin</a>(hasher, schema, n)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Reset a hash accumulator and fold in a container&rsquo;s identity.</p><a href="../proc/soa_hash_begin.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hasher~7"></span>
+              type(<a href='../type/array_hash_t.html'>array_hash_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hasher</strong></td>
+            <td>
+<p>Accumulator to restart.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-schema~4"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>schema</strong></td>
+            <td>
+<p>The container&rsquo;s schema string.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~53"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+<p>Number of live elements.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_plan_resize"></span> <h3>public  subroutine <a href='../proc/soa_plan_resize.html'>soa_plan_resize</a>(extent, new_size, new_capacity, keep, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Work out what a resize to <code>new_size</code> elements has to do.</p><a href="../proc/soa_plan_resize.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-extent~2"></span>
+              type(<a href='../type/soa_extent_t.html'>soa_extent_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>extent</strong></td>
+            <td>
+<p>Current size and capacity of the container.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_size"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_size</strong></td>
+            <td>
+<p>Requested number of live elements.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~4"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+<p>Capacity the field arrays must have afterwards.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~3"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+<p>Number of leading elements whose values must survive.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~61"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Error state, <code>ERROR_VALIDATION</code> when <code>new_size</code> is negative.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_read_prologue"></span> <h3>public  subroutine <a href='../proc/soa_read_prologue.html'>soa_read_prologue</a>(unit, schema, n, swapped, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read and validate the prologue, returning the element count.</p><a href="../proc/soa_read_prologue.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~15"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+<p>Stream unit opened for unformatted stream reading.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-schema~3"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>schema</strong></td>
+            <td>
+<p>Schema the calling container expects.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~52"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+<p>Number of elements the stream holds, 0 when the prologue is
+rejected.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~7"></span>
+              logical,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+<p>True when the stream came from the opposite byte order; pass it on
+to every <code>soa_read_field</code> call.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~78"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Error state.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_write_prologue"></span> <h3>public  subroutine <a href='../proc/soa_write_prologue.html'>soa_write_prologue</a>(unit, schema, n, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write the stream header, the schema record and the element count.</p><a href="../proc/soa_write_prologue.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~14"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+<p>Stream unit opened for unformatted stream writing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-schema~2"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>schema</strong></td>
+            <td>
+<p>The container&rsquo;s schema string.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~51"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+<p>Number of live elements about to be written.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~77"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Error state.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_hash_int32_field"></span> <h3>private  subroutine <a href='../proc/soa_hash_int32_field.html'>soa_hash_int32_field</a>(hasher, values, n)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Fold the first <code>n</code> elements of an <code>integer(int32)</code> field into a hash.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hasher~2"></span>
+              type(<a href='../type/array_hash_t.html'>array_hash_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hasher</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~11"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~40"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_hash_int64_field"></span> <h3>private  subroutine <a href='../proc/soa_hash_int64_field.html'>soa_hash_int64_field</a>(hasher, values, n)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Fold the first <code>n</code> elements of an <code>integer(int64)</code> field into a hash.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hasher~3"></span>
+              type(<a href='../type/array_hash_t.html'>array_hash_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hasher</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~12"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~41"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_hash_logical_field"></span> <h3>private  subroutine <a href='../proc/soa_hash_logical_field.html'>soa_hash_logical_field</a>(hasher, values, n)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Fold the first <code>n</code> elements of a default <code>logical</code> field into a hash.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hasher~6"></span>
+              type(<a href='../type/array_hash_t.html'>array_hash_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hasher</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~15"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~44"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_hash_real_dp_field"></span> <h3>private  subroutine <a href='../proc/soa_hash_real_dp_field.html'>soa_hash_real_dp_field</a>(hasher, values, n)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Fold the first <code>n</code> elements of a <code>real(dp)</code> field into a hash.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hasher~5"></span>
+              type(<a href='../type/array_hash_t.html'>array_hash_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hasher</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~14"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~43"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_hash_real_sp_field"></span> <h3>private  subroutine <a href='../proc/soa_hash_real_sp_field.html'>soa_hash_real_sp_field</a>(hasher, values, n)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Fold the first <code>n</code> elements of a <code>real(sp)</code> field into a hash.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hasher~4"></span>
+              type(<a href='../type/array_hash_t.html'>array_hash_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hasher</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~13"></span>
+              real(kind=sp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~42"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_read_int32_field"></span> <h3>private  subroutine <a href='../proc/soa_read_int32_field.html'>soa_read_int32_field</a>(unit, name, values, n, swapped, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read an <code>integer(int32)</code> field record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~9"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~9"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~16"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~45"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~2"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~72"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_read_int64_field"></span> <h3>private  subroutine <a href='../proc/soa_read_int64_field.html'>soa_read_int64_field</a>(unit, name, values, n, swapped, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read an <code>integer(int64)</code> field record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~10"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~10"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~17"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~46"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~3"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~73"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_read_logical_field"></span> <h3>private  subroutine <a href='../proc/soa_read_logical_field.html'>soa_read_logical_field</a>(unit, name, values, n, swapped, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read a default <code>logical</code> field from an <code>int32</code> record of 0/1 codes.</p><a href="../proc/soa_read_logical_field.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~13"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~13"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~20"></span>
+              logical,
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~49"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~6"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~76"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_read_real_dp_field"></span> <h3>private  subroutine <a href='../proc/soa_read_real_dp_field.html'>soa_read_real_dp_field</a>(unit, name, values, n, swapped, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read a <code>real(dp)</code> field record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~12"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~12"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~19"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~48"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~5"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~75"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_read_real_sp_field"></span> <h3>private  subroutine <a href='../proc/soa_read_real_sp_field.html'>soa_read_real_sp_field</a>(unit, name, values, n, swapped, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read a <code>real(sp)</code> field record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~11"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name~11"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~18"></span>
+              real(kind=sp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~47"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~4"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~74"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_resize_int32_field"></span> <h3>private  subroutine <a href='../proc/soa_resize_int32_field.html'>soa_resize_int32_field</a>(values, new_capacity, keep, fill_to, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Resize an <code>integer(int32)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~4"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~62"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_resize_int64_field"></span> <h3>private  subroutine <a href='../proc/soa_resize_int64_field.html'>soa_resize_int64_field</a>(values, new_capacity, keep, fill_to, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Resize an <code>integer(int64)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~2"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~3"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~63"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_resize_logical_field"></span> <h3>private  subroutine <a href='../proc/soa_resize_logical_field.html'>soa_resize_logical_field</a>(values, new_capacity, keep, fill_to, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Resize a default <code>logical</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~5"></span>
+              logical,
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~9"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~8"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~66"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_resize_real_dp_field"></span> <h3>private  subroutine <a href='../proc/soa_resize_real_dp_field.html'>soa_resize_real_dp_field</a>(values, new_capacity, keep, fill_to, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Resize a <code>real(dp)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~4"></span>
+              real(kind=dp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~8"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~7"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~65"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_resize_real_sp_field"></span> <h3>private  subroutine <a href='../proc/soa_resize_real_sp_field.html'>soa_resize_real_sp_field</a>(values, new_capacity, keep, fill_to, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Resize a <code>real(sp)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~3"></span>
+              real(kind=sp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new_capacity~7"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>new_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-keep~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>keep</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fill_to~4"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fill_to</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~64"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_write_int32_field"></span> <h3>private  subroutine <a href='../proc/soa_write_int32_field.html'>soa_write_int32_field</a>(unit, values, n, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write the first <code>n</code> elements of an <code>integer(int32)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~4"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~6"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~35"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~67"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_write_int64_field"></span> <h3>private  subroutine <a href='../proc/soa_write_int64_field.html'>soa_write_int64_field</a>(unit, values, n, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write the first <code>n</code> elements of an <code>integer(int64)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~7"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~36"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~68"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_write_logical_field"></span> <h3>private  subroutine <a href='../proc/soa_write_logical_field.html'>soa_write_logical_field</a>(unit, values, n, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write the first <code>n</code> elements of a default <code>logical</code> field as an
+<code>int32</code> record of 0/1 codes.</p><a href="../proc/soa_write_logical_field.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~8"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~10"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~39"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~71"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_write_real_dp_field"></span> <h3>private  subroutine <a href='../proc/soa_write_real_dp_field.html'>soa_write_real_dp_field</a>(unit, values, n, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write the first <code>n</code> elements of a <code>real(dp)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~7"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~9"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~38"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~70"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-soa_write_real_sp_field"></span> <h3>private  subroutine <a href='../proc/soa_write_real_sp_field.html'>soa_write_real_sp_field</a>(unit, values, n, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write the first <code>n</code> elements of a <code>real(sp)</code> field.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~8"></span>
+              real(kind=sp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~37"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~69"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,3510 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>pic_serialize &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>pic_serialize
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 2.6% of total for modules and submodules.">452 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_serialize.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_serialize.f90.html'>pic_serialize.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">pic_serialize</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_serialize.html#variable-pic_format_version">PIC_FORMAT_VERSION</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#variable-pic_header_bytes">PIC_HEADER_BYTES</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#variable-pic_magic">PIC_MAGIC</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#variable-pic_record_header_bytes">PIC_RECORD_HEADER_BYTES</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#variable-pic_tag_char">PIC_TAG_CHAR</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#variable-pic_tag_int32">PIC_TAG_INT32</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#variable-pic_tag_int64">PIC_TAG_INT64</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#variable-pic_tag_real_dp">PIC_TAG_REAL_DP</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#variable-pic_tag_real_sp">PIC_TAG_REAL_SP</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#variable-bits_per_byte">BITS_PER_BYTE</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#variable-pic_endian_mark">PIC_ENDIAN_MARK</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#variable-reserved_word">RESERVED_WORD</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#inters-0"
+         aria-expanded="false" aria-controls="inters-0">
+         <h4 class="card-header bg-primary text-white">Interfaces</h4>
+      </a>
+      <div id="inters-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_serialize.html#interface-read_array">read_array</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#interface-write_array">write_array</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#funcs-0"
+         aria-expanded="false" aria-controls="funcs-0">
+         <h4 class="card-header bg-primary text-white">Functions</h4>
+      </a>
+      <div id="funcs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-host_is_little_endian">host_is_little_endian</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-record_bytes">record_bytes</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-bits_to_real_dp">bits_to_real_dp</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-bits_to_real_sp">bits_to_real_sp</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-bswap_int32">bswap_int32</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-bswap_int64">bswap_int64</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-element_bytes">element_bytes</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#subs-0"
+         aria-expanded="false" aria-controls="subs-0">
+         <h4 class="card-header bg-primary text-white">Subroutines</h4>
+      </a>
+      <div id="subs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-read_header">read_header</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-serialize_close">serialize_close</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-serialize_open_read">serialize_open_read</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-serialize_open_write">serialize_open_write</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-write_header">write_header</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-check_io">check_io</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-read_char_record">read_char_record</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-read_int32_array">read_int32_array</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-read_int64_array">read_int64_array</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-read_real_dp_array">read_real_dp_array</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-read_real_sp_array">read_real_sp_array</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-read_record_header">read_record_header</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-write_char_record">write_char_record</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-write_int32_array">write_int32_array</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-write_int64_array">write_int64_array</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-write_real_dp_array">write_real_dp_array</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-write_real_sp_array">write_real_sp_array</a>
+            <a class="list-group-item" href="../module/pic_serialize.html#proc-write_record_header">write_record_header</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <p>Self-describing binary serialization for PIC.</p>
+<p>## Stream layout</p>
+<p>Every stream starts with a 16 byte header followed by zero or more
+ records. All multi-byte fields are written in the <em>native</em> byte order of
+ the writing machine; the header carries a byte-order mark so that a
+ reader on a foreign machine can detect this and un-swap on the fly.</p>
+<p>### Header, 16 bytes</p>
+<table>
+<thead>
+<tr>
+<th>offset</th>
+<th>size</th>
+<th>field</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>magic</td>
+<td>ASCII <code>"PIC1"</code>, byte order independent</td>
+</tr>
+<tr>
+<td>4</td>
+<td>4</td>
+<td>endian mark</td>
+<td><code>integer(int32)</code> <code>0x01020304</code> (16909060)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>4</td>
+<td>version</td>
+<td><code>integer(int32)</code> format version</td>
+</tr>
+<tr>
+<td>12</td>
+<td>4</td>
+<td>reserved</td>
+<td><code>integer(int32)</code> written as 0, readers skip it</td>
+</tr>
+</tbody>
+</table>
+<p>There is deliberately <strong>no</strong> payload-length field in the header. The
+ number and kind of records that follow is decided by the caller, and each
+ record is individually length prefixed and bounds checked against the
+ real size of the file, so a global length would only be a second source
+ of truth that can disagree with the first. The reserved word exists so a
+ future version can add one without changing the header size.</p>
+<p>### Record, 12 byte record header plus payload</p>
+<table>
+<thead>
+<tr>
+<th>offset</th>
+<th>size</th>
+<th>field</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>4</td>
+<td>tag</td>
+<td><code>integer(int32)</code> type tag, see <code>PIC_TAG_*</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>8</td>
+<td>count</td>
+<td><code>integer(int64)</code> number of <em>elements</em></td>
+</tr>
+<tr>
+<td>12</td>
+<td>n</td>
+<td>payload</td>
+<td><code>count * element size</code> bytes</td>
+</tr>
+</tbody>
+</table>
+<p><code>count</code> counts elements, not bytes: three <code>real(dp)</code> values give
+ <code>count == 3</code> and a 24 byte payload. For a character record <code>count</code> is the
+ number of characters, so the element size is one.</p>
+<p>## Fixed widths on purpose</p>
+<p>Every field that reaches the file is an explicit <code>int32</code>/<code>int64</code>, never
+ <code>default_int</code>. A file written by a build with <code>PIC_DEFAULT_INT8=ON</code> is
+ byte identical to one written by a default build; the test suite pins the
+ exact byte length of a known stream so this cannot regress silently.</p>
+<p>## Error contract</p>
+<p>Every procedure takes <code>type(error_t), intent(inout) :: err</code> and writes it
+ <em>only on failure</em>; it is never cleared on entry. Pass a fresh or cleared
+ <code>error_t</code> and check it after each call, which is the convention the rest
+ of PIC uses. Keeping <code>err</code> <code>intent(inout)</code> rather than <code>intent(out)</code> also
+ keeps the compiler from emitting a conditional deallocation of the error
+ message on every single call into this module.</p>
+<p>## Usage</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="k">type</span><span class="p">(</span><span class="n">error_t</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">err</span>
+<span class="w"> </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">unit</span>
+<span class="w"> </span><span class="kt">integer</span><span class="p">(</span><span class="n">int32</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">version</span>
+<span class="w"> </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">swapped</span>
+<span class="w"> </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">values</span><span class="p">(:)</span>
+
+<span class="w"> </span><span class="k">call </span><span class="n">serialize_open_write</span><span class="p">(</span><span class="s2">"state.bin"</span><span class="p">,</span><span class="w"> </span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w"> </span><span class="k">call </span><span class="n">write_header</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w"> </span><span class="k">call </span><span class="n">write_array</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">1.0_dp</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0_dp</span><span class="p">],</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w"> </span><span class="k">call </span><span class="n">serialize_close</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+
+<span class="w"> </span><span class="k">call </span><span class="n">serialize_open_read</span><span class="p">(</span><span class="s2">"state.bin"</span><span class="p">,</span><span class="w"> </span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w"> </span><span class="k">call </span><span class="n">read_header</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">version</span><span class="p">,</span><span class="w"> </span><span class="n">swapped</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w"> </span><span class="k">call </span><span class="n">read_array</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">values</span><span class="p">,</span><span class="w"> </span><span class="n">swapped</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w"> </span><span class="k">call </span><span class="n">serialize_close</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+</code></pre></div>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='pic_types.html'>pic_types</a></li>
+                  <li class="list-inline-item"><a href='pic_error.html'>pic_error</a></li>
+                  <li class="list-inline-item"><a href='pic_io.html'>pic_io</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~pic_serialize~~UsesGraph Pages: 1 -->
+<svg id="modulepic_serializeUsesGraph" width="573pt" height="155pt"
+ viewBox="0.00 0.00 573.00 155.34" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_serialize~~UsesGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 151.34)">
+<title>module~~pic_serialize~~UsesGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-151.34 569,-151.34 569,4 -4,4"/>
+<!-- module~pic_serialize -->
+<g id="module~~pic_serialize~~UsesGraph_node1" class="node">
+<title>module~pic_serialize</title>
+<polygon fill="none" stroke="black" points="565,-66.8 487,-66.8 487,-42.8 565,-42.8 565,-66.8"/>
+<text text-anchor="middle" x="526" y="-52.4" font-family="Helvetica,sans-Serif" font-size="10.50">pic_serialize</text>
+</g>
+<!-- module~pic_error -->
+<g id="module~~pic_serialize~~UsesGraph_node2" class="node">
+<title>module~pic_error</title>
+<g id="a_module~~pic_serialize~~UsesGraph_node2"><a xlink:href="../module/pic_error.html" xlink:title="pic_error">
+<polygon fill="#337ab7" stroke="#337ab7" points="451,-127.8 391,-127.8 391,-103.8 451,-103.8 451,-127.8"/>
+<text text-anchor="middle" x="421" y="-113.4" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_error</text>
+</a>
+</g>
+</g>
+<!-- module~pic_serialize&#45;&gt;module~pic_error -->
+<g id="module~~pic_serialize~~UsesGraph_edge1" class="edge">
+<title>module~pic_serialize&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M504.65,-66.86C489.41,-75.88 468.35,-88.35 451.3,-98.45"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="449.13,-95.67 442.31,-103.78 452.7,-101.69 449.13,-95.67"/>
+</g>
+<!-- module~pic_io -->
+<g id="module~~pic_serialize~~UsesGraph_node3" class="node">
+<title>module~pic_io</title>
+<g id="a_module~~pic_serialize~~UsesGraph_node3"><a xlink:href="../module/pic_io.html" xlink:title="pic_io">
+<polygon fill="#337ab7" stroke="#337ab7" points="448,-66.8 394,-66.8 394,-42.8 448,-42.8 448,-66.8"/>
+<text text-anchor="middle" x="421" y="-52.4" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_io</text>
+</a>
+</g>
+</g>
+<!-- module~pic_serialize&#45;&gt;module~pic_io -->
+<g id="module~~pic_serialize~~UsesGraph_edge2" class="edge">
+<title>module~pic_serialize&#45;&gt;module~pic_io</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M486.94,-54.8C477.53,-54.8 467.48,-54.8 458.16,-54.8"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="458.03,-51.31 448.03,-54.8 458.03,-58.31 458.03,-51.31"/>
+</g>
+<!-- module~pic_types -->
+<g id="module~~pic_serialize~~UsesGraph_node4" class="node">
+<title>module~pic_types</title>
+<g id="a_module~~pic_serialize~~UsesGraph_node4"><a xlink:href="../module/pic_types.html" xlink:title="pic_types">
+<polygon fill="#337ab7" stroke="#337ab7" points="192,-87.8 130,-87.8 130,-63.8 192,-63.8 192,-87.8"/>
+<text text-anchor="middle" x="161" y="-73.4" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_types</text>
+</a>
+</g>
+</g>
+<!-- module~pic_serialize&#45;&gt;module~pic_types -->
+<g id="module~~pic_serialize~~UsesGraph_edge3" class="edge">
+<title>module~pic_serialize&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M498.54,-42.78C445.35,-20.39 322.48,22.17 228,-14.8 207.11,-22.98 188.87,-41.21 176.89,-55.63"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="174.06,-53.56 170.58,-63.57 179.54,-57.91 174.06,-53.56"/>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_types -->
+<g id="module~~pic_serialize~~UsesGraph_edge5" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M390.91,-127.2C352.3,-140.52 282.65,-158.19 228,-136.8 207.11,-128.63 188.87,-110.4 176.89,-95.98"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="179.54,-93.7 170.58,-88.04 174.06,-98.05 179.54,-93.7"/>
+</g>
+<!-- module~pic_global_definitions -->
+<g id="module~~pic_serialize~~UsesGraph_node8" class="node">
+<title>module~pic_global_definitions</title>
+<g id="a_module~~pic_serialize~~UsesGraph_node8"><a xlink:href="../module/pic_global_definitions.html" xlink:title="pic_global_definitions">
+<polygon fill="#337ab7" stroke="#337ab7" points="355,-127.8 228,-127.8 228,-103.8 355,-103.8 355,-127.8"/>
+<text text-anchor="middle" x="291.5" y="-113.4" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_global_definitions</text>
+</a>
+</g>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_global_definitions -->
+<g id="module~~pic_serialize~~UsesGraph_edge4" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_global_definitions</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M390.75,-115.8C383,-115.8 374.29,-115.8 365.32,-115.8"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="365.14,-112.31 355.14,-115.8 365.14,-119.31 365.14,-112.31"/>
+</g>
+<!-- module~pic_io&#45;&gt;module~pic_types -->
+<g id="module~~pic_serialize~~UsesGraph_edge7" class="edge">
+<title>module~pic_io&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#00ff00" stroke-dasharray="5,2" d="M393.84,-56.93C348.68,-60.61 255.81,-68.17 202.33,-72.52"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="201.87,-69.05 192.19,-73.35 202.44,-76.02 201.87,-69.05"/>
+</g>
+<!-- module~pic_ascii -->
+<g id="module~~pic_serialize~~UsesGraph_node7" class="node">
+<title>module~pic_ascii</title>
+<g id="a_module~~pic_serialize~~UsesGraph_node7"><a xlink:href="../module/pic_ascii.html" xlink:title="pic_ascii">
+<polygon fill="#337ab7" stroke="#337ab7" points="320.5,-47.8 262.5,-47.8 262.5,-23.8 320.5,-23.8 320.5,-47.8"/>
+<text text-anchor="middle" x="291.5" y="-33.4" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_ascii</text>
+</a>
+</g>
+</g>
+<!-- module~pic_io&#45;&gt;module~pic_ascii -->
+<g id="module~~pic_serialize~~UsesGraph_edge6" class="edge">
+<title>module~pic_io&#45;&gt;module~pic_ascii</title>
+<path fill="none" stroke="#00ff00" stroke-dasharray="5,2" d="M393.89,-50.91C375.69,-48.2 351.12,-44.54 330.72,-41.5"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="331.2,-38.03 320.79,-40.02 330.16,-44.96 331.2,-38.03"/>
+</g>
+<!-- iso_c_binding -->
+<g id="module~~pic_serialize~~UsesGraph_node5" class="node">
+<title>iso_c_binding</title>
+<g id="a_module~~pic_serialize~~UsesGraph_node5"><a xlink:href="http://fortranwiki.org/fortran/show/iso_c_binding" xlink:title="iso_c_binding">
+<polygon fill="#337ab7" stroke="#337ab7" points="89,-108.8 5,-108.8 5,-84.8 89,-84.8 89,-108.8"/>
+<text text-anchor="middle" x="47" y="-94.4" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_c_binding</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_c_binding -->
+<g id="module~~pic_serialize~~UsesGraph_edge8" class="edge">
+<title>module~pic_types&#45;&gt;iso_c_binding</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M129.99,-81.43C120.46,-83.22 109.64,-85.25 99.07,-87.23"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="98.23,-83.83 89.05,-89.11 99.52,-90.71 98.23,-83.83"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~pic_serialize~~UsesGraph_node6" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~pic_serialize~~UsesGraph_node6"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-66.8 0,-66.8 0,-42.8 94,-42.8 94,-66.8"/>
+<text text-anchor="middle" x="47" y="-52.4" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_fortran_env -->
+<g id="module~~pic_serialize~~UsesGraph_edge9" class="edge">
+<title>module~pic_types&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M129.99,-70.18C121.98,-68.68 113.07,-67.01 104.15,-65.33"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="104.6,-61.86 94.13,-63.45 103.31,-68.74 104.6,-61.86"/>
+</g>
+<!-- module~pic_ascii&#45;&gt;module~pic_types -->
+<g id="module~~pic_serialize~~UsesGraph_edge10" class="edge">
+<title>module~pic_ascii&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M262.3,-44.58C244.6,-50.09 221.51,-57.28 201.95,-63.37"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="200.88,-60.04 192.38,-66.35 202.96,-66.72 200.88,-60.04"/>
+</g>
+<!-- module~pic_global_definitions&#45;&gt;module~pic_types -->
+<g id="module~~pic_serialize~~UsesGraph_edge11" class="edge">
+<title>module~pic_global_definitions&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#7f00ff" stroke-dasharray="5,2" d="M251.95,-103.8C236.15,-98.89 217.88,-93.2 201.94,-88.24"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="202.95,-84.89 192.36,-85.26 200.87,-91.57 202.95,-84.89"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+          <div class="card">
+      <h3 class="card-header card-title bg-light">Used by</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~pic_serialize~~UsedByGraph Pages: 1 -->
+<svg id="modulepic_serializeUsedByGraph" width="310pt" height="32pt"
+ viewBox="0.00 0.00 310.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_serialize~~UsedByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>module~~pic_serialize~~UsedByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 306,-28 306,4 -4,4"/>
+<!-- module~pic_serialize -->
+<g id="module~~pic_serialize~~UsedByGraph_node1" class="node">
+<title>module~pic_serialize</title>
+<polygon fill="none" stroke="black" points="78,-24 0,-24 0,0 78,0 78,-24"/>
+<text text-anchor="middle" x="39" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">pic_serialize</text>
+</g>
+<!-- module~pic_soa -->
+<g id="module~~pic_serialize~~UsedByGraph_node2" class="node">
+<title>module~pic_soa</title>
+<g id="a_module~~pic_serialize~~UsedByGraph_node2"><a xlink:href="../module/pic_soa.html" xlink:title="pic_soa">
+<polygon fill="#337ab7" stroke="#337ab7" points="168,-24 114,-24 114,0 168,0 168,-24"/>
+<text text-anchor="middle" x="141" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_soa</text>
+</a>
+</g>
+</g>
+<!-- module~pic_soa&#45;&gt;module~pic_serialize -->
+<g id="module~~pic_serialize~~UsedByGraph_edge1" class="edge">
+<title>module~pic_soa&#45;&gt;module~pic_serialize</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M113.99,-12C106.17,-12 97.32,-12 88.54,-12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="88.32,-8.5 78.32,-12 88.32,-15.5 88.32,-8.5"/>
+</g>
+<!-- module~pic_soa_particle -->
+<g id="module~~pic_serialize~~UsedByGraph_node3" class="node">
+<title>module~pic_soa_particle</title>
+<g id="a_module~~pic_serialize~~UsedByGraph_node3"><a xlink:href="../module/pic_soa_particle.html" xlink:title="pic_soa_particle">
+<polygon fill="#337ab7" stroke="#337ab7" points="302,-24 204,-24 204,0 302,0 302,-24"/>
+<text text-anchor="middle" x="253" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_soa_particle</text>
+</a>
+</g>
+</g>
+<!-- module~pic_soa_particle&#45;&gt;module~pic_soa -->
+<g id="module~~pic_serialize~~UsedByGraph_edge2" class="edge">
+<title>module~pic_soa_particle&#45;&gt;module~pic_soa</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M203.75,-12C195.24,-12 186.52,-12 178.4,-12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="178.15,-8.5 168.15,-12 178.15,-15.5 178.15,-8.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsedByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsedByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      <br>
+
+
+        <section>
+          <h2>Variables</h2>
+            <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pic_format_version"></span>
+              integer(kind=int32),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PIC_FORMAT_VERSION</strong></td>
+<td> =</td>
+                <td>1_int32</td>
+            <td>
+                <p>Current envelope version. Readers accept
+<code>1 &lt;= version &lt;= PIC_FORMAT_VERSION</code> and reject anything else with
+<code>ERROR_VALIDATION</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pic_header_bytes"></span>
+              integer(kind=int64),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PIC_HEADER_BYTES</strong></td>
+<td> =</td>
+                <td>16_int64</td>
+            <td>
+                <p>Size of the stream header in bytes.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pic_magic"></span>
+              character(len=*),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PIC_MAGIC</strong></td>
+<td> =</td>
+                <td>&#34;PIC1&#34;</td>
+            <td>
+                <p>Four byte ASCII magic written at offset 0 of every stream. Being
+characters it has no byte order of its own, which is what makes it
+usable to reject a foreign file before anything else is decoded.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pic_record_header_bytes"></span>
+              integer(kind=int64),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PIC_RECORD_HEADER_BYTES</strong></td>
+<td> =</td>
+                <td>12_int64</td>
+            <td>
+                <p>Size of one record header, tag plus element count, in bytes.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pic_tag_char"></span>
+              integer(kind=int32),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PIC_TAG_CHAR</strong></td>
+<td> =</td>
+                <td>5_int32</td>
+            <td>
+                <p>Record tag for a character scalar, 1 byte per element.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pic_tag_int32"></span>
+              integer(kind=int32),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PIC_TAG_INT32</strong></td>
+<td> =</td>
+                <td>1_int32</td>
+            <td>
+                <p>Record tag for <code>integer(int32)</code> arrays, 4 bytes per element.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pic_tag_int64"></span>
+              integer(kind=int32),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PIC_TAG_INT64</strong></td>
+<td> =</td>
+                <td>2_int32</td>
+            <td>
+                <p>Record tag for <code>integer(int64)</code> arrays, 8 bytes per element.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pic_tag_real_dp"></span>
+              integer(kind=int32),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PIC_TAG_REAL_DP</strong></td>
+<td> =</td>
+                <td>4_int32</td>
+            <td>
+                <p>Record tag for <code>real(dp)</code> arrays, 8 bytes per element.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pic_tag_real_sp"></span>
+              integer(kind=int32),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PIC_TAG_REAL_SP</strong></td>
+<td> =</td>
+                <td>3_int32</td>
+            <td>
+                <p>Record tag for <code>real(sp)</code> arrays, 4 bytes per element.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bits_per_byte"></span>
+              integer(kind=int32),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>BITS_PER_BYTE</strong></td>
+<td> =</td>
+                <td>8_int32</td>
+            <td>
+                <p>Width of one byte field, used by the byte reversal helpers.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pic_endian_mark"></span>
+              integer(kind=int32),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PIC_ENDIAN_MARK</strong></td>
+<td> =</td>
+                <td>16909060_int32</td>
+            <td>
+                <p><code>0x01020304</code>, spelled in decimal so that no BOZ literal appears in an
+initializer, since gfortran and ifx disagree about the kind of those.
+Written natively: a reader that sees the byte reversed value
+<code>0x04030201</code> knows the file came from the opposite byte order.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-reserved_word"></span>
+              integer(kind=int32),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>RESERVED_WORD</strong></td>
+<td> =</td>
+                <td>0_int32</td>
+            <td>
+                <p>Value written into the reserved header slot.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-read_array"></span>
+      <h3>public        interface <a href='../interface/read_array.html'>read_array</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Read one record back, validating its type tag and its length.</p>
+<p>Usage: <code>call read_array(unit, values, swapped, err)</code></p>
+<p><code>values</code> is <code>allocatable</code> and is allocated to the length stored in the
+record. <code>swapped</code> is the flag returned by <code>read_header</code>; when it is
+true every multi-byte element is byte reversed after reading.</p>
+<p>Fails with <code>ERROR_VALIDATION</code> if the record holds a different type
+than the one requested, and with <code>ERROR_IO</code> if the payload announced
+by the record header runs past the end of the file.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/read_int32_array.html'>read_int32_array</a>(unit, values, swapped, err)  
+
+    </h3>
+    
+  <p>Read an <code>integer(int32)</code> array record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~35"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~27"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~10"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~179"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/read_int64_array.html'>read_int64_array</a>(unit, values, swapped, err)  
+
+    </h3>
+    
+  <p>Read an <code>integer(int64)</code> array record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~36"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~28"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~11"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~180"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/read_real_sp_array.html'>read_real_sp_array</a>(unit, values, swapped, err)  
+
+    </h3>
+    
+  <p>Read a <code>real(sp)</code> array record.</p>
+<p>On the native path the values are read straight into <code>values</code>. On the
+foreign endian path the same bytes are read into an <code>int32</code> buffer,
+reversed with integer arithmetic, and only then reinterpreted.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~37"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~29"></span>
+              real(kind=sp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~12"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~181"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/read_real_dp_array.html'>read_real_dp_array</a>(unit, values, swapped, err)  
+
+    </h3>
+    
+  <p>Read a <code>real(dp)</code> array record. See <code>read_real_sp_array</code> for the way
+the foreign endian path is kept away from the native one.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~38"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~30"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~13"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~182"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/read_char_record.html'>read_char_record</a>(unit, text, swapped, err)  
+
+    </h3>
+    
+  <p>Read a character scalar record into a deferred length string.</p>
+<p>Characters are single bytes so <code>swapped</code> never changes the payload,
+but it is still needed to decode the record header itself.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~39"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-text~8"></span>
+              character(len=:),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>text</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~14"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~183"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-write_array"></span>
+      <h3>public        interface <a href='../interface/write_array.html'>write_array</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Write one length prefixed, type tagged record to a stream unit.</p>
+<p>Usage: <code>call write_array(unit, values, err)</code></p>
+<p>The unit must have been opened with <code>access='stream'</code> and
+<code>form='unformatted'</code>, for instance by <code>serialize_open_write</code>, and
+<code>write_header</code> must already have been called on it. Zero sized arrays
+and zero length strings are legal and produce a record header with
+<code>count == 0</code> and no payload.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/write_int32_array.html'>write_int32_array</a>(unit, values, err)  
+
+    </h3>
+    
+  <p>Write an <code>integer(int32)</code> array record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~30"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~23"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~174"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/write_int64_array.html'>write_int64_array</a>(unit, values, err)  
+
+    </h3>
+    
+  <p>Write an <code>integer(int64)</code> array record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~31"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~24"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~175"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/write_real_sp_array.html'>write_real_sp_array</a>(unit, values, err)  
+
+    </h3>
+    
+  <p>Write a <code>real(sp)</code> array record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~32"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~25"></span>
+              real(kind=sp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~176"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/write_real_dp_array.html'>write_real_dp_array</a>(unit, values, err)  
+
+    </h3>
+    
+  <p>Write a <code>real(dp)</code> array record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~33"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~26"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~177"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  subroutine <a href='../proc/write_char_record.html'>write_char_record</a>(unit, text, err)  
+
+    </h3>
+    
+  <p>Write a character scalar record. The stored count is the number of
+characters, so a record of <code>n</code> characters occupies <code>n</code> payload bytes.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~34"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-text~7"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>text</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~178"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+    </ul>
+  </div>
+
+        </section>
+        <br>
+
+
+
+        <section>
+          <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-host_is_little_endian"></span> <h3>public pure function <a href='../proc/host_is_little_endian.html'>host_is_little_endian</a>() result(is_little)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Report whether the running machine stores the least significant byte
+of an integer first.</p><a href="../proc/host_is_little_endian.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+    <em>None</em>
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-record_bytes"></span> <h3>public pure function <a href='../proc/record_bytes.html'>record_bytes</a>(tag, count) result(nbytes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Total on disk size of a record, including its 12 byte record header.</p><a href="../proc/record_bytes.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tag~4"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tag</strong></td>
+            <td>
+<p>One of the <code>PIC_TAG_*</code> constants.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-count~3"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>count</strong></td>
+            <td>
+<p>Number of elements in the record.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-bits_to_real_dp"></span> <h3>private pure function <a href='../proc/bits_to_real_dp.html'>bits_to_real_dp</a>(bits) result(x)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Reinterpret the bit pattern of an <code>int64</code> as a <code>real(dp)</code>.
+See <code>bits_to_real_sp</code> for why this is confined to the swapped path.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bits~2"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>bits</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-bits_to_real_sp"></span> <h3>private pure function <a href='../proc/bits_to_real_sp.html'>bits_to_real_sp</a>(bits) result(x)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Reinterpret the bit pattern of an <code>int32</code> as a <code>real(sp)</code>.</p><a href="../proc/bits_to_real_sp.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bits"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>bits</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=sp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-bswap_int32"></span> <h3>private pure function <a href='../proc/bswap_int32.html'>bswap_int32</a>(x) result(y)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Reverse the four bytes of an <code>int32</code>.</p><a href="../proc/bswap_int32.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~26"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-bswap_int64"></span> <h3>private pure function <a href='../proc/bswap_int64.html'>bswap_int64</a>(x) result(y)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Reverse the eight bytes of an <code>int64</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~27"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-element_bytes"></span> <h3>private pure function <a href='../proc/element_bytes.html'>element_bytes</a>(tag) result(nbytes)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Bytes occupied by one element of the record type <code>tag</code>, or -1 for an
+unknown tag.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tag~3"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tag</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Subroutines</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-read_header"></span> <h3>public  subroutine <a href='../proc/read_header.html'>read_header</a>(unit, version, swapped, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read and validate the stream header.</p><a href="../proc/read_header.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~27"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+<p>Stream unit opened for unformatted stream reading.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-version~2"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>version</strong></td>
+            <td>
+<p>Format version found in the file, 0 if the header was rejected.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~8"></span>
+              logical,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+<p>True when the file was written by a machine of the opposite byte
+order, so every multi-byte field needs reversing on the way in.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~171"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Error state.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-serialize_close"></span> <h3>public  subroutine <a href='../proc/serialize_close.html'>serialize_close</a>(unit, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Close a unit previously opened by one of the open helpers.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~25"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+<p>Unit to close.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~169"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Error state, <code>ERROR_IO</code> if the close failed.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-serialize_open_read"></span> <h3>public  subroutine <a href='../proc/serialize_open_read.html'>serialize_open_read</a>(filename, unit, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Open an existing serialized stream for reading.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-filename~4"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+<p>Path of the file to read.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~24"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+<p>Newly opened unit number, -1 when the open failed.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~168"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Error state, <code>ERROR_IO</code> if the file cannot be opened.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-serialize_open_write"></span> <h3>public  subroutine <a href='../proc/serialize_open_write.html'>serialize_open_write</a>(filename, unit, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Open <code>filename</code> for writing a serialized stream, replacing any
+existing file.</p><a href="../proc/serialize_open_write.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-filename~3"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+<p>Path of the file to create.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~23"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+<p>Newly opened unit number, -1 when the open failed.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~167"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Error state, <code>ERROR_IO</code> if the file cannot be created.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-write_header"></span> <h3>public  subroutine <a href='../proc/write_header.html'>write_header</a>(unit, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write the 16 byte stream header at the current position.</p><a href="../proc/write_header.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~26"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+<p>Stream unit opened for unformatted stream writing.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~170"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Error state, <code>ERROR_IO</code> if any field could not be written.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-check_io"></span> <h3>private  subroutine <a href='../proc/check_io.html'>check_io</a>(ios, context, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Turn a non zero <code>iostat</code> into an <code>ERROR_IO</code> carrying the raw value.
+Every I/O statement in this module funnels its status through here so
+that the failure message always names both the operation and the
+<code>iostat</code> the runtime produced.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ios~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ios</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-context~2"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>context</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~166"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-read_char_record"></span> <h3>private  subroutine <a href='../proc/read_char_record.html'>read_char_record</a>(unit, text, swapped, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read a character scalar record into a deferred length string.</p><a href="../proc/read_char_record.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~39"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-text~8"></span>
+              character(len=:),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>text</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~14"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~183"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-read_int32_array"></span> <h3>private  subroutine <a href='../proc/read_int32_array.html'>read_int32_array</a>(unit, values, swapped, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read an <code>integer(int32)</code> array record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~35"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~27"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~10"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~179"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-read_int64_array"></span> <h3>private  subroutine <a href='../proc/read_int64_array.html'>read_int64_array</a>(unit, values, swapped, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read an <code>integer(int64)</code> array record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~36"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~28"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~11"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~180"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-read_real_dp_array"></span> <h3>private  subroutine <a href='../proc/read_real_dp_array.html'>read_real_dp_array</a>(unit, values, swapped, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read a <code>real(dp)</code> array record. See <code>read_real_sp_array</code> for the way
+the foreign endian path is kept away from the native one.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~38"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~30"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~13"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~182"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-read_real_sp_array"></span> <h3>private  subroutine <a href='../proc/read_real_sp_array.html'>read_real_sp_array</a>(unit, values, swapped, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read a <code>real(sp)</code> array record.</p><a href="../proc/read_real_sp_array.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~37"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~29"></span>
+              real(kind=sp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~12"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~181"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-read_record_header"></span> <h3>private  subroutine <a href='../proc/read_record_header.html'>read_record_header</a>(unit, expected_tag, swapped, count, ok, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Read a record header, check the type tag, and bounds check the
+announced payload against the real length of the file.</p><a href="../proc/read_record_header.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~29"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-expected_tag"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>expected_tag</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped~9"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-count~5"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>count</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ok~7"></span>
+              logical,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ok</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~173"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-write_char_record"></span> <h3>private  subroutine <a href='../proc/write_char_record.html'>write_char_record</a>(unit, text, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write a character scalar record. The stored count is the number of
+characters, so a record of <code>n</code> characters occupies <code>n</code> payload bytes.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~34"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-text~7"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>text</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~178"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-write_int32_array"></span> <h3>private  subroutine <a href='../proc/write_int32_array.html'>write_int32_array</a>(unit, values, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write an <code>integer(int32)</code> array record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~30"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~23"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~174"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-write_int64_array"></span> <h3>private  subroutine <a href='../proc/write_int64_array.html'>write_int64_array</a>(unit, values, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write an <code>integer(int64)</code> array record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~31"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~24"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~175"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-write_real_dp_array"></span> <h3>private  subroutine <a href='../proc/write_real_dp_array.html'>write_real_dp_array</a>(unit, values, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write a <code>real(dp)</code> array record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~33"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~26"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~177"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-write_real_sp_array"></span> <h3>private  subroutine <a href='../proc/write_real_sp_array.html'>write_real_sp_array</a>(unit, values, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write a <code>real(sp)</code> array record.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~32"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-values~25"></span>
+              real(kind=sp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>values</strong>(:)</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~176"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-write_record_header"></span> <h3>private  subroutine <a href='../proc/write_record_header.html'>write_record_header</a>(unit, tag, count, ok, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Write a record header: type tag followed by the element count.
+<code>ok</code> rather than <code>err</code> carries the outcome so that a stale error left
+in <code>err</code> by an earlier call cannot be mistaken for a failure here.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~28"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tag~5"></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tag</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-count~4"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>count</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ok~6"></span>
+              logical,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ok</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~172"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

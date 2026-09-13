@@ -1,0 +1,2212 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>pic_hash_map &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>pic_hash_map
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 2.0% of total for modules and submodules.">338 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_hash_map.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_hash_map.f90.html'>pic_hash_map.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">pic_hash_map</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_hash_map.html#variable-bucket_empty">BUCKET_EMPTY</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#variable-load_den">LOAD_DEN</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#variable-load_num">LOAD_NUM</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#variable-min_buckets">MIN_BUCKETS</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#variable-min_entries">MIN_ENTRIES</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#variable-min_pool">MIN_POOL</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#types-0"
+         aria-expanded="false" aria-controls="types-0">
+         <h4 class="card-header bg-primary text-white">Derived Types</h4>
+      </a>
+      <div id="types-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_hash_map.html#type-hash_map_t">hash_map_t</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#funcs-0"
+         aria-expanded="false" aria-controls="funcs-0">
+         <h4 class="card-header bg-primary text-white">Functions</h4>
+      </a>
+      <div id="funcs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-entry_key">entry_key</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-find_entry">find_entry</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_bucket_count">hash_map_bucket_count</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_has_key">hash_map_has_key</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_is_empty">hash_map_is_empty</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_keys">hash_map_keys</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_size">hash_map_size</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_values">hash_map_values</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-home_bucket">home_bucket</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-key_matches">key_matches</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-probe_free">probe_free</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#subs-0"
+         aria-expanded="false" aria-controls="subs-0">
+         <h4 class="card-header bg-primary text-white">Subroutines</h4>
+      </a>
+      <div id="subs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-grow_buckets">grow_buckets</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_at">hash_map_at</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_clear">hash_map_clear</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_destroy">hash_map_destroy</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_get">hash_map_get</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_init">hash_map_init</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_insert">hash_map_insert</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-hash_map_remove">hash_map_remove</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-rebuild_buckets">rebuild_buckets</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-reserve_entries">reserve_entries</a>
+            <a class="list-group-item" href="../module/pic_hash_map.html#proc-reserve_pool">reserve_pool</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <p>A hash map from <code>character(len=*)</code> keys to <code>integer(int64)</code> values whose
+ iteration order is a documented, reproducible guarantee rather than an
+ implementation accident.</p>
+<p>## The iteration-order guarantee</p>
+<p><strong>Iteration is always in insertion order.</strong> <code>keys()</code>, <code>values()</code> and
+ <code>at()</code> visit the entries in the exact order in which their keys were
+ first inserted. That order does <strong>not</strong> depend on the bucket count, on
+ how many times the table has grown and rehashed, on the hash function,
+ or on which other keys were inserted or removed. Two runs performing
+ the same sequence of <code>insert</code>/<code>remove</code> calls observe the same iteration
+ order, on every supported compiler.</p>
+<p>The rules that make that guarantee precise:</p>
+<ul>
+<li><code>insert</code> on a key that is <strong>not</strong> present appends the entry at the end
+   of the iteration order.</li>
+<li><code>insert</code> on a key that <strong>is</strong> present overwrites the value and leaves
+   the key exactly where it was in the iteration order. It is an update,
+   not a re-insertion.</li>
+<li><code>remove</code> deletes the entry from the iteration order. Every remaining
+   entry keeps its relative position: entries before the removed one are
+   untouched, entries after it shift down by one index.</li>
+<li><code>remove</code> followed by <code>insert</code> of the same key is a <strong>fresh insertion</strong>:
+   the key reappears at the <em>end</em> of the iteration order, not at its old
+   position.</li>
+<li>Growing the table rehashes the buckets but never reorders entries.</li>
+</ul>
+<p>## Key identity</p>
+<p>Keys are compared by <strong>exact length and exact characters</strong>, not with the
+ Fortran <code>==</code> operator. Fortran blank-pads the shorter operand when
+ comparing <code>character</code> values, so <code>"a" == "a "</code> is <code>.true.</code> in the
+ language; in this map <code>"a"</code> and <code>"a "</code> are <strong>different keys</strong>. Trailing
+ blanks are significant and are stored verbatim.</p>
+<p>Beware that a <code>character(len=8)</code> variable holding <code>"a"</code> is the eight
+ character key <code>"a       "</code>, because that is what the actual argument
+ contains. Pass <code>trim(name)</code> if trailing blanks are not meant to count.</p>
+<p>The zero-length key <code>""</code> is a perfectly ordinary key.</p>
+<p>## Capacity, load factor and growth</p>
+<p>The bucket table is a power of two, at least 8 buckets, addressed by
+ open addressing with linear probing. It grows by <strong>doubling</strong> whenever a
+ new entry would push occupancy above a load factor of <strong>0.75</strong>. There
+ are no tombstones: <code>remove</code> compacts the insertion-order table and
+ rebuilds the bucket table from scratch, so <code>remove</code> costs
+ <code>O(size() + bucket_count())</code> while <code>insert</code>, <code>get</code> and <code>has_key</code> are
+ amortised <code>O(1)</code>. This map is built for reproducible iteration and
+ simple, portable code, not for remove-heavy workloads.</p>
+<p>## Example</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="k">type</span><span class="p">(</span><span class="n">hash_map_t</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">counts</span>
+<span class="w"> </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">k</span>
+<span class="w"> </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">v</span>
+<span class="w"> </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
+
+<span class="w"> </span><span class="k">call </span><span class="n">counts</span><span class="p">%</span><span class="n">init</span><span class="p">(</span><span class="mi">16_default_int</span><span class="p">)</span>
+<span class="w"> </span><span class="k">call </span><span class="n">counts</span><span class="p">%</span><span class="n">insert</span><span class="p">(</span><span class="s2">"beta"</span><span class="p">,</span><span class="w"> </span><span class="mi">2_int64</span><span class="p">)</span>
+<span class="w"> </span><span class="k">call </span><span class="n">counts</span><span class="p">%</span><span class="n">insert</span><span class="p">(</span><span class="s2">"alpha"</span><span class="p">,</span><span class="w"> </span><span class="mi">1_int64</span><span class="p">)</span>
+<span class="w"> </span><span class="k">call </span><span class="n">counts</span><span class="p">%</span><span class="n">insert</span><span class="p">(</span><span class="s2">"beta"</span><span class="p">,</span><span class="w"> </span><span class="mi">20_int64</span><span class="p">)</span><span class="w">   </span><span class="c">! updates, stays at position 1</span>
+<span class="w"> </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">counts</span><span class="p">%</span><span class="n">size</span><span class="p">()</span>
+<span class="w">    </span><span class="k">call </span><span class="n">counts</span><span class="p">%</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w">             </span><span class="c">! "beta" then "alpha"</span>
+<span class="w"> </span><span class="k">end do</span>
+<span class="k"> call </span><span class="n">counts</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+</code></pre></div>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='pic_types.html'>pic_types</a></li>
+                  <li class="list-inline-item"><a href='pic_error.html'>pic_error</a></li>
+                  <li class="list-inline-item"><a href='pic_hash_32bit_fnv.html'>pic_hash_32bit_fnv</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~pic_hash_map~~UsesGraph Pages: 1 -->
+<svg id="modulepic_hash_mapUsesGraph" width="583pt" height="103pt"
+ viewBox="0.00 0.00 583.00 103.29" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_hash_map~~UsesGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 99.29)">
+<title>module~~pic_hash_map~~UsesGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-99.29 579,-99.29 579,4 -4,4"/>
+<!-- module~pic_hash_map -->
+<g id="module~~pic_hash_map~~UsesGraph_node1" class="node">
+<title>module~pic_hash_map</title>
+<polygon fill="none" stroke="black" points="575,-66 487,-66 487,-42 575,-42 575,-66"/>
+<text text-anchor="middle" x="531" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50">pic_hash_map</text>
+</g>
+<!-- module~pic_error -->
+<g id="module~~pic_hash_map~~UsesGraph_node2" class="node">
+<title>module~pic_error</title>
+<g id="a_module~~pic_hash_map~~UsesGraph_node2"><a xlink:href="../module/pic_error.html" xlink:title="pic_error">
+<polygon fill="#337ab7" stroke="#337ab7" points="451,-66 391,-66 391,-42 451,-42 451,-66"/>
+<text text-anchor="middle" x="421" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_error</text>
+</a>
+</g>
+</g>
+<!-- module~pic_hash_map&#45;&gt;module~pic_error -->
+<g id="module~~pic_hash_map~~UsesGraph_edge1" class="edge">
+<title>module~pic_hash_map&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M486.69,-54C478.28,-54 469.5,-54 461.22,-54"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="461.07,-50.5 451.07,-54 461.07,-57.5 461.07,-50.5"/>
+</g>
+<!-- module~pic_hash_32bit_fnv -->
+<g id="module~~pic_hash_map~~UsesGraph_node3" class="node">
+<title>module~pic_hash_32bit_fnv</title>
+<g id="a_module~~pic_hash_map~~UsesGraph_node3"><a xlink:href="../module/pic_hash_32bit_fnv.html" xlink:title="pic_hash_32bit_fnv">
+<polygon fill="#337ab7" stroke="#337ab7" points="348,-24 235,-24 235,0 348,0 348,-24"/>
+<text text-anchor="middle" x="291.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_hash_32bit_fnv</text>
+</a>
+</g>
+</g>
+<!-- module~pic_hash_map&#45;&gt;module~pic_hash_32bit_fnv -->
+<g id="module~~pic_hash_map~~UsesGraph_edge2" class="edge">
+<title>module~pic_hash_map&#45;&gt;module~pic_hash_32bit_fnv</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M488.82,-41.99C476.71,-38.74 463.39,-35.46 451,-33 420.81,-27.01 387.04,-22.27 358.45,-18.82"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="358.51,-15.3 348.17,-17.61 357.69,-22.26 358.51,-15.3"/>
+</g>
+<!-- module~pic_types -->
+<g id="module~~pic_hash_map~~UsesGraph_node4" class="node">
+<title>module~pic_types</title>
+<g id="a_module~~pic_hash_map~~UsesGraph_node4"><a xlink:href="../module/pic_types.html" xlink:title="pic_types">
+<polygon fill="#337ab7" stroke="#337ab7" points="192,-66 130,-66 130,-42 192,-42 192,-66"/>
+<text text-anchor="middle" x="161" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_types</text>
+</a>
+</g>
+</g>
+<!-- module~pic_hash_map&#45;&gt;module~pic_types -->
+<g id="module~~pic_hash_map~~UsesGraph_edge3" class="edge">
+<title>module~pic_hash_map&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M492.42,-66C445.83,-79.57 363.82,-99.15 292.5,-94"/>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_types -->
+<g id="module~~pic_hash_map~~UsesGraph_edge5" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M398.5,-66.15C373.63,-78.92 331.14,-96.79 292.5,-94"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M290.5,-94C258.2,-91.67 223.21,-80.14 197.91,-70.05"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="198.95,-66.7 188.37,-66.13 196.29,-73.17 198.95,-66.7"/>
+</g>
+<!-- module~pic_global_definitions -->
+<g id="module~~pic_hash_map~~UsesGraph_node7" class="node">
+<title>module~pic_global_definitions</title>
+<g id="a_module~~pic_hash_map~~UsesGraph_node7"><a xlink:href="../module/pic_global_definitions.html" xlink:title="pic_global_definitions">
+<polygon fill="#337ab7" stroke="#337ab7" points="355,-66 228,-66 228,-42 355,-42 355,-66"/>
+<text text-anchor="middle" x="291.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_global_definitions</text>
+</a>
+</g>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_global_definitions -->
+<g id="module~~pic_hash_map~~UsesGraph_edge4" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_global_definitions</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M390.75,-54C383,-54 374.29,-54 365.32,-54"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="365.14,-50.5 355.14,-54 365.14,-57.5 365.14,-50.5"/>
+</g>
+<!-- module~pic_hash_32bit_fnv&#45;&gt;module~pic_types -->
+<g id="module~~pic_hash_map~~UsesGraph_edge7" class="edge">
+<title>module~pic_hash_32bit_fnv&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#00ff00" stroke-dasharray="5,2" d="M253.68,-24.04C237.59,-29.29 218.67,-35.48 202.21,-40.86"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="200.75,-37.65 192.33,-44.09 202.92,-44.31 200.75,-37.65"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~pic_hash_map~~UsesGraph_node6" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~pic_hash_map~~UsesGraph_node6"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-24 0,-24 0,0 94,0 94,-24"/>
+<text text-anchor="middle" x="47" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~pic_hash_32bit_fnv&#45;&gt;iso_fortran_env -->
+<g id="module~~pic_hash_map~~UsesGraph_edge6" class="edge">
+<title>module~pic_hash_32bit_fnv&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#00ff00" stroke-dasharray="5,2" d="M234.87,-12C195.72,-12 143.5,-12 104.22,-12"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="104.02,-8.5 94.02,-12 104.02,-15.5 104.02,-8.5"/>
+</g>
+<!-- iso_c_binding -->
+<g id="module~~pic_hash_map~~UsesGraph_node5" class="node">
+<title>iso_c_binding</title>
+<g id="a_module~~pic_hash_map~~UsesGraph_node5"><a xlink:href="http://fortranwiki.org/fortran/show/iso_c_binding" xlink:title="iso_c_binding">
+<polygon fill="#337ab7" stroke="#337ab7" points="89,-66 5,-66 5,-42 89,-42 89,-66"/>
+<text text-anchor="middle" x="47" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_c_binding</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_c_binding -->
+<g id="module~~pic_hash_map~~UsesGraph_edge8" class="edge">
+<title>module~pic_types&#45;&gt;iso_c_binding</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M129.99,-54C120.46,-54 109.64,-54 99.07,-54"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="99.05,-50.5 89.05,-54 99.05,-57.5 99.05,-50.5"/>
+</g>
+<!-- module~pic_types&#45;&gt;iso_fortran_env -->
+<g id="module~~pic_hash_map~~UsesGraph_edge9" class="edge">
+<title>module~pic_types&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M129.99,-42.74C117.58,-38.09 102.98,-32.62 89.57,-27.59"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="90.65,-24.26 80.06,-24.02 88.19,-30.81 90.65,-24.26"/>
+</g>
+<!-- module~pic_global_definitions&#45;&gt;module~pic_types -->
+<g id="module~~pic_hash_map~~UsesGraph_edge10" class="edge">
+<title>module~pic_global_definitions&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M227.76,-54C219.16,-54 210.53,-54 202.48,-54"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="202.28,-50.5 192.28,-54 202.28,-57.5 202.28,-50.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      
+      <br>
+
+
+        <section>
+          <h2>Variables</h2>
+            <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bucket_empty"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>BUCKET_EMPTY</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+                <p>Sentinel stored in a bucket that does not hold an entry.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-load_den"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>LOAD_DEN</strong></td>
+<td> =</td>
+                <td>4</td>
+            <td>
+                <p>Denominator of the maximum load factor (3/4).</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-load_num"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>LOAD_NUM</strong></td>
+<td> =</td>
+                <td>3</td>
+            <td>
+                <p>Numerator of the maximum load factor (3/4).</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-min_buckets"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>MIN_BUCKETS</strong></td>
+<td> =</td>
+                <td>8</td>
+            <td>
+                <p>Smallest bucket table this map will ever allocate.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-min_entries"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>MIN_ENTRIES</strong></td>
+<td> =</td>
+                <td>8</td>
+            <td>
+                <p>Smallest insertion-order table this map will ever allocate.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-min_pool"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>MIN_POOL</strong></td>
+<td> =</td>
+                <td>64</td>
+            <td>
+                <p>Smallest key character pool this map will ever allocate.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+        </section>
+        <br>
+
+
+
+
+        <section>
+          <h2>Derived Types</h2>
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-hash_map_t"></span>
+      <h3>
+        type, public&nbsp;::&nbsp;
+        <a href='../type/hash_map_t.html'>hash_map_t</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>Insertion-ordered hash map: <code>character(len=*)</code> keys, <code>integer(int64)</code>
+values. Default initialisation yields a valid empty map; the first
+<code>insert</code> allocates with default capacity if <code>init</code> was never called.</p>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-buckets"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>buckets</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+<p>Bucket table; <code>BUCKET_EMPTY</code> or an index into the entry table.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-entry_cap"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>entry_cap</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>Allocated length of the entry arrays.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-entry_value"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>entry_value</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+<p>Value of each entry, in insertion order.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key_pool"></span>
+              character(len=1),
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>key_pool</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+<p>Packed storage for all key characters.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key_size"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>key_size</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+<p>Length in characters of each key, in insertion order.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key_start"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>key_start</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+<p>First character of each key inside <code>key_pool</code>, in insertion order.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n_buckets"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n_buckets</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>Number of buckets, always a power of two, 0 while unallocated.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n_entries~3"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n_entries</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>Number of live entries, i.e. the value returned by <code>size()</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pool_cap"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>pool_cap</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>Allocated length of <code>key_pool</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pool_used"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>pool_used</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>Number of characters currently used in <code>key_pool</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+
+        <h4>Type-Bound Procedures</h4>
+        <table class="table table-striped varlist">
+          <tbody>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-at~2'>at</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_at.html'>hash_map_at</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-bucket_count'>bucket_count</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_bucket_count.html'>hash_map_bucket_count</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-clear~2'>clear</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_clear.html'>hash_map_clear</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-destroy~2'>destroy</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_destroy.html'>hash_map_destroy</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-get'>get</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_get.html'>hash_map_get</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-has_key'>has_key</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_has_key.html'>hash_map_has_key</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-init'>init</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_init.html'>hash_map_init</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-insert'>insert</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_insert.html'>hash_map_insert</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-is_empty'>is_empty</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_is_empty.html'>hash_map_is_empty</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-keys'>keys</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_keys.html'>hash_map_keys</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-remove'>remove</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_remove.html'>hash_map_remove</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-size~2'>size</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_size.html'>hash_map_size</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/hash_map_t.html#boundprocedure-values~22'>values</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/hash_map_values.html'>hash_map_values</a></td>
+                  <td></td>
+              </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-entry_key"></span> <h3>private  function <a href='../proc/entry_key.html'>entry_key</a>(this, entry) result(key)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Rebuild the key of an entry from the packed character pool.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~65"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-entry~5"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>entry</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>character(len=:), allocatable</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-find_entry"></span> <h3>private  function <a href='../proc/find_entry.html'>find_entry</a>(this, key) result(entry)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Index of <code>key</code> in the insertion-order table, or 0 when absent.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~68"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key~119"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>key</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_bucket_count"></span> <h3>private pure function <a href='../proc/hash_map_bucket_count.html'>hash_map_bucket_count</a>(this) result(n)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Current number of buckets, 0 while the map is unallocated. Exposed so
+that callers and tests can observe growth; it never affects iteration
+order.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~57"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_has_key"></span> <h3>private  function <a href='../proc/hash_map_has_key.html'>hash_map_has_key</a>(this, key) result(present_in_map)  
+</h3></div>
+    <div class="card-body">
+          
+  <p><code>.true.</code> when <code>key</code> is stored in the map.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~60"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key~113"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>key</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_is_empty"></span> <h3>private pure function <a href='../proc/hash_map_is_empty.html'>hash_map_is_empty</a>(this) result(empty)  
+</h3></div>
+    <div class="card-body">
+          
+  <p><code>.true.</code> when the map holds no entries.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~56"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_keys"></span> <h3>private  function <a href='../proc/hash_map_keys.html'>hash_map_keys</a>(this) result(res)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>All keys, in insertion order.</p><a href="../proc/hash_map_keys.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~63"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>character(len=:), allocatable, (:)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_size"></span> <h3>private pure function <a href='../proc/hash_map_size.html'>hash_map_size</a>(this) result(n)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Number of entries currently stored.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~55"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_values"></span> <h3>private  function <a href='../proc/hash_map_values.html'>hash_map_values</a>(this) result(res)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>All values, in insertion order. <code>values()</code> and <code>keys()</code> are index
+aligned: <code>values(i)</code> belongs to <code>keys(i)</code>. Zero-sized for an empty
+map.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~64"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64), allocatable, (:)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-home_bucket"></span> <h3>private  function <a href='../proc/home_bucket.html'>home_bucket</a>(this, key) result(bucket)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Bucket a key hashes to before probing.</p><a href="../proc/home_bucket.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~67"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key~118"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>key</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-key_matches"></span> <h3>private  function <a href='../proc/key_matches.html'>key_matches</a>(this, entry, key) result(same)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Exact key comparison: same length and same characters. Deliberately
+not the Fortran <code>==</code> operator, which blank-pads the shorter operand.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~66"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-entry~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>entry</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key~117"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>key</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-probe_free"></span> <h3>private  function <a href='../proc/probe_free.html'>probe_free</a>(this, key) result(bucket)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>First empty bucket in the probe sequence of <code>key</code>. The load factor
+keeps at least one bucket empty at all times, so this always finds
+one.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~69"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key~120"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>key</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Subroutines</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-grow_buckets"></span> <h3>private  subroutine <a href='../proc/grow_buckets.html'>grow_buckets</a>(this)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Double the bucket table and rehash. Entry storage is never moved.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~71"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_at"></span> <h3>private  subroutine <a href='../proc/hash_map_at.html'>hash_map_at</a>(this, position, key, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Fetch the entry at <code>position</code> in the iteration order, counting from 1.
+This is the exact-fidelity iteration accessor: <code>key</code> comes back with
+the key&rsquo;s true length, trailing blanks included.</p><a href="../proc/hash_map_at.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~62"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-position"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>position</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key~115"></span>
+              character(len=:),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>key</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~7"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~106"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_clear"></span> <h3>private  subroutine <a href='../proc/hash_map_clear.html'>hash_map_clear</a>(this)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Remove every entry but keep the allocated capacity, so that refilling
+the map does not have to reallocate. A cleared map iterates as empty
+and the next <code>insert</code> starts a fresh insertion order at position 1.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~54"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_destroy"></span> <h3>private  subroutine <a href='../proc/hash_map_destroy.html'>hash_map_destroy</a>(this)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Release every buffer and return the map to the unallocated state.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~53"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_get"></span> <h3>private  subroutine <a href='../proc/hash_map_get.html'>hash_map_get</a>(this, key, value, found)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Look up <code>key</code>. A missing key is an ordinary outcome, not an error:
+<code>found</code> comes back <code>.false.</code> and <code>value</code> is set to 0.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~59"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key~112"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>key</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~6"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-found~4"></span>
+              logical,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>found</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_init"></span> <h3>private  subroutine <a href='../proc/hash_map_init.html'>hash_map_init</a>(this, initial_capacity)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Allocate the map, discarding any entries it already held.</p><a href="../proc/hash_map_init.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~52"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-initial_capacity"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>initial_capacity</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_insert"></span> <h3>private  subroutine <a href='../proc/hash_map_insert.html'>hash_map_insert</a>(this, key, value)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Insert <code>key</code> with <code>value</code>, or overwrite the value of an existing key.</p><a href="../proc/hash_map_insert.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~58"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key~111"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>key</strong></td>
+            <td>
+<p>Stored verbatim; trailing blanks are part of the key.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~5"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-hash_map_remove"></span> <h3>private  subroutine <a href='../proc/hash_map_remove.html'>hash_map_remove</a>(this, key, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Remove <code>key</code> from the map.</p><a href="../proc/hash_map_remove.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~61"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key~114"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>key</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~105"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-rebuild_buckets"></span> <h3>private  subroutine <a href='../proc/rebuild_buckets.html'>rebuild_buckets</a>(this)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Re-index every entry into the bucket table. Touches buckets only, so
+the insertion order is untouched by construction.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~70"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-reserve_entries"></span> <h3>private  subroutine <a href='../proc/reserve_entries.html'>reserve_entries</a>(this, needed)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Ensure the insertion-order arrays hold at least <code>needed</code> entries.
+Explicit allocate/copy/<code>move_alloc</code> rather than
+reallocation-on-assignment, which is shaky on some supported
+compilers.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~72"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-needed"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>needed</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-reserve_pool"></span> <h3>private  subroutine <a href='../proc/reserve_pool.html'>reserve_pool</a>(this, needed)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Ensure the packed key pool holds at least <code>needed</code> characters.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~73"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-needed~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>needed</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

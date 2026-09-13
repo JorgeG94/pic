@@ -1,0 +1,1960 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>pic_fixed_array &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>pic_fixed_array
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.1% of total for modules and submodules.">186 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_fixed_array.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_fixed_array.f90.html'>pic_fixed_array.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">pic_fixed_array</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_fixed_array.html#variable-pic_fixed_array_capacity">PIC_FIXED_ARRAY_CAPACITY</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#variable-msg_out_of_range">MSG_OUT_OF_RANGE</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#variable-msg_overflow">MSG_OVERFLOW</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#variable-msg_underflow">MSG_UNDERFLOW</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#types-0"
+         aria-expanded="false" aria-controls="types-0">
+         <h4 class="card-header bg-primary text-white">Derived Types</h4>
+      </a>
+      <div id="types-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_fixed_array.html#type-fixed_array_dp_t">fixed_array_dp_t</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#type-fixed_array_int_t">fixed_array_int_t</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#funcs-0"
+         aria-expanded="false" aria-controls="funcs-0">
+         <h4 class="card-header bg-primary text-white">Functions</h4>
+      </a>
+      <div id="funcs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_dp_as_array">fixed_array_dp_as_array</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_dp_capacity">fixed_array_dp_capacity</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_dp_get_unchecked">fixed_array_dp_get_unchecked</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_dp_is_empty">fixed_array_dp_is_empty</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_dp_is_full">fixed_array_dp_is_full</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_dp_size">fixed_array_dp_size</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_int_as_array">fixed_array_int_as_array</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_int_capacity">fixed_array_int_capacity</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_int_get_unchecked">fixed_array_int_get_unchecked</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_int_is_empty">fixed_array_int_is_empty</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_int_is_full">fixed_array_int_is_full</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_int_size">fixed_array_int_size</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#subs-0"
+         aria-expanded="false" aria-controls="subs-0">
+         <h4 class="card-header bg-primary text-white">Subroutines</h4>
+      </a>
+      <div id="subs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_dp_at">fixed_array_dp_at</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_dp_clear">fixed_array_dp_clear</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_dp_pop_back">fixed_array_dp_pop_back</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_dp_push_back">fixed_array_dp_push_back</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_int_at">fixed_array_int_at</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_int_clear">fixed_array_int_clear</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_int_pop_back">fixed_array_int_pop_back</a>
+            <a class="list-group-item" href="../module/pic_fixed_array.html#proc-fixed_array_int_push_back">fixed_array_int_push_back</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <p>Fixed-capacity (&ldquo;in place&rdquo;) array containers.</p>
+<p>Motivation: HPC inner loops where the upper bound on the number of
+elements is known ahead of time, where an <code>allocate</code> is unacceptable,
+and where push/pop/size semantics with bounds checking are still
+wanted. The element storage is a <em>fixed-size</em> component, never
+<code>allocatable</code> and never a <code>pointer</code>, so an object of these types can
+live on the stack, in a <code>block</code> construct, or as a local of an
+OpenMP/OpenACC region without touching the heap.</p>
+<p>Capacity is the module parameter <code>PIC_FIXED_ARRAY_CAPACITY</code>. It is a
+compile-time constant shared by every instance; change it in one place
+if your problem needs a different bound. A deliberate design choice is
+that this module does <em>not</em> use a parameterized derived type (a <code>len</code>
+type parameter would be the textbook answer) because PDT support is
+poor or absent on several of the compilers PIC exists to support.</p>
+<p>Usage:
+  type(fixed_array_int_t) :: stack
+  type(error_t) :: err
+  integer(default_int) :: value</p>
+<p>call stack%push_back(42_default_int, err)
+  if (err%has_error()) call err%fatal()
+  call stack%pop_back(value, err)</p>
+<p>Every operation that can fail reports through <code>error_t</code> with
+<code>ERROR_VALIDATION</code>: overflowing the capacity, popping an empty
+container and out-of-range indexing are all errors, never a silent
+write past the end and never a crash.</p>
+<p>The <code>err</code> argument is <code>intent(inout)</code> and is written to <em>only</em> when
+the operation fails; a successful call leaves it exactly as it was.
+This is deliberate and is what keeps the promise of no heap traffic:
+<code>error_t</code> has an allocatable <code>message</code> component, so an
+<code>intent(out)</code> error argument would make the compiler emit a
+deallocation of that component on entry to every single call,
+putting a <code>free</code> in the middle of the hot loop. Callers that reuse
+one <code>error_t</code> across several calls should <code>call err%clear()</code> between
+them, exactly as elsewhere in PIC.</p>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='pic_types.html'>pic_types</a></li>
+                  <li class="list-inline-item"><a href='pic_error.html'>pic_error</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~pic_fixed_array~~UsesGraph Pages: 1 -->
+<svg id="modulepic_fixed_arrayUsesGraph" width="589pt" height="74pt"
+ viewBox="0.00 0.00 589.00 74.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_fixed_array~~UsesGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 70)">
+<title>module~~pic_fixed_array~~UsesGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-70 585,-70 585,4 -4,4"/>
+<!-- module~pic_fixed_array -->
+<g id="module~~pic_fixed_array~~UsesGraph_node1" class="node">
+<title>module~pic_fixed_array</title>
+<polygon fill="none" stroke="black" points="581,-25 487,-25 487,-1 581,-1 581,-25"/>
+<text text-anchor="middle" x="534" y="-10.6" font-family="Helvetica,sans-Serif" font-size="10.50">pic_fixed_array</text>
+</g>
+<!-- module~pic_error -->
+<g id="module~~pic_fixed_array~~UsesGraph_node2" class="node">
+<title>module~pic_error</title>
+<g id="a_module~~pic_fixed_array~~UsesGraph_node2"><a xlink:href="../module/pic_error.html" xlink:title="pic_error">
+<polygon fill="#337ab7" stroke="#337ab7" points="451,-45 391,-45 391,-21 451,-21 451,-45"/>
+<text text-anchor="middle" x="421" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_error</text>
+</a>
+</g>
+</g>
+<!-- module~pic_fixed_array&#45;&gt;module~pic_error -->
+<g id="module~~pic_fixed_array~~UsesGraph_edge1" class="edge">
+<title>module~pic_fixed_array&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M486.89,-21.31C478.25,-22.86 469.3,-24.48 460.91,-25.99"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="460.22,-22.56 451,-27.77 461.47,-29.45 460.22,-22.56"/>
+</g>
+<!-- module~pic_types -->
+<g id="module~~pic_fixed_array~~UsesGraph_node3" class="node">
+<title>module~pic_types</title>
+<g id="a_module~~pic_fixed_array~~UsesGraph_node3"><a xlink:href="../module/pic_types.html" xlink:title="pic_types">
+<polygon fill="#337ab7" stroke="#337ab7" points="192,-45 130,-45 130,-21 192,-21 192,-45"/>
+<text text-anchor="middle" x="161" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_types</text>
+</a>
+</g>
+</g>
+<!-- module~pic_fixed_array&#45;&gt;module~pic_types -->
+<g id="module~~pic_fixed_array~~UsesGraph_edge2" class="edge">
+<title>module~pic_fixed_array&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M486.93,-8.39C426.92,-3.39 318.91,2.12 228,-12 219.37,-13.34 210.33,-15.61 201.81,-18.17"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="200.55,-14.9 192.09,-21.28 202.68,-21.57 200.55,-14.9"/>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_types -->
+<g id="module~~pic_fixed_array~~UsesGraph_edge4" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M390.71,-44.61C379.69,-48.4 366.95,-52.12 355,-54 299.24,-62.78 283.78,-62.66 228,-54 219.37,-52.66 210.33,-50.39 201.81,-47.83"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="202.68,-44.43 192.09,-44.72 200.55,-51.1 202.68,-44.43"/>
+</g>
+<!-- module~pic_global_definitions -->
+<g id="module~~pic_fixed_array~~UsesGraph_node6" class="node">
+<title>module~pic_global_definitions</title>
+<g id="a_module~~pic_fixed_array~~UsesGraph_node6"><a xlink:href="../module/pic_global_definitions.html" xlink:title="pic_global_definitions">
+<polygon fill="#337ab7" stroke="#337ab7" points="355,-45 228,-45 228,-21 355,-21 355,-45"/>
+<text text-anchor="middle" x="291.5" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_global_definitions</text>
+</a>
+</g>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_global_definitions -->
+<g id="module~~pic_fixed_array~~UsesGraph_edge3" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_global_definitions</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M390.75,-33C383,-33 374.29,-33 365.32,-33"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="365.14,-29.5 355.14,-33 365.14,-36.5 365.14,-29.5"/>
+</g>
+<!-- iso_c_binding -->
+<g id="module~~pic_fixed_array~~UsesGraph_node4" class="node">
+<title>iso_c_binding</title>
+<g id="a_module~~pic_fixed_array~~UsesGraph_node4"><a xlink:href="http://fortranwiki.org/fortran/show/iso_c_binding" xlink:title="iso_c_binding">
+<polygon fill="#337ab7" stroke="#337ab7" points="89,-66 5,-66 5,-42 89,-42 89,-66"/>
+<text text-anchor="middle" x="47" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_c_binding</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_c_binding -->
+<g id="module~~pic_fixed_array~~UsesGraph_edge5" class="edge">
+<title>module~pic_types&#45;&gt;iso_c_binding</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M129.99,-38.63C120.46,-40.41 109.64,-42.44 99.07,-44.43"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="98.23,-41.02 89.05,-46.3 99.52,-47.9 98.23,-41.02"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~pic_fixed_array~~UsesGraph_node5" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~pic_fixed_array~~UsesGraph_node5"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-24 0,-24 0,0 94,0 94,-24"/>
+<text text-anchor="middle" x="47" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_fortran_env -->
+<g id="module~~pic_fixed_array~~UsesGraph_edge6" class="edge">
+<title>module~pic_types&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M129.99,-27.37C121.98,-25.87 113.07,-24.2 104.15,-22.53"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="104.6,-19.05 94.13,-20.65 103.31,-25.93 104.6,-19.05"/>
+</g>
+<!-- module~pic_global_definitions&#45;&gt;module~pic_types -->
+<g id="module~~pic_fixed_array~~UsesGraph_edge7" class="edge">
+<title>module~pic_global_definitions&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M227.76,-33C219.16,-33 210.53,-33 202.48,-33"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="202.28,-29.5 192.28,-33 202.28,-36.5 202.28,-29.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      
+      <br>
+
+
+        <section>
+          <h2>Variables</h2>
+            <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pic_fixed_array_capacity"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PIC_FIXED_ARRAY_CAPACITY</strong></td>
+<td> =</td>
+                <td>256_default_int</td>
+            <td>
+                <p>Maximum number of elements any fixed array can hold. Compile-time
+constant: the storage of every instance is exactly this many
+elements, so a <code>fixed_array_dp_t</code> occupies 256 doubles (2 KiB)
+regardless of how many elements are live.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-msg_out_of_range"></span>
+              character(len=*),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>MSG_OUT_OF_RANGE</strong></td>
+<td> =</td>
+                <td>&#34;fixed array index out of range, valid range is 1:size()&#34;</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-msg_overflow"></span>
+              character(len=*),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>MSG_OVERFLOW</strong></td>
+<td> =</td>
+                <td>&#34;fixed array is full, cannot push_back beyond PIC_FIXED_ARRAY_CAPACITY&#34;</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-msg_underflow"></span>
+              character(len=*),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>MSG_UNDERFLOW</strong></td>
+<td> =</td>
+                <td>&#34;fixed array is empty, cannot pop_back&#34;</td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+        </section>
+        <br>
+
+
+
+
+        <section>
+          <h2>Derived Types</h2>
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-fixed_array_dp_t"></span>
+      <h3>
+        type, public&nbsp;::&nbsp;
+        <a href='../type/fixed_array_dp_t.html'>fixed_array_dp_t</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>Bounded array of <code>real(dp)</code> with fixed inline storage.</p>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-items~2"></span>
+              real(kind=dp),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>items</strong>(PIC_FIXED_ARRAY_CAPACITY)</td>
+                <td></td>
+                <td></td>
+            <td>
+<p>Inline storage. Deliberately not <code>allocatable</code>: no heap, ever.
+Elements above <code>n_items</code> are undefined and must not be read.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n_items~2"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n_items</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>Number of live elements, always in <code>0:PIC_FIXED_ARRAY_CAPACITY</code></p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+
+        <h4>Type-Bound Procedures</h4>
+        <table class="table table-striped varlist">
+          <tbody>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_dp_t.html#boundprocedure-as_array~2'>as_array</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_dp_as_array.html'>fixed_array_dp_as_array</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_dp_t.html#boundprocedure-at~4'>at</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_dp_at.html'>fixed_array_dp_at</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_dp_t.html#boundprocedure-capacity~5'>capacity</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_dp_capacity.html'>fixed_array_dp_capacity</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_dp_t.html#boundprocedure-clear~5'>clear</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_dp_clear.html'>fixed_array_dp_clear</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_dp_t.html#boundprocedure-get_unchecked~2'>get_unchecked</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_dp_get_unchecked.html'>fixed_array_dp_get_unchecked</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_dp_t.html#boundprocedure-is_empty~4'>is_empty</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_dp_is_empty.html'>fixed_array_dp_is_empty</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_dp_t.html#boundprocedure-is_full~2'>is_full</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_dp_is_full.html'>fixed_array_dp_is_full</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_dp_t.html#boundprocedure-pop_back~2'>pop_back</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_dp_pop_back.html'>fixed_array_dp_pop_back</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_dp_t.html#boundprocedure-push_back~2'>push_back</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_dp_push_back.html'>fixed_array_dp_push_back</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_dp_t.html#boundprocedure-size~5'>size</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_dp_size.html'>fixed_array_dp_size</a></td>
+                  <td></td>
+              </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-fixed_array_int_t"></span>
+      <h3>
+        type, public&nbsp;::&nbsp;
+        <a href='../type/fixed_array_int_t.html'>fixed_array_int_t</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>Bounded array of <code>integer(default_int)</code> with fixed inline storage.</p>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-items"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>items</strong>(PIC_FIXED_ARRAY_CAPACITY)</td>
+                <td></td>
+                <td></td>
+            <td>
+<p>Inline storage. Deliberately not <code>allocatable</code>: no heap, ever.
+Elements above <code>n_items</code> are undefined and must not be read.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n_items"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n_items</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>Number of live elements, always in <code>0:PIC_FIXED_ARRAY_CAPACITY</code></p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+
+        <h4>Type-Bound Procedures</h4>
+        <table class="table table-striped varlist">
+          <tbody>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_int_t.html#boundprocedure-as_array'>as_array</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_int_as_array.html'>fixed_array_int_as_array</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_int_t.html#boundprocedure-at~3'>at</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_int_at.html'>fixed_array_int_at</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_int_t.html#boundprocedure-capacity~4'>capacity</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_int_capacity.html'>fixed_array_int_capacity</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_int_t.html#boundprocedure-clear~4'>clear</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_int_clear.html'>fixed_array_int_clear</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_int_t.html#boundprocedure-get_unchecked'>get_unchecked</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_int_get_unchecked.html'>fixed_array_int_get_unchecked</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_int_t.html#boundprocedure-is_empty~3'>is_empty</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_int_is_empty.html'>fixed_array_int_is_empty</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_int_t.html#boundprocedure-is_full'>is_full</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_int_is_full.html'>fixed_array_int_is_full</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_int_t.html#boundprocedure-pop_back'>pop_back</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_int_pop_back.html'>fixed_array_int_pop_back</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_int_t.html#boundprocedure-push_back'>push_back</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_int_push_back.html'>fixed_array_int_push_back</a></td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='../type/fixed_array_int_t.html#boundprocedure-size~4'>size</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/fixed_array_int_size.html'>fixed_array_int_size</a></td>
+                  <td></td>
+              </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_dp_as_array"></span> <h3>private pure function <a href='../proc/fixed_array_dp_as_array.html'>fixed_array_dp_as_array</a>(self) result(arr)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Copy of the live elements as a plain array of extent <code>size()</code>,
+not <code>capacity()</code>. Returns a zero-length array when empty. This is
+how the contents are handed to ordinary Fortran routines; note
+that it is the one operation here that does allocate, so keep it
+out of the hot path.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~63"></span>
+              class(<a href='../type/fixed_array_dp_t.html'>fixed_array_dp_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp), allocatable, (:)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_dp_capacity"></span> <h3>private pure function <a href='../proc/fixed_array_dp_capacity.html'>fixed_array_dp_capacity</a>(self) result(n)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Maximum number of elements, i.e. <code>PIC_FIXED_ARRAY_CAPACITY</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~59"></span>
+              class(<a href='../type/fixed_array_dp_t.html'>fixed_array_dp_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_dp_get_unchecked"></span> <h3>private pure function <a href='../proc/fixed_array_dp_get_unchecked.html'>fixed_array_dp_get_unchecked</a>(self, index) result(value)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>UNCHECKED element access for inner loops: no bounds check at all.
+The caller is responsible for guaranteeing <code>1 &lt;= index &lt;= size()</code>,
+typically by looping over <code>1, array%size()</code>. Reading an index
+outside that range returns undefined data. Use <code>at</code> unless the
+bounds check is measurably in the way.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~57"></span>
+              class(<a href='../type/fixed_array_dp_t.html'>fixed_array_dp_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-index~94"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>index</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_dp_is_empty"></span> <h3>private pure function <a href='../proc/fixed_array_dp_is_empty.html'>fixed_array_dp_is_empty</a>(self) result(empty)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>True when no elements are live.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~60"></span>
+              class(<a href='../type/fixed_array_dp_t.html'>fixed_array_dp_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_dp_is_full"></span> <h3>private pure function <a href='../proc/fixed_array_dp_is_full.html'>fixed_array_dp_is_full</a>(self) result(full)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>True when a further <code>push_back</code> would fail.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~61"></span>
+              class(<a href='../type/fixed_array_dp_t.html'>fixed_array_dp_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_dp_size"></span> <h3>private pure function <a href='../proc/fixed_array_dp_size.html'>fixed_array_dp_size</a>(self) result(n)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Number of live elements.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~58"></span>
+              class(<a href='../type/fixed_array_dp_t.html'>fixed_array_dp_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_int_as_array"></span> <h3>private pure function <a href='../proc/fixed_array_int_as_array.html'>fixed_array_int_as_array</a>(self) result(arr)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Copy of the live elements as a plain array of extent <code>size()</code>,
+not <code>capacity()</code>. Returns a zero-length array when empty. This is
+how the contents are handed to ordinary Fortran routines; note
+that it is the one operation here that does allocate, so keep it
+out of the hot path.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~53"></span>
+              class(<a href='../type/fixed_array_int_t.html'>fixed_array_int_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int), allocatable, (:)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_int_capacity"></span> <h3>private pure function <a href='../proc/fixed_array_int_capacity.html'>fixed_array_int_capacity</a>(self) result(n)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Maximum number of elements, i.e. <code>PIC_FIXED_ARRAY_CAPACITY</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~49"></span>
+              class(<a href='../type/fixed_array_int_t.html'>fixed_array_int_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_int_get_unchecked"></span> <h3>private pure function <a href='../proc/fixed_array_int_get_unchecked.html'>fixed_array_int_get_unchecked</a>(self, index) result(value)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>UNCHECKED element access for inner loops: no bounds check at all.
+The caller is responsible for guaranteeing <code>1 &lt;= index &lt;= size()</code>,
+typically by looping over <code>1, array%size()</code>. Reading an index
+outside that range returns undefined data. Use <code>at</code> unless the
+bounds check is measurably in the way.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~47"></span>
+              class(<a href='../type/fixed_array_int_t.html'>fixed_array_int_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-index~92"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>index</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_int_is_empty"></span> <h3>private pure function <a href='../proc/fixed_array_int_is_empty.html'>fixed_array_int_is_empty</a>(self) result(empty)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>True when no elements are live.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~50"></span>
+              class(<a href='../type/fixed_array_int_t.html'>fixed_array_int_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_int_is_full"></span> <h3>private pure function <a href='../proc/fixed_array_int_is_full.html'>fixed_array_int_is_full</a>(self) result(full)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>True when a further <code>push_back</code> would fail.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~51"></span>
+              class(<a href='../type/fixed_array_int_t.html'>fixed_array_int_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_int_size"></span> <h3>private pure function <a href='../proc/fixed_array_int_size.html'>fixed_array_int_size</a>(self) result(n)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Number of live elements.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~48"></span>
+              class(<a href='../type/fixed_array_int_t.html'>fixed_array_int_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Subroutines</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_dp_at"></span> <h3>private pure subroutine <a href='../proc/fixed_array_dp_at.html'>fixed_array_dp_at</a>(self, index, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Bounds-checked element access, 1-based. Any index outside
+<code>1:size()</code> (including indices that are within the capacity but
+beyond the live elements) sets <code>value</code> to zero and <code>err</code> to
+<code>ERROR_VALIDATION</code>. On success <code>err</code> is left untouched.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~56"></span>
+              class(<a href='../type/fixed_array_dp_t.html'>fixed_array_dp_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-index~93"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>index</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~14"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~120"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_dp_clear"></span> <h3>private pure subroutine <a href='../proc/fixed_array_dp_clear.html'>fixed_array_dp_clear</a>(self)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Drop every element. The storage itself is untouched, so this is a
+single integer assignment; the array can be reused immediately.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~62"></span>
+              class(<a href='../type/fixed_array_dp_t.html'>fixed_array_dp_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_dp_pop_back"></span> <h3>private pure subroutine <a href='../proc/fixed_array_dp_pop_back.html'>fixed_array_dp_pop_back</a>(self, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Remove and return the last element (LIFO). On an empty array
+<code>value</code> is set to zero and <code>err</code> is set to <code>ERROR_VALIDATION</code>.
+On success <code>err</code> is left untouched.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~55"></span>
+              class(<a href='../type/fixed_array_dp_t.html'>fixed_array_dp_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~13"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~119"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_dp_push_back"></span> <h3>private pure subroutine <a href='../proc/fixed_array_dp_push_back.html'>fixed_array_dp_push_back</a>(self, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Append an element. If the array is already at capacity the element
+is <em>not</em> stored, the size is left unchanged and <code>err</code> is set to
+<code>ERROR_VALIDATION</code>. On success <code>err</code> is left untouched.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~54"></span>
+              class(<a href='../type/fixed_array_dp_t.html'>fixed_array_dp_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~12"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~118"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_int_at"></span> <h3>private pure subroutine <a href='../proc/fixed_array_int_at.html'>fixed_array_int_at</a>(self, index, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Bounds-checked element access, 1-based. Any index outside
+<code>1:size()</code> (including indices that are within the capacity but
+beyond the live elements) sets <code>value</code> to zero and <code>err</code> to
+<code>ERROR_VALIDATION</code>. On success <code>err</code> is left untouched.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~46"></span>
+              class(<a href='../type/fixed_array_int_t.html'>fixed_array_int_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-index~91"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>index</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~10"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~117"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_int_clear"></span> <h3>private pure subroutine <a href='../proc/fixed_array_int_clear.html'>fixed_array_int_clear</a>(self)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Drop every element. The storage itself is untouched, so this is a
+single integer assignment; the array can be reused immediately.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~52"></span>
+              class(<a href='../type/fixed_array_int_t.html'>fixed_array_int_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_int_pop_back"></span> <h3>private pure subroutine <a href='../proc/fixed_array_int_pop_back.html'>fixed_array_int_pop_back</a>(self, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Remove and return the last element (LIFO). On an empty array
+<code>value</code> is set to zero and <code>err</code> is set to <code>ERROR_VALIDATION</code>.
+On success <code>err</code> is left untouched.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~45"></span>
+              class(<a href='../type/fixed_array_int_t.html'>fixed_array_int_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~9"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~116"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-fixed_array_int_push_back"></span> <h3>private pure subroutine <a href='../proc/fixed_array_int_push_back.html'>fixed_array_int_push_back</a>(self, value, err)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Append an element. If the array is already at capacity the element
+is <em>not</em> stored, the size is left unchanged and <code>err</code> is set to
+<code>ERROR_VALIDATION</code>. On success <code>err</code> is left untouched.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~44"></span>
+              class(<a href='../type/fixed_array_int_t.html'>fixed_array_int_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~8"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~115"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

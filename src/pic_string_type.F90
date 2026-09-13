@@ -454,7 +454,16 @@ elemental function len_trim_string(string) result(length)
    type(string_type), intent(in) :: string
    integer :: length
 
-   length = merge(len_trim(string%raw), 0, allocated(string%raw))
+   ! Not `merge(len_trim(string%raw), 0, allocated(string%raw))`: MERGE is
+   ! an ordinary function reference, so both value arguments are evaluated
+   ! regardless of the mask, and `len_trim(string%raw)` references an
+   ! unallocated allocatable (F2018 9.7.1) whenever the mask is false.
+   ! `len_string` just above already uses this shape.
+   if (allocated(string%raw)) then
+      length = len_trim(string%raw)
+   else
+      length = 0
+   end if
 
 end function len_trim_string
 
@@ -499,7 +508,14 @@ elemental function char_string_pos(string, pos) result(character_string)
    integer, intent(in) :: pos
    character(len=1) :: character_string
 
-   character_string = merge(string%raw(pos:pos), " ", allocated(string%raw))
+   ! See len_trim_string: MERGE would evaluate `string%raw(pos:pos)` even
+   ! for an unallocated `raw`, which is a reference to an unallocated
+   ! allocatable.
+   if (allocated(string%raw)) then
+      character_string = string%raw(pos:pos)
+   else
+      character_string = " "
+   end if
 
 end function char_string_pos
 
@@ -510,8 +526,13 @@ pure function char_string_range(string, start, last) result(character_string)
    integer, intent(in) :: last
    character(len=last - start + 1) :: character_string
 
-   character_string = merge(string%raw(int(start, long):int(last, long)), &
-                            repeat(" ", int(len(character_string), long)), allocated(string%raw))
+   ! See len_trim_string. Assignment to a character variable blank-pads on
+   ! the right, so the unallocated case needs no `repeat`.
+   if (allocated(string%raw)) then
+      character_string = string%raw(int(start, long):int(last, long))
+   else
+      character_string = ""
+   end if
 
 end function char_string_range
 

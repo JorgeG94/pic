@@ -1,0 +1,697 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>hash_map_insert &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>hash_map_insert
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.2% of total for procedures.">27 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_hash_map.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_hash_map.f90.html'>pic_hash_map.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_hash_map.html'>pic_hash_map</a></li>
+            <li class="breadcrumb-item active" aria-current="page">hash_map_insert</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../proc/hash_map_insert.html#variable-entry~2">entry</a>
+            <a class="list-group-item" href="../proc/hash_map_insert.html#variable-i~136">i</a>
+            <a class="list-group-item" href="../proc/hash_map_insert.html#variable-klen">klen</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/hash_map_insert.html#src">hash_map_insert</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private  subroutine hash_map_insert(this, key, value)  
+</h2>
+    
+
+    <p>Insert <code>key</code> with <code>value</code>, or overwrite the value of an existing key.</p>
+<p>A key that is not present is appended at the end of the iteration
+order. A key that is already present keeps its position in the
+iteration order and only its value changes.</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/hash_map_t.html'>hash_map_t</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~58"></span>
+              class(<a href='../type/hash_map_t.html'>hash_map_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key~111"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>key</strong></td>
+            <td>
+                <p>Stored verbatim; trailing blanks are part of the key.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-value~5"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>value</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~hash_map_insert~~CallsGraph Pages: 1 -->
+<svg id="prochash_map_insertCallsGraph" width="641pt" height="172pt"
+ viewBox="0.00 0.00 641.00 171.97" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~hash_map_insert~~CallsGraph" class="graph" transform="scale(0.68 0.68) rotate(0) translate(4 249.8)">
+<title>proc~~hash_map_insert~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-249.8 942,-249.8 942,4 -4,4"/>
+<!-- proc~hash_map_insert -->
+<g id="proc~~hash_map_insert~~CallsGraph_node1" class="node">
+<title>proc~hash_map_insert</title>
+<polygon fill="none" stroke="black" points="176,-126 0,-126 0,-102 176,-102 176,-126"/>
+<text text-anchor="middle" x="88" y="-111.6" font-family="Helvetica,sans-Serif" font-size="10.50">hash_map_t%hash_map_insert</text>
+</g>
+<!-- proc~find_entry -->
+<g id="proc~~hash_map_insert~~CallsGraph_node2" class="node">
+<title>proc~find_entry</title>
+<g id="a_proc~~hash_map_insert~~CallsGraph_node2"><a xlink:href="../proc/find_entry.html" xlink:title="find_entry">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="326.5,-230 260.5,-230 260.5,-206 326.5,-206 326.5,-230"/>
+<text text-anchor="middle" x="293.5" y="-215.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">find_entry</text>
+</a>
+</g>
+</g>
+<!-- proc~hash_map_insert&#45;&gt;proc~find_entry -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge1" class="edge">
+<title>proc~hash_map_insert&#45;&gt;proc~find_entry</title>
+<path fill="none" stroke="#ff0000" d="M103.54,-126.25C125.62,-144.26 169.51,-177.8 212,-197 224.05,-202.44 237.77,-206.68 250.43,-209.87"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="249.77,-213.31 260.31,-212.22 251.38,-206.5 249.77,-213.31"/>
+</g>
+<!-- proc~grow_buckets -->
+<g id="proc~~hash_map_insert~~CallsGraph_node3" class="node">
+<title>proc~grow_buckets</title>
+<g id="a_proc~~hash_map_insert~~CallsGraph_node3"><a xlink:href="../proc/grow_buckets.html" xlink:title="grow_buckets">
+<polygon fill="#d9534f" stroke="#d9534f" points="336,-188 251,-188 251,-164 336,-164 336,-188"/>
+<text text-anchor="middle" x="293.5" y="-173.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">grow_buckets</text>
+</a>
+</g>
+</g>
+<!-- proc~hash_map_insert&#45;&gt;proc~grow_buckets -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge2" class="edge">
+<title>proc~hash_map_insert&#45;&gt;proc~grow_buckets</title>
+<path fill="none" stroke="#ff0000" d="M123.01,-126.01C147.59,-134.53 181.68,-146 212,-155 221.35,-157.78 231.37,-160.55 241.06,-163.13"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="240.43,-166.58 250.99,-165.73 242.2,-159.81 240.43,-166.58"/>
+</g>
+<!-- proc~hash_map_init -->
+<g id="proc~~hash_map_insert~~CallsGraph_node4" class="node">
+<title>proc~hash_map_init</title>
+<g id="a_proc~~hash_map_insert~~CallsGraph_node4"><a xlink:href="../proc/hash_map_init.html" xlink:title="hash_map_t%hash_map_init">
+<polygon fill="#d9534f" stroke="#d9534f" points="375,-146 212,-146 212,-122 375,-122 375,-146"/>
+<text text-anchor="middle" x="293.5" y="-131.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">hash_map_t%hash_map_init</text>
+</a>
+</g>
+</g>
+<!-- proc~hash_map_insert&#45;&gt;proc~hash_map_init -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge3" class="edge">
+<title>proc~hash_map_insert&#45;&gt;proc~hash_map_init</title>
+<path fill="none" stroke="#ff0000" d="M176.19,-122.57C184.72,-123.41 193.39,-124.26 201.95,-125.1"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="201.64,-128.59 211.93,-126.08 202.32,-121.62 201.64,-128.59"/>
+</g>
+<!-- proc~probe_free -->
+<g id="proc~~hash_map_insert~~CallsGraph_node5" class="node">
+<title>proc~probe_free</title>
+<g id="a_proc~~hash_map_insert~~CallsGraph_node5"><a xlink:href="../proc/probe_free.html" xlink:title="probe_free">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="702,-167 632,-167 632,-143 702,-143 702,-167"/>
+<text text-anchor="middle" x="667" y="-152.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">probe_free</text>
+</a>
+</g>
+</g>
+<!-- proc~hash_map_insert&#45;&gt;proc~probe_free -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge4" class="edge">
+<title>proc~hash_map_insert&#45;&gt;proc~probe_free</title>
+<path fill="none" stroke="#ff0000" d="M176.02,-113.2C188.1,-113.12 200.36,-113.05 212,-113 382.67,-112.31 431.53,-67.44 596,-113 612.98,-117.7 629.97,-127.74 642.97,-136.83"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="641.13,-139.82 651.27,-142.89 645.26,-134.16 641.13,-139.82"/>
+</g>
+<!-- proc~reserve_entries -->
+<g id="proc~~hash_map_insert~~CallsGraph_node6" class="node">
+<title>proc~reserve_entries</title>
+<g id="a_proc~~hash_map_insert~~CallsGraph_node6"><a xlink:href="../proc/reserve_entries.html" xlink:title="reserve_entries">
+<polygon fill="#d9534f" stroke="#d9534f" points="340.5,-66 246.5,-66 246.5,-42 340.5,-42 340.5,-66"/>
+<text text-anchor="middle" x="293.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">reserve_entries</text>
+</a>
+</g>
+</g>
+<!-- proc~hash_map_insert&#45;&gt;proc~reserve_entries -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge5" class="edge">
+<title>proc~hash_map_insert&#45;&gt;proc~reserve_entries</title>
+<path fill="none" stroke="#ff0000" d="M130.18,-101.86C162.42,-92.35 207.42,-79.09 241.86,-68.93"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="243.13,-72.21 251.73,-66.02 241.15,-65.49 243.13,-72.21"/>
+</g>
+<!-- proc~reserve_pool -->
+<g id="proc~~hash_map_insert~~CallsGraph_node7" class="node">
+<title>proc~reserve_pool</title>
+<g id="a_proc~~hash_map_insert~~CallsGraph_node7"><a xlink:href="../proc/reserve_pool.html" xlink:title="reserve_pool">
+<polygon fill="#d9534f" stroke="#d9534f" points="334,-24 253,-24 253,0 334,0 334,-24"/>
+<text text-anchor="middle" x="293.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">reserve_pool</text>
+</a>
+</g>
+</g>
+<!-- proc~hash_map_insert&#45;&gt;proc~reserve_pool -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge6" class="edge">
+<title>proc~hash_map_insert&#45;&gt;proc~reserve_pool</title>
+<path fill="none" stroke="#ff0000" d="M103.97,-101.77C126.23,-84.16 169.95,-51.71 212,-33 221.7,-28.68 232.47,-25.11 242.89,-22.22"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="243.94,-25.56 252.73,-19.65 242.17,-18.79 243.94,-25.56"/>
+</g>
+<!-- proc~home_bucket -->
+<g id="proc~~hash_map_insert~~CallsGraph_node9" class="node">
+<title>proc~home_bucket</title>
+<g id="a_proc~~hash_map_insert~~CallsGraph_node9"><a xlink:href="../proc/home_bucket.html" xlink:title="home_bucket">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="823,-208 738,-208 738,-184 823,-184 823,-208"/>
+<text text-anchor="middle" x="780.5" y="-193.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">home_bucket</text>
+</a>
+</g>
+</g>
+<!-- proc~find_entry&#45;&gt;proc~home_bucket -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge7" class="edge">
+<title>proc~find_entry&#45;&gt;proc~home_bucket</title>
+<path fill="none" stroke="#ff0000" d="M326.93,-225.45C350.19,-230.4 382.34,-236.44 411,-239 540.15,-250.55 575.93,-248.33 702,-218 710.99,-215.84 720.5,-213.33 729.67,-210.79"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="730.76,-214.12 739.44,-208.04 728.86,-207.38 730.76,-214.12"/>
+</g>
+<!-- proc~key_matches -->
+<g id="proc~~hash_map_insert~~CallsGraph_node10" class="node">
+<title>proc~key_matches</title>
+<g id="a_proc~~hash_map_insert~~CallsGraph_node10"><a xlink:href="../proc/key_matches.html" xlink:title="key_matches">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="544.5,-230 462.5,-230 462.5,-206 544.5,-206 544.5,-230"/>
+<text text-anchor="middle" x="503.5" y="-215.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">key_matches</text>
+</a>
+</g>
+</g>
+<!-- proc~find_entry&#45;&gt;proc~key_matches -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge8" class="edge">
+<title>proc~find_entry&#45;&gt;proc~key_matches</title>
+<path fill="none" stroke="#ff0000" d="M326.54,-218C360.02,-218 413,-218 452.09,-218"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="452.21,-221.5 462.21,-218 452.21,-214.5 452.21,-221.5"/>
+</g>
+<!-- proc~rebuild_buckets -->
+<g id="proc~~hash_map_insert~~CallsGraph_node11" class="node">
+<title>proc~rebuild_buckets</title>
+<g id="a_proc~~hash_map_insert~~CallsGraph_node11"><a xlink:href="../proc/rebuild_buckets.html" xlink:title="rebuild_buckets">
+<polygon fill="#d9534f" stroke="#d9534f" points="551.5,-188 455.5,-188 455.5,-164 551.5,-164 551.5,-188"/>
+<text text-anchor="middle" x="503.5" y="-173.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">rebuild_buckets</text>
+</a>
+</g>
+</g>
+<!-- proc~grow_buckets&#45;&gt;proc~rebuild_buckets -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge9" class="edge">
+<title>proc~grow_buckets&#45;&gt;proc~rebuild_buckets</title>
+<path fill="none" stroke="#ffff00" d="M336.09,-176C367.25,-176 410.27,-176 444.76,-176"/>
+<polygon fill="#ffff00" stroke="#ffff00" points="445.17,-179.5 455.17,-176 445.17,-172.5 445.17,-179.5"/>
+</g>
+<!-- proc~hash_map_destroy -->
+<g id="proc~~hash_map_insert~~CallsGraph_node8" class="node">
+<title>proc~hash_map_destroy</title>
+<g id="a_proc~~hash_map_insert~~CallsGraph_node8"><a xlink:href="../proc/hash_map_destroy.html" xlink:title="hash_map_t%hash_map_destroy">
+<polygon fill="#d9534f" stroke="#d9534f" points="596,-146 411,-146 411,-122 596,-122 596,-146"/>
+<text text-anchor="middle" x="503.5" y="-131.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">hash_map_t%hash_map_destroy</text>
+</a>
+</g>
+</g>
+<!-- proc~hash_map_init&#45;&gt;proc~hash_map_destroy -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge10" class="edge">
+<title>proc~hash_map_init&#45;&gt;proc~hash_map_destroy</title>
+<path fill="none" stroke="#00ff00" d="M375.22,-134C383.59,-134 392.17,-134 400.74,-134"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="400.77,-137.5 410.77,-134 400.77,-130.5 400.77,-137.5"/>
+</g>
+<!-- proc~probe_free&#45;&gt;proc~home_bucket -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge11" class="edge">
+<title>proc~probe_free&#45;&gt;proc~home_bucket</title>
+<path fill="none" stroke="#00ffff" d="M700.85,-167.08C712.2,-171.25 725.09,-175.99 737.1,-180.41"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="735.91,-183.7 746.5,-183.87 738.32,-177.13 735.91,-183.7"/>
+</g>
+<!-- interface~fnv_1a_hash -->
+<g id="proc~~hash_map_insert~~CallsGraph_node12" class="node">
+<title>interface~fnv_1a_hash</title>
+<g id="a_proc~~hash_map_insert~~CallsGraph_node12"><a xlink:href="../interface/fnv_1a_hash.html" xlink:title="fnv_1a_hash">
+<polygon fill="#a7506f" stroke="#a7506f" points="938,-208 859,-208 859,-184 938,-184 938,-208"/>
+<text text-anchor="middle" x="898.5" y="-193.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fnv_1a_hash</text>
+</a>
+</g>
+</g>
+<!-- proc~home_bucket&#45;&gt;interface~fnv_1a_hash -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge12" class="edge">
+<title>proc~home_bucket&#45;&gt;interface~fnv_1a_hash</title>
+<path fill="none" stroke="#7fff00" d="M823.05,-196C831.37,-196 840.18,-196 848.72,-196"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="848.95,-199.5 858.95,-196 848.95,-192.5 848.95,-199.5"/>
+</g>
+<!-- proc~rebuild_buckets&#45;&gt;proc~probe_free -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge14" class="edge">
+<title>proc~rebuild_buckets&#45;&gt;proc~probe_free</title>
+<path fill="none" stroke="#7f00ff" d="M551.65,-169.87C573.83,-166.98 600.13,-163.56 621.91,-160.73"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="622.42,-164.2 631.89,-159.44 621.52,-157.25 622.42,-164.2"/>
+</g>
+<!-- proc~entry_key -->
+<g id="proc~~hash_map_insert~~CallsGraph_node13" class="node">
+<title>proc~entry_key</title>
+<g id="a_proc~~hash_map_insert~~CallsGraph_node13"><a xlink:href="../proc/entry_key.html" xlink:title="entry_key">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="699,-209 635,-209 635,-185 699,-185 699,-209"/>
+<text text-anchor="middle" x="667" y="-194.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">entry_key</text>
+</a>
+</g>
+</g>
+<!-- proc~rebuild_buckets&#45;&gt;proc~entry_key -->
+<g id="proc~~hash_map_insert~~CallsGraph_edge13" class="edge">
+<title>proc~rebuild_buckets&#45;&gt;proc~entry_key</title>
+<path fill="none" stroke="#7f00ff" d="M551.65,-182.13C574.79,-185.14 602.43,-188.73 624.73,-191.63"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="624.52,-195.14 634.89,-192.95 625.42,-188.19 624.52,-195.14"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprochash_map_insertCallsGraph = svgPanZoom('#prochash_map_insertCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    <section>    
+      <h2>Variables</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-entry~2"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>entry</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-i~136"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-klen"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>klen</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">hash_map_insert</span><span class="p">(</span><span class="n">this</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="k">value</span><span class="p">)</span>
+<span class="w">      </span><span class="c">!! Insert `key` with `value`, or overwrite the value of an existing key.</span>
+<span class="w">      </span><span class="c">!!</span>
+<span class="w">      </span><span class="c">!! A key that is not present is appended at the end of the iteration</span>
+<span class="w">      </span><span class="c">!! order. A key that is already present keeps its position in the</span>
+<span class="w">      </span><span class="c">!! iteration order and only its value changes.</span>
+<span class="w">      </span><span class="k">class</span><span class="p">(</span><span class="n">hash_map_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">this</span>
+<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">key</span>
+<span class="w">         </span><span class="c">!! Stored verbatim; trailing blanks are part of the key.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="k">value</span>
+
+<span class="k">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="k">entry</span><span class="p">,</span><span class="w"> </span><span class="n">klen</span><span class="p">,</span><span class="w"> </span><span class="n">i</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">%</span><span class="n">n_buckets</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">call </span><span class="n">this</span><span class="p">%</span><span class="n">init</span><span class="p">()</span>
+
+<span class="w">      </span><span class="k">entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">find_entry</span><span class="p">(</span><span class="n">this</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">entry</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">this</span><span class="p">%</span><span class="n">entry_value</span><span class="p">(</span><span class="k">entry</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">value</span>
+<span class="k">         return</span>
+<span class="k">      end if</span>
+
+<span class="k">      if</span><span class="w"> </span><span class="p">((</span><span class="n">this</span><span class="p">%</span><span class="n">n_entries</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">LOAD_DEN</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">n_buckets</span><span class="o">*</span><span class="n">LOAD_NUM</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">grow_buckets</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end if</span>
+
+<span class="k">      </span><span class="n">klen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">),</span><span class="w"> </span><span class="n">default_int</span><span class="p">)</span>
+<span class="w">      </span><span class="k">call </span><span class="n">reserve_entries</span><span class="p">(</span><span class="n">this</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">n_entries</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">call </span><span class="n">reserve_pool</span><span class="p">(</span><span class="n">this</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">pool_used</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">klen</span><span class="p">)</span>
+
+<span class="w">      </span><span class="n">this</span><span class="p">%</span><span class="n">n_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">n_entries</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="n">this</span><span class="p">%</span><span class="n">key_start</span><span class="p">(</span><span class="n">this</span><span class="p">%</span><span class="n">n_entries</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">pool_used</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="n">this</span><span class="p">%</span><span class="n">key_size</span><span class="p">(</span><span class="n">this</span><span class="p">%</span><span class="n">n_entries</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">klen</span>
+<span class="w">      </span><span class="n">this</span><span class="p">%</span><span class="n">entry_value</span><span class="p">(</span><span class="n">this</span><span class="p">%</span><span class="n">n_entries</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">value</span>
+<span class="k">      do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">klen</span>
+<span class="w">         </span><span class="n">this</span><span class="p">%</span><span class="n">key_pool</span><span class="p">(</span><span class="n">this</span><span class="p">%</span><span class="n">pool_used</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">key</span><span class="p">(</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end do</span>
+<span class="k">      </span><span class="n">this</span><span class="p">%</span><span class="n">pool_used</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">pool_used</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">klen</span>
+
+<span class="w">      </span><span class="n">this</span><span class="p">%</span><span class="n">buckets</span><span class="p">(</span><span class="n">probe_free</span><span class="p">(</span><span class="n">this</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">n_entries</span>
+<span class="w">   </span><span class="k">end subroutine </span><span class="n">hash_map_insert</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

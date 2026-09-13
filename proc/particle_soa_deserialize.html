@@ -1,0 +1,1464 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>particle_soa_deserialize &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>particle_soa_deserialize
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.3% of total for procedures.">42 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_soa_particle.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_soa_particle.f90.html'>pic_soa_particle.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_soa_particle.html'>pic_soa_particle</a></li>
+            <li class="breadcrumb-item active" aria-current="page">particle_soa_deserialize</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../proc/particle_soa_deserialize.html#variable-n~32">n</a>
+            <a class="list-group-item" href="../proc/particle_soa_deserialize.html#variable-swapped">swapped</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/particle_soa_deserialize.html#src">particle_soa_deserialize</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private  subroutine particle_soa_deserialize(this, unit, err)  
+</h2>
+    
+
+    <p>Read a container back from an open stream unit.</p>
+<p>Validates the envelope and the schema string before touching any
+payload, so a stream written from a different field list is rejected
+with <code>ERROR_VALIDATION</code> rather than decoded as garbage. Every field
+record must hold exactly the element count the prologue announced.</p>
+<p>On success the container holds exactly the elements from the stream
+and its capacity equals its size. On failure it is left deallocated
+rather than half filled.</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/particle_soa_t.html'>particle_soa_t</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~50"></span>
+              class(<a href='../type/particle_soa_t.html'>particle_soa_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>Container to fill. Any previous contents are discarded.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-unit~3"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>unit</strong></td>
+            <td>
+                <p>Stream unit opened for unformatted stream reading.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~56"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                <p>Error state, <code>ERROR_VALIDATION</code> on a layout or length mismatch and
+<code>ERROR_IO</code> on a truncated stream.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~particle_soa_deserialize~~CallsGraph Pages: 1 -->
+<svg id="procparticle_soa_deserializeCallsGraph" width="641pt" height="546pt"
+ viewBox="0.00 0.00 641.00 545.95" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~particle_soa_deserialize~~CallsGraph" class="graph" transform="scale(0.43 0.43) rotate(0) translate(4 1268.45)">
+<title>proc~~particle_soa_deserialize~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-1268.45 1490,-1268.45 1490,4 -4,4"/>
+<!-- proc~particle_soa_deserialize -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node1" class="node">
+<title>proc~particle_soa_deserialize</title>
+<polygon fill="none" stroke="black" points="223,-244.45 0,-244.45 0,-220.45 223,-220.45 223,-244.45"/>
+<text text-anchor="middle" x="111.5" y="-230.05" font-family="Helvetica,sans-Serif" font-size="10.50">particle_soa_t%particle_soa_deserialize</text>
+</g>
+<!-- interface~soa_read_field -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node2" class="node">
+<title>interface~soa_read_field</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node2"><a xlink:href="../interface/soa_read_field.html" xlink:title="soa_read_field">
+<polygon fill="#a7506f" stroke="#a7506f" points="348,-244.45 259,-244.45 259,-220.45 348,-220.45 348,-244.45"/>
+<text text-anchor="middle" x="303.5" y="-230.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_field</text>
+</a>
+</g>
+</g>
+<!-- proc~particle_soa_deserialize&#45;&gt;interface~soa_read_field -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge1" class="edge">
+<title>proc~particle_soa_deserialize&#45;&gt;interface~soa_read_field</title>
+<path fill="none" stroke="#ff0000" d="M223.02,-232.45C231.86,-232.45 240.52,-232.45 248.67,-232.45"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="248.71,-235.95 258.71,-232.45 248.71,-228.95 248.71,-235.95"/>
+</g>
+<!-- proc~error_has_error -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node3" class="node">
+<title>proc~error_has_error</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node3"><a xlink:href="../proc/error_has_error.html" xlink:title="error_t%error_has_error">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1185,-149.45 1046,-149.45 1046,-125.45 1185,-125.45 1185,-149.45"/>
+<text text-anchor="middle" x="1115.5" y="-135.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_has_error</text>
+</a>
+</g>
+</g>
+<!-- proc~particle_soa_deserialize&#45;&gt;proc~error_has_error -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge2" class="edge">
+<title>proc~particle_soa_deserialize&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#ff0000" d="M121.41,-220.25C156.97,-173.1 294.31,-5.45 449.5,-5.45 449.5,-5.45 449.5,-5.45 779.5,-5.45 882.45,-5.45 917.43,16.6 1010,-28.45 1050.73,-48.28 1084.08,-90.99 1101.46,-116.67"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="1098.71,-118.86 1107.13,-125.29 1104.56,-115.01 1098.71,-118.86"/>
+</g>
+<!-- proc~soa_read_prologue -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node4" class="node">
+<title>proc~soa_read_prologue</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node4"><a xlink:href="../proc/soa_read_prologue.html" xlink:title="soa_read_prologue">
+<polygon fill="#d9534f" stroke="#d9534f" points="507,-787.45 394,-787.45 394,-763.45 507,-763.45 507,-787.45"/>
+<text text-anchor="middle" x="450.5" y="-773.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_prologue</text>
+</a>
+</g>
+</g>
+<!-- proc~particle_soa_deserialize&#45;&gt;proc~soa_read_prologue -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge3" class="edge">
+<title>proc~particle_soa_deserialize&#45;&gt;proc~soa_read_prologue</title>
+<path fill="none" stroke="#ff0000" d="M120.01,-244.56C163.3,-314.31 380.96,-665.02 436.56,-754.6"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="433.72,-756.67 441.97,-763.32 439.67,-752.98 433.72,-756.67"/>
+</g>
+<!-- proc~soa_read_int32_field -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node9" class="node">
+<title>proc~soa_read_int32_field</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node9"><a xlink:href="../proc/soa_read_int32_field.html" xlink:title="soa_read_int32_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="511,-202.45 390,-202.45 390,-178.45 511,-178.45 511,-202.45"/>
+<text text-anchor="middle" x="450.5" y="-188.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_int32_field</text>
+</a>
+</g>
+</g>
+<!-- interface~soa_read_field&#45;&gt;proc~soa_read_int32_field -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge4" class="edge">
+<title>interface~soa_read_field&#45;&gt;proc~soa_read_int32_field</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M346.05,-220.42C362.28,-215.72 381.06,-210.28 398.12,-205.34"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="399.31,-208.64 407.94,-202.49 397.36,-201.91 399.31,-208.64"/>
+</g>
+<!-- proc~soa_read_int64_field -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node10" class="node">
+<title>proc~soa_read_int64_field</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node10"><a xlink:href="../proc/soa_read_int64_field.html" xlink:title="soa_read_int64_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="511,-160.45 390,-160.45 390,-136.45 511,-136.45 511,-160.45"/>
+<text text-anchor="middle" x="450.5" y="-146.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_int64_field</text>
+</a>
+</g>
+</g>
+<!-- interface~soa_read_field&#45;&gt;proc~soa_read_int64_field -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge5" class="edge">
+<title>interface~soa_read_field&#45;&gt;proc~soa_read_int64_field</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M316.71,-220.43C331.51,-206.43 357.74,-183.47 384,-169.45 387.51,-167.58 391.23,-165.84 395.02,-164.22"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="396.54,-167.39 404.57,-160.48 393.98,-160.87 396.54,-167.39"/>
+</g>
+<!-- proc~soa_read_logical_field -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node11" class="node">
+<title>proc~soa_read_logical_field</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node11"><a xlink:href="../proc/soa_read_logical_field.html" xlink:title="soa_read_logical_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="515.5,-328.45 385.5,-328.45 385.5,-304.45 515.5,-304.45 515.5,-328.45"/>
+<text text-anchor="middle" x="450.5" y="-314.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_logical_field</text>
+</a>
+</g>
+</g>
+<!-- interface~soa_read_field&#45;&gt;proc~soa_read_logical_field -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge6" class="edge">
+<title>interface~soa_read_field&#45;&gt;proc~soa_read_logical_field</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M316.71,-244.48C331.51,-258.48 357.74,-281.44 384,-295.45 387.51,-297.33 391.23,-299.07 395.02,-300.69"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="393.98,-304.04 404.57,-304.43 396.54,-297.52 393.98,-304.04"/>
+</g>
+<!-- proc~soa_read_real_dp_field -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node12" class="node">
+<title>proc~soa_read_real_dp_field</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node12"><a xlink:href="../proc/soa_read_real_dp_field.html" xlink:title="soa_read_real_dp_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="517,-244.45 384,-244.45 384,-220.45 517,-220.45 517,-244.45"/>
+<text text-anchor="middle" x="450.5" y="-230.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_real_dp_field</text>
+</a>
+</g>
+</g>
+<!-- interface~soa_read_field&#45;&gt;proc~soa_read_real_dp_field -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge7" class="edge">
+<title>interface~soa_read_field&#45;&gt;proc~soa_read_real_dp_field</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M348,-232.45C356.1,-232.45 364.77,-232.45 373.51,-232.45"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="373.77,-235.95 383.77,-232.45 373.77,-228.95 373.77,-235.95"/>
+</g>
+<!-- proc~soa_read_real_sp_field -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node13" class="node">
+<title>proc~soa_read_real_sp_field</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node13"><a xlink:href="../proc/soa_read_real_sp_field.html" xlink:title="soa_read_real_sp_field">
+<polygon fill="#d9534f" stroke="#d9534f" points="516.5,-286.45 384.5,-286.45 384.5,-262.45 516.5,-262.45 516.5,-286.45"/>
+<text text-anchor="middle" x="450.5" y="-272.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_read_real_sp_field</text>
+</a>
+</g>
+</g>
+<!-- interface~soa_read_field&#45;&gt;proc~soa_read_real_sp_field -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge8" class="edge">
+<title>interface~soa_read_field&#45;&gt;proc~soa_read_real_sp_field</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M346.05,-244.49C362.28,-249.19 381.06,-254.63 398.12,-259.57"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="397.36,-263 407.94,-262.42 399.31,-256.27 397.36,-263"/>
+</g>
+<!-- proc~soa_read_prologue&#45;&gt;proc~error_has_error -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge11" class="edge">
+<title>proc~soa_read_prologue&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#0000ff" d="M461.43,-763.1C508.34,-704.76 706.08,-459.07 721,-444.45 846.93,-321.12 1021.2,-199.94 1087.47,-155.37"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="1089.72,-158.07 1096.08,-149.6 1085.83,-152.26 1089.72,-158.07"/>
+</g>
+<!-- interface~read_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node5" class="node">
+<title>interface~read_array</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node5"><a xlink:href="../interface/read_array.html" xlink:title="read_array">
+<polygon fill="#a7506f" stroke="#a7506f" points="654,-477.45 584,-477.45 584,-453.45 654,-453.45 654,-477.45"/>
+<text text-anchor="middle" x="619" y="-463.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_array</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_prologue&#45;&gt;interface~read_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge9" class="edge">
+<title>proc~soa_read_prologue&#45;&gt;interface~read_array</title>
+<path fill="none" stroke="#0000ff" d="M458.03,-763.3C483.26,-716.33 574.59,-546.27 606.72,-486.45"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="609.87,-487.99 611.52,-477.52 603.7,-484.68 609.87,-487.99"/>
+</g>
+<!-- interface~to_char -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node6" class="node">
+<title>interface~to_char</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node6"><a xlink:href="../interface/to_char.html" xlink:title="to_char">
+<polygon fill="#a7506f" stroke="#a7506f" points="1300.5,-991.45 1246.5,-991.45 1246.5,-967.45 1300.5,-967.45 1300.5,-991.45"/>
+<text text-anchor="middle" x="1273.5" y="-977.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_prologue&#45;&gt;interface~to_char -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge10" class="edge">
+<title>proc~soa_read_prologue&#45;&gt;interface~to_char</title>
+<path fill="none" stroke="#0000ff" d="M451.45,-787.49C451.98,-833.01 460.49,-995.79 553,-1069.45 631.5,-1131.96 677.15,-1093.45 777.5,-1093.45 777.5,-1093.45 777.5,-1093.45 942,-1093.45 1050.53,-1093.45 1087.23,-1116.56 1185,-1069.45 1217.12,-1053.98 1243.93,-1021.52 1259.09,-1000.11"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="1262.09,-1001.92 1264.86,-991.69 1256.32,-997.96 1262.09,-1001.92"/>
+</g>
+<!-- proc~error_set -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node7" class="node">
+<title>proc~error_set</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node7"><a xlink:href="../proc/error_set.html" xlink:title="error_t%error_set">
+<polygon fill="#d9534f" stroke="#d9534f" points="1326,-707.45 1221,-707.45 1221,-683.45 1326,-683.45 1326,-707.45"/>
+<text text-anchor="middle" x="1273.5" y="-693.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_set</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_prologue&#45;&gt;proc~error_set -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge12" class="edge">
+<title>proc~soa_read_prologue&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#0000ff" d="M478.76,-787.5C560.12,-821.84 808.11,-914.89 1010,-868.45 1094.27,-849.07 1114.64,-833.71 1185,-783.45 1212.8,-763.6 1239.72,-734.59 1256.2,-715.38"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="1259.02,-717.45 1262.79,-707.55 1253.67,-712.94 1259.02,-717.45"/>
+</g>
+<!-- proc~read_header -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node8" class="node">
+<title>proc~read_header</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node8"><a xlink:href="../proc/read_header.html" xlink:title="read_header">
+<polygon fill="#d9534f" stroke="#d9534f" points="981,-951.45 901,-951.45 901,-927.45 981,-927.45 981,-951.45"/>
+<text text-anchor="middle" x="941" y="-937.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_header</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_prologue&#45;&gt;proc~read_header -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge13" class="edge">
+<title>proc~soa_read_prologue&#45;&gt;proc~read_header</title>
+<path fill="none" stroke="#0000ff" d="M459.29,-787.55C474.38,-809.86 509.94,-857.27 553,-879.45 663.55,-936.4 813.67,-942.6 890.39,-941.5"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="890.79,-945 900.72,-941.3 890.66,-938 890.79,-945"/>
+</g>
+<!-- proc~read_char_record -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node16" class="node">
+<title>proc~read_char_record</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node16"><a xlink:href="../proc/read_char_record.html" xlink:title="read_char_record">
+<polygon fill="#d9534f" stroke="#d9534f" points="831.5,-561.45 725.5,-561.45 725.5,-537.45 831.5,-537.45 831.5,-561.45"/>
+<text text-anchor="middle" x="778.5" y="-547.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_char_record</text>
+</a>
+</g>
+</g>
+<!-- interface~read_array&#45;&gt;proc~read_char_record -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge14" class="edge">
+<title>interface~read_array&#45;&gt;proc~read_char_record</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M636.9,-477.48C656.48,-491.06 690.03,-513.23 721,-528.45 724.6,-530.22 728.38,-531.93 732.21,-533.56"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="731.19,-536.92 741.77,-537.42 733.82,-530.43 731.19,-536.92"/>
+</g>
+<!-- proc~read_int32_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node17" class="node">
+<title>proc~read_int32_array</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node17"><a xlink:href="../proc/read_int32_array.html" xlink:title="read_int32_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="830,-619.45 727,-619.45 727,-595.45 830,-595.45 830,-619.45"/>
+<text text-anchor="middle" x="778.5" y="-605.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_int32_array</text>
+</a>
+</g>
+</g>
+<!-- interface~read_array&#45;&gt;proc~read_int32_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge15" class="edge">
+<title>interface~read_array&#45;&gt;proc~read_int32_array</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M630.12,-477.65C647.48,-498.15 684.59,-540.26 721,-570.45 729.33,-577.36 738.99,-584.09 747.94,-589.88"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="746.26,-592.96 756.59,-595.33 749.99,-587.03 746.26,-592.96"/>
+</g>
+<!-- proc~read_int64_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node18" class="node">
+<title>proc~read_int64_array</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node18"><a xlink:href="../proc/read_int64_array.html" xlink:title="read_int64_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="830,-519.45 727,-519.45 727,-495.45 830,-495.45 830,-519.45"/>
+<text text-anchor="middle" x="778.5" y="-505.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_int64_array</text>
+</a>
+</g>
+</g>
+<!-- interface~read_array&#45;&gt;proc~read_int64_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge16" class="edge">
+<title>interface~read_array&#45;&gt;proc~read_int64_array</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M654.18,-474.57C674.11,-479.89 699.74,-486.72 722.46,-492.78"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="721.76,-496.21 732.33,-495.41 723.57,-489.45 721.76,-496.21"/>
+</g>
+<!-- proc~read_real_dp_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node19" class="node">
+<title>proc~read_real_dp_array</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node19"><a xlink:href="../proc/read_real_dp_array.html" xlink:title="read_real_dp_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="836,-477.45 721,-477.45 721,-453.45 836,-453.45 836,-477.45"/>
+<text text-anchor="middle" x="778.5" y="-463.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_real_dp_array</text>
+</a>
+</g>
+</g>
+<!-- interface~read_array&#45;&gt;proc~read_real_dp_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge17" class="edge">
+<title>interface~read_array&#45;&gt;proc~read_real_dp_array</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M654.18,-465.45C670.74,-465.45 691.23,-465.45 710.71,-465.45"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="710.79,-468.95 720.79,-465.45 710.79,-461.95 710.79,-468.95"/>
+</g>
+<!-- proc~read_real_sp_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node20" class="node">
+<title>proc~read_real_sp_array</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node20"><a xlink:href="../proc/read_real_sp_array.html" xlink:title="read_real_sp_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="835,-677.45 722,-677.45 722,-653.45 835,-653.45 835,-677.45"/>
+<text text-anchor="middle" x="778.5" y="-663.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_real_sp_array</text>
+</a>
+</g>
+</g>
+<!-- interface~read_array&#45;&gt;proc~read_real_sp_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge18" class="edge">
+<title>interface~read_array&#45;&gt;proc~read_real_sp_array</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M625.32,-477.73C638.31,-506.66 674.05,-580.31 721,-628.45 728.17,-635.81 737.05,-642.46 745.62,-648.03"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="744.02,-651.15 754.37,-653.43 747.7,-645.2 744.02,-651.15"/>
+</g>
+<!-- proc~to_char_char -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node23" class="node">
+<title>proc~to_char_char</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node23"><a xlink:href="../proc/to_char_char.html" xlink:title="to_char_char">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1465,-1264.45 1383,-1264.45 1383,-1240.45 1465,-1240.45 1465,-1264.45"/>
+<text text-anchor="middle" x="1424" y="-1250.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_char</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_char -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge19" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_char</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1275.11,-991.64C1277.77,-1031.79 1291.66,-1161.3 1362,-1231.45 1365.44,-1234.88 1369.46,-1237.75 1373.77,-1240.15"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1372.39,-1243.37 1382.93,-1244.46 1375.36,-1237.04 1372.39,-1243.37"/>
+</g>
+<!-- proc~to_char_dp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node24" class="node">
+<title>proc~to_char_dp</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node24"><a xlink:href="../proc/to_char_dp.html" xlink:title="to_char_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1459.5,-1222.45 1388.5,-1222.45 1388.5,-1198.45 1459.5,-1198.45 1459.5,-1222.45"/>
+<text text-anchor="middle" x="1424" y="-1208.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_dp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge20" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_dp</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1276.07,-991.61C1281.29,-1027.24 1301.38,-1132.55 1362,-1189.45 1366.77,-1193.93 1372.54,-1197.46 1378.6,-1200.24"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1377.68,-1203.64 1388.27,-1204.01 1380.23,-1197.12 1377.68,-1203.64"/>
+</g>
+<!-- proc~to_char_int32 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node25" class="node">
+<title>proc~to_char_int32</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node25"><a xlink:href="../proc/to_char_int32.html" xlink:title="to_char_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1466.5,-1180.45 1381.5,-1180.45 1381.5,-1156.45 1466.5,-1156.45 1466.5,-1180.45"/>
+<text text-anchor="middle" x="1424" y="-1166.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_int32 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge21" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_int32</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1277.45,-991.56C1285.54,-1022.19 1310.92,-1103.46 1362,-1147.45 1365.06,-1150.09 1368.47,-1152.41 1372.08,-1154.43"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1370.8,-1157.7 1381.33,-1158.9 1373.84,-1151.4 1370.8,-1157.7"/>
+</g>
+<!-- proc~to_char_int64 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node26" class="node">
+<title>proc~to_char_int64</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node26"><a xlink:href="../proc/to_char_int64.html" xlink:title="to_char_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1466.5,-1138.45 1381.5,-1138.45 1381.5,-1114.45 1466.5,-1114.45 1466.5,-1138.45"/>
+<text text-anchor="middle" x="1424" y="-1124.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_int64 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge22" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_int64</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1279.81,-991.78C1291.2,-1016.83 1320.37,-1073.96 1362,-1105.45 1365.18,-1107.86 1368.64,-1110 1372.27,-1111.9"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1370.95,-1115.15 1381.5,-1116.16 1373.89,-1108.79 1370.95,-1115.15"/>
+</g>
+<!-- proc~to_char_logical -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node27" class="node">
+<title>proc~to_char_logical</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node27"><a xlink:href="../proc/to_char_logical.html" xlink:title="to_char_logical">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1470.5,-1096.45 1377.5,-1096.45 1377.5,-1072.45 1470.5,-1072.45 1470.5,-1096.45"/>
+<text text-anchor="middle" x="1424" y="-1082.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_logical</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_logical -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge23" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_logical</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1284.25,-991.74C1299.2,-1009.82 1329.47,-1043.59 1362,-1063.45 1364.82,-1065.18 1367.8,-1066.78 1370.87,-1068.27"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1369.68,-1071.58 1380.25,-1072.41 1372.51,-1065.17 1369.68,-1071.58"/>
+</g>
+<!-- proc~to_char_matrix_dp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node28" class="node">
+<title>proc~to_char_matrix_dp</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node28"><a xlink:href="../proc/to_char_matrix_dp.html" xlink:title="to_char_matrix_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1479.5,-1054.45 1368.5,-1054.45 1368.5,-1030.45 1479.5,-1030.45 1479.5,-1054.45"/>
+<text text-anchor="middle" x="1424" y="-1040.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_dp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge24" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_dp</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1297.93,-991.62C1315.36,-1000.44 1339.87,-1012.37 1362,-1021.45 1366.49,-1023.3 1371.21,-1025.12 1375.95,-1026.87"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1375.05,-1030.27 1385.65,-1030.36 1377.42,-1023.68 1375.05,-1030.27"/>
+</g>
+<!-- proc~to_char_matrix_int32 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node29" class="node">
+<title>proc~to_char_matrix_int32</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node29"><a xlink:href="../proc/to_char_matrix_int32.html" xlink:title="to_char_matrix_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1486,-1012.45 1362,-1012.45 1362,-988.45 1486,-988.45 1486,-1012.45"/>
+<text text-anchor="middle" x="1424" y="-998.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_int32 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge25" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_int32</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1300.71,-983.16C1315.04,-985.19 1333.56,-987.81 1351.82,-990.39"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1351.53,-993.88 1361.92,-991.82 1352.51,-986.95 1351.53,-993.88"/>
+</g>
+<!-- proc~to_char_matrix_int64 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node30" class="node">
+<title>proc~to_char_matrix_int64</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node30"><a xlink:href="../proc/to_char_matrix_int64.html" xlink:title="to_char_matrix_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1486,-970.45 1362,-970.45 1362,-946.45 1486,-946.45 1486,-970.45"/>
+<text text-anchor="middle" x="1424" y="-956.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_int64 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge26" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_int64</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1300.71,-975.75C1315.04,-973.72 1333.56,-971.1 1351.82,-968.52"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1352.51,-971.96 1361.92,-967.09 1351.53,-965.03 1352.51,-971.96"/>
+</g>
+<!-- proc~to_char_matrix_sp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node31" class="node">
+<title>proc~to_char_matrix_sp</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node31"><a xlink:href="../proc/to_char_matrix_sp.html" xlink:title="to_char_matrix_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1478.5,-928.45 1369.5,-928.45 1369.5,-904.45 1478.5,-904.45 1478.5,-928.45"/>
+<text text-anchor="middle" x="1424" y="-914.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_matrix_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_matrix_sp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge27" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_matrix_sp</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1297.93,-967.29C1315.36,-958.47 1339.87,-946.54 1362,-937.45 1366.49,-935.61 1371.21,-933.79 1375.95,-932.04"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1377.42,-935.23 1385.65,-928.55 1375.05,-928.64 1377.42,-935.23"/>
+</g>
+<!-- proc~to_char_sp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node32" class="node">
+<title>proc~to_char_sp</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node32"><a xlink:href="../proc/to_char_sp.html" xlink:title="to_char_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1459,-886.45 1389,-886.45 1389,-862.45 1459,-862.45 1459,-886.45"/>
+<text text-anchor="middle" x="1424" y="-872.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_sp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge28" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_sp</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1284.25,-967.17C1299.2,-949.09 1329.47,-915.32 1362,-895.45 1367.39,-892.16 1373.38,-889.3 1379.42,-886.84"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1380.76,-890.07 1388.9,-883.3 1378.31,-883.52 1380.76,-890.07"/>
+</g>
+<!-- proc~to_char_vector_dp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node33" class="node">
+<title>proc~to_char_vector_dp</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node33"><a xlink:href="../proc/to_char_vector_dp.html" xlink:title="to_char_vector_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1479,-844.45 1369,-844.45 1369,-820.45 1479,-820.45 1479,-844.45"/>
+<text text-anchor="middle" x="1424" y="-830.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_dp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_dp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge29" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_dp</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1279.81,-967.13C1291.2,-942.08 1320.37,-884.95 1362,-853.45 1364.03,-851.92 1366.18,-850.49 1368.42,-849.16"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1370.11,-852.22 1377.38,-844.51 1366.89,-846.01 1370.11,-852.22"/>
+</g>
+<!-- proc~to_char_vector_int32 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node34" class="node">
+<title>proc~to_char_vector_int32</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node34"><a xlink:href="../proc/to_char_vector_int32.html" xlink:title="to_char_vector_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1486,-802.45 1362,-802.45 1362,-778.45 1486,-778.45 1486,-802.45"/>
+<text text-anchor="middle" x="1424" y="-788.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_int32</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_int32 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge30" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_int32</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1277.45,-967.35C1285.54,-936.72 1310.92,-855.45 1362,-811.45 1363.53,-810.14 1365.14,-808.9 1366.82,-807.75"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1368.82,-810.63 1375.7,-802.57 1365.3,-804.59 1368.82,-810.63"/>
+</g>
+<!-- proc~to_char_vector_int64 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node35" class="node">
+<title>proc~to_char_vector_int64</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node35"><a xlink:href="../proc/to_char_vector_int64.html" xlink:title="to_char_vector_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1486,-760.45 1362,-760.45 1362,-736.45 1486,-736.45 1486,-760.45"/>
+<text text-anchor="middle" x="1424" y="-746.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_int64</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_int64 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge31" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_int64</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1276.07,-967.3C1281.29,-931.67 1301.38,-826.36 1362,-769.45 1363.29,-768.24 1364.66,-767.1 1366.08,-766.02"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1368.18,-768.83 1374.78,-760.55 1364.46,-762.91 1368.18,-768.83"/>
+</g>
+<!-- proc~to_char_vector_sp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node36" class="node">
+<title>proc~to_char_vector_sp</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node36"><a xlink:href="../proc/to_char_vector_sp.html" xlink:title="to_char_vector_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1478.5,-718.45 1369.5,-718.45 1369.5,-694.45 1478.5,-694.45 1478.5,-718.45"/>
+<text text-anchor="middle" x="1424" y="-704.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">to_char_vector_sp</text>
+</a>
+</g>
+</g>
+<!-- interface~to_char&#45;&gt;proc~to_char_vector_sp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge32" class="edge">
+<title>interface~to_char&#45;&gt;proc~to_char_vector_sp</title>
+<path fill="none" stroke="#ffaa00" stroke-dasharray="5,2" d="M1275.11,-967.27C1277.77,-927.12 1291.66,-797.61 1362,-727.45 1363.23,-726.23 1364.53,-725.08 1365.89,-723.99"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="1367.84,-726.9 1374.26,-718.48 1363.99,-721.06 1367.84,-726.9"/>
+</g>
+<!-- proc~read_header&#45;&gt;interface~to_char -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge33" class="edge">
+<title>proc~read_header&#45;&gt;interface~to_char</title>
+<path fill="none" stroke="#00ff00" d="M981.32,-948.51C1000.7,-952.69 1024.48,-957.39 1046,-960.45 1112.73,-969.96 1191.24,-975.24 1236.11,-977.7"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="1236.06,-981.2 1246.23,-978.24 1236.43,-974.21 1236.06,-981.2"/>
+</g>
+<!-- proc~read_header&#45;&gt;proc~error_set -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge36" class="edge">
+<title>proc~read_header&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#00ff00" d="M981.23,-931.01C1045.86,-916.81 1169.18,-888.46 1185,-875.45 1235.57,-833.89 1259.1,-756.01 1268,-717.78"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="1271.49,-718.21 1270.22,-707.69 1264.65,-716.71 1271.49,-718.21"/>
+</g>
+<!-- proc~bswap_int32 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node14" class="node">
+<title>proc~bswap_int32</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node14"><a xlink:href="../proc/bswap_int32.html" xlink:title="bswap_int32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1155,-774.45 1076,-774.45 1076,-750.45 1155,-750.45 1155,-774.45"/>
+<text text-anchor="middle" x="1115.5" y="-760.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bswap_int32</text>
+</a>
+</g>
+</g>
+<!-- proc~read_header&#45;&gt;proc~bswap_int32 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge34" class="edge">
+<title>proc~read_header&#45;&gt;proc~bswap_int32</title>
+<path fill="none" stroke="#00ff00" d="M955.29,-927.45C969.19,-914.78 991.51,-894.11 1010,-875.45 1041.5,-843.68 1076.5,-805.13 1096.94,-782.26"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="1099.74,-784.38 1103.78,-774.59 1094.52,-779.72 1099.74,-784.38"/>
+</g>
+<!-- proc~check_io -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node15" class="node">
+<title>proc~check_io</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node15"><a xlink:href="../proc/check_io.html" xlink:title="check_io">
+<polygon fill="#d9534f" stroke="#d9534f" points="1145,-707.45 1086,-707.45 1086,-683.45 1145,-683.45 1145,-707.45"/>
+<text text-anchor="middle" x="1115.5" y="-693.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_io</text>
+</a>
+</g>
+</g>
+<!-- proc~read_header&#45;&gt;proc~check_io -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge35" class="edge">
+<title>proc~read_header&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#00ff00" d="M959.68,-927.27C975.18,-915.69 997.18,-896.88 1010,-875.45 1041.66,-822.53 1010.12,-791.61 1046,-741.45 1054.37,-729.76 1066.71,-720.16 1078.62,-712.81"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="1080.67,-715.67 1087.57,-707.64 1077.16,-709.61 1080.67,-715.67"/>
+</g>
+<!-- proc~soa_read_int32_field&#45;&gt;proc~error_has_error -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge38" class="edge">
+<title>proc~soa_read_int32_field&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#00ffa9" d="M502.49,-178.41C507.69,-175.96 512.65,-173 517,-169.45 542.29,-148.82 524.83,-121.93 553,-105.45 640.66,-54.18 909.56,-90.42 1010,-105.45 1031.57,-108.68 1054.84,-115.47 1073.94,-121.96"/>
+<polygon fill="#00ffa9" stroke="#00ffa9" points="1072.92,-125.31 1083.51,-125.31 1075.23,-118.7 1072.92,-125.31"/>
+</g>
+<!-- proc~soa_read_int32_field&#45;&gt;interface~read_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge37" class="edge">
+<title>proc~soa_read_int32_field&#45;&gt;interface~read_array</title>
+<path fill="none" stroke="#00ffa9" d="M504.28,-202.6C508.91,-205.03 513.25,-207.95 517,-211.45 586.18,-276.07 608.87,-394.19 615.52,-443.22"/>
+<polygon fill="#00ffa9" stroke="#00ffa9" points="612.07,-443.87 616.8,-453.36 619.02,-443 612.07,-443.87"/>
+</g>
+<!-- proc~soa_check_field_count -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node22" class="node">
+<title>proc~soa_check_field_count</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node22"><a xlink:href="../proc/soa_check_field_count.html" xlink:title="soa_check_field_count">
+<polygon fill="#d9534f" stroke="#d9534f" points="685,-209.45 553,-209.45 553,-185.45 685,-185.45 685,-209.45"/>
+<text text-anchor="middle" x="619" y="-195.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_check_field_count</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_int32_field&#45;&gt;proc~soa_check_field_count -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge39" class="edge">
+<title>proc~soa_read_int32_field&#45;&gt;proc~soa_check_field_count</title>
+<path fill="none" stroke="#00ffa9" d="M511.14,-192.96C521.39,-193.39 532.17,-193.85 542.77,-194.29"/>
+<polygon fill="#00ffa9" stroke="#00ffa9" points="542.71,-197.79 552.85,-194.72 543.01,-190.8 542.71,-197.79"/>
+</g>
+<!-- proc~soa_read_int64_field&#45;&gt;proc~error_has_error -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge41" class="edge">
+<title>proc~soa_read_int64_field&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#00a9ff" d="M461.51,-136.4C478.16,-117.4 513.63,-81.24 553,-67.45 744.7,-0.34 815.67,-8.38 1010,-67.45 1042.72,-77.4 1074.52,-101.38 1094.28,-118.5"/>
+<polygon fill="#00a9ff" stroke="#00a9ff" points="1092.18,-121.31 1101.98,-125.35 1096.83,-116.09 1092.18,-121.31"/>
+</g>
+<!-- proc~soa_read_int64_field&#45;&gt;interface~read_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge40" class="edge">
+<title>proc~soa_read_int64_field&#45;&gt;interface~read_array</title>
+<path fill="none" stroke="#00a9ff" d="M504.79,-160.58C509.25,-163.02 513.42,-165.94 517,-169.45 557.58,-209.28 599.36,-382.04 613.22,-443.58"/>
+<polygon fill="#00a9ff" stroke="#00a9ff" points="609.82,-444.41 615.4,-453.41 616.65,-442.89 609.82,-444.41"/>
+</g>
+<!-- proc~soa_read_int64_field&#45;&gt;proc~soa_check_field_count -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge42" class="edge">
+<title>proc~soa_read_int64_field&#45;&gt;proc~soa_check_field_count</title>
+<path fill="none" stroke="#00a9ff" d="M492.66,-160.57C515.26,-167.22 543.47,-175.52 567.4,-182.56"/>
+<polygon fill="#00a9ff" stroke="#00a9ff" points="566.45,-185.93 577.03,-185.4 568.42,-179.22 566.45,-185.93"/>
+</g>
+<!-- proc~soa_read_logical_field&#45;&gt;proc~error_has_error -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge45" class="edge">
+<title>proc~soa_read_logical_field&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#0000ff" d="M496.03,-304.43C613.49,-272.72 931.44,-186.88 1059.73,-152.24"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="1060.99,-155.53 1069.73,-149.54 1059.16,-148.77 1060.99,-155.53"/>
+</g>
+<!-- proc~soa_read_logical_field&#45;&gt;interface~read_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge43" class="edge">
+<title>proc~soa_read_logical_field&#45;&gt;interface~read_array</title>
+<path fill="none" stroke="#0000ff" d="M465.13,-328.65C494.03,-354.51 561.69,-415.06 596.49,-446.2"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="594.4,-449.03 604.19,-453.09 599.07,-443.82 594.4,-449.03"/>
+</g>
+<!-- proc~soa_read_logical_field&#45;&gt;interface~to_char -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge44" class="edge">
+<title>proc~soa_read_logical_field&#45;&gt;interface~to_char</title>
+<path fill="none" stroke="#0000ff" d="M453.25,-328.69C460.58,-377.76 491.26,-564.48 553,-705.45 627.14,-874.74 592.69,-1055.45 777.5,-1055.45 777.5,-1055.45 777.5,-1055.45 942,-1055.45 1051.24,-1055.45 1080.17,-1049.19 1185,-1018.45 1204.08,-1012.86 1224.42,-1003.99 1240.68,-996.12"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="1242.34,-999.2 1249.75,-991.63 1239.23,-992.93 1242.34,-999.2"/>
+</g>
+<!-- proc~soa_read_logical_field&#45;&gt;proc~error_set -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge46" class="edge">
+<title>proc~soa_read_logical_field&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#0000ff" d="M515.51,-314.27C581.24,-312.21 686.5,-309.45 777.5,-309.45 777.5,-309.45 777.5,-309.45 942,-309.45 1013.53,-309.45 1172.52,-392.3 1185,-406.45 1255.1,-485.94 1269.05,-620.12 1271.82,-673.03"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="1268.34,-673.48 1272.27,-683.32 1275.33,-673.17 1268.34,-673.48"/>
+</g>
+<!-- proc~soa_check_alloc -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node21" class="node">
+<title>proc~soa_check_alloc</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node21"><a xlink:href="../proc/soa_check_alloc.html" xlink:title="soa_check_alloc">
+<polygon fill="#d9534f" stroke="#d9534f" points="1165,-951.45 1066,-951.45 1066,-927.45 1165,-927.45 1165,-951.45"/>
+<text text-anchor="middle" x="1115.5" y="-937.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">soa_check_alloc</text>
+</a>
+</g>
+</g>
+<!-- proc~soa_read_logical_field&#45;&gt;proc~soa_check_alloc -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge47" class="edge">
+<title>proc~soa_read_logical_field&#45;&gt;proc~soa_check_alloc</title>
+<path fill="none" stroke="#0000ff" d="M454.68,-328.54C475.38,-404.25 598.55,-814.88 872,-960.45 937.04,-995.08 1025.99,-972.79 1076.1,-955.06"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="1077.39,-958.31 1085.58,-951.59 1074.99,-951.74 1077.39,-958.31"/>
+</g>
+<!-- proc~soa_read_logical_field&#45;&gt;proc~soa_check_field_count -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge48" class="edge">
+<title>proc~soa_read_logical_field&#45;&gt;proc~soa_check_field_count</title>
+<path fill="none" stroke="#0000ff" d="M503.33,-304.3C508.25,-301.87 512.92,-298.95 517,-295.45 544.16,-272.17 526.67,-247.68 553,-223.45 556.82,-219.94 561.16,-216.88 565.76,-214.22"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="567.54,-217.24 574.84,-209.56 564.34,-211.01 567.54,-217.24"/>
+</g>
+<!-- proc~soa_read_real_dp_field&#45;&gt;proc~error_has_error -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge50" class="edge">
+<title>proc~soa_read_real_dp_field&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#aa00ff" d="M502.91,-220.36C507.98,-217.92 512.79,-214.98 517,-211.45 543.22,-189.5 523.8,-161.25 553,-143.45 631.7,-95.5 900.44,-115.11 1035.57,-128.64"/>
+<polygon fill="#aa00ff" stroke="#aa00ff" points="1035.56,-132.15 1045.86,-129.68 1036.26,-125.19 1035.56,-132.15"/>
+</g>
+<!-- proc~soa_read_real_dp_field&#45;&gt;interface~read_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge49" class="edge">
+<title>proc~soa_read_real_dp_field&#45;&gt;interface~read_array</title>
+<path fill="none" stroke="#aa00ff" d="M503.39,-244.53C508.31,-246.98 512.95,-249.92 517,-253.45 576.59,-305.53 603.88,-400.51 613.59,-443.4"/>
+<polygon fill="#aa00ff" stroke="#aa00ff" points="610.21,-444.32 615.74,-453.35 617.05,-442.84 610.21,-444.32"/>
+</g>
+<!-- proc~soa_read_real_dp_field&#45;&gt;proc~soa_check_field_count -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge51" class="edge">
+<title>proc~soa_read_real_dp_field&#45;&gt;proc~soa_check_field_count</title>
+<path fill="none" stroke="#aa00ff" d="M508.8,-220.41C522.35,-217.56 536.92,-214.5 550.86,-211.57"/>
+<polygon fill="#aa00ff" stroke="#aa00ff" points="551.81,-214.95 560.88,-209.46 550.37,-208.09 551.81,-214.95"/>
+</g>
+<!-- proc~soa_read_real_sp_field&#45;&gt;proc~error_has_error -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge53" class="edge">
+<title>proc~soa_read_real_sp_field&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#ff00aa" d="M503.42,-262.41C508.33,-259.96 512.97,-257.01 517,-253.45 545.36,-228.49 521.85,-197.83 553,-176.45 591.83,-149.81 890.5,-141.18 1035.72,-138.54"/>
+<polygon fill="#ff00aa" stroke="#ff00aa" points="1035.97,-142.04 1045.9,-138.36 1035.84,-135.04 1035.97,-142.04"/>
+</g>
+<!-- proc~soa_read_real_sp_field&#45;&gt;interface~read_array -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge52" class="edge">
+<title>proc~soa_read_real_sp_field&#45;&gt;interface~read_array</title>
+<path fill="none" stroke="#ff00aa" d="M502.41,-286.6C507.62,-289.04 512.61,-291.96 517,-295.45 567.11,-335.36 597.83,-407.4 610.8,-443.54"/>
+<polygon fill="#ff00aa" stroke="#ff00aa" points="607.54,-444.82 614.13,-453.12 614.16,-442.53 607.54,-444.82"/>
+</g>
+<!-- proc~soa_read_real_sp_field&#45;&gt;proc~soa_check_field_count -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge54" class="edge">
+<title>proc~soa_read_real_sp_field&#45;&gt;proc~soa_check_field_count</title>
+<path fill="none" stroke="#ff00aa" d="M496.85,-262.44C503.79,-259.89 510.72,-256.91 517,-253.45 535.25,-243.42 535.11,-234.12 553,-223.45 559.03,-219.86 565.65,-216.56 572.29,-213.61"/>
+<polygon fill="#ff00aa" stroke="#ff00aa" points="574.1,-216.65 581.96,-209.54 571.38,-210.2 574.1,-216.65"/>
+</g>
+<!-- proc~check_io&#45;&gt;interface~to_char -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge55" class="edge">
+<title>proc~check_io&#45;&gt;interface~to_char</title>
+<path fill="none" stroke="#ff4200" d="M1141.92,-707.46C1156.28,-715.36 1173.58,-726.92 1185,-741.45 1238.15,-809.11 1261.14,-912.18 1269.05,-957.16"/>
+<polygon fill="#ff4200" stroke="#ff4200" points="1265.64,-958 1270.74,-967.28 1272.55,-956.84 1265.64,-958"/>
+</g>
+<!-- proc~check_io&#45;&gt;proc~error_set -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge56" class="edge">
+<title>proc~check_io&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#ff4200" d="M1145.11,-695.45C1163.42,-695.45 1187.89,-695.45 1210.49,-695.45"/>
+<polygon fill="#ff4200" stroke="#ff4200" points="1210.72,-698.95 1220.72,-695.45 1210.72,-691.95 1210.72,-698.95"/>
+</g>
+<!-- proc~read_char_record&#45;&gt;proc~check_io -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge57" class="edge">
+<title>proc~read_char_record&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff8500" d="M798.39,-561.63C816.67,-573.04 845.44,-590 872,-601.45 930.99,-626.89 950.29,-620.74 1010,-644.45 1023.81,-649.94 1056.29,-665.98 1081.4,-678.62"/>
+<polygon fill="#ff8500" stroke="#ff8500" points="1080.1,-681.89 1090.61,-683.27 1083.26,-675.64 1080.1,-681.89"/>
+</g>
+<!-- proc~error_get_code -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node40" class="node">
+<title>proc~error_get_code</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node40"><a xlink:href="../proc/error_get_code.html" xlink:title="error_t%error_get_code">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1010,-677.45 872,-677.45 872,-653.45 1010,-653.45 1010,-677.45"/>
+<text text-anchor="middle" x="941" y="-663.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_get_code</text>
+</a>
+</g>
+</g>
+<!-- proc~read_char_record&#45;&gt;proc~error_get_code -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge58" class="edge">
+<title>proc~read_char_record&#45;&gt;proc~error_get_code</title>
+<path fill="none" stroke="#ff8500" d="M802.18,-561.5C813.14,-567.99 826.05,-576.67 836,-586.45 856.3,-606.42 849.67,-621.78 872,-639.45 876.63,-643.12 881.84,-646.32 887.27,-649.09"/>
+<polygon fill="#ff8500" stroke="#ff8500" points="885.98,-652.35 896.52,-653.37 888.91,-646 885.98,-652.35"/>
+</g>
+<!-- proc~error_wrap -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node41" class="node">
+<title>proc~error_wrap</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node41"><a xlink:href="../proc/error_wrap.html" xlink:title="error_t%error_wrap">
+<polygon fill="#d9534f" stroke="#d9534f" points="998.5,-517.45 883.5,-517.45 883.5,-493.45 998.5,-493.45 998.5,-517.45"/>
+<text text-anchor="middle" x="941" y="-503.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_wrap</text>
+</a>
+</g>
+</g>
+<!-- proc~read_char_record&#45;&gt;proc~error_wrap -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge59" class="edge">
+<title>proc~read_char_record&#45;&gt;proc~error_wrap</title>
+<path fill="none" stroke="#ff8500" d="M823.36,-537.43C842.82,-532.1 865.9,-525.77 886.38,-520.15"/>
+<polygon fill="#ff8500" stroke="#ff8500" points="887.48,-523.48 896.2,-517.46 885.63,-516.73 887.48,-523.48"/>
+</g>
+<!-- proc~read_record_header -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node42" class="node">
+<title>proc~read_record_header</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node42"><a xlink:href="../proc/read_record_header.html" xlink:title="read_record_header">
+<polygon fill="#d9534f" stroke="#d9534f" points="1001,-559.45 881,-559.45 881,-535.45 1001,-535.45 1001,-559.45"/>
+<text text-anchor="middle" x="941" y="-545.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_record_header</text>
+</a>
+</g>
+</g>
+<!-- proc~read_char_record&#45;&gt;proc~read_record_header -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge60" class="edge">
+<title>proc~read_char_record&#45;&gt;proc~read_record_header</title>
+<path fill="none" stroke="#ff8500" d="M831.61,-548.81C844.03,-548.65 857.49,-548.48 870.55,-548.32"/>
+<polygon fill="#ff8500" stroke="#ff8500" points="870.96,-551.82 880.92,-548.19 870.87,-544.82 870.96,-551.82"/>
+</g>
+<!-- proc~read_int32_array&#45;&gt;proc~bswap_int32 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge61" class="edge">
+<title>proc~read_int32_array&#45;&gt;proc~bswap_int32</title>
+<path fill="none" stroke="#ffc700" d="M803.46,-619.55C814.35,-625.89 826.81,-634.43 836,-644.45 858.84,-669.37 844.94,-691.2 872,-711.45 902.04,-733.94 1003.7,-749.46 1065.46,-757.07"/>
+<polygon fill="#ffc700" stroke="#ffc700" points="1065.41,-760.59 1075.75,-758.31 1066.24,-753.64 1065.41,-760.59"/>
+</g>
+<!-- proc~read_int32_array&#45;&gt;proc~check_io -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge62" class="edge">
+<title>proc~read_int32_array&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ffc700" d="M800.9,-619.49C811.92,-626.17 825.25,-635.01 836,-644.45 854.47,-660.68 849.86,-675.77 872,-686.45 937.89,-718.25 1025.97,-711.05 1075.82,-703.13"/>
+<polygon fill="#ffc700" stroke="#ffc700" points="1076.57,-706.55 1085.85,-701.44 1075.41,-699.65 1076.57,-706.55"/>
+</g>
+<!-- proc~read_int32_array&#45;&gt;proc~error_get_code -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge63" class="edge">
+<title>proc~read_int32_array&#45;&gt;proc~error_get_code</title>
+<path fill="none" stroke="#ffc700" d="M812.76,-619.47C837.29,-628.34 870.87,-640.47 897.37,-650.05"/>
+<polygon fill="#ffc700" stroke="#ffc700" points="896.19,-653.35 906.79,-653.45 898.57,-646.76 896.19,-653.35"/>
+</g>
+<!-- proc~read_int32_array&#45;&gt;proc~error_wrap -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge64" class="edge">
+<title>proc~read_int32_array&#45;&gt;proc~error_wrap</title>
+<path fill="none" stroke="#ffc700" d="M801.26,-595.35C812.25,-588.73 825.45,-579.94 836,-570.45 854.79,-553.56 851.04,-540.56 872,-526.45 874.53,-524.75 877.21,-523.18 879.98,-521.73"/>
+<polygon fill="#ffc700" stroke="#ffc700" points="881.48,-524.9 889.08,-517.52 878.53,-518.55 881.48,-524.9"/>
+</g>
+<!-- proc~read_int32_array&#45;&gt;proc~read_record_header -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge65" class="edge">
+<title>proc~read_int32_array&#45;&gt;proc~read_record_header</title>
+<path fill="none" stroke="#ffc700" d="M811.98,-595.31C836.86,-586.01 871.38,-573.11 898.3,-563.04"/>
+<polygon fill="#ffc700" stroke="#ffc700" points="899.7,-566.26 907.84,-559.48 897.25,-559.7 899.7,-566.26"/>
+</g>
+<!-- proc~read_int64_array&#45;&gt;proc~check_io -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge67" class="edge">
+<title>proc~read_int64_array&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#f3ff00" d="M819.31,-519.46C825.14,-522 830.89,-524.98 836,-528.45 855.78,-541.9 851.44,-556.23 872,-568.45 926.21,-600.68 959,-564.36 1010,-601.45 1034.84,-619.52 1023.47,-639.57 1046,-660.45 1054.86,-668.67 1066.02,-675.45 1076.74,-680.79"/>
+<polygon fill="#f3ff00" stroke="#f3ff00" points="1075.44,-684.04 1085.98,-685.1 1078.4,-677.7 1075.44,-684.04"/>
+</g>
+<!-- proc~bswap_int64 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node39" class="node">
+<title>proc~bswap_int64</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node39"><a xlink:href="../proc/bswap_int64.html" xlink:title="bswap_int64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1155,-439.45 1076,-439.45 1076,-415.45 1155,-415.45 1155,-439.45"/>
+<text text-anchor="middle" x="1115.5" y="-425.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bswap_int64</text>
+</a>
+</g>
+</g>
+<!-- proc~read_int64_array&#45;&gt;proc~bswap_int64 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge66" class="edge">
+<title>proc~read_int64_array&#45;&gt;proc~bswap_int64</title>
+<path fill="none" stroke="#f3ff00" d="M827.48,-495.4C841.79,-491.84 857.52,-487.96 872,-484.45 939.11,-468.23 1016.82,-450.07 1065.82,-438.7"/>
+<polygon fill="#f3ff00" stroke="#f3ff00" points="1066.87,-442.05 1075.82,-436.38 1065.29,-435.23 1066.87,-442.05"/>
+</g>
+<!-- proc~read_int64_array&#45;&gt;proc~error_get_code -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge68" class="edge">
+<title>proc~read_int64_array&#45;&gt;proc~error_get_code</title>
+<path fill="none" stroke="#f3ff00" d="M822.83,-519.55C827.59,-522.01 832.12,-524.95 836,-528.45 862.85,-552.69 850.49,-572.37 872,-601.45 884.65,-618.56 902.21,-634.95 916.31,-646.86"/>
+<polygon fill="#f3ff00" stroke="#f3ff00" points="914.21,-649.66 924.15,-653.32 918.66,-644.26 914.21,-649.66"/>
+</g>
+<!-- proc~read_int64_array&#45;&gt;proc~error_wrap -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge69" class="edge">
+<title>proc~read_int64_array&#45;&gt;proc~error_wrap</title>
+<path fill="none" stroke="#f3ff00" d="M830.28,-506.82C843.88,-506.65 858.79,-506.47 873.11,-506.29"/>
+<polygon fill="#f3ff00" stroke="#f3ff00" points="873.46,-509.78 883.41,-506.16 873.37,-502.78 873.46,-509.78"/>
+</g>
+<!-- proc~read_int64_array&#45;&gt;proc~read_record_header -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge70" class="edge">
+<title>proc~read_int64_array&#45;&gt;proc~read_record_header</title>
+<path fill="none" stroke="#f3ff00" d="M827.66,-519.46C844.56,-523.67 863.74,-528.45 881.4,-532.85"/>
+<polygon fill="#f3ff00" stroke="#f3ff00" points="881.05,-536.37 891.6,-535.39 882.74,-529.58 881.05,-536.37"/>
+</g>
+<!-- proc~read_real_dp_array&#45;&gt;proc~check_io -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge73" class="edge">
+<title>proc~read_real_dp_array&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#b1ff00" d="M836.32,-453.6C887.48,-446.41 961.81,-445.07 1010,-484.45 1054.43,-520.77 1019.77,-557.42 1046,-608.45 1059.07,-633.87 1080.06,-659.11 1095.36,-675.81"/>
+<polygon fill="#b1ff00" stroke="#b1ff00" points="1092.97,-678.37 1102.36,-683.28 1098.08,-673.59 1092.97,-678.37"/>
+</g>
+<!-- proc~bits_to_real_dp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node37" class="node">
+<title>proc~bits_to_real_dp</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node37"><a xlink:href="../proc/bits_to_real_dp.html" xlink:title="bits_to_real_dp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="986.5,-361.45 895.5,-361.45 895.5,-337.45 986.5,-337.45 986.5,-361.45"/>
+<text text-anchor="middle" x="941" y="-347.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bits_to_real_dp</text>
+</a>
+</g>
+</g>
+<!-- proc~read_real_dp_array&#45;&gt;proc~bits_to_real_dp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge71" class="edge">
+<title>proc~read_real_dp_array&#45;&gt;proc~bits_to_real_dp</title>
+<path fill="none" stroke="#b1ff00" d="M789.09,-453.37C804.67,-434.43 837.26,-397.65 872,-375.45 877.8,-371.75 884.2,-368.45 890.69,-365.54"/>
+<polygon fill="#b1ff00" stroke="#b1ff00" points="892.33,-368.65 900.21,-361.57 889.63,-362.19 892.33,-368.65"/>
+</g>
+<!-- proc~read_real_dp_array&#45;&gt;proc~bswap_int64 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge72" class="edge">
+<title>proc~read_real_dp_array&#45;&gt;proc~bswap_int64</title>
+<path fill="none" stroke="#b1ff00" d="M795.11,-453.33C812.67,-440.53 842.59,-421.15 872,-413.45 937.65,-396.27 1016.58,-406.22 1066.16,-415.98"/>
+<polygon fill="#b1ff00" stroke="#b1ff00" points="1065.47,-419.41 1075.97,-417.99 1066.87,-412.56 1065.47,-419.41"/>
+</g>
+<!-- proc~read_real_dp_array&#45;&gt;proc~error_get_code -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge74" class="edge">
+<title>proc~read_real_dp_array&#45;&gt;proc~error_get_code</title>
+<path fill="none" stroke="#b1ff00" d="M823.27,-477.54C827.9,-479.99 832.27,-482.94 836,-486.45 864.95,-513.77 852.48,-533.77 872,-568.45 887.74,-596.43 909.57,-626.35 924.21,-645.45"/>
+<polygon fill="#b1ff00" stroke="#b1ff00" points="921.49,-647.65 930.38,-653.41 927.02,-643.37 921.49,-647.65"/>
+</g>
+<!-- proc~read_real_dp_array&#45;&gt;proc~error_wrap -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge75" class="edge">
+<title>proc~read_real_dp_array&#45;&gt;proc~error_wrap</title>
+<path fill="none" stroke="#b1ff00" d="M827.66,-477.46C844.56,-481.67 863.74,-486.45 881.4,-490.85"/>
+<polygon fill="#b1ff00" stroke="#b1ff00" points="881.05,-494.37 891.6,-493.39 882.74,-487.58 881.05,-494.37"/>
+</g>
+<!-- proc~read_real_dp_array&#45;&gt;proc~read_record_header -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge76" class="edge">
+<title>proc~read_real_dp_array&#45;&gt;proc~read_record_header</title>
+<path fill="none" stroke="#b1ff00" d="M819.31,-477.46C825.14,-480 830.89,-482.98 836,-486.45 855.78,-499.9 851.85,-513.57 872,-526.45 874.76,-528.22 877.68,-529.84 880.69,-531.34"/>
+<polygon fill="#b1ff00" stroke="#b1ff00" points="879.38,-534.59 889.95,-535.44 882.22,-528.19 879.38,-534.59"/>
+</g>
+<!-- proc~read_real_sp_array&#45;&gt;proc~bswap_int32 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge78" class="edge">
+<title>proc~read_real_sp_array&#45;&gt;proc~bswap_int32</title>
+<path fill="none" stroke="#6eff00" d="M787.09,-677.62C800.96,-698.55 832.6,-740.72 872,-757.45 934.73,-784.1 1015.07,-779.05 1065.68,-771.73"/>
+<polygon fill="#6eff00" stroke="#6eff00" points="1066.35,-775.17 1075.7,-770.2 1065.29,-768.25 1066.35,-775.17"/>
+</g>
+<!-- proc~read_real_sp_array&#45;&gt;proc~check_io -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge79" class="edge">
+<title>proc~read_real_sp_array&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#6eff00" d="M781.53,-677.85C787.8,-711.6 810.32,-805.09 872,-842.45 924.46,-874.23 959.88,-877.8 1010,-842.45 1048.95,-814.99 1016.75,-779.08 1046,-741.45 1054.97,-729.92 1067.67,-720.27 1079.7,-712.84"/>
+<polygon fill="#6eff00" stroke="#6eff00" points="1081.82,-715.66 1088.69,-707.6 1078.29,-709.61 1081.82,-715.66"/>
+</g>
+<!-- proc~bits_to_real_sp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node38" class="node">
+<title>proc~bits_to_real_sp</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node38"><a xlink:href="../proc/bits_to_real_sp.html" xlink:title="bits_to_real_sp">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="986,-833.45 896,-833.45 896,-809.45 986,-809.45 986,-833.45"/>
+<text text-anchor="middle" x="941" y="-819.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bits_to_real_sp</text>
+</a>
+</g>
+</g>
+<!-- proc~read_real_sp_array&#45;&gt;proc~bits_to_real_sp -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge77" class="edge">
+<title>proc~read_real_sp_array&#45;&gt;proc~bits_to_real_sp</title>
+<path fill="none" stroke="#6eff00" d="M785.1,-677.66C797.33,-703.07 828.85,-762.05 872,-795.45 876.74,-799.12 882.05,-802.32 887.57,-805.11"/>
+<polygon fill="#6eff00" stroke="#6eff00" points="886.42,-808.43 896.97,-809.4 889.33,-802.06 886.42,-808.43"/>
+</g>
+<!-- proc~read_real_sp_array&#45;&gt;proc~error_get_code -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge80" class="edge">
+<title>proc~read_real_sp_array&#45;&gt;proc~error_get_code</title>
+<path fill="none" stroke="#6eff00" d="M835.18,-665.45C843.8,-665.45 852.84,-665.45 861.84,-665.45"/>
+<polygon fill="#6eff00" stroke="#6eff00" points="861.96,-668.95 871.96,-665.45 861.96,-661.95 861.96,-668.95"/>
+</g>
+<!-- proc~read_real_sp_array&#45;&gt;proc~error_wrap -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge81" class="edge">
+<title>proc~read_real_sp_array&#45;&gt;proc~error_wrap</title>
+<path fill="none" stroke="#6eff00" d="M805.33,-653.31C816.07,-647.16 827.9,-638.79 836,-628.45 865.67,-590.63 837.34,-559.77 872,-526.45 873.26,-525.25 874.58,-524.11 875.96,-523.04"/>
+<polygon fill="#6eff00" stroke="#6eff00" points="877.9,-525.95 884.4,-517.58 874.1,-520.07 877.9,-525.95"/>
+</g>
+<!-- proc~read_real_sp_array&#45;&gt;proc~read_record_header -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge82" class="edge">
+<title>proc~read_real_sp_array&#45;&gt;proc~read_record_header</title>
+<path fill="none" stroke="#6eff00" d="M798.85,-653.34C809.89,-646.29 823.89,-637.12 836,-628.45 864.63,-607.98 896.4,-582.87 917.2,-566.08"/>
+<polygon fill="#6eff00" stroke="#6eff00" points="919.57,-568.67 925.14,-559.65 915.16,-563.23 919.57,-568.67"/>
+</g>
+<!-- proc~soa_check_alloc&#45;&gt;interface~to_char -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge83" class="edge">
+<title>proc~soa_check_alloc&#45;&gt;interface~to_char</title>
+<path fill="none" stroke="#2cff00" d="M1163.31,-951.46C1186.7,-957.46 1214.59,-964.6 1236.32,-970.18"/>
+<polygon fill="#2cff00" stroke="#2cff00" points="1235.58,-973.6 1246.14,-972.7 1237.32,-966.82 1235.58,-973.6"/>
+</g>
+<!-- proc~soa_check_alloc&#45;&gt;proc~error_set -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge84" class="edge">
+<title>proc~soa_check_alloc&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#2cff00" d="M1164.14,-927.3C1171.78,-923.77 1179.1,-919.25 1185,-913.45 1241.5,-858.01 1262.63,-761.32 1269.54,-717.8"/>
+<polygon fill="#2cff00" stroke="#2cff00" points="1273.03,-718.11 1271.03,-707.71 1266.1,-717.09 1273.03,-718.11"/>
+</g>
+<!-- proc~soa_check_field_count&#45;&gt;interface~to_char -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge85" class="edge">
+<title>proc~soa_check_field_count&#45;&gt;interface~to_char</title>
+<path fill="none" stroke="#00ff16" d="M623.73,-209.68C634.53,-245.46 666.27,-353.24 685,-444.45 734.06,-683.4 669.42,-824.59 872,-960.45 985.74,-1036.74 1161.21,-1006.99 1236.34,-989.13"/>
+<polygon fill="#00ff16" stroke="#00ff16" points="1237.38,-992.48 1246.26,-986.7 1235.72,-985.68 1237.38,-992.48"/>
+</g>
+<!-- proc~soa_check_field_count&#45;&gt;proc~error_set -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge86" class="edge">
+<title>proc~soa_check_field_count&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#00ff16" d="M685.13,-187.66C802.03,-174.08 1048,-164.31 1185,-295.45 1240.44,-348.52 1264.6,-596.62 1270.81,-673.01"/>
+<polygon fill="#00ff16" stroke="#00ff16" points="1267.35,-673.67 1271.63,-683.37 1274.33,-673.12 1267.35,-673.67"/>
+</g>
+<!-- proc~error_wrap&#45;&gt;proc~error_has_error -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge88" class="edge">
+<title>proc~error_wrap&#45;&gt;proc~error_has_error</title>
+<path fill="none" stroke="#0000ff" d="M948.37,-493.26C960.64,-469.7 988.24,-416.19 1010,-370.45 1046.7,-293.32 1087.35,-200.31 1105.22,-159.02"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="1108.5,-160.24 1109.25,-149.67 1102.07,-157.46 1108.5,-160.24"/>
+</g>
+<!-- proc~clip_tail -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node43" class="node">
+<title>proc~clip_tail</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node43"><a xlink:href="../proc/clip_tail.html" xlink:title="clip_tail">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1142.5,-517.45 1088.5,-517.45 1088.5,-493.45 1142.5,-493.45 1142.5,-517.45"/>
+<text text-anchor="middle" x="1115.5" y="-503.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">clip_tail</text>
+</a>
+</g>
+</g>
+<!-- proc~error_wrap&#45;&gt;proc~clip_tail -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge87" class="edge">
+<title>proc~error_wrap&#45;&gt;proc~clip_tail</title>
+<path fill="none" stroke="#0000ff" d="M998.96,-505.45C1025.17,-505.45 1055.48,-505.45 1078.47,-505.45"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="1078.49,-508.95 1088.49,-505.45 1078.49,-501.95 1078.49,-508.95"/>
+</g>
+<!-- proc~read_record_header&#45;&gt;interface~to_char -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge89" class="edge">
+<title>proc~read_record_header&#45;&gt;interface~to_char</title>
+<path fill="none" stroke="#ff00ff" d="M1000.89,-559.55C1004.06,-561 1007.12,-562.63 1010,-564.45 1031.34,-577.98 1026.1,-592.88 1046,-608.45 1099.85,-650.61 1140.76,-622.3 1185,-674.45 1257.52,-759.96 1270.04,-902.28 1272.12,-957.04"/>
+<polygon fill="#ff00ff" stroke="#ff00ff" points="1268.63,-957.45 1272.42,-967.34 1275.63,-957.24 1268.63,-957.45"/>
+</g>
+<!-- proc~read_record_header&#45;&gt;proc~error_set -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge94" class="edge">
+<title>proc~read_record_header&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#ff00ff" d="M1001.17,-538.41C1053.16,-533.49 1129.02,-533.93 1185,-566.45 1226.65,-590.66 1252.69,-643.58 1264.68,-673.57"/>
+<polygon fill="#ff00ff" stroke="#ff00ff" points="1261.5,-675.05 1268.34,-683.14 1268.04,-672.55 1261.5,-675.05"/>
+</g>
+<!-- proc~read_record_header&#45;&gt;proc~bswap_int32 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge90" class="edge">
+<title>proc~read_record_header&#45;&gt;proc~bswap_int32</title>
+<path fill="none" stroke="#ff00ff" d="M951.41,-559.62C965.13,-577.62 991.05,-612.66 1010,-644.45 1028.32,-675.19 1022.37,-689.59 1046,-716.45 1055.97,-727.79 1069.35,-737.59 1081.63,-745.2"/>
+<polygon fill="#ff00ff" stroke="#ff00ff" points="1079.93,-748.26 1090.32,-750.34 1083.5,-742.24 1079.93,-748.26"/>
+</g>
+<!-- proc~read_record_header&#45;&gt;proc~check_io -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge92" class="edge">
+<title>proc~read_record_header&#45;&gt;proc~check_io</title>
+<path fill="none" stroke="#ff00ff" d="M988.89,-559.55C996.61,-563.09 1004.02,-567.64 1010,-573.45 1039.99,-602.64 1017.62,-629.71 1046,-660.45 1054.34,-669.49 1065.53,-676.55 1076.46,-681.89"/>
+<polygon fill="#ff00ff" stroke="#ff00ff" points="1075.35,-685.23 1085.9,-686.15 1078.22,-678.85 1075.35,-685.23"/>
+</g>
+<!-- proc~read_record_header&#45;&gt;proc~bswap_int64 -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge91" class="edge">
+<title>proc~read_record_header&#45;&gt;proc~bswap_int64</title>
+<path fill="none" stroke="#ff00ff" d="M992.49,-535.42C998.63,-532.94 1004.63,-529.98 1010,-526.45 1030.55,-512.96 1028.49,-501.71 1046,-484.45 1059.96,-470.7 1076.88,-456.59 1090.41,-445.86"/>
+<polygon fill="#ff00ff" stroke="#ff00ff" points="1092.63,-448.57 1098.34,-439.64 1088.31,-443.06 1092.63,-448.57"/>
+</g>
+<!-- proc~element_bytes -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_node44" class="node">
+<title>proc~element_bytes</title>
+<g id="a_proc~~particle_soa_deserialize~~CallsGraph_node44"><a xlink:href="../proc/element_bytes.html" xlink:title="element_bytes">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1161,-599.45 1070,-599.45 1070,-575.45 1161,-575.45 1161,-599.45"/>
+<text text-anchor="middle" x="1115.5" y="-585.05" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">element_bytes</text>
+</a>
+</g>
+</g>
+<!-- proc~read_record_header&#45;&gt;proc~element_bytes -->
+<g id="proc~~particle_soa_deserialize~~CallsGraph_edge93" class="edge">
+<title>proc~read_record_header&#45;&gt;proc~element_bytes</title>
+<path fill="none" stroke="#ff00ff" d="M993.76,-559.46C1014.66,-564.3 1038.8,-569.9 1059.98,-574.81"/>
+<polygon fill="#ff00ff" stroke="#ff00ff" points="1059.26,-578.24 1069.79,-577.09 1060.84,-571.42 1059.26,-578.24"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocparticle_soa_deserializeCallsGraph = svgPanZoom('#procparticle_soa_deserializeCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    <section>    
+      <h2>Variables</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~32"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-swapped"></span>
+              logical,
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>swapped</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">particle_soa_deserialize</span><span class="p">(</span><span class="n">this</span><span class="p">,</span><span class="w"> </span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="c">!! Read a container back from an open stream unit.</span>
+<span class="w">      </span><span class="c">!!</span>
+<span class="w">      </span><span class="c">!! Validates the envelope and the schema string before touching any</span>
+<span class="w">      </span><span class="c">!! payload, so a stream written from a different field list is rejected</span>
+<span class="w">      </span><span class="c">!! with `ERROR_VALIDATION` rather than decoded as garbage. Every field</span>
+<span class="w">      </span><span class="c">!! record must hold exactly the element count the prologue announced.</span>
+<span class="w">      </span><span class="c">!!</span>
+<span class="w">      </span><span class="c">!! On success the container holds exactly the elements from the stream</span>
+<span class="w">      </span><span class="c">!! and its capacity equals its size. On failure it is left deallocated</span>
+<span class="w">      </span><span class="c">!! rather than half filled.</span>
+<span class="w">      </span><span class="k">class</span><span class="p">(</span><span class="n">particle_soa_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">this</span>
+<span class="w">         </span><span class="c">!! Container to fill. Any previous contents are discarded.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">unit</span>
+<span class="w">         </span><span class="c">!! Stream unit opened for unformatted stream reading.</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">error_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">err</span>
+<span class="w">         </span><span class="c">!! Error state, `ERROR_VALIDATION` on a layout or length mismatch and</span>
+<span class="w">         </span><span class="c">!! `ERROR_IO` on a truncated stream.</span>
+
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span>
+<span class="w">      </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">swapped</span>
+
+<span class="w">      </span><span class="k">call </span><span class="n">this</span><span class="p">%</span><span class="k">deallocate</span><span class="p">()</span>
+
+<span class="w">      </span><span class="k">call </span><span class="n">soa_read_prologue</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">PARTICLE_SOA_SCHEMA</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">swapped</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="p">%</span><span class="n">has_error</span><span class="p">())</span><span class="w"> </span><span class="k">return</span>
+
+<span class="k">      call </span><span class="n">soa_read_field</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="s2">"id"</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">swapped</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="p">%</span><span class="n">has_error</span><span class="p">())</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">this</span><span class="p">%</span><span class="k">deallocate</span><span class="p">()</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      call </span><span class="n">soa_read_field</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="s2">"x"</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">swapped</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="p">%</span><span class="n">has_error</span><span class="p">())</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">this</span><span class="p">%</span><span class="k">deallocate</span><span class="p">()</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      call </span><span class="n">soa_read_field</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="s2">"y"</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">swapped</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="p">%</span><span class="n">has_error</span><span class="p">())</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">this</span><span class="p">%</span><span class="k">deallocate</span><span class="p">()</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      call </span><span class="n">soa_read_field</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="s2">"z"</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">swapped</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="p">%</span><span class="n">has_error</span><span class="p">())</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">this</span><span class="p">%</span><span class="k">deallocate</span><span class="p">()</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      call </span><span class="n">soa_read_field</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="s2">"mass"</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">mass</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">swapped</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="p">%</span><span class="n">has_error</span><span class="p">())</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">this</span><span class="p">%</span><span class="k">deallocate</span><span class="p">()</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      call </span><span class="n">soa_read_field</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">%</span><span class="n">active</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">swapped</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="p">%</span><span class="n">has_error</span><span class="p">())</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">this</span><span class="p">%</span><span class="k">deallocate</span><span class="p">()</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+
+<span class="k">      </span><span class="n">this</span><span class="p">%</span><span class="n">extent</span><span class="p">%</span><span class="n">used</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span>
+<span class="w">      </span><span class="n">this</span><span class="p">%</span><span class="n">extent</span><span class="p">%</span><span class="n">capacity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span>
+<span class="w">   </span><span class="k">end subroutine </span><span class="n">particle_soa_deserialize</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

@@ -89,7 +89,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 1.5% of total for modules and submodules.">187 statements</a>
+                 title=" 1.5% of total for modules and submodules.">261 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -131,15 +131,19 @@
       <div id="vars-0" class="collapse">
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../module/pic_error.html#variable-error_alloc">ERROR_ALLOC</a>
+            <a class="list-group-item" href="../module/pic_error.html#variable-error_bounds">ERROR_BOUNDS</a>
             <a class="list-group-item" href="../module/pic_error.html#variable-error_generic">ERROR_GENERIC</a>
+            <a class="list-group-item" href="../module/pic_error.html#variable-error_internal">ERROR_INTERNAL</a>
             <a class="list-group-item" href="../module/pic_error.html#variable-error_io">ERROR_IO</a>
             <a class="list-group-item" href="../module/pic_error.html#variable-error_parse">ERROR_PARSE</a>
             <a class="list-group-item" href="../module/pic_error.html#variable-error_validation">ERROR_VALIDATION</a>
+            <a class="list-group-item" href="../module/pic_error.html#variable-pic_error_code_max">PIC_ERROR_CODE_MAX</a>
             <a class="list-group-item" href="../module/pic_error.html#variable-success">SUCCESS</a>
             <a class="list-group-item" href="../module/pic_error.html#variable-max_cause_depth">MAX_CAUSE_DEPTH</a>
             <a class="list-group-item" href="../module/pic_error.html#variable-max_cause_msg_len">MAX_CAUSE_MSG_LEN</a>
             <a class="list-group-item" href="../module/pic_error.html#variable-max_location_len">MAX_LOCATION_LEN</a>
             <a class="list-group-item" href="../module/pic_error.html#variable-max_stack_depth">MAX_STACK_DEPTH</a>
+            <a class="list-group-item" href="../module/pic_error.html#variable-truncation_marker">TRUNCATION_MARKER</a>
         </div>
       </div>
     </div>
@@ -183,11 +187,15 @@
       <div id="funcs-0" class="collapse">
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../module/pic_error.html#proc-code_to_string">code_to_string</a>
+            <a class="list-group-item" href="../module/pic_error.html#proc-is_pic_error_code">is_pic_error_code</a>
+            <a class="list-group-item" href="../module/pic_error.html#proc-clip_head">clip_head</a>
+            <a class="list-group-item" href="../module/pic_error.html#proc-clip_tail">clip_tail</a>
             <a class="list-group-item" href="../module/pic_error.html#proc-error_get_code">error_get_code</a>
             <a class="list-group-item" href="../module/pic_error.html#proc-error_get_full_trace">error_get_full_trace</a>
             <a class="list-group-item" href="../module/pic_error.html#proc-error_get_message">error_get_message</a>
             <a class="list-group-item" href="../module/pic_error.html#proc-error_has_error">error_has_error</a>
             <a class="list-group-item" href="../module/pic_error.html#proc-error_is">error_is</a>
+            <a class="list-group-item" href="../module/pic_error.html#proc-omitted_note">omitted_note</a>
         </div>
       </div>
     </div>
@@ -199,6 +207,7 @@
       </a>
       <div id="subs-0" class="collapse">
         <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_error.html#proc-error_raise">error_raise</a>
             <a class="list-group-item" href="../module/pic_error.html#proc-error_add_context">error_add_context</a>
             <a class="list-group-item" href="../module/pic_error.html#proc-error_clear">error_clear</a>
             <a class="list-group-item" href="../module/pic_error.html#proc-error_fatal">error_fatal</a>
@@ -236,7 +245,42 @@ to propagate errors with context through call chains.</p>
   if (err%has_error()) then
      call err%wrap(ERROR_PARSE, &ldquo;failed to parse input&rdquo;)
      return
-  end if
+  end if</p>
+<h2 id="purity">Purity</h2>
+<p>Every mutator (<code>set</code>, <code>clear</code>, <code>wrap</code>, <code>add_context</code>) and the
+<code>error_raise</code> helper are <code>pure</code>, so they can be used from the <code>pure</code>
+and <code>pure recursive</code> procedures that make up most of PIC&rsquo;s sorting and
+array code. The reporting procedures (<code>get_full_trace</code>, <code>print_trace</code>,
+<code>fatal</code>) perform I/O and are therefore necessarily impure: calling
+<code>err%fatal()</code> from a <code>pure</code> procedure is a compile error by design.
+A <code>pure</code> procedure must return the error to its caller and let an
+impure caller report it.</p>
+<h2 id="thread-safety">Thread safety</h2>
+<p><code>error_t</code> carries no locking of any kind. PIC has threaded code paths
+(<code>pic_array</code> exposes <code>set_threading_mode</code>, and sorting can be threaded),
+so the rule is:</p>
+<ul>
+<li>give every thread its own <code>error_t</code> (a thread-private local, or one
+    element of a per-thread array), then reduce/inspect them after the
+    parallel region, or</li>
+<li>write to a single shared <code>error_t</code> only from inside a <code>critical</code>
+    region (or an equivalent lock).</li>
+</ul>
+<p>Two threads calling <code>set</code>, <code>wrap</code>, <code>add_context</code> or <code>clear</code> on the same
+<code>error_t</code> is a data race: <code>message</code> is an allocatable component, so
+concurrent writes can corrupt the heap, not merely lose a message.
+Reading a shared <code>error_t</code> (<code>has_error</code>, <code>is</code>, <code>get_code</code>) while another
+thread writes it is equally a race.</p>
+<h2 id="error-code-ranges">Error code ranges</h2>
+<p>PIC reserves codes <code>0 .. PIC_ERROR_CODE_MAX</code> (0-99) for itself and will
+only ever add new library codes inside that range. Downstream code that
+wants its own codes must take them at or above <code>PIC_ERROR_CODE_MAX + 1</code>
+(i.e. 100 and up); <code>is_pic_error_code</code> checks a candidate value.
+Because <code>code_to_string</code> cannot know a downstream name, pass it:</p>
+<p>integer(default_int), parameter :: MYLIB_ERROR_SOCKET = 100
+  print *, code_to_string(err%get_code(), &ldquo;MYLIB_ERROR_SOCKET&rdquo;)</p>
+<p>The <code>user_name</code> argument is only consulted for codes PIC does not know,
+so it is safe to pass unconditionally.
 Error codes
 Stack trace configuration</p>
 <br>          <div class="card mb-4">
@@ -245,8 +289,8 @@ Stack trace configuration</p>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='pic_global_definitions.html'>pic_global_definitions</a></li>
                   <li class="list-inline-item"><a href='pic_types.html'>pic_types</a></li>
+                  <li class="list-inline-item"><a href='pic_global_definitions.html'>pic_global_definitions</a></li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -412,7 +456,404 @@ large graphs.</div>
       </div>
     </div>
 
-      
+          <div class="card">
+      <h3 class="card-header card-title bg-light">Used by</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~pic_error~~UsedByGraph Pages: 1 -->
+<svg id="modulepic_errorUsedByGraph" width="498pt" height="608pt"
+ viewBox="0.00 0.00 498.00 608.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_error~~UsedByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 604)">
+<title>module~~pic_error~~UsedByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-604 494,-604 494,4 -4,4"/>
+<!-- module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_node1" class="node">
+<title>module~pic_error</title>
+<polygon fill="none" stroke="black" points="60,-352 0,-352 0,-328 60,-328 60,-352"/>
+<text text-anchor="middle" x="30" y="-337.6" font-family="Helvetica,sans-Serif" font-size="10.50">pic_error</text>
+</g>
+<!-- module~pic_array -->
+<g id="module~~pic_error~~UsedByGraph_node2" class="node">
+<title>module~pic_array</title>
+<g id="a_module~~pic_error~~UsedByGraph_node2"><a xlink:href="../module/pic_array.html" xlink:title="pic_array">
+<polygon fill="#337ab7" stroke="#337ab7" points="174,-600 112,-600 112,-576 174,-576 174,-600"/>
+<text text-anchor="middle" x="143" y="-585.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_array</text>
+</a>
+</g>
+</g>
+<!-- module~pic_array&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge1" class="edge">
+<title>module~pic_array&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M111.73,-578.72C105.87,-575.76 100.24,-571.92 96,-567 43.97,-506.55 33.48,-406.87 31.44,-362.5"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="34.93,-362.11 31.08,-352.24 27.94,-362.35 34.93,-362.11"/>
+</g>
+<!-- module~pic_csr -->
+<g id="module~~pic_error~~UsedByGraph_node3" class="node">
+<title>module~pic_csr</title>
+<g id="a_module~~pic_error~~UsedByGraph_node3"><a xlink:href="../module/pic_csr.html" xlink:title="pic_csr">
+<polygon fill="#337ab7" stroke="#337ab7" points="170,-558 116,-558 116,-534 170,-534 170,-558"/>
+<text text-anchor="middle" x="143" y="-543.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_csr</text>
+</a>
+</g>
+</g>
+<!-- module~pic_csr&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge2" class="edge">
+<title>module~pic_csr&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M115.78,-538.32C108.6,-535.16 101.33,-530.83 96,-525 52.74,-477.65 37.95,-399.79 33.15,-361.98"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="36.63,-361.55 32.01,-352.02 29.67,-362.35 36.63,-361.55"/>
+</g>
+<!-- module~pic_fixed_array -->
+<g id="module~~pic_error~~UsedByGraph_node4" class="node">
+<title>module~pic_fixed_array</title>
+<g id="a_module~~pic_error~~UsedByGraph_node4"><a xlink:href="../module/pic_fixed_array.html" xlink:title="pic_fixed_array">
+<polygon fill="#337ab7" stroke="#337ab7" points="190,-516 96,-516 96,-492 190,-492 190,-516"/>
+<text text-anchor="middle" x="143" y="-501.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_fixed_array</text>
+</a>
+</g>
+</g>
+<!-- module~pic_fixed_array&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge3" class="edge">
+<title>module~pic_fixed_array&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M114.23,-491.93C107.68,-488.16 101.12,-483.51 96,-478 64.23,-443.77 45.38,-391.22 36.73,-361.83"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="40.08,-360.8 34,-352.12 33.34,-362.7 40.08,-360.8"/>
+</g>
+<!-- module~pic_graph -->
+<g id="module~~pic_error~~UsedByGraph_node5" class="node">
+<title>module~pic_graph</title>
+<g id="a_module~~pic_error~~UsedByGraph_node5"><a xlink:href="../module/pic_graph.html" xlink:title="pic_graph">
+<polygon fill="#337ab7" stroke="#337ab7" points="323.5,-476 258.5,-476 258.5,-452 323.5,-452 323.5,-476"/>
+<text text-anchor="middle" x="291" y="-461.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_graph</text>
+</a>
+</g>
+</g>
+<!-- module~pic_graph&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge4" class="edge">
+<title>module~pic_graph&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M258.42,-468.98C217.64,-473.72 145.98,-476.13 96,-445 65.43,-425.96 46.99,-386.69 37.92,-361.94"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="41.18,-360.64 34.6,-352.33 34.56,-362.92 41.18,-360.64"/>
+</g>
+<!-- module~pic_graph&#45;&gt;module~pic_csr -->
+<g id="module~~pic_error~~UsedByGraph_edge16" class="edge">
+<title>module~pic_graph&#45;&gt;module~pic_csr</title>
+<path fill="none" stroke="#ff6600" stroke-dasharray="5,2" d="M271.59,-476.15C251.81,-488.98 219.28,-509.46 190,-525 186.52,-526.85 182.85,-528.69 179.16,-530.47"/>
+<polygon fill="#ff6600" stroke="#ff6600" points="177.61,-527.34 170.05,-534.76 180.59,-533.67 177.61,-527.34"/>
+</g>
+<!-- module~pic_heap -->
+<g id="module~~pic_error~~UsedByGraph_node7" class="node">
+<title>module~pic_heap</title>
+<g id="a_module~~pic_error~~UsedByGraph_node7"><a xlink:href="../module/pic_heap.html" xlink:title="pic_heap">
+<polygon fill="#337ab7" stroke="#337ab7" points="173.5,-394 112.5,-394 112.5,-370 173.5,-370 173.5,-394"/>
+<text text-anchor="middle" x="143" y="-379.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_heap</text>
+</a>
+</g>
+</g>
+<!-- module~pic_graph&#45;&gt;module~pic_heap -->
+<g id="module~~pic_error~~UsedByGraph_edge17" class="edge">
+<title>module~pic_graph&#45;&gt;module~pic_heap</title>
+<path fill="none" stroke="#00ff00" stroke-dasharray="5,2" d="M271.59,-451.85C251.81,-439.02 219.28,-418.54 190,-403 187.13,-401.48 184.13,-399.96 181.1,-398.47"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="182.52,-395.27 171.99,-394.13 179.51,-401.59 182.52,-395.27"/>
+</g>
+<!-- module~pic_hash_map -->
+<g id="module~~pic_error~~UsedByGraph_node6" class="node">
+<title>module~pic_hash_map</title>
+<g id="a_module~~pic_error~~UsedByGraph_node6"><a xlink:href="../module/pic_hash_map.html" xlink:title="pic_hash_map">
+<polygon fill="#337ab7" stroke="#337ab7" points="187,-436 99,-436 99,-412 187,-412 187,-436"/>
+<text text-anchor="middle" x="143" y="-421.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_hash_map</text>
+</a>
+</g>
+</g>
+<!-- module~pic_hash_map&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge5" class="edge">
+<title>module~pic_hash_map&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M111.5,-411.87C106.16,-409.25 100.79,-406.27 96,-403 78.05,-390.75 60.52,-373.35 48.2,-359.94"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="50.53,-357.29 41.25,-352.18 45.32,-361.96 50.53,-357.29"/>
+</g>
+<!-- module~pic_heap&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge6" class="edge">
+<title>module~pic_heap&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M112.25,-370.74C99.11,-365.77 83.48,-359.86 69.46,-354.55"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="70.65,-351.26 60.06,-351 68.17,-357.81 70.65,-351.26"/>
+</g>
+<!-- module~pic_rng -->
+<g id="module~~pic_error~~UsedByGraph_node8" class="node">
+<title>module~pic_rng</title>
+<g id="a_module~~pic_error~~UsedByGraph_node8"><a xlink:href="../module/pic_rng.html" xlink:title="pic_rng">
+<polygon fill="#337ab7" stroke="#337ab7" points="170,-352 116,-352 116,-328 170,-328 170,-352"/>
+<text text-anchor="middle" x="143" y="-337.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_rng</text>
+</a>
+</g>
+</g>
+<!-- module~pic_rng&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge7" class="edge">
+<title>module~pic_rng&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M115.98,-340C102.44,-340 85.61,-340 70.5,-340"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="70.38,-336.5 60.38,-340 70.38,-343.5 70.38,-336.5"/>
+</g>
+<!-- module~pic_serialize -->
+<g id="module~~pic_error~~UsedByGraph_node9" class="node">
+<title>module~pic_serialize</title>
+<g id="a_module~~pic_error~~UsedByGraph_node9"><a xlink:href="../module/pic_serialize.html" xlink:title="pic_serialize">
+<polygon fill="#337ab7" stroke="#337ab7" points="182,-272 104,-272 104,-248 182,-248 182,-272"/>
+<text text-anchor="middle" x="143" y="-257.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_serialize</text>
+</a>
+</g>
+</g>
+<!-- module~pic_serialize&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge8" class="edge">
+<title>module~pic_serialize&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M118.58,-272.18C111.19,-276.3 103.1,-281.1 96,-286 80.55,-296.66 64.3,-310.16 51.92,-320.99"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="49.54,-318.41 44.38,-327.67 54.19,-323.65 49.54,-318.41"/>
+</g>
+<!-- module~pic_soa -->
+<g id="module~~pic_error~~UsedByGraph_node10" class="node">
+<title>module~pic_soa</title>
+<g id="a_module~~pic_error~~UsedByGraph_node10"><a xlink:href="../module/pic_soa.html" xlink:title="pic_soa">
+<polygon fill="#337ab7" stroke="#337ab7" points="318,-272 264,-272 264,-248 318,-248 318,-272"/>
+<text text-anchor="middle" x="291" y="-257.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_soa</text>
+</a>
+</g>
+</g>
+<!-- module~pic_soa&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge9" class="edge">
+<title>module~pic_soa&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M263.91,-267.78C226.62,-278.93 155.96,-300.2 96,-319 87.45,-321.68 78.28,-324.61 69.61,-327.4"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="68.53,-324.08 60.09,-330.48 70.68,-330.74 68.53,-324.08"/>
+</g>
+<!-- module~pic_soa&#45;&gt;module~pic_serialize -->
+<g id="module~~pic_error~~UsedByGraph_edge18" class="edge">
+<title>module~pic_soa&#45;&gt;module~pic_serialize</title>
+<path fill="none" stroke="#00ffcb" stroke-dasharray="5,2" d="M263.9,-260C244.11,-260 216.34,-260 192.51,-260"/>
+<polygon fill="#00ffcb" stroke="#00ffcb" points="192.23,-256.5 182.23,-260 192.23,-263.5 192.23,-256.5"/>
+</g>
+<!-- module~pic_soa_particle -->
+<g id="module~~pic_error~~UsedByGraph_node11" class="node">
+<title>module~pic_soa_particle</title>
+<g id="a_module~~pic_error~~UsedByGraph_node11"><a xlink:href="../module/pic_soa_particle.html" xlink:title="pic_soa_particle">
+<polygon fill="#337ab7" stroke="#337ab7" points="490,-252 392,-252 392,-228 490,-228 490,-252"/>
+<text text-anchor="middle" x="441" y="-237.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_soa_particle</text>
+</a>
+</g>
+</g>
+<!-- module~pic_soa_particle&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge10" class="edge">
+<title>module~pic_soa_particle&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M391.74,-230.79C319.16,-217.93 185.91,-198.45 144,-220"/>
+</g>
+<!-- module~pic_soa_particle&#45;&gt;module~pic_soa -->
+<g id="module~~pic_error~~UsedByGraph_edge19" class="edge">
+<title>module~pic_soa_particle&#45;&gt;module~pic_soa</title>
+<path fill="none" stroke="#00cbff" stroke-dasharray="5,2" d="M391.95,-246.49C371.3,-249.28 347.56,-252.49 328.4,-255.08"/>
+<polygon fill="#00cbff" stroke="#00cbff" points="327.71,-251.64 318.27,-256.45 328.65,-258.58 327.71,-251.64"/>
+</g>
+<!-- module~pic_sorting -->
+<g id="module~~pic_error~~UsedByGraph_node12" class="node">
+<title>module~pic_sorting</title>
+<g id="a_module~~pic_error~~UsedByGraph_node12"><a xlink:href="../module/pic_sorting.html" xlink:title="pic_sorting">
+<polygon fill="#337ab7" stroke="#337ab7" points="178,-129 108,-129 108,-105 178,-105 178,-129"/>
+<text text-anchor="middle" x="143" y="-114.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_sorting</text>
+</a>
+</g>
+</g>
+<!-- module~pic_sorting&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge11" class="edge">
+<title>module~pic_sorting&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M135.65,-129.04C126.69,-146.1 109.86,-178.32 96,-206 76.18,-245.56 53.81,-292.12 41.16,-318.63"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="37.95,-317.22 36.81,-327.75 44.27,-320.23 37.95,-317.22"/>
+</g>
+<!-- module~pic_sorting_ord_sort -->
+<g id="module~~pic_error~~UsedByGraph_node13" class="node">
+<title>module~pic_sorting_ord_sort</title>
+<g id="a_module~~pic_error~~UsedByGraph_node13"><a xlink:href="../module/pic_sorting_ord_sort.html" xlink:title="pic_sorting_ord_sort">
+<polygon fill="#5bc0de" stroke="#5bc0de" points="350.5,-192 231.5,-192 231.5,-168 350.5,-168 350.5,-192"/>
+<text text-anchor="middle" x="291" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_sorting_ord_sort</text>
+</a>
+</g>
+</g>
+<!-- module~pic_sorting_ord_sort&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge12" class="edge">
+<title>module~pic_sorting_ord_sort&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M231.45,-190.22C203.91,-196.46 171.23,-206 144,-220"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M142,-220C122.33,-230.11 112.98,-224.83 96,-239 69.9,-260.78 50.68,-295.78 40.16,-318.33"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="36.85,-317.17 35.95,-327.72 43.24,-320.03 36.85,-317.17"/>
+</g>
+<!-- module~pic_sorting_ord_sort&#45;&gt;module~pic_sorting -->
+<g id="module~~pic_error~~UsedByGraph_edge21" class="edge">
+<title>module~pic_sorting_ord_sort&#45;&gt;module~pic_sorting</title>
+<path fill="none" stroke="#0000ff" d="M250.04,-167.96C242,-165.24 233.66,-162.2 226,-159 208.52,-151.71 189.66,-142.17 174.45,-134.03"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="175.95,-130.87 165.49,-129.18 172.61,-137.02 175.95,-130.87"/>
+</g>
+<!-- module~pic_sorting_radix_sort -->
+<g id="module~~pic_error~~UsedByGraph_node14" class="node">
+<title>module~pic_sorting_radix_sort</title>
+<g id="a_module~~pic_error~~UsedByGraph_node14"><a xlink:href="../module/pic_sorting_radix_sort.html" xlink:title="pic_sorting_radix_sort">
+<polygon fill="#5bc0de" stroke="#5bc0de" points="355,-66 227,-66 227,-42 355,-42 355,-66"/>
+<text text-anchor="middle" x="291" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_sorting_radix_sort</text>
+</a>
+</g>
+</g>
+<!-- module~pic_sorting_radix_sort&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge13" class="edge">
+<title>module~pic_sorting_radix_sort&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M251.31,-41.96C219.15,-34.53 173.95,-30.38 144,-54"/>
+</g>
+<!-- module~pic_sorting_radix_sort&#45;&gt;module~pic_sorting -->
+<g id="module~~pic_error~~UsedByGraph_edge22" class="edge">
+<title>module~pic_sorting_radix_sort&#45;&gt;module~pic_sorting</title>
+<path fill="none" stroke="#0000ff" d="M250.04,-66.04C242,-68.76 233.66,-71.8 226,-75 208.52,-82.29 189.66,-91.83 174.45,-99.97"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="172.61,-96.98 165.49,-104.82 175.95,-103.13 172.61,-96.98"/>
+</g>
+<!-- module~pic_sorting_sort_index -->
+<g id="module~~pic_error~~UsedByGraph_node15" class="node">
+<title>module~pic_sorting_sort_index</title>
+<g id="a_module~~pic_error~~UsedByGraph_node15"><a xlink:href="../module/pic_sorting_sort_index.html" xlink:title="pic_sorting_sort_index">
+<polygon fill="#5bc0de" stroke="#5bc0de" points="356,-24 226,-24 226,0 356,0 356,-24"/>
+<text text-anchor="middle" x="291" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_sorting_sort_index</text>
+</a>
+</g>
+</g>
+<!-- module~pic_sorting_sort_index&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge14" class="edge">
+<title>module~pic_sorting_sort_index&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M241.19,-24.09C201.87,-34.15 151.87,-47.79 144,-54"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M142,-54C120.26,-71.14 110.37,-72.33 96,-96 51.54,-169.24 37.08,-272.86 32.73,-317.79"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="29.23,-317.62 31.83,-327.89 36.2,-318.24 29.23,-317.62"/>
+</g>
+<!-- module~pic_sorting_sort_index&#45;&gt;module~pic_sorting -->
+<g id="module~~pic_error~~UsedByGraph_edge24" class="edge">
+<title>module~pic_sorting_sort_index&#45;&gt;module~pic_sorting</title>
+<path fill="none" stroke="#0000ff" d="M244.02,-24.08C237.75,-26.58 231.56,-29.54 226,-33 218.54,-37.65 183.9,-74.17 162.1,-97.5"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="159.51,-95.14 155.26,-104.85 164.63,-99.92 159.51,-95.14"/>
+</g>
+<!-- module~pic_tokenizer -->
+<g id="module~~pic_error~~UsedByGraph_node16" class="node">
+<title>module~pic_tokenizer</title>
+<g id="a_module~~pic_error~~UsedByGraph_node16"><a xlink:href="../module/pic_tokenizer.html" xlink:title="pic_tokenizer">
+<polygon fill="#337ab7" stroke="#337ab7" points="184.5,-26 101.5,-26 101.5,-2 184.5,-2 184.5,-26"/>
+<text text-anchor="middle" x="143" y="-11.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_tokenizer</text>
+</a>
+</g>
+</g>
+<!-- module~pic_tokenizer&#45;&gt;module~pic_error -->
+<g id="module~~pic_error~~UsedByGraph_edge15" class="edge">
+<title>module~pic_tokenizer&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M111.89,-26.16C105.87,-29.81 100.13,-34.39 96,-40 63.05,-84.74 40.65,-255.64 33.48,-317.49"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="29.97,-317.38 32.32,-327.71 36.92,-318.17 29.97,-317.38"/>
+</g>
+<!-- module~pic_profiler -->
+<g id="module~~pic_error~~UsedByGraph_node17" class="node">
+<title>module~pic_profiler</title>
+<g id="a_module~~pic_error~~UsedByGraph_node17"><a xlink:href="../module/pic_profiler.html" xlink:title="pic_profiler">
+<polygon fill="#337ab7" stroke="#337ab7" points="327,-150 255,-150 255,-126 327,-126 327,-150"/>
+<text text-anchor="middle" x="291" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_profiler</text>
+</a>
+</g>
+</g>
+<!-- module~pic_profiler&#45;&gt;module~pic_sorting -->
+<g id="module~~pic_error~~UsedByGraph_edge20" class="edge">
+<title>module~pic_profiler&#45;&gt;module~pic_sorting</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M254.66,-132.92C234.64,-130.04 209.42,-126.41 188.12,-123.35"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="188.41,-119.85 178.01,-121.89 187.41,-126.78 188.41,-119.85"/>
+</g>
+<!-- module~pic_sorting_sort -->
+<g id="module~~pic_error~~UsedByGraph_node18" class="node">
+<title>module~pic_sorting_sort</title>
+<g id="a_module~~pic_error~~UsedByGraph_node18"><a xlink:href="../module/pic_sorting_sort.html" xlink:title="pic_sorting_sort">
+<polygon fill="#5bc0de" stroke="#5bc0de" points="339,-108 243,-108 243,-84 339,-84 339,-108"/>
+<text text-anchor="middle" x="291" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_sorting_sort</text>
+</a>
+</g>
+</g>
+<!-- module~pic_sorting_sort&#45;&gt;module~pic_sorting -->
+<g id="module~~pic_error~~UsedByGraph_edge23" class="edge">
+<title>module~pic_sorting_sort&#45;&gt;module~pic_sorting</title>
+<path fill="none" stroke="#0000ff" d="M242.6,-102.82C225.22,-105.32 205.63,-108.14 188.52,-110.6"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="187.62,-107.19 178.22,-112.08 188.62,-114.12 187.62,-107.19"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsedByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsedByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
       <br>
 
 
@@ -447,6 +888,23 @@ parameter
         </tr>
         <tr>
             <td>
+              <span class="anchor" id="variable-error_bounds"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>ERROR_BOUNDS</strong></td>
+<td> =</td>
+                <td>7</td>
+            <td>
+                <p>an index or extent was out of range</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
               <span class="anchor" id="variable-error_generic"></span>
               integer(kind=default_int),
             </td>
@@ -460,6 +918,24 @@ parameter
                 <td>1</td>
             <td>
                 
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-error_internal"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>ERROR_INTERNAL</strong></td>
+<td> =</td>
+                <td>6</td>
+            <td>
+                <p>a PIC invariant was violated: this is a bug in the library itself,
+not bad input from the caller. Report it upstream.</p>
             </td>
         </tr>
         <tr>
@@ -515,6 +991,24 @@ parameter
         </tr>
         <tr>
             <td>
+              <span class="anchor" id="variable-pic_error_code_max"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PIC_ERROR_CODE_MAX</strong></td>
+<td> =</td>
+                <td>99</td>
+            <td>
+                <p>Highest error code PIC reserves for itself. Downstream libraries
+must number their own codes from PIC_ERROR_CODE_MAX + 1 upwards.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
               <span class="anchor" id="variable-success"></span>
               integer(kind=default_int),
             </td>
@@ -561,7 +1055,7 @@ parameter
 <td> =</td>
                 <td>256</td>
             <td>
-                <p>Unified error type with stack trace support</p>
+                
             </td>
         </tr>
         <tr>
@@ -596,6 +1090,27 @@ parameter
                 <td>20</td>
             <td>
                 
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-truncation_marker"></span>
+              character(len=*),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>TRUNCATION_MARKER</strong></td>
+<td> =</td>
+                <td>&#34;...&#34;</td>
+            <td>
+                <p>Marker used whenever a location or cause message does not fit in its
+fixed-length slot. Locations keep their tail (the <code>:line</code> part) and
+get the marker as a prefix; messages keep their head and get it as a
+suffix.</p>
+<p>Unified error type with stack trace support</p>
             </td>
         </tr>
     </tbody>
@@ -638,7 +1153,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~9"></span>
+              <span class="anchor" id="variable-self~74"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(in)</td>
@@ -763,7 +1278,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-code"></span>
+              <span class="anchor" id="variable-code~3"></span>
               integer(kind=default_int),
             </td>
               <td>public</td>
@@ -780,7 +1295,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-message~11"></span>
+              <span class="anchor" id="variable-message~23"></span>
               character(len=:),
             </td>
               <td>public,</td>
@@ -792,12 +1307,31 @@ parameter
                 <td></td>
                 <td></td>
             <td>
-<p>Error message</p><a href="../type/error_t.html#variable-message~11" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>Error message</p><a href="../type/error_t.html#variable-message~23" class="pull-right"><emph>Read more&hellip;</emph></a>
             </td>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-stack_depth"></span>
+              <span class="anchor" id="variable-omitted_causes"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>omitted_causes</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>Number of intermediate causes dropped because the cause chain was
+already MAX_CAUSE_DEPTH deep. The root cause is always kept; it is
+the middle layers that are lost, and the traces report how many.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-stack_depth~2"></span>
               integer(kind=default_int),
             </td>
               <td>public</td>
@@ -828,7 +1362,7 @@ parameter
               </tr>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='../type/error_t.html#boundprocedure-clear'>clear</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/error_clear.html'>error_clear</a></td>
+  <strong><a href='../type/error_t.html#boundprocedure-clear~6'>clear</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/error_clear.html'>error_clear</a></td>
                   <td></td>
               </tr>
               <tr>
@@ -868,7 +1402,7 @@ parameter
               </tr>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='../type/error_t.html#boundprocedure-set'>set</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/error_set.html'>error_set</a></td>
+  <strong><a href='../type/error_t.html#boundprocedure-set~10'>set</a></strong> => <a href='/home/runner/work/pic/pic/docs/fpm-ford/proc/error_set.html'>error_set</a></td>
                   <td></td>
               </tr>
               <tr>
@@ -887,7 +1421,7 @@ parameter
         <section>
           <h2>Functions</h2>
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-code_to_string"></span> <h3>public pure function <a href='../proc/code_to_string.html'>code_to_string</a>(code) result(name)  
+    <div class="card-header codesum"><span class="anchor" id="proc-code_to_string"></span> <h3>public pure function <a href='../proc/code_to_string.html'>code_to_string</a>(code, user_name) result(name)  
 </h3></div>
     <div class="card-body">
           
@@ -906,7 +1440,70 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-code~2"></span>
+              <span class="anchor" id="variable-code~4"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>code</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-user_name"></span>
+              character(len=*),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>user_name</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>character(len=:), allocatable</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-is_pic_error_code"></span> <h3>public pure function <a href='../proc/is_pic_error_code.html'>is_pic_error_code</a>(code) result(reserved)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>True when <code>code</code> falls inside the range PIC reserves for its own
+error codes (0 .. PIC_ERROR_CODE_MAX). Downstream libraries can
+assert their own codes are outside it:
+  if (is_pic_error_code(MYLIB_ERROR_SOCKET)) error stop &ldquo;code clash&rdquo;</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-code~5"></span>
               integer(kind=default_int),
             </td>
 <td>intent(in)</td>
@@ -924,7 +1521,99 @@ parameter
 
     <h4>
     Return Value
-    <small>character(len=:), allocatable</small>
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-clip_head"></span> <h3>private pure function <a href='../proc/clip_head.html'>clip_head</a>(location) result(clipped)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Fit a location into MAX_LOCATION_LEN keeping its TAIL, marking any
+truncation with a leading TRUNCATION_MARKER.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-location~2"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>location</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>character(len=MAX_LOCATION_LEN)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-clip_tail"></span> <h3>private pure function <a href='../proc/clip_tail.html'>clip_tail</a>(message) result(clipped)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Fit a cause message into MAX_CAUSE_MSG_LEN keeping its HEAD, marking
+any truncation with a trailing TRUNCATION_MARKER.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-message~28"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>message</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>character(len=MAX_CAUSE_MSG_LEN)</small>
     </h4>
     
 
@@ -951,7 +1640,7 @@ parameter
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~13"></span>
+              <span class="anchor" id="variable-self~78"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(in)</td>
@@ -997,7 +1686,7 @@ Returns a dynamically-sized multi-line string</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~17"></span>
+              <span class="anchor" id="variable-self~82"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1042,7 +1731,7 @@ Returns a dynamically-sized multi-line string</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~14"></span>
+              <span class="anchor" id="variable-self~79"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1087,7 +1776,7 @@ Returns a dynamically-sized multi-line string</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~9"></span>
+              <span class="anchor" id="variable-self~74"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1132,7 +1821,7 @@ Returns a dynamically-sized multi-line string</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~10"></span>
+              <span class="anchor" id="variable-self~75"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1147,7 +1836,7 @@ Returns a dynamically-sized multi-line string</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-code~3"></span>
+              <span class="anchor" id="variable-code~7"></span>
               integer(kind=default_int),
             </td>
 <td>intent(in)</td>
@@ -1172,11 +1861,126 @@ Returns a dynamically-sized multi-line string</p>
     </div>
   </div>
 
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-omitted_note"></span> <h3>private pure function <a href='../proc/omitted_note.html'>omitted_note</a>(count) result(note)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>One-line notice that <code>count</code> intermediate causes were dropped</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-count~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>count</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>character(len=:), allocatable</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
         </section>
         <br>
 
         <section>
           <h2>Subroutines</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-error_raise"></span> <h3>public pure subroutine <a href='../proc/error_raise.html'>error_raise</a>(err, code, message)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Set an optional error argument, if the caller supplied one.</p><a href="../proc/error_raise.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~165"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-code~6"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>code</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-message~24"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>message</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
               <div class="card">
     <div class="card-header codesum"><span class="anchor" id="proc-error_add_context"></span> <h3>private pure subroutine <a href='../proc/error_add_context.html'>error_add_context</a>(self, location)  
 </h3></div>
@@ -1198,7 +2002,7 @@ Typically called when propagating errors upward</p><a href="../proc/error_add_co
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~16"></span>
+              <span class="anchor" id="variable-self~81"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(inout)</td>
@@ -1253,7 +2057,7 @@ Typically called when propagating errors upward</p><a href="../proc/error_add_co
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~12"></span>
+              <span class="anchor" id="variable-self~77"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(inout)</td>
@@ -1274,7 +2078,7 @@ Typically called when propagating errors upward</p><a href="../proc/error_add_co
   </div>
 
               <div class="card">
-    <div class="card-header codesum"><span class="anchor" id="proc-error_fatal"></span> <h3>private  subroutine <a href='../proc/error_fatal.html'>error_fatal</a>(self, unit)  
+    <div class="card-header codesum"><span class="anchor" id="proc-error_fatal"></span> <h3>private  subroutine <a href='../proc/error_fatal.html'>error_fatal</a>(self, unit, exit_code)  
 </h3></div>
     <div class="card-body">
           
@@ -1294,7 +2098,7 @@ Use for unrecoverable errors</p><a href="../proc/error_fatal.html" class="pull-r
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~19"></span>
+              <span class="anchor" id="variable-self~84"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1309,7 +2113,7 @@ Use for unrecoverable errors</p><a href="../proc/error_fatal.html" class="pull-r
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-unit~2"></span>
+              <span class="anchor" id="variable-unit~22"></span>
               integer(kind=default_int),
             </td>
 <td>intent(in),</td>
@@ -1318,6 +2122,21 @@ Use for unrecoverable errors</p><a href="../proc/error_fatal.html" class="pull-r
             </td>
             <td>::</td>
             <td><strong>unit</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-exit_code"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>exit_code</strong></td>
             <td>
 
             </td>
@@ -1350,7 +2169,7 @@ If unit not specified, prints to stdout</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~18"></span>
+              <span class="anchor" id="variable-self~83"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(in)</td>
@@ -1365,7 +2184,7 @@ If unit not specified, prints to stdout</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-unit"></span>
+              <span class="anchor" id="variable-unit~21"></span>
               integer(kind=default_int),
             </td>
 <td>intent(in),</td>
@@ -1406,7 +2225,7 @@ Resets the stack trace and cause chain</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~11"></span>
+              <span class="anchor" id="variable-self~76"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(inout)</td>
@@ -1421,7 +2240,7 @@ Resets the stack trace and cause chain</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-code~4"></span>
+              <span class="anchor" id="variable-code~8"></span>
               integer(kind=default_int),
             </td>
 <td>intent(in)</td>
@@ -1436,7 +2255,7 @@ Resets the stack trace and cause chain</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-message~12"></span>
+              <span class="anchor" id="variable-message~25"></span>
               character(len=*),
             </td>
 <td>intent(in)</td>
@@ -1478,7 +2297,7 @@ top-level code and message (Rust-style &ldquo;caused by&rdquo;)</p><a href="../p
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-self~15"></span>
+              <span class="anchor" id="variable-self~80"></span>
               class(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(inout)</td>
@@ -1493,7 +2312,7 @@ top-level code and message (Rust-style &ldquo;caused by&rdquo;)</p><a href="../p
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-code~6"></span>
+              <span class="anchor" id="variable-code~10"></span>
               integer(kind=default_int),
             </td>
 <td>intent(in)</td>
@@ -1508,7 +2327,7 @@ top-level code and message (Rust-style &ldquo;caused by&rdquo;)</p><a href="../p
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-message~14"></span>
+              <span class="anchor" id="variable-message~27"></span>
               character(len=*),
             </td>
 <td>intent(in)</td>
@@ -1551,7 +2370,7 @@ top-level code and message (Rust-style &ldquo;caused by&rdquo;)</p><a href="../p
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-09-13 17:21 +0000             </p>
+ on 2026-09-13 18:10 +0000             </p>
           </div>
         </div>
         <br>

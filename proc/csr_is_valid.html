@@ -1,0 +1,766 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>csr_is_valid &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>csr_is_valid
+      <small>Function</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.4% of total for procedures.">45 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_csr.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_csr.f90.html'>pic_csr.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_csr.html'>pic_csr</a></li>
+            <li class="breadcrumb-item active" aria-current="page">csr_is_valid</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../proc/csr_is_valid.html#variable-i~76">i</a>
+            <a class="list-group-item" href="../proc/csr_is_valid.html#variable-n_entries~2">n_entries</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/csr_is_valid.html#src">csr_is_valid</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private  function csr_is_valid(self, err) result(ok)  
+</h2>
+    
+
+    <p>Check that the stored triple is structurally consistent.</p>
+<p>Verifies non-negative dimensions, that all three arrays are
+allocated, that <code>row_ptr</code> has <code>nrow + 1</code> elements, starts at 1, is
+monotonically non-decreasing and ends at <code>nnz + 1</code>, that <code>col_idx</code>
+and <code>values</code> have the same length, and that every column index lies
+in <code>1:ncol</code>. When <code>err</code> is present it carries the first violation
+found as <code>ERROR_VALIDATION</code>.</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/csr_t.html'>csr_t</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-self~26"></span>
+              class(<a href='../type/csr_t.html'>csr_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>self</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~83"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <h3>Return Value
+        <small>
+          <span class="anchor" id="variable-ok~3"></span>
+          logical
+        </small>
+      </h3>
+      <p><code>.true.</code> when the matrix is structurally sound</p>
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~csr_is_valid~~CallsGraph Pages: 1 -->
+<svg id="proccsr_is_validCallsGraph" width="346pt" height="32pt"
+ viewBox="0.00 0.00 346.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~csr_is_valid~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~csr_is_valid~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 342,-28 342,4 -4,4"/>
+<!-- proc~csr_is_valid -->
+<g id="proc~~csr_is_valid~~CallsGraph_node1" class="node">
+<title>proc~csr_is_valid</title>
+<polygon fill="none" stroke="black" points="107,-24 0,-24 0,0 107,0 107,-24"/>
+<text text-anchor="middle" x="53.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">csr_t%csr_is_valid</text>
+</g>
+<!-- proc~fail~2 -->
+<g id="proc~~csr_is_valid~~CallsGraph_node2" class="node">
+<title>proc~fail~2</title>
+<g id="a_proc~~csr_is_valid~~CallsGraph_node2"><a xlink:href="../proc/fail~2.html" xlink:title="fail">
+<polygon fill="#d9534f" stroke="#d9534f" points="197,-24 143,-24 143,0 197,0 197,-24"/>
+<text text-anchor="middle" x="170" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fail</text>
+</a>
+</g>
+</g>
+<!-- proc~csr_is_valid&#45;&gt;proc~fail~2 -->
+<g id="proc~~csr_is_valid~~CallsGraph_edge1" class="edge">
+<title>proc~csr_is_valid&#45;&gt;proc~fail~2</title>
+<path fill="none" stroke="#ff0000" d="M107.06,-12C115.72,-12 124.53,-12 132.69,-12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="132.96,-15.5 142.96,-12 132.96,-8.5 132.96,-15.5"/>
+</g>
+<!-- proc~error_set -->
+<g id="proc~~csr_is_valid~~CallsGraph_node3" class="node">
+<title>proc~error_set</title>
+<g id="a_proc~~csr_is_valid~~CallsGraph_node3"><a xlink:href="../proc/error_set.html" xlink:title="error_t%error_set">
+<polygon fill="#d9534f" stroke="#d9534f" points="338,-24 233,-24 233,0 338,0 338,-24"/>
+<text text-anchor="middle" x="285.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_set</text>
+</a>
+</g>
+</g>
+<!-- proc~fail~2&#45;&gt;proc~error_set -->
+<g id="proc~~csr_is_valid~~CallsGraph_edge2" class="edge">
+<title>proc~fail~2&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#ff0000" d="M197.04,-12C204.74,-12 213.53,-12 222.49,-12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="222.63,-15.5 232.63,-12 222.63,-8.5 222.63,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~csr_is_valid~~CalledByGraph Pages: 1 -->
+<svg id="proccsr_is_validCalledByGraph" width="448pt" height="242pt"
+ viewBox="0.00 0.00 448.00 242.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~csr_is_valid~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 238)">
+<title>proc~~csr_is_valid~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-238 444,-238 444,4 -4,4"/>
+<!-- proc~csr_is_valid -->
+<g id="proc~~csr_is_valid~~CalledByGraph_node1" class="node">
+<title>proc~csr_is_valid</title>
+<polygon fill="none" stroke="black" points="440,-87 333,-87 333,-63 440,-63 440,-87"/>
+<text text-anchor="middle" x="386.5" y="-72.6" font-family="Helvetica,sans-Serif" font-size="10.50">csr_t%csr_is_valid</text>
+</g>
+<!-- proc~check_graph -->
+<g id="proc~~csr_is_valid~~CalledByGraph_node2" class="node">
+<title>proc~check_graph</title>
+<g id="a_proc~~csr_is_valid~~CalledByGraph_node2"><a xlink:href="../proc/check_graph.html" xlink:title="check_graph">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="277,-150 196,-150 196,-126 277,-126 277,-150"/>
+<text text-anchor="middle" x="236.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_graph</text>
+</a>
+</g>
+</g>
+<!-- proc~check_graph&#45;&gt;proc~csr_is_valid -->
+<g id="proc~~csr_is_valid~~CalledByGraph_edge1" class="edge">
+<title>proc~check_graph&#45;&gt;proc~csr_is_valid</title>
+<path fill="none" stroke="#ff0000" d="M273.6,-125.94C281.37,-123.15 289.51,-120.09 297,-117 315.66,-109.3 336.05,-99.71 352.54,-91.64"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="354.34,-94.65 361.76,-87.09 351.25,-88.38 354.34,-94.65"/>
+</g>
+<!-- proc~csr_matvec -->
+<g id="proc~~csr_is_valid~~CalledByGraph_node3" class="node">
+<title>proc~csr_matvec</title>
+<g id="a_proc~~csr_is_valid~~CalledByGraph_node3"><a xlink:href="../proc/csr_matvec.html" xlink:title="csr_t%csr_matvec">
+<polygon fill="#d9534f" stroke="#d9534f" points="290.5,-108 182.5,-108 182.5,-84 290.5,-84 290.5,-108"/>
+<text text-anchor="middle" x="236.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">csr_t%csr_matvec</text>
+</a>
+</g>
+</g>
+<!-- proc~csr_matvec&#45;&gt;proc~csr_is_valid -->
+<g id="proc~~csr_is_valid~~CalledByGraph_edge2" class="edge">
+<title>proc~csr_matvec&#45;&gt;proc~csr_is_valid</title>
+<path fill="none" stroke="#ff0000" d="M290.51,-88.48C300.95,-87 311.99,-85.43 322.71,-83.91"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="323.45,-87.34 332.86,-82.47 322.46,-80.41 323.45,-87.34"/>
+</g>
+<!-- proc~csr_row_slice -->
+<g id="proc~~csr_is_valid~~CalledByGraph_node4" class="node">
+<title>proc~csr_row_slice</title>
+<g id="a_proc~~csr_is_valid~~CalledByGraph_node4"><a xlink:href="../proc/csr_row_slice.html" xlink:title="csr_t%csr_row_slice">
+<polygon fill="#d9534f" stroke="#d9534f" points="294.5,-66 178.5,-66 178.5,-42 294.5,-42 294.5,-66"/>
+<text text-anchor="middle" x="236.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">csr_t%csr_row_slice</text>
+</a>
+</g>
+</g>
+<!-- proc~csr_row_slice&#45;&gt;proc~csr_is_valid -->
+<g id="proc~~csr_is_valid~~CalledByGraph_edge3" class="edge">
+<title>proc~csr_row_slice&#45;&gt;proc~csr_is_valid</title>
+<path fill="none" stroke="#ff0000" d="M294.72,-62.12C303.92,-63.42 313.48,-64.78 322.8,-66.1"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="322.4,-69.58 332.79,-67.52 323.38,-62.65 322.4,-69.58"/>
+</g>
+<!-- proc~csr_transpose -->
+<g id="proc~~csr_is_valid~~CalledByGraph_node5" class="node">
+<title>proc~csr_transpose</title>
+<g id="a_proc~~csr_is_valid~~CalledByGraph_node5"><a xlink:href="../proc/csr_transpose.html" xlink:title="csr_t%csr_transpose">
+<polygon fill="#d9534f" stroke="#d9534f" points="297,-24 176,-24 176,0 297,0 297,-24"/>
+<text text-anchor="middle" x="236.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">csr_t%csr_transpose</text>
+</a>
+</g>
+</g>
+<!-- proc~csr_transpose&#45;&gt;proc~csr_is_valid -->
+<g id="proc~~csr_is_valid~~CalledByGraph_edge4" class="edge">
+<title>proc~csr_transpose&#45;&gt;proc~csr_is_valid</title>
+<path fill="none" stroke="#ff0000" d="M273.6,-24.06C281.37,-26.85 289.51,-29.91 297,-33 315.66,-40.7 336.05,-50.29 352.54,-58.36"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="351.25,-61.62 361.76,-62.91 354.34,-55.35 351.25,-61.62"/>
+</g>
+<!-- proc~a_star -->
+<g id="proc~~csr_is_valid~~CalledByGraph_node6" class="node">
+<title>proc~a_star</title>
+<g id="a_proc~~csr_is_valid~~CalledByGraph_node6"><a xlink:href="../proc/a_star.html" xlink:title="a_star">
+<polygon fill="#d9534f" stroke="#d9534f" points="97,-234 43,-234 43,-210 97,-210 97,-234"/>
+<text text-anchor="middle" x="70" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">a_star</text>
+</a>
+</g>
+</g>
+<!-- proc~a_star&#45;&gt;proc~check_graph -->
+<g id="proc~~csr_is_valid~~CalledByGraph_edge5" class="edge">
+<title>proc~a_star&#45;&gt;proc~check_graph</title>
+<path fill="none" stroke="#ff0000" d="M97.22,-215.93C110.39,-212.4 126.4,-207.39 140,-201 166.07,-188.75 193.25,-170.16 211.92,-156.34"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="214.22,-158.99 220.11,-150.18 210.01,-153.4 214.22,-158.99"/>
+</g>
+<!-- proc~bfs -->
+<g id="proc~~csr_is_valid~~CalledByGraph_node7" class="node">
+<title>proc~bfs</title>
+<g id="a_proc~~csr_is_valid~~CalledByGraph_node7"><a xlink:href="../proc/bfs.html" xlink:title="bfs">
+<polygon fill="#d9534f" stroke="#d9534f" points="97,-192 43,-192 43,-168 97,-168 97,-192"/>
+<text text-anchor="middle" x="70" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bfs</text>
+</a>
+</g>
+</g>
+<!-- proc~bfs&#45;&gt;proc~check_graph -->
+<g id="proc~~csr_is_valid~~CalledByGraph_edge6" class="edge">
+<title>proc~bfs&#45;&gt;proc~check_graph</title>
+<path fill="none" stroke="#ff0000" d="M97.07,-173.34C120.81,-167.28 156.52,-158.16 185.73,-150.71"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="186.93,-154.01 195.75,-148.15 185.2,-147.23 186.93,-154.01"/>
+</g>
+<!-- proc~connected_components -->
+<g id="proc~~csr_is_valid~~CalledByGraph_node8" class="node">
+<title>proc~connected_components</title>
+<g id="a_proc~~csr_is_valid~~CalledByGraph_node8"><a xlink:href="../proc/connected_components.html" xlink:title="connected_components">
+<polygon fill="#d9534f" stroke="#d9534f" points="140,-150 0,-150 0,-126 140,-126 140,-150"/>
+<text text-anchor="middle" x="70" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">connected_components</text>
+</a>
+</g>
+</g>
+<!-- proc~connected_components&#45;&gt;proc~check_graph -->
+<g id="proc~~csr_is_valid~~CalledByGraph_edge7" class="edge">
+<title>proc~connected_components&#45;&gt;proc~check_graph</title>
+<path fill="none" stroke="#ff0000" d="M140.29,-138C155.55,-138 171.42,-138 185.73,-138"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="185.84,-141.5 195.84,-138 185.84,-134.5 185.84,-141.5"/>
+</g>
+<!-- proc~dijkstra -->
+<g id="proc~~csr_is_valid~~CalledByGraph_node9" class="node">
+<title>proc~dijkstra</title>
+<g id="a_proc~~csr_is_valid~~CalledByGraph_node9"><a xlink:href="../proc/dijkstra.html" xlink:title="dijkstra">
+<polygon fill="#d9534f" stroke="#d9534f" points="97,-108 43,-108 43,-84 97,-84 97,-108"/>
+<text text-anchor="middle" x="70" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">dijkstra</text>
+</a>
+</g>
+</g>
+<!-- proc~dijkstra&#45;&gt;proc~check_graph -->
+<g id="proc~~csr_is_valid~~CalledByGraph_edge8" class="edge">
+<title>proc~dijkstra&#45;&gt;proc~check_graph</title>
+<path fill="none" stroke="#ff0000" d="M97.07,-102.66C120.81,-108.72 156.52,-117.84 185.73,-125.29"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="185.2,-128.77 195.75,-127.85 186.93,-121.99 185.2,-128.77"/>
+</g>
+<!-- proc~path_cost -->
+<g id="proc~~csr_is_valid~~CalledByGraph_node10" class="node">
+<title>proc~path_cost</title>
+<g id="a_proc~~csr_is_valid~~CalledByGraph_node10"><a xlink:href="../proc/path_cost.html" xlink:title="path_cost">
+<polygon fill="#d9534f" stroke="#d9534f" points="102,-66 38,-66 38,-42 102,-42 102,-66"/>
+<text text-anchor="middle" x="70" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">path_cost</text>
+</a>
+</g>
+</g>
+<!-- proc~path_cost&#45;&gt;proc~check_graph -->
+<g id="proc~~csr_is_valid~~CalledByGraph_edge9" class="edge">
+<title>proc~path_cost&#45;&gt;proc~check_graph</title>
+<path fill="none" stroke="#ff0000" d="M102.17,-59.52C114.63,-62.71 128.68,-67.6 140,-75 160.58,-88.45 155.72,-103.1 176,-117 179.31,-119.27 182.89,-121.32 186.6,-123.16"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="185.43,-126.48 195.99,-127.35 188.28,-120.08 185.43,-126.48"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    <section>    
+      <h2>Variables</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-i~76"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n_entries~2"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n_entries</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">function </span><span class="n">csr_is_valid</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">ok</span><span class="p">)</span>
+<span class="w">      </span><span class="c">!! Check that the stored triple is structurally consistent.</span>
+<span class="w">      </span><span class="c">!!</span>
+<span class="w">      </span><span class="c">!! Verifies non-negative dimensions, that all three arrays are</span>
+<span class="w">      </span><span class="c">!! allocated, that `row_ptr` has `nrow + 1` elements, starts at 1, is</span>
+<span class="w">      </span><span class="c">!! monotonically non-decreasing and ends at `nnz + 1`, that `col_idx`</span>
+<span class="w">      </span><span class="c">!! and `values` have the same length, and that every column index lies</span>
+<span class="w">      </span><span class="c">!! in `1:ncol`. When `err` is present it carries the first violation</span>
+<span class="w">      </span><span class="c">!! found as `ERROR_VALIDATION`.</span>
+<span class="w">      </span><span class="k">class</span><span class="p">(</span><span class="n">csr_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">self</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">error_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">err</span>
+<span class="w">      </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ok</span>
+<span class="w">         </span><span class="c">!! `.true.` when the matrix is structurally sound</span>
+
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">n_entries</span>
+
+<span class="w">      </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">nrow</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">ncol</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">fail</span><span class="p">(</span><span class="n">err</span><span class="p">,</span><span class="w"> </span><span class="s2">"pic_csr: matrix has a negative dimension"</span><span class="p">)</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">allocated</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">row_ptr</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">allocated</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">col_idx</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">allocated</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">values</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">fail</span><span class="p">(</span><span class="n">err</span><span class="p">,</span><span class="w"> </span><span class="s2">"pic_csr: matrix has unallocated storage arrays"</span><span class="p">)</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">row_ptr</span><span class="p">),</span><span class="w"> </span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">nrow</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">fail</span><span class="p">(</span><span class="n">err</span><span class="p">,</span><span class="w"> </span><span class="s2">"pic_csr: row_ptr must have exactly n_rows + 1 elements"</span><span class="p">)</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      </span><span class="n">n_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">col_idx</span><span class="p">),</span><span class="w"> </span><span class="n">default_int</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">values</span><span class="p">),</span><span class="w"> </span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">n_entries</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">fail</span><span class="p">(</span><span class="n">err</span><span class="p">,</span><span class="w"> </span><span class="s2">"pic_csr: col_idx and values must have the same length"</span><span class="p">)</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">row_ptr</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">fail</span><span class="p">(</span><span class="n">err</span><span class="p">,</span><span class="w"> </span><span class="s2">"pic_csr: row_ptr must start at 1"</span><span class="p">)</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">nrow</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">row_ptr</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">row_ptr</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            call </span><span class="n">fail</span><span class="p">(</span><span class="n">err</span><span class="p">,</span><span class="w"> </span><span class="s2">"pic_csr: row_ptr must be monotonically non-decreasing"</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">         end if</span>
+<span class="k">      end do</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">row_ptr</span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">nrow</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">n_entries</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         call </span><span class="n">fail</span><span class="p">(</span><span class="n">err</span><span class="p">,</span><span class="w"> </span><span class="s2">"pic_csr: row_ptr must end at nnz + 1"</span><span class="p">)</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n_entries</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">self</span><span class="p">%</span><span class="n">col_idx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">col_idx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">self</span><span class="p">%</span><span class="n">ncol</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            call </span><span class="n">fail</span><span class="p">(</span><span class="n">err</span><span class="p">,</span><span class="w"> </span><span class="s2">"pic_csr: col_idx holds a column index outside 1:n_cols"</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">         end if</span>
+<span class="k">      end do</span>
+
+<span class="k">      </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">   </span><span class="k">end function </span><span class="n">csr_is_valid</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

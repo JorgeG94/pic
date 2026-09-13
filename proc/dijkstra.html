@@ -1,0 +1,1105 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>dijkstra &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>dijkstra
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.4% of total for procedures.">50 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_graph.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_graph.f90.html'>pic_graph.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_graph.html'>pic_graph</a></li>
+            <li class="breadcrumb-item active" aria-current="page">dijkstra</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../proc/dijkstra.html#variable-candidate">candidate</a>
+            <a class="list-group-item" href="../proc/dijkstra.html#variable-dist_u">dist_u</a>
+            <a class="list-group-item" href="../proc/dijkstra.html#variable-k">k</a>
+            <a class="list-group-item" href="../proc/dijkstra.html#variable-key~2">key</a>
+            <a class="list-group-item" href="../proc/dijkstra.html#variable-n">n</a>
+            <a class="list-group-item" href="../proc/dijkstra.html#variable-payload">payload</a>
+            <a class="list-group-item" href="../proc/dijkstra.html#variable-queue">queue</a>
+            <a class="list-group-item" href="../proc/dijkstra.html#variable-settled">settled</a>
+            <a class="list-group-item" href="../proc/dijkstra.html#variable-u">u</a>
+            <a class="list-group-item" href="../proc/dijkstra.html#variable-v">v</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/dijkstra.html#src">dijkstra</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine dijkstra(graph, source, dist, prev, err)  
+</h2>
+    
+
+    <p>Single-source shortest paths with non-negative edge weights.</p>
+<p><code>dist(v)</code> is the shortest distance from <code>source</code> to <code>v</code>, or
+<code>GRAPH_INFINITY</code> when <code>v</code> is unreachable. <code>prev(v)</code> is the
+predecessor of <code>v</code> on that shortest path, or <code>GRAPH_NO_PREDECESSOR</code>
+for the source and for unreachable vertices. Both outputs are
+allocated to the number of vertices.</p>
+<p><code>prev</code> is deterministic: see the module documentation on
+reproducibility. Reports <code>ERROR_VALIDATION</code> for a malformed or
+non-square adjacency matrix, an out-of-range <code>source</code>, or any
+negative edge weight; in that case both outputs come back zero-size.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-graph"></span>
+              type(<a href='../type/csr_t.html'>csr_t</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>graph</strong></td>
+            <td>
+                <p>Square weighted adjacency matrix of the graph</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-source"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>source</strong></td>
+            <td>
+                <p>Source vertex, in <code>1:n</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dist"></span>
+              real(kind=dp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>dist</strong>(:)</td>
+            <td>
+                <p>Shortest distance to each vertex</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-prev"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>prev</strong>(:)</td>
+            <td>
+                <p>Predecessor of each vertex on its shortest path</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~dijkstra~~CallsGraph Pages: 1 -->
+<svg id="procdijkstraCallsGraph" width="641pt" height="439pt"
+ viewBox="0.00 0.00 641.00 439.29" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~dijkstra~~CallsGraph" class="graph" transform="scale(0.9 0.9) rotate(0) translate(4 486)">
+<title>proc~~dijkstra~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-486 711,-486 711,4 -4,4"/>
+<!-- proc~dijkstra -->
+<g id="proc~~dijkstra~~CallsGraph_node1" class="node">
+<title>proc~dijkstra</title>
+<polygon fill="none" stroke="black" points="54,-192 0,-192 0,-168 54,-168 54,-192"/>
+<text text-anchor="middle" x="27" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50">dijkstra</text>
+</g>
+<!-- proc~check_graph -->
+<g id="proc~~dijkstra~~CallsGraph_node2" class="node">
+<title>proc~check_graph</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node2"><a xlink:href="../proc/check_graph.html" xlink:title="check_graph">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="199.5,-398 118.5,-398 118.5,-374 199.5,-374 199.5,-398"/>
+<text text-anchor="middle" x="159" y="-383.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_graph</text>
+</a>
+</g>
+</g>
+<!-- proc~dijkstra&#45;&gt;proc~check_graph -->
+<g id="proc~~dijkstra~~CallsGraph_edge1" class="edge">
+<title>proc~dijkstra&#45;&gt;proc~check_graph</title>
+<path fill="none" stroke="#ff0000" d="M31.45,-192.35C39.08,-218.27 59.19,-279.5 90,-323 102.05,-340.02 119.33,-355.95 133.45,-367.53"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="131.33,-370.32 141.33,-373.82 135.7,-364.85 131.33,-370.32"/>
+</g>
+<!-- proc~check_weights -->
+<g id="proc~~dijkstra~~CallsGraph_node3" class="node">
+<title>proc~check_weights</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node3"><a xlink:href="../proc/check_weights.html" xlink:title="check_weights">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="204,-314 114,-314 114,-290 204,-290 204,-314"/>
+<text text-anchor="middle" x="159" y="-299.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">check_weights</text>
+</a>
+</g>
+</g>
+<!-- proc~dijkstra&#45;&gt;proc~check_weights -->
+<g id="proc~~dijkstra~~CallsGraph_edge2" class="edge">
+<title>proc~dijkstra&#45;&gt;proc~check_weights</title>
+<path fill="none" stroke="#ff0000" d="M39.61,-192.36C51.86,-205.27 71.88,-225.98 90,-243 104.81,-256.91 122.12,-271.91 135.57,-283.3"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="133.48,-286.12 143.38,-289.89 137.99,-280.77 133.48,-286.12"/>
+</g>
+<!-- proc~csr_n_rows -->
+<g id="proc~~dijkstra~~CallsGraph_node4" class="node">
+<title>proc~csr_n_rows</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node4"><a xlink:href="../proc/csr_n_rows.html" xlink:title="csr_t%csr_n_rows">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="381,-482 277,-482 277,-458 381,-458 381,-482"/>
+<text text-anchor="middle" x="329" y="-467.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">csr_t%csr_n_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~dijkstra&#45;&gt;proc~csr_n_rows -->
+<g id="proc~~dijkstra~~CallsGraph_edge3" class="edge">
+<title>proc~dijkstra&#45;&gt;proc~csr_n_rows</title>
+<path fill="none" stroke="#ff0000" d="M27.42,-192.14C26.34,-229.81 28.37,-345.86 90,-407 136.61,-453.24 212.96,-466.67 266.6,-470.02"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="266.5,-473.52 276.67,-470.55 266.86,-466.53 266.5,-473.52"/>
+</g>
+<!-- proc~distance_key -->
+<g id="proc~~dijkstra~~CallsGraph_node5" class="node">
+<title>proc~distance_key</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node5"><a xlink:href="../proc/distance_key.html" xlink:title="distance_key">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="200,-108 118,-108 118,-84 200,-84 200,-108"/>
+<text text-anchor="middle" x="159" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">distance_key</text>
+</a>
+</g>
+</g>
+<!-- proc~dijkstra&#45;&gt;proc~distance_key -->
+<g id="proc~~dijkstra~~CallsGraph_edge4" class="edge">
+<title>proc~dijkstra&#45;&gt;proc~distance_key</title>
+<path fill="none" stroke="#ff0000" d="M37.13,-167.53C48.16,-153.34 67.97,-130.4 90,-117 95.54,-113.63 101.67,-110.76 107.91,-108.32"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="109.48,-111.48 117.75,-104.85 107.15,-104.88 109.48,-111.48"/>
+</g>
+<!-- proc~heap_destroy -->
+<g id="proc~~dijkstra~~CallsGraph_node6" class="node">
+<title>proc~heap_destroy</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node6"><a xlink:href="../proc/heap_destroy.html" xlink:title="heap_t%heap_destroy">
+<polygon fill="#d9534f" stroke="#d9534f" points="224,-66 94,-66 94,-42 224,-42 224,-66"/>
+<text text-anchor="middle" x="159" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">heap_t%heap_destroy</text>
+</a>
+</g>
+</g>
+<!-- proc~dijkstra&#45;&gt;proc~heap_destroy -->
+<g id="proc~~dijkstra~~CallsGraph_edge5" class="edge">
+<title>proc~dijkstra&#45;&gt;proc~heap_destroy</title>
+<path fill="none" stroke="#ff0000" d="M31.82,-167.98C39.37,-146.18 58.27,-100.06 90,-75 91.81,-73.57 93.72,-72.23 95.71,-70.99"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="97.65,-73.92 104.8,-66.1 94.34,-67.75 97.65,-73.92"/>
+</g>
+<!-- proc~heap_init -->
+<g id="proc~~dijkstra~~CallsGraph_node7" class="node">
+<title>proc~heap_init</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node7"><a xlink:href="../proc/heap_init.html" xlink:title="heap_t%heap_init">
+<polygon fill="#d9534f" stroke="#d9534f" points="212.5,-150 105.5,-150 105.5,-126 212.5,-126 212.5,-150"/>
+<text text-anchor="middle" x="159" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">heap_t%heap_init</text>
+</a>
+</g>
+</g>
+<!-- proc~dijkstra&#45;&gt;proc~heap_init -->
+<g id="proc~~dijkstra~~CallsGraph_edge6" class="edge">
+<title>proc~dijkstra&#45;&gt;proc~heap_init</title>
+<path fill="none" stroke="#ff0000" d="M54.19,-170.95C65.23,-167.19 78.21,-162.81 90,-159 96.02,-157.05 102.35,-155.04 108.62,-153.08"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="109.88,-156.35 118.39,-150.03 107.8,-149.67 109.88,-156.35"/>
+</g>
+<!-- proc~heap_is_empty -->
+<g id="proc~~dijkstra~~CallsGraph_node8" class="node">
+<title>proc~heap_is_empty</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node8"><a xlink:href="../proc/heap_is_empty.html" xlink:title="heap_t%heap_is_empty">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="228,-24 90,-24 90,0 228,0 228,-24"/>
+<text text-anchor="middle" x="159" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">heap_t%heap_is_empty</text>
+</a>
+</g>
+</g>
+<!-- proc~dijkstra&#45;&gt;proc~heap_is_empty -->
+<g id="proc~~dijkstra~~CallsGraph_edge7" class="edge">
+<title>proc~dijkstra&#45;&gt;proc~heap_is_empty</title>
+<path fill="none" stroke="#ff0000" d="M29.64,-167.73C34.04,-139.67 48.72,-70.36 90,-33 91.48,-31.66 93.04,-30.41 94.67,-29.24"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="96.55,-32.19 103.29,-24.02 92.92,-26.2 96.55,-32.19"/>
+</g>
+<!-- proc~heap_pop -->
+<g id="proc~~dijkstra~~CallsGraph_node9" class="node">
+<title>proc~heap_pop</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node9"><a xlink:href="../proc/heap_pop.html" xlink:title="heap_t%heap_pop">
+<polygon fill="#d9534f" stroke="#d9534f" points="214.5,-234 103.5,-234 103.5,-210 214.5,-210 214.5,-234"/>
+<text text-anchor="middle" x="159" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">heap_t%heap_pop</text>
+</a>
+</g>
+</g>
+<!-- proc~dijkstra&#45;&gt;proc~heap_pop -->
+<g id="proc~~dijkstra~~CallsGraph_edge8" class="edge">
+<title>proc~dijkstra&#45;&gt;proc~heap_pop</title>
+<path fill="none" stroke="#ff0000" d="M54.19,-189.05C65.23,-192.81 78.21,-197.19 90,-201 96.02,-202.95 102.35,-204.96 108.62,-206.92"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="107.8,-210.33 118.39,-209.97 109.88,-203.65 107.8,-210.33"/>
+</g>
+<!-- proc~heap_push -->
+<g id="proc~~dijkstra~~CallsGraph_node10" class="node">
+<title>proc~heap_push</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node10"><a xlink:href="../proc/heap_push.html" xlink:title="heap_t%heap_push">
+<polygon fill="#d9534f" stroke="#d9534f" points="217,-192 101,-192 101,-168 217,-168 217,-192"/>
+<text text-anchor="middle" x="159" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">heap_t%heap_push</text>
+</a>
+</g>
+</g>
+<!-- proc~dijkstra&#45;&gt;proc~heap_push -->
+<g id="proc~~dijkstra~~CallsGraph_edge9" class="edge">
+<title>proc~dijkstra&#45;&gt;proc~heap_push</title>
+<path fill="none" stroke="#ff0000" d="M54.31,-180C64.9,-180 77.66,-180 90.54,-180"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="90.86,-183.5 100.86,-180 90.86,-176.5 90.86,-183.5"/>
+</g>
+<!-- proc~check_graph&#45;&gt;proc~csr_n_rows -->
+<g id="proc~~dijkstra~~CallsGraph_edge12" class="edge">
+<title>proc~check_graph&#45;&gt;proc~csr_n_rows</title>
+<path fill="none" stroke="#ff0000" d="M177.36,-398.21C197.47,-411.95 231.97,-434.28 264,-449 268.12,-450.89 272.45,-452.69 276.85,-454.38"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="275.9,-457.77 286.5,-457.91 278.31,-451.19 275.9,-457.77"/>
+</g>
+<!-- proc~csr_is_valid -->
+<g id="proc~~dijkstra~~CallsGraph_node11" class="node">
+<title>proc~csr_is_valid</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node11"><a xlink:href="../proc/csr_is_valid.html" xlink:title="csr_t%csr_is_valid">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="382.5,-398 275.5,-398 275.5,-374 382.5,-374 382.5,-398"/>
+<text text-anchor="middle" x="329" y="-383.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">csr_t%csr_is_valid</text>
+</a>
+</g>
+</g>
+<!-- proc~check_graph&#45;&gt;proc~csr_is_valid -->
+<g id="proc~~dijkstra~~CallsGraph_edge10" class="edge">
+<title>proc~check_graph&#45;&gt;proc~csr_is_valid</title>
+<path fill="none" stroke="#ff0000" d="M199.81,-386C219.33,-386 243.3,-386 265.2,-386"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="265.43,-389.5 275.43,-386 265.43,-382.5 265.43,-389.5"/>
+</g>
+<!-- proc~csr_n_cols -->
+<g id="proc~~dijkstra~~CallsGraph_node12" class="node">
+<title>proc~csr_n_cols</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node12"><a xlink:href="../proc/csr_n_cols.html" xlink:title="csr_t%csr_n_cols">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="379.5,-440 278.5,-440 278.5,-416 379.5,-416 379.5,-440"/>
+<text text-anchor="middle" x="329" y="-425.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">csr_t%csr_n_cols</text>
+</a>
+</g>
+</g>
+<!-- proc~check_graph&#45;&gt;proc~csr_n_cols -->
+<g id="proc~~dijkstra~~CallsGraph_edge11" class="edge">
+<title>proc~check_graph&#45;&gt;proc~csr_n_cols</title>
+<path fill="none" stroke="#ff0000" d="M199.81,-395.95C220.78,-401.2 246.89,-407.72 270.06,-413.52"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="269.24,-416.92 279.79,-415.95 270.94,-410.13 269.24,-416.92"/>
+</g>
+<!-- proc~fail -->
+<g id="proc~~dijkstra~~CallsGraph_node14" class="node">
+<title>proc~fail</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node14"><a xlink:href="../proc/fail.html" xlink:title="fail">
+<polygon fill="#d9534f" stroke="#d9534f" points="356,-356 302,-356 302,-332 356,-332 356,-356"/>
+<text text-anchor="middle" x="329" y="-341.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fail</text>
+</a>
+</g>
+</g>
+<!-- proc~check_graph&#45;&gt;proc~fail -->
+<g id="proc~~dijkstra~~CallsGraph_edge13" class="edge">
+<title>proc~check_graph&#45;&gt;proc~fail</title>
+<path fill="none" stroke="#ff0000" d="M199.81,-376.05C227.78,-369.06 264.87,-359.78 291.96,-353.01"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="292.96,-356.37 301.81,-350.55 291.26,-349.58 292.96,-356.37"/>
+</g>
+<!-- proc~csr_nnz -->
+<g id="proc~~dijkstra~~CallsGraph_node13" class="node">
+<title>proc~csr_nnz</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node13"><a xlink:href="../proc/csr_nnz.html" xlink:title="csr_t%csr_nnz">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="372.5,-314 285.5,-314 285.5,-290 372.5,-290 372.5,-314"/>
+<text text-anchor="middle" x="329" y="-299.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">csr_t%csr_nnz</text>
+</a>
+</g>
+</g>
+<!-- proc~check_weights&#45;&gt;proc~csr_nnz -->
+<g id="proc~~dijkstra~~CallsGraph_edge14" class="edge">
+<title>proc~check_weights&#45;&gt;proc~csr_nnz</title>
+<path fill="none" stroke="#ffaa00" d="M204.14,-302C225.89,-302 252.28,-302 275.11,-302"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="275.31,-305.5 285.31,-302 275.31,-298.5 275.31,-305.5"/>
+</g>
+<!-- proc~check_weights&#45;&gt;proc~fail -->
+<g id="proc~~dijkstra~~CallsGraph_edge15" class="edge">
+<title>proc~check_weights&#45;&gt;proc~fail</title>
+<path fill="none" stroke="#ffaa00" d="M204.14,-313.04C231.6,-319.9 266.47,-328.62 292.21,-335.05"/>
+<polygon fill="#ffaa00" stroke="#ffaa00" points="291.38,-338.45 301.93,-337.48 293.08,-331.66 291.38,-338.45"/>
+</g>
+<!-- proc~heap_reserve -->
+<g id="proc~~dijkstra~~CallsGraph_node16" class="node">
+<title>proc~heap_reserve</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node16"><a xlink:href="../proc/heap_reserve.html" xlink:title="heap_t%heap_reserve">
+<polygon fill="#d9534f" stroke="#d9534f" points="394,-112 264,-112 264,-88 394,-88 394,-112"/>
+<text text-anchor="middle" x="329" y="-97.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">heap_t%heap_reserve</text>
+</a>
+</g>
+</g>
+<!-- proc~heap_init&#45;&gt;proc~heap_reserve -->
+<g id="proc~~dijkstra~~CallsGraph_edge16" class="edge">
+<title>proc~heap_init&#45;&gt;proc~heap_reserve</title>
+<path fill="none" stroke="#00a9ff" d="M212.7,-126.08C229.27,-122.33 247.73,-118.16 264.95,-114.26"/>
+<polygon fill="#00a9ff" stroke="#00a9ff" points="265.93,-117.63 274.91,-112.01 264.39,-110.8 265.93,-117.63"/>
+</g>
+<!-- proc~root_entry -->
+<g id="proc~~dijkstra~~CallsGraph_node17" class="node">
+<title>proc~root_entry</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node17"><a xlink:href="../proc/root_entry.html" xlink:title="root_entry">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="531.5,-297 464.5,-297 464.5,-273 531.5,-273 531.5,-297"/>
+<text text-anchor="middle" x="498" y="-282.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">root_entry</text>
+</a>
+</g>
+</g>
+<!-- proc~heap_pop&#45;&gt;proc~root_entry -->
+<g id="proc~~dijkstra~~CallsGraph_edge17" class="edge">
+<title>proc~heap_pop&#45;&gt;proc~root_entry</title>
+<path fill="none" stroke="#aa00ff" d="M214.74,-233.28C230.62,-236.49 247.99,-239.94 264,-243 330.25,-255.66 407.3,-269.34 454.08,-277.54"/>
+<polygon fill="#aa00ff" stroke="#aa00ff" points="453.71,-281.03 464.16,-279.3 454.91,-274.13 453.71,-281.03"/>
+</g>
+<!-- proc~sift_down -->
+<g id="proc~~dijkstra~~CallsGraph_node18" class="node">
+<title>proc~sift_down</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node18"><a xlink:href="../proc/sift_down.html" xlink:title="sift_down">
+<polygon fill="#d9534f" stroke="#d9534f" points="360,-234 298,-234 298,-210 360,-210 360,-234"/>
+<text text-anchor="middle" x="329" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">sift_down</text>
+</a>
+</g>
+</g>
+<!-- proc~heap_pop&#45;&gt;proc~sift_down -->
+<g id="proc~~dijkstra~~CallsGraph_edge18" class="edge">
+<title>proc~heap_pop&#45;&gt;proc~sift_down</title>
+<path fill="none" stroke="#aa00ff" d="M214.54,-222C238.26,-222 265.56,-222 287.43,-222"/>
+<polygon fill="#aa00ff" stroke="#aa00ff" points="287.7,-225.5 297.7,-222 287.7,-218.5 287.7,-225.5"/>
+</g>
+<!-- proc~heap_capacity -->
+<g id="proc~~dijkstra~~CallsGraph_node15" class="node">
+<title>proc~heap_capacity</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node15"><a xlink:href="../proc/heap_capacity.html" xlink:title="heap_t%heap_capacity">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="566,-151 430,-151 430,-127 566,-127 566,-151"/>
+<text text-anchor="middle" x="498" y="-136.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">heap_t%heap_capacity</text>
+</a>
+</g>
+</g>
+<!-- proc~heap_push&#45;&gt;proc~heap_capacity -->
+<g id="proc~~dijkstra~~CallsGraph_edge19" class="edge">
+<title>proc~heap_push&#45;&gt;proc~heap_capacity</title>
+<path fill="none" stroke="#ff00aa" d="M213.51,-167.98C229.67,-164.68 247.5,-161.37 264,-159 315.75,-151.58 374.39,-146.56 419.89,-143.41"/>
+<polygon fill="#ff00aa" stroke="#ff00aa" points="420.24,-146.9 429.98,-142.73 419.77,-139.91 420.24,-146.9"/>
+</g>
+<!-- proc~heap_push&#45;&gt;proc~heap_reserve -->
+<g id="proc~~dijkstra~~CallsGraph_edge20" class="edge">
+<title>proc~heap_push&#45;&gt;proc~heap_reserve</title>
+<path fill="none" stroke="#ff00aa" d="M208.67,-167.88C215.37,-165.38 222,-162.44 228,-159 246.83,-148.2 245.66,-137.6 264,-126 269.79,-122.34 276.18,-119.02 282.62,-116.07"/>
+<polygon fill="#ff00aa" stroke="#ff00aa" points="284.22,-119.19 292.01,-112.01 281.45,-112.76 284.22,-119.19"/>
+</g>
+<!-- proc~sift_up -->
+<g id="proc~~dijkstra~~CallsGraph_node19" class="node">
+<title>proc~sift_up</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node19"><a xlink:href="../proc/sift_up.html" xlink:title="sift_up">
+<polygon fill="#d9534f" stroke="#d9534f" points="356,-192 302,-192 302,-168 356,-168 356,-192"/>
+<text text-anchor="middle" x="329" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">sift_up</text>
+</a>
+</g>
+</g>
+<!-- proc~heap_push&#45;&gt;proc~sift_up -->
+<g id="proc~~dijkstra~~CallsGraph_edge21" class="edge">
+<title>proc~heap_push&#45;&gt;proc~sift_up</title>
+<path fill="none" stroke="#ff00aa" d="M217.35,-180C242.02,-180 270.11,-180 291.81,-180"/>
+<polygon fill="#ff00aa" stroke="#ff00aa" points="291.91,-183.5 301.91,-180 291.91,-176.5 291.91,-183.5"/>
+</g>
+<!-- proc~fail~2 -->
+<g id="proc~~dijkstra~~CallsGraph_node21" class="node">
+<title>proc~fail~2</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node21"><a xlink:href="../proc/fail~2.html" xlink:title="fail">
+<polygon fill="#d9534f" stroke="#d9534f" points="525,-397 471,-397 471,-373 525,-373 525,-397"/>
+<text text-anchor="middle" x="498" y="-382.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fail</text>
+</a>
+</g>
+</g>
+<!-- proc~csr_is_valid&#45;&gt;proc~fail~2 -->
+<g id="proc~~dijkstra~~CallsGraph_edge22" class="edge">
+<title>proc~csr_is_valid&#45;&gt;proc~fail~2</title>
+<path fill="none" stroke="#ff0000" d="M382.84,-385.68C408.08,-385.53 437.67,-385.36 460.39,-385.22"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="460.65,-388.72 470.63,-385.16 460.61,-381.72 460.65,-388.72"/>
+</g>
+<!-- proc~error_set -->
+<g id="proc~~dijkstra~~CallsGraph_node20" class="node">
+<title>proc~error_set</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node20"><a xlink:href="../proc/error_set.html" xlink:title="error_t%error_set">
+<polygon fill="#d9534f" stroke="#d9534f" points="707,-356 602,-356 602,-332 707,-332 707,-356"/>
+<text text-anchor="middle" x="654.5" y="-341.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_set</text>
+</a>
+</g>
+</g>
+<!-- proc~fail&#45;&gt;proc~error_set -->
+<g id="proc~~dijkstra~~CallsGraph_edge23" class="edge">
+<title>proc~fail&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#00ff00" d="M356.2,-344C407.09,-344 520.56,-344 591.67,-344"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="591.84,-347.5 601.84,-344 591.84,-340.5 591.84,-347.5"/>
+</g>
+<!-- proc~heap_reserve&#45;&gt;proc~heap_capacity -->
+<g id="proc~~dijkstra~~CallsGraph_edge26" class="edge">
+<title>proc~heap_reserve&#45;&gt;proc~heap_capacity</title>
+<path fill="none" stroke="#00a9ff" d="M381.47,-112.02C398.45,-115.99 417.52,-120.44 435.2,-124.57"/>
+<polygon fill="#00a9ff" stroke="#00a9ff" points="434.88,-128.09 445.41,-126.95 436.47,-121.27 434.88,-128.09"/>
+</g>
+<!-- proc~grow_int32 -->
+<g id="proc~~dijkstra~~CallsGraph_node22" class="node">
+<title>proc~grow_int32</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node22"><a xlink:href="../proc/grow_int32.html" xlink:title="grow_int32">
+<polygon fill="#d9534f" stroke="#d9534f" points="533,-109 463,-109 463,-85 533,-85 533,-109"/>
+<text text-anchor="middle" x="498" y="-94.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">grow_int32</text>
+</a>
+</g>
+</g>
+<!-- proc~heap_reserve&#45;&gt;proc~grow_int32 -->
+<g id="proc~~dijkstra~~CallsGraph_edge24" class="edge">
+<title>proc~heap_reserve&#45;&gt;proc~grow_int32</title>
+<path fill="none" stroke="#00a9ff" d="M394.09,-98.85C413.62,-98.5 434.65,-98.12 452.58,-97.8"/>
+<polygon fill="#00a9ff" stroke="#00a9ff" points="452.8,-101.29 462.74,-97.62 452.68,-94.3 452.8,-101.29"/>
+</g>
+<!-- proc~grow_int64 -->
+<g id="proc~~dijkstra~~CallsGraph_node23" class="node">
+<title>proc~grow_int64</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node23"><a xlink:href="../proc/grow_int64.html" xlink:title="grow_int64">
+<polygon fill="#d9534f" stroke="#d9534f" points="533,-67 463,-67 463,-43 533,-43 533,-67"/>
+<text text-anchor="middle" x="498" y="-52.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">grow_int64</text>
+</a>
+</g>
+</g>
+<!-- proc~heap_reserve&#45;&gt;proc~grow_int64 -->
+<g id="proc~~dijkstra~~CallsGraph_edge25" class="edge">
+<title>proc~heap_reserve&#45;&gt;proc~grow_int64</title>
+<path fill="none" stroke="#00a9ff" d="M374.75,-87.94C399.02,-81.4 428.89,-73.35 453.03,-66.85"/>
+<polygon fill="#00a9ff" stroke="#00a9ff" points="454.24,-70.15 462.99,-64.16 452.42,-63.39 454.24,-70.15"/>
+</g>
+<!-- proc~root_entry&#45;&gt;proc~error_set -->
+<g id="proc~~dijkstra~~CallsGraph_edge27" class="edge">
+<title>proc~root_entry&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#0000ff" d="M530.64,-297.08C554.28,-306.11 586.8,-318.53 612.45,-328.32"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="611.31,-331.64 621.9,-331.93 613.81,-325.1 611.31,-331.64"/>
+</g>
+<!-- proc~precedes -->
+<g id="proc~~dijkstra~~CallsGraph_node24" class="node">
+<title>proc~precedes</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node24"><a xlink:href="../proc/precedes.html" xlink:title="precedes">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="528.5,-235 467.5,-235 467.5,-211 528.5,-211 528.5,-235"/>
+<text text-anchor="middle" x="498" y="-220.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">precedes</text>
+</a>
+</g>
+</g>
+<!-- proc~sift_down&#45;&gt;proc~precedes -->
+<g id="proc~~dijkstra~~CallsGraph_edge28" class="edge">
+<title>proc~sift_down&#45;&gt;proc~precedes</title>
+<path fill="none" stroke="#aa00ff" d="M360.24,-222.18C387.4,-222.34 427.46,-222.58 457.21,-222.76"/>
+<polygon fill="#aa00ff" stroke="#aa00ff" points="457.24,-226.26 467.26,-222.82 457.28,-219.26 457.24,-226.26"/>
+</g>
+<!-- proc~swap_entries -->
+<g id="proc~~dijkstra~~CallsGraph_node25" class="node">
+<title>proc~swap_entries</title>
+<g id="a_proc~~dijkstra~~CallsGraph_node25"><a xlink:href="../proc/swap_entries.html" xlink:title="swap_entries">
+<polygon fill="#d9534f" stroke="#d9534f" points="539,-193 457,-193 457,-169 539,-169 539,-193"/>
+<text text-anchor="middle" x="498" y="-178.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">swap_entries</text>
+</a>
+</g>
+</g>
+<!-- proc~sift_down&#45;&gt;proc~swap_entries -->
+<g id="proc~~dijkstra~~CallsGraph_edge29" class="edge">
+<title>proc~sift_down&#45;&gt;proc~swap_entries</title>
+<path fill="none" stroke="#aa00ff" d="M360.24,-214.58C384.46,-208.63 418.93,-200.17 447.2,-193.23"/>
+<polygon fill="#aa00ff" stroke="#aa00ff" points="448.04,-196.62 456.92,-190.84 446.37,-189.83 448.04,-196.62"/>
+</g>
+<!-- proc~sift_up&#45;&gt;proc~precedes -->
+<g id="proc~~dijkstra~~CallsGraph_edge30" class="edge">
+<title>proc~sift_up&#45;&gt;proc~precedes</title>
+<path fill="none" stroke="#ff00aa" d="M356.09,-186.72C383.33,-193.73 426.35,-204.81 457.7,-212.88"/>
+<polygon fill="#ff00aa" stroke="#ff00aa" points="456.88,-216.28 467.43,-215.39 458.62,-209.5 456.88,-216.28"/>
+</g>
+<!-- proc~sift_up&#45;&gt;proc~swap_entries -->
+<g id="proc~~dijkstra~~CallsGraph_edge31" class="edge">
+<title>proc~sift_up&#45;&gt;proc~swap_entries</title>
+<path fill="none" stroke="#ff00aa" d="M356.09,-180.16C380.22,-180.3 416.74,-180.52 446.55,-180.7"/>
+<polygon fill="#ff00aa" stroke="#ff00aa" points="446.77,-184.2 456.79,-180.76 446.81,-177.2 446.77,-184.2"/>
+</g>
+<!-- proc~fail~2&#45;&gt;proc~error_set -->
+<g id="proc~~dijkstra~~CallsGraph_edge32" class="edge">
+<title>proc~fail~2&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#ffff00" d="M525.21,-378.04C545.2,-372.74 573.44,-365.25 598.34,-358.64"/>
+<polygon fill="#ffff00" stroke="#ffff00" points="599.28,-362.01 608.05,-356.06 597.49,-355.24 599.28,-362.01"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocdijkstraCallsGraph = svgPanZoom('#procdijkstraCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    <section>    
+      <h2>Variables</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-candidate"></span>
+              real(kind=dp),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>candidate</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dist_u"></span>
+              real(kind=dp),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dist_u</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-k"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>k</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-key~2"></span>
+              integer(kind=int64),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>key</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-payload"></span>
+              integer(kind=int32),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>payload</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-queue"></span>
+              type(<a href='../type/heap_t.html'>heap_t</a>),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>queue</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-settled"></span>
+              logical,
+            </td>
+              <td>private,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>settled</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-u"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>u</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-v"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>v</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">dijkstra</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span><span class="w"> </span><span class="n">source</span><span class="p">,</span><span class="w"> </span><span class="n">dist</span><span class="p">,</span><span class="w"> </span><span class="n">prev</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="w">      </span><span class="c">!! Single-source shortest paths with non-negative edge weights.</span>
+<span class="w">      </span><span class="c">!!</span>
+<span class="w">      </span><span class="c">!! `dist(v)` is the shortest distance from `source` to `v`, or</span>
+<span class="w">      </span><span class="c">!! `GRAPH_INFINITY` when `v` is unreachable. `prev(v)` is the</span>
+<span class="w">      </span><span class="c">!! predecessor of `v` on that shortest path, or `GRAPH_NO_PREDECESSOR`</span>
+<span class="w">      </span><span class="c">!! for the source and for unreachable vertices. Both outputs are</span>
+<span class="w">      </span><span class="c">!! allocated to the number of vertices.</span>
+<span class="w">      </span><span class="c">!!</span>
+<span class="w">      </span><span class="c">!! `prev` is deterministic: see the module documentation on</span>
+<span class="w">      </span><span class="c">!! reproducibility. Reports `ERROR_VALIDATION` for a malformed or</span>
+<span class="w">      </span><span class="c">!! non-square adjacency matrix, an out-of-range `source`, or any</span>
+<span class="w">      </span><span class="c">!! negative edge weight; in that case both outputs come back zero-size.</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">csr_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">graph</span>
+<span class="w">         </span><span class="c">!! Square weighted adjacency matrix of the graph</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">source</span>
+<span class="w">         </span><span class="c">!! Source vertex, in `1:n`</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">),</span><span class="w"> </span><span class="k">allocatable</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dist</span><span class="p">(:)</span>
+<span class="w">         </span><span class="c">!! Shortest distance to each vertex</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">),</span><span class="w"> </span><span class="k">allocatable</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">prev</span><span class="p">(:)</span>
+<span class="w">         </span><span class="c">!! Predecessor of each vertex on its shortest path</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">error_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">err</span>
+
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">heap_t</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">queue</span>
+<span class="w">      </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">settled</span><span class="p">(:)</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">k</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">key</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int32</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">payload</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">dp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dist_u</span><span class="p">,</span><span class="w"> </span><span class="n">candidate</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">check_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span><span class="w"> </span><span class="n">source</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         allocate</span><span class="w"> </span><span class="p">(</span><span class="n">dist</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">         </span><span class="k">allocate</span><span class="w"> </span><span class="p">(</span><span class="n">prev</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">check_weights</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         allocate</span><span class="w"> </span><span class="p">(</span><span class="n">dist</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">         </span><span class="k">allocate</span><span class="w"> </span><span class="p">(</span><span class="n">prev</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+
+<span class="k">      </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graph</span><span class="p">%</span><span class="n">n_rows</span><span class="p">()</span>
+<span class="w">      </span><span class="k">allocate</span><span class="w"> </span><span class="p">(</span><span class="n">dist</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="w">      </span><span class="k">allocate</span><span class="w"> </span><span class="p">(</span><span class="n">prev</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="w">      </span><span class="k">allocate</span><span class="w"> </span><span class="p">(</span><span class="n">settled</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="w">      </span><span class="n">dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GRAPH_INFINITY</span>
+<span class="w">      </span><span class="n">prev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GRAPH_NO_PREDECESSOR</span>
+<span class="w">      </span><span class="n">settled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+
+<span class="w">      </span><span class="n">dist</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_dp</span>
+<span class="w">      </span><span class="k">call </span><span class="n">queue</span><span class="p">%</span><span class="n">init</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="w">      </span><span class="k">call </span><span class="n">queue</span><span class="p">%</span><span class="n">push</span><span class="p">(</span><span class="n">distance_key</span><span class="p">(</span><span class="mf">0.0_dp</span><span class="p">),</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">source</span><span class="p">,</span><span class="w"> </span><span class="n">int32</span><span class="p">))</span>
+
+<span class="w">      </span><span class="k">do while</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">queue</span><span class="p">%</span><span class="n">is_empty</span><span class="p">())</span>
+<span class="w">         </span><span class="k">call </span><span class="n">queue</span><span class="p">%</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span>
+<span class="w">         </span><span class="n">u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span><span class="w"> </span><span class="n">default_int</span><span class="p">)</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">settled</span><span class="p">(</span><span class="n">u</span><span class="p">))</span><span class="w"> </span><span class="k">cycle</span>
+<span class="k">         </span><span class="n">settled</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">         </span><span class="n">dist_u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dist</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+<span class="w">         </span><span class="k">do </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graph</span><span class="p">%</span><span class="n">row_ptr</span><span class="p">(</span><span class="n">u</span><span class="p">),</span><span class="w"> </span><span class="n">graph</span><span class="p">%</span><span class="n">row_ptr</span><span class="p">(</span><span class="n">u</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graph</span><span class="p">%</span><span class="n">col_idx</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+<span class="w">            </span><span class="n">candidate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dist_u</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">graph</span><span class="p">%</span><span class="n">values</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">candidate</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">dist</span><span class="p">(</span><span class="n">v</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">               </span><span class="n">dist</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">candidate</span>
+<span class="w">               </span><span class="n">prev</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u</span>
+<span class="w">               </span><span class="k">call </span><span class="n">queue</span><span class="p">%</span><span class="n">push</span><span class="p">(</span><span class="n">distance_key</span><span class="p">(</span><span class="n">candidate</span><span class="p">),</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">int32</span><span class="p">))</span>
+<span class="w">            </span><span class="k">end if</span>
+<span class="k">         end do</span>
+<span class="k">      end do</span>
+
+<span class="k">      call </span><span class="n">queue</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">   </span><span class="k">end subroutine </span><span class="n">dijkstra</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-13 18:10 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>
