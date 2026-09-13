@@ -1658,6 +1658,22 @@ contains
             end if
             error stop "char_increase_ord_sort: work array is too small."
          end if
+      end if
+! An array of fewer than two elements is already sorted, and reversing a single
+! element is a no-op, so there is nothing left to sort here. This return is not
+! an optimisation. Everything below it drags a possibly zero-sized `array`
+! through the merge machinery for no reason, starting with a zero-sized scratch
+! buffer `buf(0:array_size/2 - 1)` whose element length comes from `len(array)`.
+! `LEN` of an assumed-length dummy is a type parameter inquiry and is perfectly
+! well defined for a zero-sized array, but LFortran currently evaluates it by
+! indexing element 0, so its bounds checking aborts the whole test binary there
+! (an LFortran defect, reported upstream; gfortran, ifx and nvfortran all accept
+! it). Not building a buffer we cannot use keeps the zero-sized case away from
+! that inquiry as well as from `merge_sort`.
+! The `work` check is deliberately left above this return so that a caller's
+! undersized `work` is still reported rather than silently accepted.
+      if (array_size < 2) return
+      if (present(work)) then
 ! Use the work array as scratch memory
          call merge_sort(array, work, err)
       else
@@ -3470,6 +3486,22 @@ contains
             end if
             error stop "char_decrease_ord_sort: work array is too small."
          end if
+      end if
+! An array of fewer than two elements is already sorted, and reversing a single
+! element is a no-op, so there is nothing left to sort here. This return is not
+! an optimisation. Everything below it drags a possibly zero-sized `array`
+! through the merge machinery for no reason, starting with a zero-sized scratch
+! buffer `buf(0:array_size/2 - 1)` whose element length comes from `len(array)`.
+! `LEN` of an assumed-length dummy is a type parameter inquiry and is perfectly
+! well defined for a zero-sized array, but LFortran currently evaluates it by
+! indexing element 0, so its bounds checking aborts the whole test binary there
+! (an LFortran defect, reported upstream; gfortran, ifx and nvfortran all accept
+! it). Not building a buffer we cannot use keeps the zero-sized case away from
+! that inquiry as well as from `merge_sort`.
+! The `work` check is deliberately left above this return so that a caller's
+! undersized `work` is still reported rather than silently accepted.
+      if (array_size < 2) return
+      if (present(work)) then
 ! Use the work array as scratch memory
          call merge_sort(array, work, err)
       else

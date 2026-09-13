@@ -74,7 +74,8 @@ contains
                   new_unittest("test_err_sort_index_iwork_too_small", test_err_sort_index_iwork_too_small), &
                   new_unittest("test_err_sort_index_index_too_small", test_err_sort_index_index_too_small), &
                   new_unittest("test_err_absent_and_success", test_err_absent_and_success), &
-                  new_unittest("test_radix_sort_degenerate_sizes", test_radix_sort_degenerate_sizes) &
+                  new_unittest("test_radix_sort_degenerate_sizes", test_radix_sort_degenerate_sizes), &
+                  new_unittest("test_char_sort_degenerate_guard", test_char_sort_degenerate_guard) &
                   ]
 
    end subroutine collect_pic_sorting_tests
@@ -1868,6 +1869,299 @@ contains
       end block
 
    end subroutine test_index_sort_numeric_tiny
+
+   subroutine test_char_sort_degenerate_guard(error)
+      !! `ord_sort` and `sort_index` on character arrays of 0, 1 and 2
+      !! elements, across the internal-buffer, caller-`work`, caller-`iwork`,
+      !! ascending and `reverse` branches, for both `index` kinds.
+      !!
+      !! At sizes 0 and 1 the four character routines used to walk into the
+      !! merge machinery with a zero-size scratch buffer
+      !! `buf(0:array_size/2 - 1)` sized from `len(array)`; they now return
+      !! before that. The assertions here pin down what the early return must
+      !! still deliver: the array unchanged (0 or 1 elements are sorted by
+      !! definition, in either direction), `index` holding the identity
+      !! permutation, and - the part the placement of the return protects -
+      !! every caller-argument check still reachable and still reported.
+      type(error_type), allocatable, intent(out) :: error
+      character(len=5) :: a0(0), a1(1), a2(2)
+      character(len=5) :: w0(0), w1(1)
+      integer(int32) :: ix32_0(0), ix32_1(1), ix32_2(2), iw32_0(0), iw32_1(1)
+      integer(int64) :: ix64_0(0), ix64_1(1), ix64_2(2), iw64_0(0), iw64_1(1)
+      integer(int32) :: rdx1(1), rdxw0(0)
+      type(error_t) :: err
+
+      ! ---------------------------------------------------------------
+      ! ord_sort, size 0 and 1, both directions, with and without work
+      ! ---------------------------------------------------------------
+      call ord_sort(a0)
+      call check(error, size(a0) == 0, "size-0 char ord_sort changed the size")
+      if (allocated(error)) return
+
+      call ord_sort(a0, reverse=.true.)
+      call check(error, size(a0) == 0, "size-0 reverse char ord_sort changed the size")
+      if (allocated(error)) return
+
+      call ord_sort(a0, w0)
+      call check(error, size(a0) == 0, "size-0 char ord_sort with work changed the size")
+      if (allocated(error)) return
+
+      call ord_sort(a0, w0, reverse=.true.)
+      call check(error, size(a0) == 0, "size-0 reverse char ord_sort with work changed the size")
+      if (allocated(error)) return
+
+      a1(1) = "alpha"
+      call ord_sort(a1)
+      call check(error, a1(1) == "alpha", "size-1 char ord_sort modified the array")
+      if (allocated(error)) return
+
+      call ord_sort(a1, reverse=.true.)
+      call check(error, a1(1) == "alpha", "size-1 reverse char ord_sort modified the array")
+      if (allocated(error)) return
+
+      call ord_sort(a1, w0)
+      call check(error, a1(1) == "alpha", "size-1 char ord_sort with work modified the array")
+      if (allocated(error)) return
+
+      call ord_sort(a1, w0, reverse=.true.)
+      call check(error, a1(1) == "alpha", "size-1 reverse char ord_sort with work modified the array")
+      if (allocated(error)) return
+
+      ! Size 2 is the first size the guard lets through, so it has to keep
+      ! sorting in both directions, with and without a caller buffer.
+      a2 = ["delta", "bravo"]
+      call ord_sort(a2)
+      call check(error, a2(1) == "bravo" .and. a2(2) == "delta", "size-2 char ord_sort is wrong")
+      if (allocated(error)) return
+
+      a2 = ["delta", "bravo"]
+      call ord_sort(a2, reverse=.true.)
+      call check(error, a2(1) == "delta" .and. a2(2) == "bravo", "size-2 reverse char ord_sort is wrong")
+      if (allocated(error)) return
+
+      a2 = ["delta", "bravo"]
+      call ord_sort(a2, w1)
+      call check(error, a2(1) == "bravo" .and. a2(2) == "delta", "size-2 char ord_sort with work is wrong")
+      if (allocated(error)) return
+
+      a2 = ["delta", "bravo"]
+      call ord_sort(a2, w1, reverse=.true.)
+      call check(error, a2(1) == "delta" .and. a2(2) == "bravo", "size-2 reverse char ord_sort with work is wrong")
+      if (allocated(error)) return
+
+      ! ---------------------------------------------------------------
+      ! `sort` (introsort) on the same degenerate sizes. This is a fifth
+      ! character routine with the same shape of hazard: it has no scratch
+      ! buffer, but `introsort` devolves to an `insertion_sort` whose `key`
+      ! is `character(len=len(array))`, so a zero length array reached it
+      ! too.
+      ! ---------------------------------------------------------------
+      call sort(a0)
+      call check(error, size(a0) == 0, "size-0 char sort changed the size")
+      if (allocated(error)) return
+
+      call sort(a0, reverse=.true.)
+      call check(error, size(a0) == 0, "size-0 reverse char sort changed the size")
+      if (allocated(error)) return
+
+      a1(1) = "alpha"
+      call sort(a1)
+      call check(error, a1(1) == "alpha", "size-1 char sort modified the array")
+      if (allocated(error)) return
+
+      call sort(a1, reverse=.true.)
+      call check(error, a1(1) == "alpha", "size-1 reverse char sort modified the array")
+      if (allocated(error)) return
+
+      a2 = ["delta", "bravo"]
+      call sort(a2)
+      call check(error, a2(1) == "bravo" .and. a2(2) == "delta", "size-2 char sort is wrong")
+      if (allocated(error)) return
+
+      a2 = ["delta", "bravo"]
+      call sort(a2, reverse=.true.)
+      call check(error, a2(1) == "delta" .and. a2(2) == "bravo", "size-2 reverse char sort is wrong")
+      if (allocated(error)) return
+
+      ! ---------------------------------------------------------------
+      ! sort_index, size 0: there is no index entry to write, so the
+      ! contract is that nothing is written and nothing is reported.
+      ! ---------------------------------------------------------------
+      call err%clear()
+      call sort_index(a0, ix32_0, err=err)
+      call check(error, err%has_error(), .false., "size-0 char sort_index (low) reported an error")
+      if (allocated(error)) return
+      call check(error, size(ix32_0) == 0 .and. size(a0) == 0, "size-0 char sort_index (low) changed a size")
+      if (allocated(error)) return
+
+      call err%clear()
+      call sort_index(a0, ix64_0, w0, iw64_0, reverse=.true., err=err)
+      call check(error, err%has_error(), .false., "size-0 reverse char sort_index with work and iwork reported an error")
+      if (allocated(error)) return
+      call check(error, size(ix64_0) == 0, "size-0 reverse char sort_index changed the index size")
+      if (allocated(error)) return
+
+      call err%clear()
+      call sort_index(a0, ix32_0, iwork=iw32_0, err=err)
+      call check(error, err%has_error(), .false., "size-0 char sort_index (low) with iwork reported an error")
+      if (allocated(error)) return
+
+      ! ---------------------------------------------------------------
+      ! sort_index, size 1: index must be the identity permutation, i.e.
+      ! index(1) == 1, on every branch and in both directions.
+      ! ---------------------------------------------------------------
+      a1(1) = "alpha"
+
+      ix32_1 = -1_int32
+      call sort_index(a1, ix32_1)
+      call check(error, ix32_1(1) == 1_int32, "size-1 char sort_index (low) index is not the identity")
+      if (allocated(error)) return
+      call check(error, a1(1) == "alpha", "size-1 char sort_index (low) modified the array")
+      if (allocated(error)) return
+
+      ix32_1 = -1_int32
+      call sort_index(a1, ix32_1, reverse=.true.)
+      call check(error, ix32_1(1) == 1_int32, "size-1 reverse char sort_index (low) index is not the identity")
+      if (allocated(error)) return
+
+      ix32_1 = -1_int32
+      call sort_index(a1, ix32_1, w0, iw32_0)
+      call check(error, ix32_1(1) == 1_int32, "size-1 char sort_index (low) with work and iwork is not the identity")
+      if (allocated(error)) return
+
+      ix32_1 = -1_int32
+      call sort_index(a1, ix32_1, iwork=iw32_0, reverse=.true.)
+      call check(error, ix32_1(1) == 1_int32, "size-1 reverse char sort_index (low) with iwork is not the identity")
+      if (allocated(error)) return
+
+      ix64_1 = -1_int64
+      call sort_index(a1, ix64_1)
+      call check(error, ix64_1(1) == 1_int64, "size-1 char sort_index index is not the identity")
+      if (allocated(error)) return
+
+      ix64_1 = -1_int64
+      call sort_index(a1, ix64_1, reverse=.true.)
+      call check(error, ix64_1(1) == 1_int64, "size-1 reverse char sort_index index is not the identity")
+      if (allocated(error)) return
+
+      ix64_1 = -1_int64
+      call sort_index(a1, ix64_1, w0)
+      call check(error, ix64_1(1) == 1_int64, "size-1 char sort_index with work is not the identity")
+      if (allocated(error)) return
+
+      ix64_1 = -1_int64
+      call sort_index(a1, ix64_1, w0, iw64_0, reverse=.true.)
+      call check(error, ix64_1(1) == 1_int64, "size-1 reverse char sort_index with work and iwork is not the identity")
+      if (allocated(error)) return
+
+      ix64_1 = -1_int64
+      call sort_index(a1, ix64_1, iwork=iw64_0)
+      call check(error, ix64_1(1) == 1_int64, "size-1 char sort_index with iwork is not the identity")
+      if (allocated(error)) return
+      call check(error, a1(1) == "alpha", "size-1 char sort_index modified the array")
+      if (allocated(error)) return
+
+      ! ---------------------------------------------------------------
+      ! sort_index, size 2: the first size past the guard, so the real
+      ! permutation has to come back, ascending and reversed.
+      ! ---------------------------------------------------------------
+      a2 = ["delta", "bravo"]
+      call sort_index(a2, ix64_2)
+      call check(error, a2(1) == "bravo" .and. a2(2) == "delta", "size-2 char sort_index did not sort")
+      if (allocated(error)) return
+      call check(error, ix64_2(1) == 2_int64 .and. ix64_2(2) == 1_int64, "size-2 char sort_index permutation is wrong")
+      if (allocated(error)) return
+
+      a2 = ["delta", "bravo"]
+      call sort_index(a2, ix64_2, w1, iw64_1)
+      call check(error, a2(1) == "bravo" .and. a2(2) == "delta", "size-2 char sort_index with work and iwork did not sort")
+      if (allocated(error)) return
+      call check(error, ix64_2(1) == 2_int64 .and. ix64_2(2) == 1_int64, &
+                 "size-2 char sort_index with work and iwork permutation is wrong")
+      if (allocated(error)) return
+
+      a2 = ["delta", "bravo"]
+      call sort_index(a2, ix32_2, w1, iw32_1, reverse=.true.)
+      call check(error, a2(1) == "delta" .and. a2(2) == "bravo", "size-2 reverse char sort_index did not sort")
+      if (allocated(error)) return
+      call check(error, ix32_2(1) == 1_int32 .and. ix32_2(2) == 2_int32, &
+                 "size-2 reverse char sort_index permutation is wrong")
+      if (allocated(error)) return
+
+      ! ---------------------------------------------------------------
+      ! What the placement of the early return protects: every check on a
+      ! caller supplied argument is still reached.
+      !
+      ! The return sits below the `index` checks, so a one element array
+      ! with a zero length `index` is still a bounds error rather than a
+      ! silent success.
+      ! ---------------------------------------------------------------
+      a1(1) = "alpha"
+      call err%clear()
+      call sort_index(a1, ix64_0, err=err)
+      call check_raised(error, err, ERROR_BOUNDS, "size-1 char sort_index index too small")
+      if (allocated(error)) return
+      call check(error, a1(1) == "alpha", "size-1 char sort_index must leave the array unchanged on error")
+      if (allocated(error)) return
+
+      call err%clear()
+      call sort_index(a1, ix32_0, err=err)
+      call check_raised(error, err, ERROR_BOUNDS, "size-1 char sort_index (low) index too small")
+      if (allocated(error)) return
+
+      ! `ord_sort` and `sort_index` size their `work`/`iwork` requirement as
+      ! `array_size/2`, which is 0 at sizes 0 and 1, so a zero length buffer
+      ! is legal there and must NOT be reported. This is the positive half of
+      ! the placement argument: nothing was hidden by returning early.
+      call err%clear()
+      call ord_sort(a1, w0, err=err)
+      call check(error, err%has_error(), .false., "size-1 char ord_sort must accept a zero length work")
+      if (allocated(error)) return
+
+      call err%clear()
+      call sort_index(a1, ix64_1, w0, iw64_0, err=err)
+      call check(error, err%has_error(), .false., "size-1 char sort_index must accept zero length work and iwork")
+      if (allocated(error)) return
+
+      ! At size 2 the requirement becomes 1, and every one of those checks
+      ! still fires - the guard does not short circuit them.
+      a2 = ["delta", "bravo"]
+      call err%clear()
+      call ord_sort(a2, w0, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "size-2 char ord_sort work too small")
+      if (allocated(error)) return
+
+      call err%clear()
+      call ord_sort(a2, w0, reverse=.true., err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "size-2 reverse char ord_sort work too small")
+      if (allocated(error)) return
+
+      call err%clear()
+      call sort_index(a2, ix64_2, w0, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "size-2 char sort_index work too small")
+      if (allocated(error)) return
+
+      call err%clear()
+      call sort_index(a2, ix64_2, w1, iw64_0, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "size-2 char sort_index iwork too small with work")
+      if (allocated(error)) return
+
+      call err%clear()
+      call sort_index(a2, ix32_2, iwork=iw32_0, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "size-2 char sort_index (low) iwork too small")
+      if (allocated(error)) return
+
+      ! `radix_sort` is the routine where the same placement rule bites at
+      ! size 1, because it needs `size(work) >= size(array)`, not half of it.
+      rdx1 = 7_int32
+      call err%clear()
+      call radix_sort(rdx1, rdxw0, err=err)
+      call check_raised(error, err, ERROR_VALIDATION, "size-1 radix_sort work too small")
+      if (allocated(error)) return
+      call check(error, rdx1(1) == 7_int32, "size-1 radix_sort must leave the array unchanged on error")
+      if (allocated(error)) return
+
+   end subroutine test_char_sort_degenerate_guard
    ! ------------------------------------------------------------------
    ! error_t reporting
    ! ------------------------------------------------------------------
