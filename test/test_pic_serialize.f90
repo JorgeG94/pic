@@ -826,7 +826,9 @@ contains
 
    subroutine test_open_failures(error)
       type(error_type), allocatable, intent(out) :: error
+      character(len=*), parameter :: unreachable = "pic_serialize_no_such_dir/out.bin"
       integer(default_int) :: unit
+      integer(default_int) :: probe, ios
       type(error_t) :: err
 
       call serialize_open_read("pic_serialize_does_not_exist.bin", unit, err)
@@ -835,10 +837,24 @@ contains
       call check(error, index(err%get_message(), "iostat=") > 0, "message should carry the iostat")
       if (allocated(error)) return
 
-      call err%clear()
-      call serialize_open_write("pic_serialize_no_such_dir/out.bin", unit, err)
-      call check(error, err%is(ERROR_IO), "writing into a missing directory should be ERROR_IO")
-      if (allocated(error)) return
+      ! `serialize_open_write` can only report what the processor reports, and
+      ! LFortran 0.65.0 returns iostat=0 from an OPEN into a nonexistent
+      ! directory -- as well as from the WRITE and CLOSE that follow, so the
+      ! data is silently dropped. Probe the processor with the same OPEN rather
+      ! than skipping by compiler name: the assertion then still runs on every
+      ! processor that can report the failure (GNU, Intel, Flang, NVHPC), and
+      ! comes back by itself once LFortran reports it, with nothing to delete.
+      ios = 0_default_int
+      open (newunit=probe, file=unreachable, form="unformatted", access="stream", &
+            action="write", status="replace", iostat=ios)
+      if (ios == 0_default_int) close (probe, status="delete")
+
+      if (ios /= 0_default_int) then
+         call err%clear()
+         call serialize_open_write(unreachable, unit, err)
+         call check(error, err%is(ERROR_IO), "writing into a missing directory should be ERROR_IO")
+         if (allocated(error)) return
+      end if
    end subroutine test_open_failures
 
    subroutine test_write_to_read_only_unit(error)
