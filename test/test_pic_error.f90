@@ -1,7 +1,8 @@
 module test_pic_error
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_error, only: error_t, code_to_string, operator(.haserror.), &
-                        SUCCESS, ERROR_GENERIC, ERROR_IO, ERROR_PARSE, ERROR_VALIDATION, ERROR_ALLOC
+                        SUCCESS, ERROR_GENERIC, ERROR_IO, ERROR_PARSE, ERROR_VALIDATION, ERROR_ALLOC, &
+                        ERROR_INTERNAL, ERROR_BOUNDS, PIC_ERROR_CODE_MAX, is_pic_error_code, error_raise
    use pic_types, only: default_int
    implicit none
    private
@@ -30,7 +31,20 @@ contains
                   new_unittest("test_get_full_trace_with_causes", test_get_full_trace_with_causes), &
                   new_unittest("test_print_trace_to_file", test_print_trace_to_file), &
                   new_unittest("test_error_alloc_code", test_error_alloc_code), &
-                  new_unittest("test_haserror_operator", test_haserror_operator) &
+                  new_unittest("test_haserror_operator", test_haserror_operator), &
+                  new_unittest("test_new_error_codes", test_new_error_codes), &
+                  new_unittest("test_code_to_string_user_name", test_code_to_string_user_name), &
+                  new_unittest("test_is_pic_error_code", test_is_pic_error_code), &
+                  new_unittest("test_add_context_long_location", test_add_context_long_location), &
+                  new_unittest("test_add_context_exact_fit", test_add_context_exact_fit), &
+                  new_unittest("test_wrap_long_cause_message", test_wrap_long_cause_message), &
+                  new_unittest("test_wrap_deep_chain_omission", test_wrap_deep_chain_omission), &
+                  new_unittest("test_print_trace_omission", test_print_trace_omission), &
+                  new_unittest("test_no_message_branches", test_no_message_branches), &
+                  new_unittest("test_error_raise_present", test_error_raise_present), &
+                  new_unittest("test_error_raise_absent", test_error_raise_absent), &
+                  new_unittest("test_purity_is_preserved", test_purity_is_preserved), &
+                  new_unittest("test_fatal_without_error", test_fatal_without_error) &
                   ]
    end subroutine collect_pic_error_tests
 
@@ -393,5 +407,373 @@ contains
       call check(error,.not. (.haserror.err), "Cleared error should be false with operator")
       if (allocated(error)) return
    end subroutine test_haserror_operator
+
+   subroutine test_new_error_codes(error)
+      !! ERROR_INTERNAL and ERROR_BOUNDS should behave like any other code
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+
+      call check(error, code_to_string(ERROR_INTERNAL) == "ERROR_INTERNAL", "ERROR_INTERNAL name")
+      if (allocated(error)) return
+
+      call check(error, code_to_string(ERROR_BOUNDS) == "ERROR_BOUNDS", "ERROR_BOUNDS name")
+      if (allocated(error)) return
+
+      call check(error, ERROR_INTERNAL /= ERROR_BOUNDS, "New codes must be distinct")
+      if (allocated(error)) return
+
+      call err%set(ERROR_INTERNAL, "invariant violated: heap order broken")
+      call check(error, err%is(ERROR_INTERNAL), "Should match ERROR_INTERNAL")
+      if (allocated(error)) return
+
+      call err%set(ERROR_BOUNDS, "index 11 out of range 1:10")
+      call check(error, err%is(ERROR_BOUNDS), "Should match ERROR_BOUNDS")
+      if (allocated(error)) return
+   end subroutine test_new_error_codes
+
+   subroutine test_code_to_string_user_name(error)
+      !! A downstream code can supply its own name for codes PIC does not know
+      type(error_type), allocatable, intent(out) :: error
+      integer(default_int), parameter :: mylib_socket = PIC_ERROR_CODE_MAX + 1
+
+      call check(error, code_to_string(mylib_socket, "MYLIB_ERROR_SOCKET") == "MYLIB_ERROR_SOCKET", &
+                 "Unknown code should use the caller-supplied name")
+      if (allocated(error)) return
+
+      call check(error, code_to_string(mylib_socket) == "UNKNOWN", &
+                 "Unknown code without a name should stay UNKNOWN")
+      if (allocated(error)) return
+
+      call check(error, code_to_string(ERROR_IO, "MYLIB_ERROR_SOCKET") == "ERROR_IO", &
+                 "A known PIC code must ignore user_name")
+      if (allocated(error)) return
+   end subroutine test_code_to_string_user_name
+
+   subroutine test_is_pic_error_code(error)
+      !! The reserved range is 0 .. PIC_ERROR_CODE_MAX inclusive
+      type(error_type), allocatable, intent(out) :: error
+
+      call check(error, is_pic_error_code(SUCCESS), "SUCCESS is reserved")
+      if (allocated(error)) return
+
+      call check(error, is_pic_error_code(ERROR_BOUNDS), "ERROR_BOUNDS is reserved")
+      if (allocated(error)) return
+
+      call check(error, is_pic_error_code(PIC_ERROR_CODE_MAX), "Top of the range is reserved")
+      if (allocated(error)) return
+
+      call check(error,.not. is_pic_error_code(PIC_ERROR_CODE_MAX + 1), "First user code is not reserved")
+      if (allocated(error)) return
+
+      call check(error,.not. is_pic_error_code(-1_default_int), "Negative codes are not reserved")
+      if (allocated(error)) return
+   end subroutine test_is_pic_error_code
+
+   subroutine test_add_context_long_location(error)
+      !! A location longer than MAX_LOCATION_LEN must keep its line number
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      character(len=:), allocatable :: long_location
+
+      ! Mimics __FILE__//":"//to_char(__LINE__) in a deep CI build tree
+      long_location = "/builds/runner/work/pic/pic/"//repeat("deep_dir/", 18)// &
+                      "src/lib/core/sort/pic_sorting_introsort.f90:1234"
+
+      call check(error, len(long_location) > 128, "Test location must exceed MAX_LOCATION_LEN")
+      if (allocated(error)) return
+
+      call err%set(ERROR_INTERNAL, "partition invariant broken")
+      call err%add_context(long_location)
+
+      call check(error, err%stack_depth == 1, "Should have recorded one frame")
+      if (allocated(error)) return
+
+      call check(error, index(trim(err%call_stack(1)), ":1234") > 0, &
+                 "Line number must survive truncation of a long location")
+      if (allocated(error)) return
+
+      call check(error, err%call_stack(1) (1:3) == "...", "Truncation must be marked at the front")
+      if (allocated(error)) return
+
+      call check(error, len_trim(err%call_stack(1)) == 128, "Truncated location should fill the slot")
+      if (allocated(error)) return
+
+      call check(error, index(err%get_full_trace(), ":1234") > 0, "Full trace must show the line number")
+      if (allocated(error)) return
+   end subroutine test_add_context_long_location
+
+   subroutine test_add_context_exact_fit(error)
+      !! A location exactly MAX_LOCATION_LEN long must not be marked truncated
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      character(len=:), allocatable :: location
+
+      location = repeat("b", 123)//":9999"
+
+      call err%set(ERROR_IO, "boundary case")
+      call err%add_context(location)
+
+      call check(error, trim(err%call_stack(1)) == location, "Exact-length location must be stored verbatim")
+      if (allocated(error)) return
+   end subroutine test_add_context_exact_fit
+
+   subroutine test_wrap_long_cause_message(error)
+      !! wrap must mark a cause message it had to clip
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      character(len=:), allocatable :: long_message
+      integer(default_int) :: stored_len
+
+      long_message = repeat("y", 300)
+
+      call err%set(ERROR_IO, long_message)
+      call check(error, len(err%get_message()) == 300, "Top-level message must not be truncated")
+      if (allocated(error)) return
+
+      call err%wrap(ERROR_PARSE, "could not read configuration")
+
+      stored_len = len_trim(err%cause_messages(1))
+      call check(error, stored_len == 256, "Clipped cause message should fill the slot")
+      if (allocated(error)) return
+
+      call check(error, err%cause_messages(1) (stored_len - 2:stored_len) == "...", &
+                 "Clipped cause message must end with the truncation marker")
+      if (allocated(error)) return
+
+      call check(error, err%cause_messages(1) (1:253) == repeat("y", 253), &
+                 "Clipped cause message must keep its head")
+      if (allocated(error)) return
+
+      call check(error, index(err%get_full_trace(), "...") > 0, "Trace must show the truncation marker")
+      if (allocated(error)) return
+   end subroutine test_wrap_long_cause_message
+
+   subroutine test_wrap_deep_chain_omission(error)
+      !! Wrapping past MAX_CAUSE_DEPTH keeps the root cause and reports losses
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      character(len=:), allocatable :: trace
+      character(len=16) :: level_str
+      integer(default_int) :: i
+
+      call err%set(ERROR_IO, "root cause: device not ready")
+      do i = 1, 12
+         write (level_str, "(I0)") i
+         call err%wrap(ERROR_GENERIC, "layer "//trim(level_str))
+      end do
+
+      call check(error, err%cause_depth == 8, "Cause chain should cap at MAX_CAUSE_DEPTH")
+      if (allocated(error)) return
+
+      call check(error, err%omitted_causes == 4, "Four intermediate causes should be recorded as omitted")
+      if (allocated(error)) return
+
+      trace = err%get_full_trace()
+
+      call check(error, index(trace, "root cause: device not ready") > 0, &
+                 "Root cause must survive a deep chain")
+      if (allocated(error)) return
+
+      call check(error, index(trace, "omitted") > 0, "Trace must report that layers were omitted")
+      if (allocated(error)) return
+
+      call check(error, index(trace, "4 intermediate cause(s) omitted") > 0, &
+                 "Trace must report how many layers were omitted")
+      if (allocated(error)) return
+
+      call check(error, index(trace, "layer 12") > 0, "Outermost layer must be the top-level error")
+      if (allocated(error)) return
+
+      ! clear and set must both reset the omission counter
+      call err%clear()
+      call check(error, err%omitted_causes == 0, "clear should reset omitted_causes")
+      if (allocated(error)) return
+
+      call err%set(ERROR_IO, "root cause")
+      do i = 1, 12
+         call err%wrap(ERROR_GENERIC, "layer")
+      end do
+      call err%set(ERROR_PARSE, "fresh")
+      call check(error, err%omitted_causes == 0, "set should reset omitted_causes")
+      if (allocated(error)) return
+   end subroutine test_wrap_deep_chain_omission
+
+   subroutine test_print_trace_omission(error)
+      !! print_trace must also report omitted causes
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      character(len=*), parameter :: test_filename = "test_error_omission.log"
+      character(len=256) :: line
+      integer(default_int) :: unit_num, ios, i
+      logical :: found_omitted, found_root, found_stack
+
+      call err%set(ERROR_IO, "root cause here")
+      do i = 1, 10
+         call err%wrap(ERROR_GENERIC, "wrapper")
+      end do
+      call err%add_context("test_pic_error:test_print_trace_omission:42")
+
+      open (newunit=unit_num, file=test_filename, status="replace", action="write")
+      call err%print_trace(unit_num)
+      close (unit_num)
+
+      found_omitted = .false.
+      found_root = .false.
+      found_stack = .false.
+      open (newunit=unit_num, file=test_filename, status="old", action="read")
+      read_loop: do
+         read (unit_num, "(A)", iostat=ios) line
+         if (ios /= 0) exit read_loop
+         if (index(line, "intermediate cause(s) omitted") > 0) found_omitted = .true.
+         if (index(line, "root cause here") > 0) found_root = .true.
+         if (index(line, "test_print_trace_omission:42") > 0) found_stack = .true.
+      end do read_loop
+      close (unit_num, status="delete")
+
+      call check(error, found_omitted, "print_trace should report omitted causes")
+      if (allocated(error)) return
+
+      call check(error, found_root, "print_trace should still show the root cause")
+      if (allocated(error)) return
+
+      call check(error, found_stack, "print_trace should print the call stack")
+      if (allocated(error)) return
+   end subroutine test_print_trace_omission
+
+   subroutine test_no_message_branches(error)
+      !! An error_t whose code was set directly has no message allocated
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      character(len=*), parameter :: test_filename = "test_error_nomsg.log"
+      character(len=256) :: line
+      integer(default_int) :: unit_num, ios
+      logical :: found_nomsg
+
+      ! Deliberately bypass set(): code is public, message stays unallocated
+      err%code = ERROR_BOUNDS
+
+      call check(error, err%get_full_trace() == "ERROR_BOUNDS: ", &
+                 "Trace of a message-less error should be just the code")
+      if (allocated(error)) return
+
+      call err%wrap(ERROR_INTERNAL, "wrapped a message-less error")
+      call check(error, trim(err%cause_messages(1)) == "(no message)", &
+                 "A message-less cause should render as (no message)")
+      if (allocated(error)) return
+
+      ! print_trace path for a message-less top-level error
+      err%code = ERROR_BOUNDS
+      if (allocated(err%message)) deallocate (err%message)
+
+      open (newunit=unit_num, file=test_filename, status="replace", action="write")
+      call err%print_trace(unit_num)
+      close (unit_num)
+
+      found_nomsg = .false.
+      open (newunit=unit_num, file=test_filename, status="old", action="read")
+      read_loop: do
+         read (unit_num, "(A)", iostat=ios) line
+         if (ios /= 0) exit read_loop
+         if (index(line, "(no message)") > 0) found_nomsg = .true.
+      end do read_loop
+      close (unit_num, status="delete")
+
+      call check(error, found_nomsg, "print_trace should print (no message)")
+      if (allocated(error)) return
+   end subroutine test_no_message_branches
+
+   subroutine test_error_raise_present(error)
+      !! error_raise sets the error when the caller passed one
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+
+      call raising_pure_routine(ERROR_BOUNDS, err)
+
+      call check(error, err%has_error(), "error_raise should set a present err")
+      if (allocated(error)) return
+
+      call check(error, err%is(ERROR_BOUNDS), "error_raise should set the requested code")
+      if (allocated(error)) return
+
+      call check(error, err%get_message() == "raised from a pure procedure", &
+                 "error_raise should set the requested message")
+      if (allocated(error)) return
+
+      ! calling it directly, not through the pure wrapper
+      call err%clear()
+      call error_raise(err, ERROR_INTERNAL, "direct call")
+      call check(error, err%is(ERROR_INTERNAL), "Direct error_raise should work too")
+      if (allocated(error)) return
+   end subroutine test_error_raise_present
+
+   subroutine test_error_raise_absent(error)
+      !! error_raise is a silent no-op when the caller omitted err
+      type(error_type), allocatable, intent(out) :: error
+
+      ! Must not crash; the failure is silently dropped, which is documented
+      call raising_pure_routine(ERROR_BOUNDS)
+
+      call check(error, .true., "error_raise with an absent err must be a no-op")
+      if (allocated(error)) return
+   end subroutine test_error_raise_absent
+
+   subroutine test_purity_is_preserved(error)
+      !! Compile-time guard: the sort migration needs set/error_raise to stay
+      !! usable from pure and pure recursive procedures. If the helpers below
+      !! stop compiling, that migration is dead.
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+
+      call pure_recursive_setter(3_default_int, err)
+
+      call check(error, err%is(ERROR_INTERNAL), "pure recursive set should have set the code")
+      if (allocated(error)) return
+
+      call check(error, err%get_message() == "set from a pure recursive procedure", &
+                 "pure recursive set should have set the message")
+      if (allocated(error)) return
+
+      call check(error, err%stack_depth == 3, "pure recursive add_context should have built a stack")
+      if (allocated(error)) return
+   end subroutine test_purity_is_preserved
+
+   subroutine test_fatal_without_error(error)
+      !! fatal on a clean error_t must return instead of stopping
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+
+      call err%fatal()
+      call err%fatal(exit_code=2_default_int)
+      call err%clear()
+      call err%fatal()
+
+      call check(error,.not. err%has_error(), "fatal on a clean error must be a no-op")
+      if (allocated(error)) return
+   end subroutine test_fatal_without_error
+
+   pure recursive subroutine pure_recursive_setter(depth, err)
+      !! Purity guard: mutating an error_t from a pure recursive procedure.
+      !! Note there is deliberately no local error_t here - 4672 bytes per
+      !! recursion frame is not acceptable.
+      integer(default_int), intent(in) :: depth
+      type(error_t), intent(inout) :: err
+
+      if (depth <= 0) then
+         call err%set(ERROR_INTERNAL, "set from a pure recursive procedure")
+         return
+      end if
+
+      call pure_recursive_setter(depth - 1, err)
+      call err%add_context("test_pic_error:pure_recursive_setter")
+   end subroutine pure_recursive_setter
+
+   pure subroutine raising_pure_routine(code, err)
+      !! Purity guard: the optional-err propagation pattern the sort
+      !! migration uses at ~146 sites.
+      integer(default_int), intent(in) :: code
+      type(error_t), intent(inout), optional :: err
+
+      call error_raise(err, code, "raised from a pure procedure")
+   end subroutine raising_pure_routine
 
 end module test_pic_error

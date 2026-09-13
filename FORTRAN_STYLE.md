@@ -432,6 +432,46 @@ subroutine my_subroutine(input, output, error)
 end subroutine
 ```
 
+### Passing `error_t` Around (performance rules)
+
+`error_t` is a large fixed-size type (its fixed `call_stack` and
+`cause_messages` slots make it ~4.7 kB) with one allocatable component. Two
+rules follow from that:
+
+- **Declare `error_t` dummies `intent(inout)`, never `intent(out)`.** With
+  `intent(out)` the compiler must default-initialize the dummy on entry, which
+  for gfortran means emitting a conditional `deallocate` of the allocatable
+  `message` component at the top of *every* call - that put a `free` call into
+  a 7-instruction hot-path routine in `pic_fixed_array`. `intent(inout)`
+  carries no such prologue. Use `optional, intent(inout)` when the error is
+  opt-in, and `call error_raise(err, CODE, "msg")` (pure) to set it without
+  hand-writing `if (present(err))` at every failure site.
+
+```fortran
+! Good
+subroutine do_work(a, err)
+   type(error_t), intent(inout), optional :: err
+
+! Bad - forces a deallocate prologue on every call
+subroutine do_work(a, err)
+   type(error_t), intent(out) :: err
+```
+
+- **Never declare a local `error_t` inside a recursive procedure.** At ~4.7 kB
+  per frame a recursive sort or tree walk will blow through the stack. Take the
+  error as a dummy argument and let the non-recursive entry point own the single
+  instance.
+
+```fortran
+! Bad - 4.7 kB of stack per recursion level
+pure recursive subroutine quicksort(a, lo, hi)
+   type(error_t) :: err
+
+! Good - one instance, passed down
+pure recursive subroutine quicksort(a, lo, hi, err)
+   type(error_t), intent(inout), optional :: err
+```
+
 ### Documentation
 - Use `!!` for FORD documentation comments
 - Document public interfaces
