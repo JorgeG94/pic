@@ -30,7 +30,7 @@ module pic_string_type
     public :: assignment(=)
     public :: operator(>), operator(>=), operator(<), operator(<=)
     public :: operator(==), operator(/=), operator(//)
-#ifndef __NVCOMPILER_LLVM__
+#if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG)
     public :: write(formatted), write(unformatted)
     public :: read(formatted), read(unformatted)
 #endif
@@ -358,7 +358,7 @@ module pic_string_type
         module procedure :: concat_char_string
     end interface operator(//)
 
-#ifndef __NVCOMPILER_LLVM__
+#if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG)
     !> Write the character sequence hold by the string to a connected formatted
     !> unit.
     interface write(formatted)
@@ -460,7 +460,7 @@ contains
         integer, intent(in) :: pos
         character(len=1) :: character_string
 
-        character_string = merge(string%raw(pos:pos), ' ', allocated(string%raw))
+        character_string = merge(string%raw(pos:pos), " ", allocated(string%raw))
 
     end function char_string_pos
 
@@ -472,7 +472,7 @@ contains
         character(len=last-start+1) :: character_string
 
         character_string = merge(string%raw(int(start, long):int(last, long)), &
-            repeat(' ', int(len(character_string), long)), allocated(string%raw))
+            repeat(" ", int(len(character_string), long)), allocated(string%raw))
 
     end function char_string_range
 
@@ -1120,7 +1120,7 @@ contains
     end function concat_char_string
 
 
-#ifndef __NVCOMPILER_LLVM__
+#if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG)
     !> Write the character sequence hold by the string to a connected unformatted
     !> unit.
     subroutine write_unformatted(string, unit, iostat, iomsg)
@@ -1148,13 +1148,13 @@ contains
 
         select case(iotype)
         case("LISTDIRECTED")
-            write(unit, '(a)', iostat=iostat, iomsg=iomsg) maybe(string)
+            write(unit, "(a)", iostat=iostat, iomsg=iomsg) maybe(string)
         case("NAMELIST")
             error stop "[Fatal] This implementation does not support namelist output"
         case default   ! DT*
             select case(size(v_list))
             case(0)    ! DT
-                write(unit, '(a)', iostat=iostat, iomsg=iomsg) maybe(string)
+                write(unit, "(a)", iostat=iostat, iomsg=iomsg) maybe(string)
             case default
                 error stop "[Fatal] This implementation does not support v_list formatters"
             end select
@@ -1215,9 +1215,9 @@ contains
             integer, parameter :: buffer_size = 512
             character(len=buffer_size) :: buffer
             integer :: chunk
-            line = ''
+            line = ""
             do
-                read(unit, '(a)', iostat=iostat, iomsg=iomsg, size=chunk, advance='no') &
+                read(unit, "(a)", iostat=iostat, iomsg=iomsg, size=chunk, advance="no") &
                     buffer
                 if (iostat > 0) exit
                 line = line // buffer(:chunk)
@@ -1240,7 +1240,8 @@ contains
     !> We deeply trust in the compiler to inline and optimize this piece of code away.
     elemental subroutine unused_dummy_argument(dummy)
         class(*), intent(in) :: dummy
-        associate(dummy => dummy); end associate
+        associate(dummy => dummy)
+        end associate
     end subroutine unused_dummy_argument
 
 
@@ -1251,7 +1252,7 @@ contains
         if (allocated(string%raw)) then
             maybe_string = string%raw
         else
-            maybe_string = ''
+            maybe_string = ""
         end if
     end function maybe
 

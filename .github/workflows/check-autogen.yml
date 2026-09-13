@@ -1,0 +1,41 @@
+name: Check Generated Sources
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  autogen-drift:
+    name: Generated sources match their fypp templates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # fypp regenerates the sources and fprettify applies the formatting that
+      # tools/autogen/autogen.sh performs afterwards via `pre-commit run --all`;
+      # both are needed to reproduce the committed bytes. fprettify is
+      # deliberately left unpinned, exactly as in check-precommit.yml, so that
+      # this job and the pre-commit job always agree on the formatting. No
+      # Fortran compiler is needed: this check is a pure text comparison.
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install fypp fprettify
+
+      - name: Check generated sources against templates
+        run: tools/autogen/check_generated.sh

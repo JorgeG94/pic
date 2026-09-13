@@ -1,4 +1,12 @@
 #!/bin/bash
+#
+# Regenerate the committed fypp sources under src/ and reformat them.
+#
+# NOTE: tools/autogen/check_generated.sh (run in CI by
+# .github/workflows/check-autogen.yml) parses the `fypp <template> >& <output>`
+# and `cp <output> <dir>` lines below to learn which modules are generated and
+# where they live, so adding a module here is picked up automatically. Keep
+# those two line shapes intact, one command per line.
 
 # generate
 fypp pic_array_cpu.fypp >& pic_array.f90
