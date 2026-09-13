@@ -1,0 +1,311 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
+#! ---------------------------------------------------------------------------
+#! Struct-of-arrays generator.
+#!
+#! `SOA_MACROS` below is the reusable part: `soa_module(module_name,
+#! type_name, schema_name, fields)` emits a complete, self-contained module
+#! holding one struct-of-arrays container. Every bound procedure is a thin
+#! shell over `pic_soa`, which owns the growth policy, the resize primitives,
+#! the serialization envelope and the state-hash prologue.
+#!
+#! A field is the 3-tuple (name, kind, doc):
+#!   name  Fortran component name, also the name in the schema string.
+#!   kind  one of 'i32', 'i64', 'r32', 'r64', 'bool'. Fixed width on purpose:
+#!         a `default_int` field would change width with PIC_DEFAULT_INT8 and
+#!         make checkpoints unportable between builds.
+#!   doc   FORD documentation for the component.
+#!
+#! Field order is the declaration order, the serialized record order and the
+#! state-hash fold order, all at once. Changing it changes the schema string,
+#! which retires old checkpoints through the normal validation path.
+#!
+#! PIC runs fypp at development time only. The output of this template is
+#! committed as plain Fortran under src/lib/core/soa/, so a consumer of PIC
+#! never needs fypp or Python to build. See tools/autogen/autogen.sh.
+#! ---------------------------------------------------------------------------
+#:set SOA_DECL = {'i32': 'integer(int32)', 'i64': 'integer(int64)', 'r32': 'real(sp)', 'r64': 'real(dp)', 'bool': 'logical'}
+#:set SOA_KIND_CONST = {'i32': 'SOA_FIELD_INT32', 'i64': 'SOA_FIELD_INT64', 'r32': 'SOA_FIELD_REAL_SP', 'r64': 'SOA_FIELD_REAL_DP', 'bool': 'SOA_FIELD_LOGICAL'}
+#:set SOA_USED_KINDS = {'i32': 'int32', 'i64': 'int64', 'r32': 'sp', 'r64': 'dp', 'bool': ''}
+#:def soa_module(module_name, type_name, schema_name, fields)
+#:set KINDS = [k for k in ['sp', 'dp'] if k in set([SOA_USED_KINDS[f[1]] for f in fields])]
+#:set SCHEMA = schema_name + ';' + ','.join([f[0] + ':' + f[1] for f in fields])
+#:set FIELD_CONSTS = sorted(set([SOA_KIND_CONST[f[1]] for f in fields]))
+!! Struct-of-arrays container for ${schema_name}$ data.
+!!
+!! GENERATED FILE -- DO NOT EDIT.
+!! Produced by `tools/autogen/pic_soa.fypp`; edit the template and rerun
+!! `tools/autogen/autogen.sh` instead.
+module ${module_name}$
+   !! A struct-of-arrays container holding ${len(fields)}$ parallel field arrays.
+   !!
+   !! Each field is a separate contiguous rank-1 array, which is the point of
+   !! the layout: `this%${fields[0][0]}$` is contiguous, and so is the live slice
+   !! `this%${fields[0][0]}$(1:this%size())`, so either can be handed straight to BLAS or
+   !! to a vectorised loop without a copy.
+   !!
+   !! Growth, the serialized record layout, the schema check on deserialize and
+   !! the state-hash fold order are all documented in `pic_soa`. This type's
+   !! schema string is
+   !!
+   !! ```
+   !! ${SCHEMA}$
+   !! ```
+   !!
+   !! prefixed by `SOA_SCHEMA_PREFIX`. Fields are serialized and folded into
+   !! the hash in exactly the order they are declared below.
+   use pic_types, only: default_int, int32, int64${''.join([', ' + k for k in KINDS])}$
+   use pic_error, only: error_t
+   use pic_array_hash, only: array_hash_t
+   use pic_soa, only: soa_extent_t, SOA_SCHEMA_PREFIX, &
+                      ${', '.join(FIELD_CONSTS)}$, &
+                      soa_plan_resize, soa_resize_field, &
+                      soa_write_field, soa_read_field, soa_hash_field, &
+                      soa_write_prologue, soa_read_prologue, &
+                      soa_stream_bytes, soa_hash_begin
+   implicit none
+   private
+
+   public :: ${type_name}$
+   public :: ${schema_name.upper()}$_SOA_SCHEMA
+   public :: ${schema_name.upper()}$_SOA_N_FIELDS
+   public :: ${schema_name.upper()}$_SOA_FIELD_KINDS
+
+   character(len=*), parameter :: ${schema_name.upper()}$_SOA_SCHEMA = SOA_SCHEMA_PREFIX//"${SCHEMA}$"
+      !! Layout identity written into every stream and folded into every
+      !! digest. Any change to the field list changes it, which is what makes a
+      !! stale checkpoint fail loudly instead of decoding as garbage.
+
+   integer(default_int), parameter :: ${schema_name.upper()}$_SOA_N_FIELDS = ${len(fields)}$
+      !! Number of fields, which is also the number of field records a stream
+      !! carries after the prologue.
+
+   integer(int32), parameter :: ${schema_name.upper()}$_SOA_FIELD_KINDS(${schema_name.upper()}$_SOA_N_FIELDS) = [ &
+#:for i, f in enumerate(fields)
+                                ${SOA_KIND_CONST[f[1]]}$${'' if i == len(fields) - 1 else ','}$ &
+#:endfor
+                                ]
+      !! Field kind codes in declaration order. Fixed-width `int32` because
+      !! these describe on-disk record tags. Pass to `soa_stream_bytes`.
+
+   type :: ${type_name}$
+      !! ${len(fields)}$ parallel field arrays plus size/capacity bookkeeping.
+      type(soa_extent_t) :: extent
+         !! Live element count and allocated capacity.
+#:for f in fields
+      ${SOA_DECL[f[1]]}$, allocatable :: ${f[0]}$(:)
+         !! ${f[2]}$
+#:endfor
+   contains
+      procedure :: allocate => ${schema_name}$_soa_allocate
+      procedure :: resize => ${schema_name}$_soa_resize
+      procedure :: deallocate => ${schema_name}$_soa_deallocate
+      procedure :: clear => ${schema_name}$_soa_clear
+      procedure :: size => ${schema_name}$_soa_size
+      procedure :: capacity => ${schema_name}$_soa_capacity
+      procedure :: serialized_bytes => ${schema_name}$_soa_serialized_bytes
+      procedure :: serialize => ${schema_name}$_soa_serialize
+      procedure :: deserialize => ${schema_name}$_soa_deserialize
+      procedure :: state_hash => ${schema_name}$_soa_state_hash
+   end type ${type_name}$
+
+contains
+
+   subroutine ${schema_name}$_soa_allocate(this, n, err)
+      !! Give the container `n` live elements, discarding any it already had.
+      !!
+      !! Equivalent to `clear` followed by `resize(n)`, so calling it twice is
+      !! well defined: the second call simply replaces the contents. Every
+      !! element is set to the zero value of its field's type. Capacity is
+      !! never lowered, so a smaller second call reuses the existing memory.
+      !!
+      !! On failure the container is left empty rather than half filled.
+      class(${type_name}$), intent(inout) :: this
+         !! Container to (re)allocate.
+      integer(default_int), intent(in) :: n
+         !! Number of live elements. Must not be negative.
+      type(error_t), intent(inout) :: err
+         !! Error state, `ERROR_VALIDATION` on a negative `n` and
+         !! `ERROR_ALLOC` if the field arrays cannot be allocated.
+
+      this%extent%used = 0
+      call this%resize(n, err)
+   end subroutine ${schema_name}$_soa_allocate
+
+   subroutine ${schema_name}$_soa_resize(this, n, err)
+      !! Change the number of live elements, preserving the elements that
+      !! survive.
+      !!
+      !! `min(size(), n)` leading elements of every field keep their values.
+      !! Growing sets the newly exposed elements to the zero value of their
+      !! type; shrinking only lowers the live count. Capacity grows
+      !! geometrically and never shrinks -- see `pic_soa`.
+      !!
+      !! On failure the container is left exactly as it was.
+      class(${type_name}$), intent(inout) :: this
+         !! Container to resize.
+      integer(default_int), intent(in) :: n
+         !! New number of live elements. Must not be negative.
+      type(error_t), intent(inout) :: err
+         !! Error state, `ERROR_VALIDATION` on a negative `n` and
+         !! `ERROR_ALLOC` if a field array cannot be allocated.
+
+      integer(default_int) :: new_capacity, keep
+
+      call soa_plan_resize(this%extent, n, new_capacity, keep, err)
+      if (err%has_error()) return
+
+#:for f in fields
+      call soa_resize_field(this%${f[0]}$, new_capacity, keep, n, err)
+      if (err%has_error()) return
+#:endfor
+
+      this%extent%used = n
+      this%extent%capacity = new_capacity
+   end subroutine ${schema_name}$_soa_resize
+
+   subroutine ${schema_name}$_soa_deallocate(this)
+      !! Release every field array and reset both counters to zero.
+      class(${type_name}$), intent(inout) :: this
+         !! Container to empty.
+
+#:for f in fields
+      if (allocated(this%${f[0]}$)) deallocate (this%${f[0]}$)
+#:endfor
+      this%extent%used = 0
+      this%extent%capacity = 0
+   end subroutine ${schema_name}$_soa_deallocate
+
+   subroutine ${schema_name}$_soa_clear(this)
+      !! Drop every live element but keep the allocated capacity.
+      !!
+      !! Use this to reuse a container across iterations without paying for a
+      !! reallocation. Use `deallocate` to actually give the memory back.
+      class(${type_name}$), intent(inout) :: this
+         !! Container to empty.
+
+      this%extent%used = 0
+   end subroutine ${schema_name}$_soa_clear
+
+   pure function ${schema_name}$_soa_size(this) result(n)
+      !! Number of live elements.
+      class(${type_name}$), intent(in) :: this
+         !! Container to query.
+      integer(default_int) :: n
+
+      n = this%extent%used
+   end function ${schema_name}$_soa_size
+
+   pure function ${schema_name}$_soa_capacity(this) result(n)
+      !! Allocated length of every field array. Always at least `size()`.
+      class(${type_name}$), intent(in) :: this
+         !! Container to query.
+      integer(default_int) :: n
+
+      n = this%extent%capacity
+   end function ${schema_name}$_soa_capacity
+
+   pure function ${schema_name}$_soa_serialized_bytes(this) result(nbytes)
+      !! Exact size in bytes of the stream `serialize` would write now.
+      class(${type_name}$), intent(in) :: this
+         !! Container to measure.
+      integer(int64) :: nbytes
+
+      nbytes = soa_stream_bytes(${schema_name.upper()}$_SOA_SCHEMA, this%extent%used, &
+                                ${schema_name.upper()}$_SOA_FIELD_KINDS)
+   end function ${schema_name}$_soa_serialized_bytes
+
+   subroutine ${schema_name}$_soa_serialize(this, unit, err)
+      !! Write the container to an open stream unit.
+      !!
+      !! Writes the prologue -- stream header, schema record, element count --
+      !! and then one record per field in declaration order, each holding
+      !! exactly `size()` elements. The unit must be open for unformatted
+      !! stream writing, for instance from `serialize_open_write`.
+      class(${type_name}$), intent(in) :: this
+         !! Container to write.
+      integer(default_int), intent(in) :: unit
+         !! Stream unit opened for unformatted stream writing.
+      type(error_t), intent(inout) :: err
+         !! Error state, `ERROR_IO` if the stream cannot be written.
+
+      integer(default_int) :: n
+
+      n = this%extent%used
+      call soa_write_prologue(unit, ${schema_name.upper()}$_SOA_SCHEMA, n, err)
+      if (err%has_error()) return
+
+#:for f in fields
+      call soa_write_field(unit, this%${f[0]}$, n, err)
+      if (err%has_error()) return
+#:endfor
+   end subroutine ${schema_name}$_soa_serialize
+
+   subroutine ${schema_name}$_soa_deserialize(this, unit, err)
+      !! Read a container back from an open stream unit.
+      !!
+      !! Validates the envelope and the schema string before touching any
+      !! payload, so a stream written from a different field list is rejected
+      !! with `ERROR_VALIDATION` rather than decoded as garbage. Every field
+      !! record must hold exactly the element count the prologue announced.
+      !!
+      !! On success the container holds exactly the elements from the stream
+      !! and its capacity equals its size. On failure it is left deallocated
+      !! rather than half filled.
+      class(${type_name}$), intent(inout) :: this
+         !! Container to fill. Any previous contents are discarded.
+      integer(default_int), intent(in) :: unit
+         !! Stream unit opened for unformatted stream reading.
+      type(error_t), intent(inout) :: err
+         !! Error state, `ERROR_VALIDATION` on a layout or length mismatch and
+         !! `ERROR_IO` on a truncated stream.
+
+      integer(default_int) :: n
+      logical :: swapped
+
+      call this%deallocate()
+
+      call soa_read_prologue(unit, ${schema_name.upper()}$_SOA_SCHEMA, n, swapped, err)
+      if (err%has_error()) return
+
+#:for f in fields
+      call soa_read_field(unit, "${f[0]}$", this%${f[0]}$, n, swapped, err)
+      if (err%has_error()) then
+         call this%deallocate()
+         return
+      end if
+#:endfor
+
+      this%extent%used = n
+      this%extent%capacity = n
+   end subroutine ${schema_name}$_soa_deserialize
+
+   function ${schema_name}$_soa_state_hash(this) result(digest)
+      !! 32-bit FNV-1a digest of the container's live state.
+      !!
+      !! Folds the schema string, then the element count as an explicit
+      !! `int64`, then every field's live slice in declaration order. Two runs
+      !! that reach identical state therefore produce identical digests, on any
+      !! supported compiler and in both `default_int` builds, which is what
+      !! makes this usable to validate a checkpoint.
+      !!
+      !! Changing any single element of any single field changes the digest.
+      !! See `pic_array_hash` for how -0.0 and NaN are canonicalised.
+      class(${type_name}$), intent(in) :: this
+         !! Container to fingerprint.
+      integer(int32) :: digest
+
+      type(array_hash_t) :: hasher
+      integer(default_int) :: n
+
+      n = this%extent%used
+      call soa_hash_begin(hasher, ${schema_name.upper()}$_SOA_SCHEMA, n)
+#:for f in fields
+      call soa_hash_field(hasher, this%${f[0]}$, n)
+#:endfor
+      digest = hasher%digest()
+   end function ${schema_name}$_soa_state_hash
+
+end module ${module_name}$
+#:enddef
+$:soa_module('pic_soa_particle', 'particle_soa_t', 'particle', [('id', 'i32', 'Particle identifier.'), ('x', 'r64', 'Cartesian x coordinate.'), ('y', 'r64', 'Cartesian y coordinate.'), ('z', 'r64', 'Cartesian z coordinate.'), ('mass', 'r64', 'Particle mass.'), ('active', 'bool', 'Whether the particle takes part in the simulation.')])
