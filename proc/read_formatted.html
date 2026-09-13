@@ -89,7 +89,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.5% of total for procedures.">39 statements</a>
+                 title=" 0.6% of total for procedures.">48 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -198,7 +198,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-string~97"></span>
+              <span class="anchor" id="variable-string~42"></span>
               type(<a href='../type/string_type.html'>string_type</a>),
             </td>
 <td>intent(inout)</td>
@@ -213,7 +213,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-unit~4"></span>
+              <span class="anchor" id="variable-unit~6"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -611,7 +611,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-unit~5"></span>
+              <span class="anchor" id="variable-unit~7"></span>
               integer,
             </td>
 <td>intent(in)</td>
@@ -696,10 +696,14 @@ large graphs.</div>
 <span class="w">   </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="s2">"LISTDIRECTED"</span><span class="p">)</span>
 <span class="w">      </span><span class="k">call </span><span class="n">read_line</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">,</span><span class="w"> </span><span class="n">iostat</span><span class="p">,</span><span class="w"> </span><span class="n">iomsg</span><span class="p">)</span>
 <span class="w">   </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="s2">"NAMELIST"</span><span class="p">)</span>
-<span class="w">      </span><span class="k">error stop</span><span class="w"> </span><span class="s2">"[Fatal] This implementation does not support namelist input"</span>
-<span class="w">   </span><span class="k">case </span><span class="n">default</span><span class="w">    </span><span class="c">! DT*</span>
-<span class="w">      </span><span class="k">error stop</span><span class="w"> </span><span class="s2">"[Fatal] This implementation does not support dt formatters"</span>
-<span class="w">   </span><span class="k">end select</span>
+<span class="w">      </span><span class="n">iostat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PIC_IOSTAT_NAMELIST_INPUT</span>
+<span class="w">      </span><span class="n">iomsg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"pic_string_type: namelist input is not supported for string_type"</span>
+<span class="w">      </span><span class="k">return</span>
+<span class="k">   case </span><span class="n">default</span><span class="w">    </span><span class="c">! DT*</span>
+<span class="w">      </span><span class="n">iostat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PIC_IOSTAT_DT_INPUT</span>
+<span class="w">      </span><span class="n">iomsg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"pic_string_type: dt edit descriptors are not supported for string_type input"</span>
+<span class="w">      </span><span class="k">return</span>
+<span class="k">   end select</span>
 
 <span class="k">   </span><span class="n">string</span><span class="p">%</span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">line</span>
 
@@ -713,17 +717,44 @@ large graphs.</div>
 <span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iomsg</span>
 <span class="w">      </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">buffer_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">512</span>
 <span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="n">buffer_size</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">buffer</span>
-<span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">chunk</span>
+<span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">filled</span>
+<span class="w">      </span><span class="c">! The record is transferred one character at a time into buffer, which is</span>
+<span class="w">      </span><span class="c">! flushed into line whenever it fills up, so line is reallocated once per</span>
+<span class="w">      </span><span class="c">! buffer_size characters rather than once per character.</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">! Filling the whole buffer with a single read and asking size= how much of</span>
+<span class="w">      </span><span class="c">! it is record data is not portable here. This is a child data transfer</span>
+<span class="w">      </span><span class="c">! statement, so size= counts the characters transferred by the whole</span>
+<span class="w">      </span><span class="c">! parent transfer rather than by this statement alone, and at least one</span>
+<span class="w">      </span><span class="c">! processor does not reset that count between successive parent statements</span>
+<span class="w">      </span><span class="c">! on the same unit, which makes it impossible to recover a per read count</span>
+<span class="w">      </span><span class="c">! from it. Using trim on the buffer instead is not an option either: a</span>
+<span class="w">      </span><span class="c">! non-advancing read that hits the end of the record blank pads the rest of</span>
+<span class="w">      </span><span class="c">! the buffer, and trim cannot tell that padding apart from trailing blanks</span>
+<span class="w">      </span><span class="c">! that genuinely belong to the record. A single character item needs no</span>
+<span class="w">      </span><span class="c">! such bookkeeping, because it either transfers its one character or</span>
+<span class="w">      </span><span class="c">! reports the end of the record.</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">! The loop ends on any non-zero iostat rather than on the end of</span>
+<span class="w">      </span><span class="c">! record condition specifically, so it also stops on an end of file</span>
+<span class="w">      </span><span class="c">! and on whatever value a processor chooses for either, and it cannot</span>
+<span class="w">      </span><span class="c">! keep going on a value it does not recognise. is_iostat_eor below</span>
+<span class="w">      </span><span class="c">! then decides which of those the caller is told about.</span>
 <span class="w">      </span><span class="n">line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">""</span>
+<span class="w">      </span><span class="n">filled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">      </span><span class="k">do</span>
-<span class="k">         read</span><span class="w"> </span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="s2">"(a)"</span><span class="p">,</span><span class="w"> </span><span class="n">iostat</span><span class="o">=</span><span class="n">iostat</span><span class="p">,</span><span class="w"> </span><span class="n">iomsg</span><span class="o">=</span><span class="n">iomsg</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="n">chunk</span><span class="p">,</span><span class="w"> </span><span class="n">advance</span><span class="o">=</span><span class="s2">"no"</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
-<span class="w">            </span><span class="n">buffer</span>
-<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iostat</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">exit</span>
-<span class="k">         </span><span class="n">line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">line</span><span class="o">//</span><span class="n">buffer</span><span class="p">(:</span><span class="n">chunk</span><span class="p">)</span>
-<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iostat</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">exit</span>
+<span class="k">         read</span><span class="w"> </span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="s2">"(a)"</span><span class="p">,</span><span class="w"> </span><span class="n">iostat</span><span class="o">=</span><span class="n">iostat</span><span class="p">,</span><span class="w"> </span><span class="n">iomsg</span><span class="o">=</span><span class="n">iomsg</span><span class="p">,</span><span class="w"> </span><span class="n">advance</span><span class="o">=</span><span class="s2">"no"</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="n">buffer</span><span class="p">(</span><span class="n">filled</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="n">filled</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iostat</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">exit</span>
+<span class="k">         </span><span class="n">filled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">filled</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">filled</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">buffer_size</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">line</span><span class="o">//</span><span class="n">buffer</span>
+<span class="w">            </span><span class="n">filled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">         </span><span class="k">end if</span>
 <span class="k">      end do</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">filled</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">line</span><span class="o">//</span><span class="n">buffer</span><span class="p">(:</span><span class="n">filled</span><span class="p">)</span>
 
-<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="nb">is_iostat_eor</span><span class="p">(</span><span class="n">iostat</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">is_iostat_eor</span><span class="p">(</span><span class="n">iostat</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
 <span class="k">         </span><span class="n">iostat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">      </span><span class="k">end if</span>
 <span class="k">   end subroutine </span><span class="n">read_line</span>
@@ -752,7 +783,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-09-13 12:59 +0000             </p>
+ on 2026-09-13 17:21 +0000             </p>
           </div>
         </div>
         <br>

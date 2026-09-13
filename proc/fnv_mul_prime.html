@@ -10,7 +10,7 @@
     <meta name="author" content="Jorge Luis Galvez Vallejo" >
     <link rel="icon" href="../favicon.png">
 
-    <title>scramble_array_character &ndash; PIC</title>
+    <title>fnv_mul_prime &ndash; PIC</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -78,8 +78,8 @@
 
     <div class="container">
   <div class="row">
-    <h1>scramble_array_character
-      <small>Subroutine</small>
+    <h1>fnv_mul_prime
+      <small>Function</small>
       
     </h1>
       <div class="container p-2 mb-4 bg-light border rounded-3">
@@ -89,21 +89,21 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 0.2% of total for procedures.">14 statements</a>
+                 title=" 0.1% of total for procedures.">8 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
-              <a href="../src/pic_array.f90"> Source File</a>
+              <a href="../src/pic_hash_32bit_fnv.f90"> Source File</a>
             </li>
         </ul>
       </div>
       <div class="col">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='../sourcefile/pic_array.f90.html'>pic_array.f90</a></li>
-                <li class="breadcrumb-item"><a href='../module/pic_array.html'>pic_array</a></li>
-            <li class="breadcrumb-item active" aria-current="page">scramble_array_character</li>
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_hash_32bit_fnv.f90.html'>pic_hash_32bit_fnv.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_hash_32bit_fnv.html'>pic_hash_32bit_fnv</a></li>
+            <li class="breadcrumb-item active" aria-current="page">fnv_mul_prime</li>
           </ol>
         </nav>
       </div>
@@ -131,11 +131,7 @@
       </a>
       <div id="vars-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../proc/scramble_array_character.html#variable-i~188">i</a>
-            <a class="list-group-item" href="../proc/scramble_array_character.html#variable-j~104">j</a>
-            <a class="list-group-item" href="../proc/scramble_array_character.html#variable-n~60">n</a>
-            <a class="list-group-item" href="../proc/scramble_array_character.html#variable-rand_val~5">rand_val</a>
-            <a class="list-group-item" href="../proc/scramble_array_character.html#variable-temp~25">temp</a>
+            <a class="list-group-item" href="../proc/fnv_mul_prime.html#variable-acc">acc</a>
         </div>
       </div>
     </div>
@@ -161,7 +157,7 @@
     <div class="card card-primary">
       <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
       <div class="list-group">
-        <a class="list-group-item" href="../proc/scramble_array_character.html#src">scramble_array_character</a>
+        <a class="list-group-item" href="../proc/fnv_mul_prime.html#src">fnv_mul_prime</a>
       </div>
     </div>
 
@@ -171,11 +167,34 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>private  subroutine scramble_array_character(array)  
+    <h2>private pure function fnv_mul_prime(hash_code) result(new_hash)  
 </h2>
     
 
-    <p>should not be used, intended for testing purposes. randomizes an array of type char</p>
+    <p>Multiply a 32-bit FNV state by the FNV prime, modulo 2**32.</p>
+<p>Writing <code>hash_code*prime</code> directly in <code>integer(int32)</code> overflows for very
+nearly every state &ndash; for a five-byte key, every single round overflows.
+Signed integer overflow is not defined by the Fortran standard and is
+trappable: <code>-ftrapv</code>, <code>-fsanitize=signed-integer-overflow</code> and Intel&rsquo;s
+<code>-check</code> all abort on it. It only appears to work because most compilers
+choose to wrap. This function gets the same answer by construction.</p>
+<ol>
+<li>The product is formed in <code>int64</code>, where it cannot overflow: the state is
+   at most 2<strong>31 in magnitude and the prime is below 2</strong>24, so the exact
+   product stays below 2**55.</li>
+<li><code>iand</code> with <code>mask_32</code> reduces it modulo 2<strong>32. <code>iand</code> is defined on the
+   integer bit model, so a negative <code>hash_code</code> widened to <code>int64</code> keeps
+   its two&rsquo;s-complement bit pattern and the mask yields its correct
+   residue as a value in [0, 2</strong>32 - 1].</li>
+<li>That residue cannot simply be assigned to <code>int32</code>: anything above
+   <code>huge(int32)</code> is not representable and the conversion would itself be
+   undefined. Subtracting 2<strong>32 first &ndash; still in <code>int64</code>, where the result
+   is exact and in range &ndash; maps [2</strong>31, 2<strong>32 - 1] onto [-2</strong>31, -1],
+   which is exactly the bit pattern a wrapping 32-bit multiply leaves
+   behind. Only then is the value narrowed, from a range <code>int32</code> can hold.</li>
+</ol>
+<p>The result is therefore bit-identical to the old wrapping code on every
+two&rsquo;s-complement machine, while being defined on every compiler.</p>
 
 
     <h3>Arguments</h3>
@@ -191,15 +210,15 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-array~248"></span>
-              character(len=*),
+              <span class="anchor" id="variable-hash_code~6"></span>
+              integer(kind=int_hash),
             </td>
-<td>intent(inout)</td>
+<td>intent(in)</td>
               <td></td>            <td>
               
             </td>
             <td>::</td>
-            <td><strong>array</strong>(:)</td>
+            <td><strong>hash_code</strong></td>
             <td>
                 
             </td>
@@ -207,6 +226,13 @@
     </tbody>
   </table>
 
+      <h3>Return Value
+        <small>
+          <span class="anchor" id="variable-new_hash"></span>
+          integer(kind=int_hash)
+        </small>
+      </h3>
+      
     <br>
     <div class="card">
       <div class="card-header">
@@ -218,32 +244,47 @@
  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- Generated by graphviz version 2.43.0 (0)
  -->
-<!-- Title: proc~~scramble_array_character~~CalledByGraph Pages: 1 -->
-<svg id="procscramble_array_characterCalledByGraph" width="314pt" height="32pt"
- viewBox="0.00 0.00 314.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="proc~~scramble_array_character~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
-<title>proc~~scramble_array_character~~CalledByGraph</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 310,-28 310,4 -4,4"/>
-<!-- proc~scramble_array_character -->
-<g id="proc~~scramble_array_character~~CalledByGraph_node1" class="node">
-<title>proc~scramble_array_character</title>
-<polygon fill="none" stroke="black" points="306,-24 153,-24 153,0 306,0 306,-24"/>
-<text text-anchor="middle" x="229.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">scramble_array_character</text>
+<!-- Title: proc~~fnv_mul_prime~~CalledByGraph Pages: 1 -->
+<svg id="procfnv_mul_primeCalledByGraph" width="208pt" height="74pt"
+ viewBox="0.00 0.00 208.00 74.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~fnv_mul_prime~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 70)">
+<title>proc~~fnv_mul_prime~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-70 204,-70 204,4 -4,4"/>
+<!-- proc~fnv_mul_prime -->
+<g id="proc~~fnv_mul_prime~~CalledByGraph_node1" class="node">
+<title>proc~fnv_mul_prime</title>
+<polygon fill="none" stroke="black" points="200,-45 109,-45 109,-21 200,-21 200,-45"/>
+<text text-anchor="middle" x="154.5" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50">fnv_mul_prime</text>
 </g>
-<!-- interface~pic_scramble_array -->
-<g id="proc~~scramble_array_character~~CalledByGraph_node2" class="node">
-<title>interface~pic_scramble_array</title>
-<g id="a_proc~~scramble_array_character~~CalledByGraph_node2"><a xlink:href="../interface/pic_scramble_array.html" xlink:title="pic_scramble_array">
-<polygon fill="#a7506f" stroke="#a7506f" points="117,-24 0,-24 0,0 117,0 117,-24"/>
-<text text-anchor="middle" x="58.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_scramble_array</text>
+<!-- proc~int8_fnv_1 -->
+<g id="proc~~fnv_mul_prime~~CalledByGraph_node2" class="node">
+<title>proc~int8_fnv_1</title>
+<g id="a_proc~~fnv_mul_prime~~CalledByGraph_node2"><a xlink:href="../proc/int8_fnv_1.html" xlink:title="int8_fnv_1">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="70,-66 3,-66 3,-42 70,-42 70,-66"/>
+<text text-anchor="middle" x="36.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">int8_fnv_1</text>
 </a>
 </g>
 </g>
-<!-- interface~pic_scramble_array&#45;&gt;proc~scramble_array_character -->
-<g id="proc~~scramble_array_character~~CalledByGraph_edge1" class="edge">
-<title>interface~pic_scramble_array&#45;&gt;proc~scramble_array_character</title>
-<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M117.19,-12C125.43,-12 134.06,-12 142.71,-12"/>
-<polygon fill="#ff0000" stroke="#ff0000" points="142.84,-15.5 152.84,-12 142.84,-8.5 142.84,-15.5"/>
+<!-- proc~int8_fnv_1&#45;&gt;proc~fnv_mul_prime -->
+<g id="proc~~fnv_mul_prime~~CalledByGraph_edge1" class="edge">
+<title>proc~int8_fnv_1&#45;&gt;proc~fnv_mul_prime</title>
+<path fill="none" stroke="#ff0000" d="M70.12,-48.09C78.97,-46.49 88.81,-44.71 98.53,-42.95"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="99.36,-46.36 108.57,-41.13 98.11,-39.47 99.36,-46.36"/>
+</g>
+<!-- proc~int8_fnv_1a -->
+<g id="proc~~fnv_mul_prime~~CalledByGraph_node3" class="node">
+<title>proc~int8_fnv_1a</title>
+<g id="a_proc~~fnv_mul_prime~~CalledByGraph_node3"><a xlink:href="../proc/int8_fnv_1a.html" xlink:title="int8_fnv_1a">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="73,-24 0,-24 0,0 73,0 73,-24"/>
+<text text-anchor="middle" x="36.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">int8_fnv_1a</text>
+</a>
+</g>
+</g>
+<!-- proc~int8_fnv_1a&#45;&gt;proc~fnv_mul_prime -->
+<g id="proc~~fnv_mul_prime~~CalledByGraph_edge2" class="edge">
+<title>proc~int8_fnv_1a&#45;&gt;proc~fnv_mul_prime</title>
+<path fill="none" stroke="#ff0000" d="M73.25,-18.47C81.29,-19.93 90,-21.5 98.62,-23.06"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="98.18,-26.54 108.65,-24.88 99.43,-19.65 98.18,-26.54"/>
 </g>
 </g>
 </svg>
@@ -345,83 +386,15 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-i~188"></span>
-              integer(kind=int32),
+              <span class="anchor" id="variable-acc"></span>
+              integer(kind=int64),
             </td>
               <td>private</td>
             <td>
               
             </td>
             <td>::</td>
-            <td><strong>i</strong></td>
-                <td></td>
-                <td></td>
-            <td>
-                
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-j~104"></span>
-              integer(kind=int32),
-            </td>
-              <td>private</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>j</strong></td>
-                <td></td>
-                <td></td>
-            <td>
-                
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-n~60"></span>
-              integer(kind=int32),
-            </td>
-              <td>private</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>n</strong></td>
-                <td></td>
-                <td></td>
-            <td>
-                
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-rand_val~5"></span>
-              real(kind=sp),
-            </td>
-              <td>private</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>rand_val</strong></td>
-                <td></td>
-                <td></td>
-            <td>
-                
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-temp~25"></span>
-              character(len=len),
-            </td>
-              <td>private</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>temp</strong></td>
+            <td><strong>acc</strong></td>
                 <td></td>
                 <td></td>
             <td>
@@ -444,22 +417,42 @@ large graphs.</div>
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">subroutine </span><span class="n">scramble_array_character</span><span class="p">(</span><span class="k">array</span><span class="p">)</span>
-<span class="w">      </span><span class="c">!! should not be used, intended for testing purposes. randomizes an array of type char</span>
-<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="k">array</span><span class="p">(:)</span>
-<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int32</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">n</span>
-<span class="w">      </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="k">array</span><span class="p">))</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">temp</span>
-<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rand_val</span>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">pure function </span><span class="n">fnv_mul_prime</span><span class="p">(</span><span class="n">hash_code</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">new_hash</span><span class="p">)</span>
+<span class="c">!! Multiply a 32-bit FNV state by the FNV prime, modulo 2**32.</span>
+<span class="c">!!</span>
+<span class="c">!! Writing `hash_code*prime` directly in `integer(int32)` overflows for very</span>
+<span class="c">!! nearly every state -- for a five-byte key, every single round overflows.</span>
+<span class="c">!! Signed integer overflow is not defined by the Fortran standard and is</span>
+<span class="c">!! trappable: `-ftrapv`, `-fsanitize=signed-integer-overflow` and Intel's</span>
+<span class="c">!! `-check` all abort on it. It only appears to work because most compilers</span>
+<span class="c">!! choose to wrap. This function gets the same answer by construction.</span>
+<span class="c">!!</span>
+<span class="c">!! 1. The product is formed in `int64`, where it cannot overflow: the state is</span>
+<span class="c">!!    at most 2**31 in magnitude and the prime is below 2**24, so the exact</span>
+<span class="c">!!    product stays below 2**55.</span>
+<span class="c">!! 2. `iand` with `mask_32` reduces it modulo 2**32. `iand` is defined on the</span>
+<span class="c">!!    integer bit model, so a negative `hash_code` widened to `int64` keeps</span>
+<span class="c">!!    its two's-complement bit pattern and the mask yields its correct</span>
+<span class="c">!!    residue as a value in [0, 2**32 - 1].</span>
+<span class="c">!! 3. That residue cannot simply be assigned to `int32`: anything above</span>
+<span class="c">!!    `huge(int32)` is not representable and the conversion would itself be</span>
+<span class="c">!!    undefined. Subtracting 2**32 first -- still in `int64`, where the result</span>
+<span class="c">!!    is exact and in range -- maps [2**31, 2**32 - 1] onto [-2**31, -1],</span>
+<span class="c">!!    which is exactly the bit pattern a wrapping 32-bit multiply leaves</span>
+<span class="c">!!    behind. Only then is the value narrowed, from a range `int32` can hold.</span>
+<span class="c">!!</span>
+<span class="c">!! The result is therefore bit-identical to the old wrapping code on every</span>
+<span class="c">!! two's-complement machine, while being defined on every compiler.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int_hash</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">hash_code</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int_hash</span><span class="p">)</span><span class="w">             </span><span class="kd">::</span><span class="w"> </span><span class="n">new_hash</span>
 
-<span class="w">      </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="k">array</span><span class="p">)</span>
-<span class="w">      </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
-<span class="w">         </span><span class="k">call </span><span class="nb">random_number</span><span class="p">(</span><span class="n">rand_val</span><span class="p">)</span>
-<span class="w">         </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">rand_val</span><span class="o">*</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">         </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">array</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-<span class="w">         </span><span class="k">array</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">array</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
-<span class="w">         </span><span class="k">array</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span>
-<span class="w">      </span><span class="k">end do</span>
-<span class="k">   end subroutine </span><span class="n">scramble_array_character</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">acc</span>
+
+<span class="w">      </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">iand</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">hash_code</span><span class="p">,</span><span class="w"> </span><span class="n">int64</span><span class="p">)</span><span class="o">*</span><span class="n">prime</span><span class="p">,</span><span class="w"> </span><span class="n">mask_32</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">acc</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">int32_max</span><span class="p">)</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">two_pow_32</span>
+<span class="w">      </span><span class="n">new_hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">int_hash</span><span class="p">)</span>
+
+<span class="w">   </span><span class="k">end function </span><span class="n">fnv_mul_prime</span>
 </pre></div>
 
     </section>
