@@ -17,7 +17,9 @@ contains
               new_unittest("pic_hash_int16", test_pic_hash_int16), &
               new_unittest("pic_hash_int32", test_pic_hash_int32), &
               new_unittest("pic_hash_int64", test_pic_hash_int64), &
-              new_unittest("pic_hash_char", test_pic_hash_char) &
+              new_unittest("pic_hash_char", test_pic_hash_char), &
+              new_unittest("pic_hash_long_char", test_pic_hash_long_char), &
+              new_unittest("pic_hash_long_int32", test_pic_hash_long_int32) &
               ]
 
    end subroutine collect_pic_hash_tests
@@ -100,5 +102,54 @@ contains
       call check(error, hash2 == 1335831723, 'FNV-1a hash mismatch for char')
 
    end subroutine test_pic_hash_char
+
+   ! The two cases below hash long enough inputs that every single FNV round
+   ! overflows a signed 32-bit multiply (43 of 43 rounds for the string, 160 of
+   ! 160 for the int32 array, for both FNV-1 and FNV-1a). They pin the digests
+   ! so that the overflow-free int64 construction in pic_hash_32bit_fnv stays
+   ! bit-identical to wrapping 32-bit arithmetic over a long carry chain, not
+   ! just for the five-element keys above.
+   !
+   ! The expected values were computed from the published FNV definition with
+   ! an independent reference implementation (not by running this library).
+   ! That same reference reproduces all ten digests pinned in the tests above,
+   ! which is what validates it.
+
+   subroutine test_pic_hash_long_char(error)
+      type(error_type), allocatable, intent(out) :: error
+      character(len=43), parameter :: data = 'The quick brown fox jumps over the lazy dog'
+      integer(int32) :: hash1, hash2
+
+      hash1 = fnv_1_hash(data)
+      hash2 = fnv_1a_hash(data)
+
+      call check(error, hash1 == -372741010, 'FNV-1 hash mismatch for long char')
+      if (allocated(error)) return
+      call check(error, hash2 == 76545936, 'FNV-1a hash mismatch for long char')
+
+   end subroutine test_pic_hash_long_char
+
+   subroutine test_pic_hash_long_int32(error)
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: data(40)
+      integer(int32) :: hash1, hash2
+      integer :: i
+
+      ! 40 elements of 4 bytes each: a 160-byte stream. As with the int16 /
+      ! int32 / int64 cases above, the pinned value is the little-endian one,
+      ! because that is the byte order transfer() produces on the hosts PIC is
+      ! tested on; the character case above is byte-order independent.
+      do i = 1, size(data, 1)
+         data(i) = int(i, int32)*7919_int32
+      end do
+
+      hash1 = fnv_1_hash(data)
+      hash2 = fnv_1a_hash(data)
+
+      call check(error, hash1 == -105558105, 'FNV-1 hash mismatch for long int32')
+      if (allocated(error)) return
+      call check(error, hash2 == -1422908669, 'FNV-1a hash mismatch for long int32')
+
+   end subroutine test_pic_hash_long_int32
 
 end module test_pic_hash

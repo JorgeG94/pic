@@ -15,6 +15,25 @@
 !> to a string type. Generally, the string type behaves similar to a deferred
 !> length character in most regards but adds memory access safety.
 !>
+!> Portability note on derived type input/output: the defined input/output
+!> procedures `write(formatted)`, `write(unformatted)`, `read(formatted)` and
+!> `read(unformatted)` are **not available** when this module is built with
+!> NVIDIA HPC Fortran (nvfortran) or Flang, because those compilers do not
+!> support user defined derived type input/output for this type. The generic
+!> bindings and the matching `public` declarations are removed by the
+!> preprocessor on those compilers, so portable code must not rely on reading
+!> or writing a `string_type` directly with a list-directed, `dt` or
+!> unformatted transfer. Use `char(string)` on output and read into a
+!> `character` variable that is then assigned to a `string_type` on input.
+!>
+!> Namelist input/output of a `string_type` is not supported either. The defined
+!> input/output procedures reject it through `iostat` and `iomsg`, see
+!> `PIC_IOSTAT_NAMELIST_OUTPUT`, but that only helps if the processor reaches
+!> them: some processors mishandle a namelist group object of this type inside
+!> their own namelist machinery and corrupt the heap before or around the call,
+!> which no code in this module can guard against. Convert to `character`
+!> explicitly rather than putting a `string_type` in a namelist group.
+!>
 module pic_string_type
     use pic_ascii, only: to_lower_ => to_lower, to_upper_ => to_upper, &
        & to_title_ => to_title, to_sentence_ => to_sentence, reverse_ => reverse
@@ -33,6 +52,34 @@ module pic_string_type
 #if !defined(__NVCOMPILER_LLVM__) && !defined(__FLANG)
     public :: write(formatted), write(unformatted)
     public :: read(formatted), read(unformatted)
+    public :: PIC_IOSTAT_NAMELIST_OUTPUT
+    public :: PIC_IOSTAT_VLIST_OUTPUT
+    public :: PIC_IOSTAT_NAMELIST_INPUT
+    public :: PIC_IOSTAT_DT_INPUT
+
+    !> PIC specific `iostat` value reported by `write(formatted)` when the
+    !> transfer is part of a namelist output statement, which this
+    !> implementation does not support.
+    !>
+    !> The Fortran standard defines no `iostat` value for "unsupported", so the
+    !> four `PIC_IOSTAT_*` values below are processor independent but
+    !> PIC specific. They are positive, distinct, and stable; treat them as
+    !> part of the public interface. A defined input/output procedure must not
+    !> terminate the program, so these are reported through the `iostat` and
+    !> `iomsg` arguments of the parent data transfer statement instead.
+    integer, parameter :: PIC_IOSTAT_NAMELIST_OUTPUT = 7001
+    !> PIC specific `iostat` value reported by `write(formatted)` for a `dt`
+    !> edit descriptor that carries a non empty *v-list*, which this
+    !> implementation does not support. See `PIC_IOSTAT_NAMELIST_OUTPUT`.
+    integer, parameter :: PIC_IOSTAT_VLIST_OUTPUT = 7002
+    !> PIC specific `iostat` value reported by `read(formatted)` when the
+    !> transfer is part of a namelist input statement, which this
+    !> implementation does not support. See `PIC_IOSTAT_NAMELIST_OUTPUT`.
+    integer, parameter :: PIC_IOSTAT_NAMELIST_INPUT = 7003
+    !> PIC specific `iostat` value reported by `read(formatted)` for a `dt`
+    !> edit descriptor, which this implementation does not support on input.
+    !> See `PIC_IOSTAT_NAMELIST_OUTPUT`.
+    integer, parameter :: PIC_IOSTAT_DT_INPUT = 7004
 #endif
 
 
@@ -1150,13 +1197,15 @@ contains
         case("LISTDIRECTED")
             write(unit, "(a)", iostat=iostat, iomsg=iomsg) maybe(string)
         case("NAMELIST")
-            error stop "[Fatal] This implementation does not support namelist output"
+            iostat = PIC_IOSTAT_NAMELIST_OUTPUT
+            iomsg = "pic_string_type: namelist output is not supported for string_type"
         case default   ! DT*
             select case(size(v_list))
             case(0)    ! DT
                 write(unit, "(a)", iostat=iostat, iomsg=iomsg) maybe(string)
             case default
-                error stop "[Fatal] This implementation does not support v_list formatters"
+                iostat = PIC_IOSTAT_VLIST_OUTPUT
+                iomsg = "pic_string_type: dt edit descriptors with a v-list are not supported for string_type output"
             end select
         end select
 
@@ -1197,9 +1246,13 @@ contains
         case("LISTDIRECTED")
             call read_line(unit, line, iostat, iomsg)
         case("NAMELIST")
-            error stop "[Fatal] This implementation does not support namelist input"
+            iostat = PIC_IOSTAT_NAMELIST_INPUT
+            iomsg = "pic_string_type: namelist input is not supported for string_type"
+            return
         case default    ! DT*
-            error stop "[Fatal] This implementation does not support dt formatters"
+            iostat = PIC_IOSTAT_DT_INPUT
+            iomsg = "pic_string_type: dt edit descriptors are not supported for string_type input"
+            return
         end select
 
         string%raw = line
@@ -1214,15 +1267,42 @@ contains
             character(len=*), intent(inout) :: iomsg
             integer, parameter :: buffer_size = 512
             character(len=buffer_size) :: buffer
-            integer :: chunk
+            integer :: filled
+            ! The record is transferred one character at a time into buffer, which is
+            ! flushed into line whenever it fills up, so line is reallocated once per
+            ! buffer_size characters rather than once per character.
+            !
+            ! Filling the whole buffer with a single read and asking size= how much of
+            ! it is record data is not portable here. This is a child data transfer
+            ! statement, so size= counts the characters transferred by the whole
+            ! parent transfer rather than by this statement alone, and at least one
+            ! processor does not reset that count between successive parent statements
+            ! on the same unit, which makes it impossible to recover a per read count
+            ! from it. Using trim on the buffer instead is not an option either: a
+            ! non-advancing read that hits the end of the record blank pads the rest of
+            ! the buffer, and trim cannot tell that padding apart from trailing blanks
+            ! that genuinely belong to the record. A single character item needs no
+            ! such bookkeeping, because it either transfers its one character or
+            ! reports the end of the record.
+            !
+            ! The loop ends on any non-zero iostat rather than on the end of
+            ! record condition specifically, so it also stops on an end of file
+            ! and on whatever value a processor chooses for either, and it cannot
+            ! keep going on a value it does not recognise. is_iostat_eor below
+            ! then decides which of those the caller is told about.
             line = ""
+            filled = 0
             do
-                read(unit, "(a)", iostat=iostat, iomsg=iomsg, size=chunk, advance="no") &
-                    buffer
-                if (iostat > 0) exit
-                line = line // buffer(:chunk)
-                if (iostat < 0) exit
+                read(unit, "(a)", iostat=iostat, iomsg=iomsg, advance="no") &
+                    buffer(filled + 1:filled + 1)
+                if (iostat /= 0) exit
+                filled = filled + 1
+                if (filled == buffer_size) then
+                    line = line // buffer
+                    filled = 0
+                end if
             end do
+            if (filled > 0) line = line // buffer(:filled)
 
             if (is_iostat_eor(iostat)) then
                 iostat = 0
