@@ -74,7 +74,12 @@ contains
                   new_unittest("test_err_sort_index_iwork_too_small", test_err_sort_index_iwork_too_small), &
                   new_unittest("test_err_sort_index_index_too_small", test_err_sort_index_index_too_small), &
                   new_unittest("test_err_absent_and_success", test_err_absent_and_success), &
-                  new_unittest("test_radix_sort_degenerate_sizes", test_radix_sort_degenerate_sizes) &
+                  new_unittest("test_radix_sort_degenerate_sizes", test_radix_sort_degenerate_sizes), &
+                  new_unittest("test_sort_median_of_three", test_sort_median_of_three), &
+                  new_unittest("test_sort_heapsort_fallback", test_sort_heapsort_fallback), &
+                  new_unittest("test_ord_sort_merge_exhausts_left", test_ord_sort_merge_exhausts_left), &
+                  new_unittest("test_ord_sort_run_stack_collapse", test_ord_sort_run_stack_collapse), &
+                  new_unittest("test_radix_sort_mostly_negative", test_radix_sort_mostly_negative) &
                   ]
 
    end subroutine collect_pic_sorting_tests
@@ -2564,5 +2569,472 @@ contains
       call check(error, all(array == expect_rev), .true., size_tag("dp radix_sort, reverse + err", n))
       if (allocated(error)) return
    end subroutine degenerate_dp
+
+   ! ------------------------------------------------------------------
+   ! Helpers shared by the structured-input sorting tests below.
+   !
+   ! Every scenario is described as an array of non-negative integer codes.
+   ! The codes are mapped onto each supported element type (including an
+   ! order preserving three letter encoding for characters) so that one
+   ! carefully shaped input can be pushed through every specialisation.
+   ! ------------------------------------------------------------------
+
+   pure function code_to_word(code) result(word)
+      !! Order preserving encoding of a code in [0, 17575] as three letters
+      integer(default_int), intent(in) :: code
+      character(len=3) :: word
+
+      word(1:1) = achar(iachar("a") + code/676_default_int)
+      word(2:2) = achar(iachar("a") + mod(code/26_default_int, 26_default_int))
+      word(3:3) = achar(iachar("a") + mod(code, 26_default_int))
+   end function code_to_word
+
+   pure function word_to_code(word) result(code)
+      !! Inverse of code_to_word
+      character(len=*), intent(in) :: word
+      integer(default_int) :: code
+
+      code = 676_default_int*(iachar(word(1:1)) - iachar("a")) &
+             + 26_default_int*(iachar(word(2:2)) - iachar("a")) &
+             + (iachar(word(3:3)) - iachar("a"))
+   end function word_to_code
+
+   pure function codes_to_words(codes) result(words)
+      integer(default_int), intent(in) :: codes(:)
+      character(len=3) :: words(size(codes))
+      integer(default_int) :: i
+
+      do i = 1, size(codes, kind=default_int)
+         words(i) = code_to_word(codes(i))
+      end do
+   end function codes_to_words
+
+   pure function words_to_codes(words) result(codes)
+      character(len=*), intent(in) :: words(:)
+      integer(default_int) :: codes(size(words))
+      integer(default_int) :: i
+
+      do i = 1, size(words, kind=default_int)
+         codes(i) = word_to_code(words(i))
+      end do
+   end function words_to_codes
+
+   function same_multiset(a, b) result(ok)
+      !! .true. when a and b hold the same values with the same multiplicities
+      integer(default_int), intent(in) :: a(:), b(:)
+      logical :: ok
+      integer(default_int), allocatable :: hist_a(:), hist_b(:)
+      integer(default_int) :: lo, hi, i
+
+      ok = .false.
+      if (size(a, kind=default_int) /= size(b, kind=default_int)) return
+
+      lo = min(minval(a), minval(b))
+      hi = max(maxval(a), maxval(b))
+      allocate (hist_a(lo:hi), hist_b(lo:hi))
+      hist_a = 0_default_int
+      hist_b = 0_default_int
+      do i = 1, size(a, kind=default_int)
+         hist_a(a(i)) = hist_a(a(i)) + 1_default_int
+         hist_b(b(i)) = hist_b(b(i)) + 1_default_int
+      end do
+
+      ok = all(hist_a == hist_b)
+   end function same_multiset
+
+   subroutine check_sort_outcome(error, ordered, permuted, label)
+      !! Both properties a sort must have: the right order, and the same
+      !! elements it was handed
+      type(error_type), allocatable, intent(out) :: error
+      logical, intent(in) :: ordered, permuted
+      character(len=*), intent(in) :: label
+
+      call check(error, ordered, label//": result is not in the requested order")
+      if (allocated(error)) return
+
+      call check(error, permuted, label//": result is not a permutation of the input")
+   end subroutine check_sort_outcome
+
+   function mirror_codes(codes) result(mirrored)
+      !! Reflect the codes so that an input crafted for an increasing sort
+      !! exercises exactly the same path in the decreasing specialisation
+      integer(default_int), intent(in) :: codes(:)
+      integer(default_int) :: mirrored(size(codes))
+
+      mirrored = maxval(codes) - codes
+   end function mirror_codes
+
+   subroutine run_sort_checks(error, codes, label)
+      !! Push one scenario through sort() for every element type, ascending
+      !! and descending
+      type(error_type), allocatable, intent(out) :: error
+      integer(default_int), intent(in) :: codes(:)
+      character(len=*), intent(in) :: label
+      integer(default_int) :: n
+      integer(default_int), allocatable :: mirrored(:)
+      integer(int32), allocatable :: a32(:)
+      integer(int64), allocatable :: a64(:)
+      real(sp), allocatable :: asp(:)
+      real(dp), allocatable :: adp(:)
+      character(len=3), allocatable :: ach(:)
+
+      n = size(codes, kind=default_int)
+      allocate (a32(n), a64(n), asp(n), adp(n), ach(n))
+      allocate (mirrored(n))
+      mirrored = mirror_codes(codes)
+
+      a32 = int(codes, int32)
+      call sort(a32)
+      call check_sort_outcome(error, is_sorted(a32), &
+                              same_multiset(int(a32, default_int), codes), label//" sort int32 up")
+      if (allocated(error)) return
+
+      a64 = int(codes, int64)
+      call sort(a64)
+      call check_sort_outcome(error, is_sorted(a64), &
+                              same_multiset(int(a64, default_int), codes), label//" sort int64 up")
+      if (allocated(error)) return
+
+      asp = real(codes, sp)
+      call sort(asp)
+      call check_sort_outcome(error, is_sorted(asp), &
+                              same_multiset(nint(asp, default_int), codes), label//" sort sp up")
+      if (allocated(error)) return
+
+      adp = real(codes, dp)
+      call sort(adp)
+      call check_sort_outcome(error, is_sorted(adp), &
+                              same_multiset(nint(adp, default_int), codes), label//" sort dp up")
+      if (allocated(error)) return
+
+      ach = codes_to_words(codes)
+      call sort(ach)
+      call check_sort_outcome(error, is_sorted(ach), &
+                              same_multiset(words_to_codes(ach), codes), label//" sort char up")
+      if (allocated(error)) return
+
+      a32 = int(mirrored, int32)
+      call sort(a32, .true.)
+      call check_sort_outcome(error, is_sorted(a32, DESCENDING), &
+                              same_multiset(int(a32, default_int), mirrored), label//" sort int32 down")
+      if (allocated(error)) return
+
+      a64 = int(mirrored, int64)
+      call sort(a64, .true.)
+      call check_sort_outcome(error, is_sorted(a64, DESCENDING), &
+                              same_multiset(int(a64, default_int), mirrored), label//" sort int64 down")
+      if (allocated(error)) return
+
+      asp = real(mirrored, sp)
+      call sort(asp, .true.)
+      call check_sort_outcome(error, is_sorted(asp, DESCENDING), &
+                              same_multiset(nint(asp, default_int), mirrored), label//" sort sp down")
+      if (allocated(error)) return
+
+      adp = real(mirrored, dp)
+      call sort(adp, .true.)
+      call check_sort_outcome(error, is_sorted(adp, DESCENDING), &
+                              same_multiset(nint(adp, default_int), mirrored), label//" sort dp down")
+      if (allocated(error)) return
+
+      ach = codes_to_words(mirrored)
+      call sort(ach, .true.)
+      call check_sort_outcome(error, is_sorted(ach, DESCENDING), &
+                              same_multiset(words_to_codes(ach), mirrored), label//" sort char down")
+      if (allocated(error)) return
+   end subroutine run_sort_checks
+
+   subroutine run_ord_sort_checks(error, codes, label)
+      !! Push one scenario through ord_sort() for every element type,
+      !! ascending and descending
+      type(error_type), allocatable, intent(out) :: error
+      integer(default_int), intent(in) :: codes(:)
+      character(len=*), intent(in) :: label
+      integer(default_int) :: n
+      integer(default_int), allocatable :: mirrored(:)
+      integer(int32), allocatable :: a32(:)
+      integer(int64), allocatable :: a64(:)
+      real(sp), allocatable :: asp(:)
+      real(dp), allocatable :: adp(:)
+      character(len=3), allocatable :: ach(:)
+
+      n = size(codes, kind=default_int)
+      allocate (a32(n), a64(n), asp(n), adp(n), ach(n))
+      allocate (mirrored(n))
+      mirrored = mirror_codes(codes)
+
+      a32 = int(codes, int32)
+      call ord_sort(a32)
+      call check_sort_outcome(error, is_sorted(a32), &
+                              same_multiset(int(a32, default_int), codes), label//" ord_sort int32 up")
+      if (allocated(error)) return
+
+      a64 = int(codes, int64)
+      call ord_sort(a64)
+      call check_sort_outcome(error, is_sorted(a64), &
+                              same_multiset(int(a64, default_int), codes), label//" ord_sort int64 up")
+      if (allocated(error)) return
+
+      asp = real(codes, sp)
+      call ord_sort(asp)
+      call check_sort_outcome(error, is_sorted(asp), &
+                              same_multiset(nint(asp, default_int), codes), label//" ord_sort sp up")
+      if (allocated(error)) return
+
+      adp = real(codes, dp)
+      call ord_sort(adp)
+      call check_sort_outcome(error, is_sorted(adp), &
+                              same_multiset(nint(adp, default_int), codes), label//" ord_sort dp up")
+      if (allocated(error)) return
+
+      ach = codes_to_words(codes)
+      call ord_sort(ach)
+      call check_sort_outcome(error, is_sorted(ach), &
+                              same_multiset(words_to_codes(ach), codes), label//" ord_sort char up")
+      if (allocated(error)) return
+
+      a32 = int(mirrored, int32)
+      call ord_sort(a32, reverse=.true.)
+      call check_sort_outcome(error, is_sorted(a32, DESCENDING), &
+                              same_multiset(int(a32, default_int), mirrored), label//" ord_sort int32 down")
+      if (allocated(error)) return
+
+      a64 = int(mirrored, int64)
+      call ord_sort(a64, reverse=.true.)
+      call check_sort_outcome(error, is_sorted(a64, DESCENDING), &
+                              same_multiset(int(a64, default_int), mirrored), label//" ord_sort int64 down")
+      if (allocated(error)) return
+
+      asp = real(mirrored, sp)
+      call ord_sort(asp, reverse=.true.)
+      call check_sort_outcome(error, is_sorted(asp, DESCENDING), &
+                              same_multiset(nint(asp, default_int), mirrored), label//" ord_sort sp down")
+      if (allocated(error)) return
+
+      adp = real(mirrored, dp)
+      call ord_sort(adp, reverse=.true.)
+      call check_sort_outcome(error, is_sorted(adp, DESCENDING), &
+                              same_multiset(nint(adp, default_int), mirrored), label//" ord_sort dp down")
+      if (allocated(error)) return
+
+      ach = codes_to_words(mirrored)
+      call ord_sort(ach, reverse=.true.)
+      call check_sort_outcome(error, is_sorted(ach, DESCENDING), &
+                              same_multiset(words_to_codes(ach), mirrored), label//" ord_sort char down")
+      if (allocated(error)) return
+   end subroutine run_ord_sort_checks
+
+   subroutine run_sort_index_checks(error, codes, label)
+      !! Push one scenario through sort_index() for every element type and
+      !! both index kinds, checking that the index really maps the original
+      !! positions onto the sorted order
+      type(error_type), allocatable, intent(out) :: error
+      integer(default_int), intent(in) :: codes(:)
+      character(len=*), intent(in) :: label
+      integer(default_int) :: n
+      integer(int32), allocatable :: a32(:), o32(:)
+      integer(int64), allocatable :: a64(:), o64(:)
+      real(sp), allocatable :: asp(:), osp(:)
+      real(dp), allocatable :: adp(:), odp(:)
+      character(len=3), allocatable :: ach(:), och(:)
+      integer(int32), allocatable :: idx_low(:)
+      integer(int64), allocatable :: idx_default(:)
+
+      n = size(codes, kind=default_int)
+      allocate (a32(n), o32(n), a64(n), o64(n), asp(n), osp(n), adp(n), odp(n))
+      allocate (ach(n), och(n), idx_low(n), idx_default(n))
+
+      o32 = int(codes, int32)
+      o64 = int(codes, int64)
+      osp = real(codes, sp)
+      odp = real(codes, dp)
+      och = codes_to_words(codes)
+
+      a32 = o32
+      call sort_index(a32, idx_default)
+      call check_sort_outcome(error, is_sorted(a32), all(o32(idx_default) == a32), &
+                              label//" sort_index int32/int64")
+      if (allocated(error)) return
+
+      a32 = o32
+      call sort_index(a32, idx_low)
+      call check_sort_outcome(error, is_sorted(a32), all(o32(idx_low) == a32), &
+                              label//" sort_index int32/int32")
+      if (allocated(error)) return
+
+      a64 = o64
+      call sort_index(a64, idx_default)
+      call check_sort_outcome(error, is_sorted(a64), all(o64(idx_default) == a64), &
+                              label//" sort_index int64/int64")
+      if (allocated(error)) return
+
+      a64 = o64
+      call sort_index(a64, idx_low)
+      call check_sort_outcome(error, is_sorted(a64), all(o64(idx_low) == a64), &
+                              label//" sort_index int64/int32")
+      if (allocated(error)) return
+
+      asp = osp
+      call sort_index(asp, idx_default)
+      call check_sort_outcome(error, is_sorted(asp), all(abs(osp(idx_default) - asp) <= 0.0_sp), &
+                              label//" sort_index sp/int64")
+      if (allocated(error)) return
+
+      asp = osp
+      call sort_index(asp, idx_low)
+      call check_sort_outcome(error, is_sorted(asp), all(abs(osp(idx_low) - asp) <= 0.0_sp), &
+                              label//" sort_index sp/int32")
+      if (allocated(error)) return
+
+      adp = odp
+      call sort_index(adp, idx_default)
+      call check_sort_outcome(error, is_sorted(adp), all(abs(odp(idx_default) - adp) <= 0.0_dp), &
+                              label//" sort_index dp/int64")
+      if (allocated(error)) return
+
+      adp = odp
+      call sort_index(adp, idx_low)
+      call check_sort_outcome(error, is_sorted(adp), all(abs(odp(idx_low) - adp) <= 0.0_dp), &
+                              label//" sort_index dp/int32")
+      if (allocated(error)) return
+
+      ach = och
+      call sort_index(ach, idx_default)
+      call check_sort_outcome(error, is_sorted(ach), all(och(idx_default) == ach), &
+                              label//" sort_index char/int64")
+      if (allocated(error)) return
+
+      ach = och
+      call sort_index(ach, idx_low)
+      call check_sort_outcome(error, is_sorted(ach), all(och(idx_low) == ach), &
+                              label//" sort_index char/int32")
+      if (allocated(error)) return
+   end subroutine run_sort_index_checks
+
+   function median_of_three_codes() result(codes)
+      !! Introsort samples the first, middle and last element to pick its
+      !! pivot. Here the FIRST element is the median of the three, which is
+      !! the branch a plain ascending or random input never reaches.
+      integer(default_int) :: codes(64)
+      integer(default_int) :: i
+
+      do i = 1, 64_default_int
+         codes(i) = i
+      end do
+      codes(1) = 500_default_int
+      codes(64) = 900_default_int
+   end function median_of_three_codes
+
+   function quicksort_killer_codes() result(codes)
+      !! Nearly every element equal, with a handful of smaller and a handful
+      !! of larger outliers. Median-of-three keeps picking the repeated value,
+      !! so each partition peels off a single element, the recursion depth
+      !! limit is exhausted and introsort has to fall back to its heap sort -
+      !! with distinct elements still present, so the sift-down really swaps.
+      integer(default_int) :: codes(4096)
+      integer(default_int) :: i
+
+      codes = 500_default_int
+      do i = 1, 8_default_int
+         codes(i) = i
+         codes(8_default_int + i) = 990_default_int + i
+      end do
+   end function quicksort_killer_codes
+
+   function block_pair_codes() result(codes)
+      !! Two natural runs: a long one holding only large values followed by a
+      !! shorter one holding only small values. The merge then copies the
+      !! short run into its buffer and runs out of the long run first, which
+      !! is the "left run exhausted" tail of the backwards merge.
+      integer(default_int) :: codes(128)
+      integer(default_int) :: i
+
+      do i = 1, 80_default_int
+         codes(i) = 1000_default_int + i
+      end do
+      do i = 1, 48_default_int
+         codes(80_default_int + i) = i
+      end do
+   end function block_pair_codes
+
+   function run_stack_codes() result(codes)
+      !! Seven natural runs whose lengths make the merge-sort run stack
+      !! violate its invariant in the one way random data does not: the run
+      !! two below the top is shorter than the top, so the collapse has to
+      !! merge the lower pair instead of the top pair.
+      integer(default_int) :: codes(512)
+      integer(default_int), parameter :: lengths(7) = &
+                                         [60_default_int, 80_default_int, 100_default_int, 128_default_int, &
+                                          48_default_int, 48_default_int, 48_default_int]
+      integer(default_int) :: b, i, pos
+
+      pos = 0_default_int
+      do b = 1, 7_default_int
+         do i = 1, lengths(b)
+            pos = pos + 1_default_int
+            codes(pos) = i
+         end do
+      end do
+   end function run_stack_codes
+
+   subroutine test_sort_median_of_three(error)
+      type(error_type), allocatable, intent(out) :: error
+
+      call run_sort_checks(error, median_of_three_codes(), "median-of-three")
+   end subroutine test_sort_median_of_three
+
+   subroutine test_sort_heapsort_fallback(error)
+      type(error_type), allocatable, intent(out) :: error
+
+      call run_sort_checks(error, quicksort_killer_codes(), "quicksort-killer")
+   end subroutine test_sort_heapsort_fallback
+
+   subroutine test_ord_sort_merge_exhausts_left(error)
+      type(error_type), allocatable, intent(out) :: error
+
+      call run_ord_sort_checks(error, block_pair_codes(), "block-pair")
+      if (allocated(error)) return
+
+      call run_sort_index_checks(error, block_pair_codes(), "block-pair")
+   end subroutine test_ord_sort_merge_exhausts_left
+
+   subroutine test_ord_sort_run_stack_collapse(error)
+      type(error_type), allocatable, intent(out) :: error
+
+      call run_ord_sort_checks(error, run_stack_codes(), "run-stack")
+      if (allocated(error)) return
+
+      call run_sort_index_checks(error, run_stack_codes(), "run-stack")
+   end subroutine test_ord_sort_run_stack_collapse
+
+   subroutine test_radix_sort_mostly_negative(error)
+      !! With more negatives than non-negatives the rotation that moves the
+      !! negative half back to the front has to search downwards
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: a32(5)
+      integer(int64) :: a64(5)
+      integer(int32), parameter :: expected32(5) = [-3_int32, -2_int32, -1_int32, 1_int32, 2_int32]
+      integer(int64), parameter :: expected64(5) = [-3_int64, -2_int64, -1_int64, 1_int64, 2_int64]
+
+      a32 = [-1_int32, 2_int32, -3_int32, 1_int32, -2_int32]
+      call radix_sort(a32)
+      call check(error, all(a32 == expected32), "radix_sort(int32) with three negatives")
+      if (allocated(error)) return
+
+      a64 = [-1_int64, 2_int64, -3_int64, 1_int64, -2_int64]
+      call radix_sort(a64)
+      call check(error, all(a64 == expected64), "radix_sort(int64) with three negatives")
+      if (allocated(error)) return
+
+      a32 = [-1_int32, 2_int32, -3_int32, 1_int32, -2_int32]
+      call radix_sort(a32, reverse=.true.)
+      call check(error, all(a32 == expected32(5:1:-1)), "reversed radix_sort(int32) with three negatives")
+      if (allocated(error)) return
+
+      a64 = [-1_int64, 2_int64, -3_int64, 1_int64, -2_int64]
+      call radix_sort(a64, reverse=.true.)
+      call check(error, all(a64 == expected64(5:1:-1)), "reversed radix_sort(int64) with three negatives")
+      if (allocated(error)) return
+   end subroutine test_radix_sort_mostly_negative
 
 end module test_pic_sorting

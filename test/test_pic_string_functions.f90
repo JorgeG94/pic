@@ -3,8 +3,8 @@ module pic_test_string_functions
    use, intrinsic :: iso_fortran_env, only: error_unit
    use testdrive, only: new_unittest, unittest_type, error_type, check
    use pic_string_type, only: string_type, assignment(=), operator(==), &
-                              to_lower, to_upper, to_title, to_sentence, reverse
-   use pic_strings, only: slice, find, replace_all, padl, padr, count, zfill
+                              to_lower, to_upper, to_title, to_sentence, reverse, char
+   use pic_strings, only: slice, find, replace_all, padl, padr, count, zfill, join
    use pic_optional_value, only: pic_optional
    use pic_strings, only: to_string
    implicit none
@@ -31,7 +31,9 @@ contains
                   new_unittest("padl", test_padl), &
                   new_unittest("padr", test_padr), &
                   new_unittest("count", test_count), &
-                  new_unittest("zfill", test_zfill) &
+                  new_unittest("zfill", test_zfill), &
+                  new_unittest("join", test_join), &
+                  new_unittest("find-partial-match-restart", test_find_partial_match_restart) &
                   ]
    end subroutine collect_string_function_tests
 
@@ -729,5 +731,60 @@ contains
           & 'zfill: output_length <= len(string), test_case 6')
 
    end subroutine test_zfill
+
+   subroutine test_join(error)
+      !> join concatenates with an explicit separator, or a single blank by default
+      type(error_type), allocatable, intent(out) :: error
+      type(string_type) :: parts(3)
+      type(string_type) :: joined
+      character(len=5), parameter :: cparts(3) = ["alpha", "beta ", "gamma"]
+
+      parts(1) = "alpha"
+      parts(2) = "beta"
+      parts(3) = "gamma"
+
+      joined = join(parts)
+      call check(error, char(joined) == "alpha beta gamma", &
+                 "join of string_type should default to a blank separator")
+      if (allocated(error)) return
+
+      joined = join(parts, ", ")
+      call check(error, char(joined) == "alpha, beta, gamma", &
+                 "join of string_type should use the given separator")
+      if (allocated(error)) return
+
+      joined = join(parts, "")
+      call check(error, char(joined) == "alphabetagamma", &
+                 "join of string_type should accept an empty separator")
+      if (allocated(error)) return
+
+      call check(error, join(cparts) == "alpha beta gamma", &
+                 "join of characters should default to a blank separator")
+      if (allocated(error)) return
+
+      call check(error, join(cparts, "-") == "alpha-beta-gamma", &
+                 "join of characters should use the given separator")
+      if (allocated(error)) return
+   end subroutine test_join
+
+   subroutine test_find_partial_match_restart(error)
+      !> A pattern that partially matches and then fails must resume from the
+      !> longest proper prefix rather than restarting from scratch
+      type(error_type), allocatable, intent(out) :: error
+
+      ! "aabaabaac" matches "aabaac" only at position 4, and only after the
+      ! partial match starting at position 1 fails on its last character.
+      call check(error, find("aabaabaac", "aabaac") == 4, &
+                 "find should recover from a partial match and locate the pattern")
+      if (allocated(error)) return
+
+      call check(error, find("aabaabaab", "aabaac") == 0, &
+                 "find should report no match when the pattern never completes")
+      if (allocated(error)) return
+
+      call check(error, find("aabaacaabaac", "aabaac", 2) == 7, &
+                 "find should locate the second occurrence")
+      if (allocated(error)) return
+   end subroutine test_find_partial_match_restart
 
 end module pic_test_string_functions

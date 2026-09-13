@@ -44,7 +44,10 @@ contains
                   new_unittest("test_error_raise_present", test_error_raise_present), &
                   new_unittest("test_error_raise_absent", test_error_raise_absent), &
                   new_unittest("test_purity_is_preserved", test_purity_is_preserved), &
-                  new_unittest("test_fatal_without_error", test_fatal_without_error) &
+                  new_unittest("test_fatal_without_error", test_fatal_without_error), &
+                  new_unittest("test_wrap_missing_message", test_wrap_missing_message), &
+                  new_unittest("test_print_trace_stack_and_no_message", test_print_trace_stack_and_no_message), &
+                  new_unittest("test_fatal_without_error_returns", test_fatal_without_error_returns) &
                   ]
    end subroutine collect_pic_error_tests
 
@@ -775,5 +778,102 @@ contains
 
       call error_raise(err, code, "raised from a pure procedure")
    end subroutine raising_pure_routine
+
+   subroutine test_wrap_missing_message(error)
+      !! Wrapping an error whose message was never allocated should record
+      !! the "(no message)" placeholder in the cause chain
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+
+      ! Set the code directly so that %message stays unallocated
+      err%code = ERROR_IO
+
+      call err%wrap(ERROR_PARSE, "outer context")
+
+      call check(error, err%cause_depth == 1, "One cause should have been recorded")
+      if (allocated(error)) return
+
+      call check(error, trim(err%cause_messages(1)) == "(no message)", &
+                 "Missing cause message should be replaced by the placeholder")
+      if (allocated(error)) return
+
+      call check(error, err%cause_codes(1) == ERROR_IO, "Cause code should be the original code")
+      if (allocated(error)) return
+
+      call check(error, err%get_code() == ERROR_PARSE, "Top level code should be the wrapping code")
+      if (allocated(error)) return
+   end subroutine test_wrap_missing_message
+
+   subroutine test_print_trace_stack_and_no_message(error)
+      !! print_trace should emit the "(no message)" placeholder and the call
+      !! stack section when a stack has been accumulated
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+      character(len=*), parameter :: test_filename = "test_error_trace_stack.log"
+      character(len=256) :: line
+      integer(default_int) :: unit_num, ios
+      logical :: found_no_message, found_header, found_inner, found_outer, file_exists
+
+      ! Set the code directly so that %message stays unallocated
+      err%code = ERROR_VALIDATION
+      call err%add_context("pic_deep:inner")
+      call err%add_context("pic_shallow:outer")
+
+      open (newunit=unit_num, file=test_filename, status="replace", action="write")
+      call err%print_trace(unit_num)
+      close (unit_num)
+
+      found_no_message = .false.
+      found_header = .false.
+      found_inner = .false.
+      found_outer = .false.
+
+      open (newunit=unit_num, file=test_filename, status="old", action="read")
+      read_loop: do
+         read (unit_num, "(A)", iostat=ios) line
+         if (ios /= 0) exit read_loop
+         if (index(line, "(no message)") > 0) found_no_message = .true.
+         if (index(line, "Call stack (most recent first):") > 0) found_header = .true.
+         if (index(line, "[1]") > 0 .and. index(line, "pic_deep:inner") > 0) found_inner = .true.
+         if (index(line, "[2]") > 0 .and. index(line, "pic_shallow:outer") > 0) found_outer = .true.
+      end do read_loop
+      close (unit_num)
+
+      call check(error, found_no_message, "Trace should contain the (no message) placeholder")
+      if (allocated(error)) return
+
+      call check(error, found_header, "Trace should contain the call stack header")
+      if (allocated(error)) return
+
+      call check(error, found_inner, "Trace should list the first context entry")
+      if (allocated(error)) return
+
+      call check(error, found_outer, "Trace should list the second context entry")
+      if (allocated(error)) return
+
+      inquire (file=test_filename, exist=file_exists)
+      if (file_exists) then
+         open (newunit=unit_num, file=test_filename, status="old", action="read")
+         close (unit_num, status="delete")
+      end if
+   end subroutine test_print_trace_stack_and_no_message
+
+   subroutine test_fatal_without_error_returns(error)
+      !! fatal() on a clean error_t must return instead of stopping
+      type(error_type), allocatable, intent(out) :: error
+      type(error_t) :: err
+
+      call err%fatal()
+
+      call check(error,.not. err%has_error(), "fatal() must leave a clean error_t untouched")
+      if (allocated(error)) return
+
+      call err%set(ERROR_IO, "boom")
+      call err%clear()
+      call err%fatal()
+
+      call check(error, err%get_code() == SUCCESS, "fatal() on a cleared error must return")
+      if (allocated(error)) return
+   end subroutine test_fatal_without_error_returns
 
 end module test_pic_error

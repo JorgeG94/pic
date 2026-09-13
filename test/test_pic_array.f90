@@ -118,7 +118,10 @@ contains
                   new_unittest("print_bad_format_err", test_print_bad_format_err), &
                   new_unittest("print_packed_bad_size_err", test_print_packed_bad_size_err), &
                   new_unittest("print_bad_input_without_err", test_print_bad_input_without_err), &
-                  new_unittest("print_valid_input_err_clear", test_print_valid_input_err_clear) &
+                  new_unittest("print_valid_input_err_clear", test_print_valid_input_err_clear), &
+                  new_unittest("is_sorted_rejects_unsorted", test_is_sorted_rejects_unsorted), &
+                  new_unittest("print_packed_rejects_bad_size", test_print_packed_rejects_bad_size), &
+                  new_unittest("print_unknown_format_falls_back", test_print_unknown_format_falls_back) &
                   ]
 
       ! Add more tests as needed
@@ -2216,5 +2219,117 @@ contains
       if (allocated(error)) return
 
    end subroutine test_print_valid_input_err_clear
+
+   subroutine test_is_sorted_rejects_unsorted(error)
+      !! is_sorted must return .false. for every supported kind when the
+      !! requested ordering is violated, for both orderings
+      type(error_type), allocatable, intent(out) :: error
+      integer(int32) :: a_int32(4)
+      integer(int64) :: a_int64(4)
+      real(sp) :: a_sp(4)
+      real(dp) :: a_dp(4)
+      character(len=3) :: a_char(4)
+
+      a_int32 = [1_int32, 2_int32, 9_int32, 3_int32]
+      a_int64 = [1_int64, 2_int64, 9_int64, 3_int64]
+      a_sp = [1.0_sp, 2.0_sp, 9.0_sp, 3.0_sp]
+      a_dp = [1.0_dp, 2.0_dp, 9.0_dp, 3.0_dp]
+      a_char = ["aaa", "bbb", "zzz", "ccc"]
+
+      ! Ascending is requested but the last step decreases.
+      call check(error,.not. is_sorted(a_int32), "int32 descent must not count as ascending")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_int64), "int64 descent must not count as ascending")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_sp), "sp descent must not count as ascending")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_dp), "dp descent must not count as ascending")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_char), "character descent must not count as ascending")
+      if (allocated(error)) return
+
+      ! The explicit ASCENDING spelling must behave identically.
+      call check(error,.not. is_sorted(a_int32, ASCENDING), "explicit ASCENDING must reject int32 descent")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_char, ASCENDING), "explicit ASCENDING must reject character descent")
+      if (allocated(error)) return
+
+      ! Reversing the data makes it ascending and not descending.
+      a_int32 = [1_int32, 2_int32, 3_int32, 9_int32]
+      a_char = ["aaa", "bbb", "ccc", "zzz"]
+
+      call check(error, is_sorted(a_int32), "int32 ascending run must be accepted")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_int32, DESCENDING), "ascending int32 must not count as descending")
+      if (allocated(error)) return
+
+      call check(error, is_sorted(a_char), "character ascending run must be accepted")
+      if (allocated(error)) return
+
+      call check(error,.not. is_sorted(a_char, DESCENDING), "ascending characters must not count as descending")
+      if (allocated(error)) return
+   end subroutine test_is_sorted_rejects_unsorted
+
+   subroutine test_print_packed_rejects_bad_size(error)
+      !! A packed-triangle print with an element count that is not a
+      !! triangular number must bail out instead of reading past the array.
+      !! The arrays below are sized exactly to the (invalid) element count,
+      !! so an unguarded routine would run off their ends.
+      type(error_type), allocatable, intent(out) :: error
+      integer(default_int), parameter :: five = 5
+      integer(int32) :: v_int32(5)
+      integer(int64) :: v_int64(5)
+      real(sp) :: v_sp(5)
+      real(dp) :: v_dp(5)
+
+      v_int32 = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32]
+      v_int64 = [1_int64, 2_int64, 3_int64, 4_int64, 5_int64]
+      v_sp = [1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp]
+      v_dp = [1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp]
+
+      ! 5 is not of the form n*(n+1)/2, so all four of these must return early.
+      call pic_print_array(v_int32, five, "PLAIN")
+      call pic_print_array(v_int64, five, "PLAIN")
+      call pic_print_array(v_sp, five, "PLAIN")
+      call pic_print_array(v_dp, five, "PLAIN")
+
+      call check(error, all(v_int32 == [1_int32, 2_int32, 3_int32, 4_int32, 5_int32]), &
+                 "Rejected packed print must leave the int32 input untouched")
+      if (allocated(error)) return
+
+      call check(error, all(v_int64 == [1_int64, 2_int64, 3_int64, 4_int64, 5_int64]), &
+                 "Rejected packed print must leave the int64 input untouched")
+      if (allocated(error)) return
+
+      call check(error, all(abs(v_sp - [1.0_sp, 2.0_sp, 3.0_sp, 4.0_sp, 5.0_sp]) <= 0.0_sp), &
+                 "Rejected packed print must leave the sp input untouched")
+      if (allocated(error)) return
+
+      call check(error, all(abs(v_dp - [1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 5.0_dp]) <= 0.0_dp), &
+                 "Rejected packed print must leave the dp input untouched")
+      if (allocated(error)) return
+   end subroutine test_print_packed_rejects_bad_size
+
+   subroutine test_print_unknown_format_falls_back(error)
+      !! An unrecognised bracket style must fall back to the NumPy style
+      !! instead of failing; the fallback is exercised on a valid triangle.
+      type(error_type), allocatable, intent(out) :: error
+      integer(default_int), parameter :: six = 6
+      integer(int32) :: v_int32(6)
+
+      v_int32 = [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32]
+
+      call pic_print_array(v_int32, six, "NOT_A_REAL_FORMAT")
+
+      call check(error, all(v_int32 == [1_int32, 2_int32, 3_int32, 4_int32, 5_int32, 6_int32]), &
+                 "Printing with an unknown format must not modify the input")
+      if (allocated(error)) return
+   end subroutine test_print_unknown_format_falls_back
 
 end module test_pic_array

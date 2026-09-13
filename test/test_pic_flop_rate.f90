@@ -17,7 +17,9 @@ contains
                   new_unittest("test_flop_rate_accessors", test_flop_rate_accessors), &
                   new_unittest("test_flop_rate_timing_order", test_flop_rate_timing_order), &
                   new_unittest("test_flop_rate_reset_behavior", test_flop_rate_reset_behavior), &
-                  new_unittest("test_flop_rate_report", test_flop_rate_report) &
+                  new_unittest("test_flop_rate_report", test_flop_rate_report), &
+                  new_unittest("test_flop_rate_zero_time", test_flop_rate_zero_time), &
+                  new_unittest("test_flop_rate_sourced_copy", test_flop_rate_sourced_copy) &
                   ]
    end subroutine collect_flop_rate_tests
 
@@ -162,5 +164,48 @@ contains
       call check(error, .true., "Flop rate report should not crash")
       if (allocated(error)) return
    end subroutine test_flop_rate_report
+
+   subroutine test_flop_rate_zero_time(error)
+      !! A flop rate asked for before any timing has happened must clamp to
+      !! zero rather than divide by zero
+      type(error_type), allocatable, intent(out) :: error
+      type(flop_rate_type) :: flop_rate
+      real(dp) :: rate
+
+      call flop_rate%add_flops(1000_int64)
+
+      ! No start/stop pair, so the underlying timer reports exactly zero.
+      call check(error, abs(flop_rate%get_time()) <= 0.0_dp, "Untimed flop rate should report zero time")
+      if (allocated(error)) return
+
+      rate = flop_rate%get_flop_rate()
+
+      call check(error, abs(rate) <= 0.0_dp, "Flop rate should be clamped to zero for zero elapsed time")
+      if (allocated(error)) return
+
+      call check(error, flop_rate%get_flops() == 1000_int64, "Clamping must not discard the flop count")
+      if (allocated(error)) return
+   end subroutine test_flop_rate_zero_time
+
+   subroutine test_flop_rate_sourced_copy(error)
+      !! A sourced allocation of a flop rate must carry the flop count over
+      type(error_type), allocatable, intent(out) :: error
+      type(flop_rate_type) :: flop_rate
+      class(flop_rate_type), allocatable :: copy
+
+      call flop_rate%start_time()
+      call dummy_work()
+      call flop_rate%stop_time()
+      call flop_rate%add_flops(4096_int64)
+
+      allocate (copy, source=flop_rate)
+
+      call check(error, copy%get_flops() == 4096_int64, "A copied flop rate should keep the flop count")
+      if (allocated(error)) return
+
+      call check(error, abs(copy%get_time() - flop_rate%get_time()) <= 0.0_dp, &
+                 "A copied flop rate should keep the measured time")
+      if (allocated(error)) return
+   end subroutine test_flop_rate_sourced_copy
 
 end module test_pic_flop_rate

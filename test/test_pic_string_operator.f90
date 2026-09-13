@@ -22,7 +22,8 @@ contains
                   new_unittest("le", test_le), &
                   new_unittest("eq", test_eq), &
                   new_unittest("ne", test_ne), &
-                  new_unittest("concat", test_concat) &
+                  new_unittest("concat", test_concat), &
+                  new_unittest("char-lhs-comparisons", test_char_lhs_comparisons) &
                   ]
    end subroutine collect_string_operator_tests
 
@@ -213,5 +214,41 @@ contains
       call check(error, slen(string) == 10)
 
    end subroutine test_concat
+
+   subroutine test_char_lhs_comparisons(error)
+      !> Comparisons with the character operand on the left must agree with
+      !> the string_type-on-the-left forms
+      type(error_type), allocatable, intent(out) :: error
+      type(string_type) :: string
+
+      string = "bcd"
+
+      ! character <= string_type
+      call check(error, ("abc" <= string) .eqv. .true., "abc <= bcd should be true")
+      if (allocated(error)) return
+
+      call check(error, ("bcd" <= string) .eqv. .true., "bcd <= bcd should be true")
+      if (allocated(error)) return
+
+      call check(error, ("cde" <= string) .eqv. .false., "cde <= bcd should be false")
+      if (allocated(error)) return
+
+      ! character == string_type, taking the "not greater either way" path
+      call check(error, ("bcd" == string) .eqv. .true., "bcd == bcd should be true")
+      if (allocated(error)) return
+
+      call check(error, ("abc" == string) .eqv. .false., "abc == bcd should be false")
+      if (allocated(error)) return
+
+      ! character /= string_type, taking the "check the other direction" path
+      call check(error, ("bcd" /= string) .eqv. .false., "bcd /= bcd should be false")
+      if (allocated(error)) return
+
+      call check(error, ("abc" /= string) .eqv. .true., "abc /= bcd should be true")
+      if (allocated(error)) return
+
+      call check(error, ("cde" /= string) .eqv. .true., "cde /= bcd should be true")
+      if (allocated(error)) return
+   end subroutine test_char_lhs_comparisons
 
 end module pic_test_string_operator

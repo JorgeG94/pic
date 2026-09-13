@@ -19,7 +19,8 @@ contains
                   new_unittest("test_flop_recorder_large_numbers", test_flop_recorder_large_numbers), &
                   new_unittest("test_flop_recorder_zero_flops", test_flop_recorder_zero_flops), &
                   new_unittest("test_flop_recorder_accumulation", test_flop_recorder_accumulation), &
-                  new_unittest("test_flop_recorder_multiple_instances", test_flop_recorder_multiple_instances) &
+                  new_unittest("test_flop_recorder_multiple_instances", test_flop_recorder_multiple_instances), &
+                  new_unittest("test_flop_recorder_sourced_copy", test_flop_recorder_sourced_copy) &
                   ]
    end subroutine collect_pic_flop_recorder_tests
 
@@ -168,5 +169,28 @@ contains
       if (allocated(error)) return
 
    end subroutine test_flop_recorder_multiple_instances
+
+   subroutine test_flop_recorder_sourced_copy(error)
+      !! A sourced allocation of a recorder must carry the count over and the
+      !! copy must then accumulate independently of the original
+      type(error_type), allocatable, intent(out) :: error
+      type(flop_recorder_type) :: recorder
+      class(flop_recorder_type), allocatable :: copy
+
+      call recorder%add(123456789_int64)
+
+      allocate (copy, source=recorder)
+
+      call check(error, copy%get() == 123456789_int64, "Copy should start from the source count")
+      if (allocated(error)) return
+
+      call copy%add(1_int64)
+
+      call check(error, copy%get() == 123456790_int64, "Copy should accumulate on its own")
+      if (allocated(error)) return
+
+      call check(error, recorder%get() == 123456789_int64, "Original must be unaffected by the copy")
+      if (allocated(error)) return
+   end subroutine test_flop_recorder_sourced_copy
 
 end module test_pic_flop_recorder
