@@ -20,7 +20,12 @@ The Fortran ecosystem lacks a standard library that compiles reliably across all
 **Key Features:**
 
 - Strings, logging, timers, arrays, sorting, hashing
-- Tested on GNU, Intel, NVIDIA HPC, LFortran, Cray, and Flang
+- Unified error handling with cause chains and stack traces (``error_t``)
+- Containers: heaps, hash maps with a guaranteed iteration order, CSR sparse
+  matrices, graphs, fixed-capacity arrays, struct-of-arrays
+- Reproducibility: explicit-state RNGs, deterministic number formatting,
+  array state hashing, binary serialization
+- Tested on GNU, Intel, NVIDIA HPC, AOCC, LLVM Flang, LFortran and Cray
 - Two build systems: CMake and FPM
 - MIT licensed and open source
 

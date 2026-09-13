@@ -3,6 +3,10 @@ Features
 
 PIC provides a comprehensive set of utilities for Fortran development.
 
+Every module here compiles on the full CI matrix. Where a module exists
+because the standard leaves something *processor dependent*, that reason is
+stated — it is usually the most important thing to know about the module.
+
 Core Modules
 ------------
 
@@ -15,27 +19,170 @@ Portable kind definitions that work across all supported compilers:
 - ``sp``, ``dp``, ``qp`` - Single, double, and quad precision real kinds
 - ``int8``, ``int16``, ``int32``, ``int64`` - Fixed-width integer kinds
 
+Use ``default_int`` for anything that is conceptually "an integer", and an
+explicit width only where the width is part of the algorithm (hash
+accumulators, RNG state, serialized field widths).
+
+Error Handling (``pic_error``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A unified error type replacing ``stat``/``errmsg`` pairs, with a cause chain
+and a call-stack trace:
+
+.. code-block:: fortran
+
+   use pic_error
+   type(error_t) :: err
+
+   call err%set(ERROR_IO, "failed to open file")
+   if (err%has_error()) call err%fatal()
+   ! or with the operator form:
+   if (.haserror. err) call err%fatal()
+
+Errors can be wrapped to add context as they propagate, printing outermost
+first in the style of Rust's "caused by":
+
+.. code-block:: fortran
+
+   call low_level_routine(err)
+   if (err%has_error()) then
+      call err%wrap(ERROR_PARSE, "failed to parse input")
+      return
+   end if
+
+Error codes: ``SUCCESS``, ``ERROR_GENERIC``, ``ERROR_IO``, ``ERROR_PARSE``,
+``ERROR_VALIDATION``, ``ERROR_ALLOC``, ``ERROR_INTERNAL``, ``ERROR_BOUNDS``.
+
+``ERROR_VALIDATION`` means the *caller* passed something wrong;
+``ERROR_INTERNAL`` means a PIC invariant was violated. That distinction is
+what makes a bug report actionable, so prefer the specific code.
+
+Codes up to ``PIC_ERROR_CODE_MAX`` (99) are reserved for PIC. Downstream
+projects should use 100 and above, and can pass their own name table to
+``code_to_string`` through its optional ``user_name`` argument.
+
+.. note::
+
+   Every ``error_t`` mutator is ``pure``, so errors can be reported from
+   ``pure`` procedures — which is why the sorting routines can accept an
+   optional ``err`` without giving up purity. ``fatal`` and ``print_trace``
+   do I/O and are therefore impure; calling them from a ``pure`` procedure
+   is a compile-time error, as it should be.
+
 Strings (``pic_strings``, ``pic_string_type``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Comprehensive string handling:
 
 - Dynamic string type (``string_type``)
-- Conversion functions (``to_string``, ``to_lower``, ``to_upper``)
+- Conversion functions (``to_string`` from ``pic_strings``; ``to_lower``,
+  ``to_upper``, ``to_title``, ``to_sentence``, ``reverse`` from ``pic_ascii``,
+  and also available for ``string_type`` from ``pic_string_type``)
 - String manipulation utilities
 - ASCII character utilities (``pic_ascii``)
+
+.. warning::
+
+   The defined-I/O procedures for ``string_type`` (``read(formatted)``,
+   ``write(formatted)`` and their unformatted counterparts) are **not
+   available on nvfortran or classic flang** — those compilers do not
+   support user-defined derived-type I/O, so the interfaces are excluded by
+   preprocessor guard. Code that must build on every supported compiler
+   should not rely on them.
+
+   A ``string_type`` must also never be used as a namelist group object.
+
+Tokenizer (``pic_tokenizer``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Splitting character data into tokens, and parsing those tokens into numbers
+with explicit error reporting:
+
+- ``split`` - split on a delimiter, **keeping** empty fields
+- ``tokenize`` - split on separators, collapsing runs and dropping empties
+- ``parse_int``, ``parse_real`` - checked parsing reporting through ``error_t``
+
+The parsers deliberately avoid list-directed internal reads, which accept
+almost nothing the caller meant: ``"1,2"`` reads as 1, ``"3*7"`` is a repeat
+count, ``"nan"`` and ``"infinity"`` are accepted, and trailing junk after a
+separator is ignored. Every accepted form is checked against an explicit
+grammar first, and a malformed input yields ``ERROR_PARSE`` with a readable
+message rather than a plausible wrong number.
+
+The two split policies differ in a way that matters for columnar data:
+``split`` returns *delimiter count + 1* elements always, so
+``join(split(text, d), d)`` reproduces ``text`` and CSV columns stay aligned.
+``tokenize`` is the right choice for whitespace-separated input.
+
+Deterministic Formatting (``pic_format``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Number-to-string conversion producing a byte-identical result on every
+supported compiler:
+
+- ``to_string_fixed`` - fixed-point with a chosen number of decimals
+- ``to_string_sci`` - scientific notation
+- ``to_string_width`` - right-aligned in a field
+
+This exists because list-directed output and the ``g0`` edit descriptor are
+explicitly processor dependent — compilers disagree about digit counts,
+trailing zeros, whether a leading zero appears before the decimal point, the
+exponent letter, and the exponent field width. That makes golden-file testing
+impossible. ``pic_format`` generates the exact decimal expansion with integer
+arithmetic and rounds explicitly, round-half-to-even against the **exact
+binary value**.
+
+.. note::
+
+   Rounding against the exact binary value is occasionally surprising:
+   ``0.15_dp`` is really ``0.1499999999999999944…``, so
+   ``to_string_fixed(0.15_dp, 1)`` is ``"0.1"``, not ``"0.2"``. A tie is only
+   a tie for dyadic rationals such as ``0.25`` or ``2.5``. This is the only
+   rounding rule that can be reproduced exactly everywhere.
+
+Random Numbers (``pic_rng``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Reproducible pseudo-random generators with explicit state:
+
+- ``splitmix64_t`` - SplitMix64, a 64-bit counter plus a strong finalizing mix
+- ``pcg32_t`` - PCG-XSH-RR 64/32, supporting 2**63 distinct streams
+- ``next_real_dp``, ``next_below``, ``stream_for`` - generic helpers
+
+The intrinsic ``random_number`` is deliberately unspecified: every compiler
+ships a different engine, a different seeding rule and a different number of
+seed words, so any result depending on it cannot be regression tested across
+compilers. These generators are pure functions of their state, so the same
+seed yields the same bits everywhere.
+
+``next_real_dp`` builds its value from the top 53 bits rather than dividing by
+a modulus, so the result is exactly uniform on [0,1) with no rounding-to-one
+edge case. ``next_below(n)`` rejects the low values that would bias a naive
+modulo reduction.
 
 Logger (``pic_logger``)
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Logging utilities with multiple severity levels:
 
-- ``log_info`` - Informational messages
-- ``log_warning`` - Warning messages
-- ``log_error`` - Error messages
-- ``log_debug`` - Debug messages
+Messages are emitted through a ``logger_type`` object; ``global_logger`` is
+provided ready to use.
 
-A pure logger variant (``pic_pure_logger``) is also available for use in pure procedures.
+- ``%debug``, ``%verbose``, ``%large_info``, ``%info``, ``%performance``,
+  ``%warning``, ``%error``, ``%knowledge`` - emit at a level
+- ``%configure(level)`` / ``%configuration(level)`` - set and query verbosity
+- ``%configure_file_output(path, level)`` / ``%close_log_file`` - tee to a file
+- ``%set_explicit_printing(flag)`` - show or hide the level prefix
+
+Levels, in decreasing verbosity: ``debug_level``, ``verbose_level``,
+``large_info_level``, ``info_level``, ``performance_level``, ``warning_level``,
+``error_level``, ``knowledge_level``.
+
+A pure variant (``pic_pure_logger``) provides ``pure_debug``, ``pure_info``,
+``pure_warning``, ``pure_error`` and friends for use inside ``pure``
+procedures. Because a pure procedure cannot do I/O, those calls append to a
+buffer that impure code emits later with ``flush_log_buffer`` (or discards
+with ``clear_log_buffer``).
 
 Timer (``pic_timer``)
 ^^^^^^^^^^^^^^^^^^^^^
@@ -46,23 +193,124 @@ High-resolution timing utilities:
 - Elapsed time measurement
 - Support for nested timers
 
+Uses ``omp_get_wtime`` when built with OpenMP and ``system_clock`` otherwise.
+
+.. note::
+
+   On a processor with no clock, the standard specifies that ``system_clock``
+   returns a zero count rate. ``get_elapsed_time`` reports zero elapsed time
+   in that case rather than dividing by it. A caller cannot distinguish "no
+   clock" from "no measurable time passed" from the result alone — both mean
+   the same thing to any arithmetic downstream.
+
+Profiler (``pic_profiler``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Named, stack-based code regions with optional NVTX support:
+
+.. code-block:: fortran
+
+   use pic_profiler
+
+   call profiler_init()
+   call profiler_start("outer")
+   call profiler_start("inner")
+   ! ...
+   call profiler_stop()   ! stops "inner" - the stack decides, not the name
+   call profiler_stop()   ! stops "outer"
+   call profiler_report()
+   call profiler_finalize()
+
+Build with ``-DPIC_USE_NVTX=ON`` for NVIDIA Nsight Systems integration, or
+``-DPIC_DISABLE_PROFILER=ON`` for zero overhead.
+
 Arrays (``pic_array``)
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Array utilities:
 
-- ``fill_vector`` - Fill arrays with values
-- Support for multiple data types and ranks
-- Optional OpenMP parallelization
+- ``pic_fill`` - fill 1-D or 2-D arrays, generic over int32/int64/sp/dp
+- ``pic_copy``, ``pic_sum``, ``pic_transpose``
+- ``pic_scramble_array`` - shuffle, useful for building sort test cases
+- ``pic_print_array`` - NUMPY, MATHEMATICA and PLAIN output formats
+- ``is_sorted`` - with ``ASCENDING`` / ``DESCENDING``
+- ``set_threading_mode`` / ``get_threading_mode`` - default OpenMP threading,
+  overridable per call with the ``threaded`` argument
+
+Fixed-Capacity Arrays (``pic_fixed_array``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Bounded containers with push/pop/size semantics and no heap allocation:
+
+- ``fixed_array_int_t``, ``fixed_array_dp_t``
+- Capacity fixed at compile time by ``PIC_FIXED_ARRAY_CAPACITY``
+
+The Fortran analogue of C++'s ``std::inplace_vector``. Element storage is a
+fixed-size component — never ``allocatable``, never a ``pointer`` — so an
+instance can live on the stack, inside a ``block`` construct, or as a local of
+an OpenMP/OpenACC region without touching the heap. Every failure mode
+(capacity overflow, popping empty, out-of-range index) reports
+``ERROR_VALIDATION`` rather than writing past the end.
+
+.. note::
+
+   A parameterized derived type with a ``len`` parameter would be the textbook
+   way to make capacity per-instance. It is deliberately not used: PDT support
+   is poor or absent on several of the compilers PIC exists to support.
+
+   The ``err`` argument here is ``intent(inout)``, not ``intent(out)``, and is
+   written only on failure. An ``intent(out)`` ``error_t`` would oblige the
+   compiler to deallocate its ``message`` component on entry to *every* call,
+   putting heap traffic back into the hot path of a container whose whole
+   purpose is not having any.
 
 Sorting (``pic_sorting``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Sorting algorithms that work across all compilers:
 
-- Multiple sorting algorithms
-- Support for various data types
-- Works where stdlib sorting may not compile
+- ``sort`` - introsort with a heapsort fallback
+- ``ord_sort`` - a stable merge sort
+- ``radix_sort`` - for integer and real keys
+- ``sort_index`` - produces a permutation index rather than reordering in place
+
+``sort`` and ``ord_sort`` are ``pure``, so they can be called from your own
+``pure`` procedures.
+
+``ord_sort``, ``sort_index`` and ``radix_sort`` accept an **optional** ``err``
+argument of type ``error_t`` — each can need a scratch buffer, so each has
+something that can fail. When ``err`` is absent an unrecoverable condition
+still stops the program via ``error stop``, because a pure procedure has no
+other way to report. Passing ``err`` is purely additive and changes no
+existing call.
+
+``sort`` takes no ``err``: introsort works in place and allocates nothing, so
+there is no failure for it to report.
+
+.. note::
+
+   ``sort_index(..., reverse=.true.)`` reverses ``array`` in place *before*
+   sorting. If it then fails, ``array`` is left reversed — every other failure
+   mode leaves the input untouched. This is the one case where a recovering
+   caller cannot assume its input survived.
+
+Heap / Priority Queue (``pic_heap``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A binary heap over ``dp`` values:
+
+- ``init``, ``clear``, ``destroy``, ``reserve``
+- ``push``, ``pop``, ``peek``
+- ``build_from`` - Floyd's O(n) heapify, not n successive pushes
+- ``size``, ``is_empty``, ``capacity``
+
+``clear`` keeps the allocated storage and resets the count; ``destroy``
+releases it. A priority queue reused across iterations of an outer loop should
+use ``clear`` and never reallocate.
+
+Min or max ordering is chosen at ``init``, rather than by a comparator
+procedure pointer — procedure-pointer components in derived types are a
+recurring portability problem across this compiler matrix.
 
 Hash Functions (``pic_hash_32bit``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -71,6 +319,108 @@ Hash Functions (``pic_hash_32bit``)
 
 - FNV-1a hash implementation
 - General-purpose hashing utilities
+
+Hash Map (``pic_hash_map``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A string-keyed map with a **guaranteed iteration order**:
+
+- ``insert``, ``get``, ``has_key``, ``remove``, ``at``
+- ``keys``, ``values`` - always returned in **insertion order**
+- ``size``, ``is_empty``, ``bucket_count``
+
+The ordering guarantee is a documented promise, not an accident of the bucket
+layout. A map that iterates in bucket order produces output that changes when
+the hash changes, when the capacity changes, or when a compiler's integer
+arithmetic differs — which makes any report or golden file built on top of it
+untestable. ``remove`` preserves the relative order of what remains.
+
+Keys are deferred-length character, so there is no key-length limit.
+
+Array State Hashing (``pic_array_hash``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A stable digest of an array's contents, for answering "did this run produce
+the same state as that run" without diffing gigabytes. Covers the intrinsic
+types and both real kinds, ranks 1 to 3.
+
+.. note::
+
+   ``transfer`` between real and integer kinds is **not** used, even though it
+   is the obvious way to reach a real's bits: nvfortran and LFortran disagree
+   with GNU and Intel about the result for some inputs, which is fatal for a
+   hash whose entire purpose is cross-compiler comparison. The real paths
+   decompose values with ``fraction`` and ``exponent`` instead.
+
+   Two special cases are handled explicitly: ``-0.0`` hashes identically to
+   ``+0.0`` (they compare equal, so a hash that distinguished them would
+   report a difference where ``==`` reports none), and NaN is normalized to a
+   single canonical pattern so that two runs which both produced NaN do not
+   hash differently.
+
+Sparse Matrices (``pic_csr``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Compressed sparse row storage:
+
+- ``build_from_coo`` - accepts unsorted triplets and sums duplicates
+- ``matvec``, ``transpose`` - both ``pure``
+- ``row_slice`` - index range for a row, so callers can iterate without copying
+- ``n_rows``, ``n_cols``, ``nnz``, ``is_valid``, ``destroy``
+
+``build_from_coo`` accepting duplicates matters because that is what finite
+element assembly actually produces. ``transpose`` is the O(nnz) counting-sort
+construction, not a round trip through COO.
+
+Graphs (``pic_graph``)
+^^^^^^^^^^^^^^^^^^^^^^
+
+Shortest paths and connectivity over CSR adjacency:
+
+- ``dijkstra`` - weighted shortest paths, using ``pic_heap``
+- ``a_star`` - with a per-node heuristic supplied as an array
+- ``bfs`` - the unweighted case, without the cost of a heap
+- ``connected_components``
+- ``path_cost`` - reconstructs and re-sums a path from the predecessor array
+
+Constants: ``GRAPH_INFINITY``, ``GRAPH_NO_PREDECESSOR``, ``GRAPH_UNREACHABLE``.
+"Unreachable" is a named constant rather than a magic number, so "no path" is
+never confused with "distance zero".
+
+``dijkstra`` reports ``ERROR_VALIDATION`` on a negative edge weight rather
+than returning a plausible wrong answer. The algorithm cannot detect this
+mid-run, so it is checked up front.
+
+Serialization (``pic_serialize``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Binary serialization with a self-describing envelope recording magic number,
+format version, element kind, rank and extents.
+
+Unformatted **stream** access is used rather than unformatted sequential
+writes, because sequential record markers are processor dependent in both
+width and endianness — a file written by gfortran is not readable by ifx. The
+envelope is checked on read, and every mismatch (wrong magic, a version from
+the future, a kind mismatch, a rank or extent mismatch, a truncated payload)
+is a distinct ``error_t`` naming what was expected and what was found, rather
+than a partly-filled array.
+
+I/O errors carry the processor's own ``iostat`` value in the message text.
+
+Struct-of-Arrays (``pic_soa``, ``pic_soa_particle``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Struct-of-arrays containers generated from an fypp template, with amortized
+``resize``, ``checkpoint`` through ``pic_serialize``, and ``state_hash``
+through ``pic_array_hash``.
+
+Fields are parallel arrays sharing a size and capacity, so each field is
+contiguous and can be handed to BLAS, MPI or a GPU kernel without a gather.
+A live slice such as ``p%x(1:p%size())`` reaches a callee with its contiguity
+intact rather than being copied.
+
+To generate a container for your own particle type, edit
+``tools/autogen/pic_soa.fypp`` and regenerate — see :doc:`contributing`.
 
 I/O (``pic_io``)
 ^^^^^^^^^^^^^^^^
@@ -124,4 +474,11 @@ These features require additional dependencies or compiler flags:
 OpenMP Support
 ^^^^^^^^^^^^^^
 
-Enable with ``-DPIC_ENABLE_OMP=ON``. Provides parallel implementations of various operations.
+Enable with ``-DPIC_ENABLE_OMP=ON``. Provides parallel implementations of
+various operations.
+
+NVTX Annotations
+^^^^^^^^^^^^^^^^
+
+Enable with ``-DPIC_USE_NVTX=ON`` to have ``pic_profiler`` regions appear in
+NVIDIA Nsight Systems timelines.

@@ -6,25 +6,28 @@ This guide will help you get started with PIC in your Fortran projects.
 Basic Usage
 -----------
 
-PIC provides an umbrella module that exposes all functionality:
+The ``pic`` module itself only provides the banner, which is handy for
+verifying an install:
 
 .. code-block:: fortran
 
    program my_program
-      use pic
+      use pic, only: pic_print_banner
       implicit none
 
-      ! Your code here
+      call pic_print_banner()
    end program my_program
 
-For finer control, import specific modules:
+Everything else is imported from the module that provides it. There is no
+umbrella module re-exporting the whole library — importing only what you use
+keeps compile times down and makes the dependency explicit:
 
 .. code-block:: fortran
 
    program my_program
       use pic_types, only: default_int, dp
       use pic_strings, only: to_string
-      use pic_logger, only: log_info
+      use pic_logger, only: global_logger
       implicit none
 
       ! Your code here
@@ -79,7 +82,9 @@ PIC provides a dynamic string type and string utilities:
 .. code-block:: fortran
 
    use pic_string_type, only: string_type
-   use pic_strings, only: to_string, to_lower, to_upper, starts_with, ends_with
+   use pic_strings, only: to_string, starts_with, ends_with
+   use pic_ascii, only: to_lower, to_upper
+   use pic_types, only: dp
 
    type(string_type) :: s
    character(len=:), allocatable :: str
@@ -105,13 +110,19 @@ PIC includes a logging system with severity levels:
 
 .. code-block:: fortran
 
-   use pic_logger
+   use pic_logger, only: global_logger, debug_level
 
-   ! Different severity levels
-   call log_debug("Detailed debug information")
-   call log_info("Starting computation...")
-   call log_warning("Memory usage is high")
-   call log_error("Failed to open file")
+   ! Messages go through a logger object; `global_logger` is provided
+   call global_logger%debug("Detailed debug information")
+   call global_logger%info("Starting computation...")
+   call global_logger%warning("Memory usage is high")
+   call global_logger%error("Failed to open file")
+
+   ! An optional second argument names the emitting module
+   call global_logger%info("Cache warm", "my_module")
+
+   ! Raise verbosity to see debug messages
+   call global_logger%configure(debug_level)
 
 Output example::
 
@@ -126,17 +137,66 @@ For use in ``pure`` procedures, use ``pic_pure_logger``:
 
 .. code-block:: fortran
 
-   use pic_pure_logger
+   use pic_pure_logger, only: pure_info, flush_log_buffer
 
    pure function compute(x) result(y)
       real(dp), intent(in) :: x
       real(dp) :: y
-      character(len=256) :: msg
 
-      ! Pure logging (deferred output)
-      call pure_log_info("Computing...", msg)
-      y = x * 2.0_dp
+      ! Buffered; nothing is written until the buffer is flushed
+      call pure_info("Computing...")
+      y = x*2.0_dp
    end function compute
+
+Because a ``pure`` procedure may not perform I/O, messages are appended to a
+buffer. Emit them from impure code once you are back outside:
+
+.. code-block:: fortran
+
+   call flush_log_buffer()
+
+Error Handling
+--------------
+
+PIC reports failures through a single ``error_t`` type rather than
+``stat``/``errmsg`` pairs:
+
+.. code-block:: fortran
+
+   use pic_error
+
+   type(error_t) :: err
+
+   call err%set(ERROR_IO, "failed to open file")
+
+   if (err%has_error()) then
+      call err%print_trace()   ! print and carry on
+      call err%fatal()         ! or print and stop
+   end if
+
+Add context as an error travels back up, and the trace prints outermost
+first, with the root cause last:
+
+.. code-block:: fortran
+
+   call parse_config(path, err)
+   if (err%has_error()) then
+      call err%wrap(ERROR_PARSE, "could not load configuration")
+      return
+   end if
+
+   ! ERROR_PARSE: could not load configuration
+   !   Caused by: ERROR_IO: failed to open file
+
+Check for a specific code with ``err%is(ERROR_IO)``, and clear a handled
+error with ``err%clear()``.
+
+.. note::
+
+   Every mutator is ``pure``, so errors can be raised from ``pure``
+   procedures — that is what lets the sorting routines take an optional
+   ``err`` without giving up purity. ``fatal`` and ``print_trace`` do I/O and
+   are impure; calling them from a ``pure`` procedure is a compile-time error.
 
 Timer
 -----
@@ -156,7 +216,7 @@ Measure execution time with high-resolution timers:
    ! ... your computation ...
 
    call t%stop()
-   elapsed = t%elapsed()
+   elapsed = t%get_elapsed_time()
 
    print '(A,F10.3,A)', "Elapsed time: ", elapsed, " seconds"
 
@@ -167,18 +227,28 @@ PIC provides array utilities with optional OpenMP parallelization:
 
 .. code-block:: fortran
 
-   use pic_array, only: fill_vector, fill_matrix
+   use pic_array, only: pic_fill, pic_copy, pic_sum, is_sorted, &
+                        set_threading_mode
    use pic_types, only: dp
 
-   real(dp) :: vec(1000)
+   real(dp) :: vec(1000), other(1000)
    real(dp) :: mat(100, 100)
+   real(dp) :: total
 
-   ! Fill arrays with values
-   call fill_vector(vec, 0.0_dp)
-   call fill_matrix(mat, 1.0_dp)
+   ! One generic covers 1-D and 2-D, and int32/int64/sp/dp
+   call pic_fill(vec, 0.0_dp)
+   call pic_fill(mat, 1.0_dp)
 
-   ! Enable threaded filling (requires PIC_ENABLE_OMP)
-   call fill_vector(vec, 0.0_dp, threaded=.true.)
+   call pic_copy(vec, other)
+   total = pic_sum(vec)
+
+   if (is_sorted(vec)) print *, "already ordered"
+
+   ! Threading (requires -DPIC_ENABLE_OMP=ON) can be set per call...
+   call pic_fill(vec, 0.0_dp, threaded=.true.)
+
+   ! ...or as the default for subsequent calls
+   call set_threading_mode(.true.)
 
 Sorting
 -------
@@ -187,17 +257,43 @@ Sorting routines that work on all compilers (unlike stdlib which may fail on som
 
 .. code-block:: fortran
 
-   use pic_sorting
+   use pic_sorting, only: sort, ord_sort, sort_index
+   use pic_types, only: dp, int_index
+
+   real(dp) :: arr(100)
+   integer(int_index) :: indices(100)
+
+   ! Sort in place (introsort)
+   call sort(arr)
+
+   ! Stable merge sort
+   call ord_sort(arr)
+
+   ! Sort and also return the permutation that produced it.
+   ! `index` is integer(int_index), not default_int.
+   call sort_index(arr, indices)
+
+``sort`` and ``ord_sort`` are ``pure``, so they can be called from your own
+``pure`` procedures.
+
+``ord_sort``, ``sort_index`` and ``radix_sort`` take an **optional** ``err`` of
+type ``error_t``, because each of them can need a scratch buffer and therefore
+has something that can fail:
+
+.. code-block:: fortran
+
+   use pic_sorting, only: ord_sort
+   use pic_error, only: error_t
    use pic_types, only: dp
 
    real(dp) :: arr(100)
-   integer(default_int) :: indices(100)
+   type(error_t) :: err
 
-   ! Sort in place
-   call sort(arr)
+   call ord_sort(arr, err=err)
+   if (err%has_error()) call err%fatal()
 
-   ! Get sorted indices
-   call argsort(arr, indices)
+``sort`` has no ``err`` argument and needs none — introsort works in place and
+allocates nothing.
 
 Hash Functions
 --------------
@@ -206,13 +302,15 @@ FNV-1a 32-bit hash implementation:
 
 .. code-block:: fortran
 
-   use pic_hash_32bit, only: fnv1a_hash
+   use pic_hash_32bit, only: fnv_1a_hash
    use pic_types, only: int32
 
    integer(int32) :: hash_val
    character(len=*), parameter :: key = "my_key"
 
-   hash_val = fnv1a_hash(key)
+   hash_val = fnv_1a_hash(key)
+
+``fnv_1_hash`` is also available if you need FNV-1 rather than FNV-1a.
 
 Complete Example
 ----------------
@@ -222,32 +320,37 @@ Here's a complete example showing multiple PIC features:
 .. code-block:: fortran
 
    program pic_demo
-      use pic
+      use pic_types, only: default_int, dp
+      use pic_timer, only: timer_type
+      use pic_array, only: pic_fill, is_sorted
+      use pic_sorting, only: ord_sort
+      use pic_logger, only: global_logger
+      use pic_strings, only: to_string
+      use pic_error, only: error_t
       implicit none
 
       type(timer_type) :: timer
-      real(dp) :: data(1000), elapsed
+      type(error_t) :: err
+      real(dp) :: values(1000), elapsed
       integer(default_int) :: i
 
-      ! Start timing
       call timer%start()
 
-      ! Initialize array
-      call fill_vector(data, 0.0_dp)
-      do i = 1, size(data)
-         data(i) = real(i, dp)
+      ! Fill, then overwrite with a descending ramp so there is work to do
+      call pic_fill(values, 0.0_dp)
+      do i = 1, size(values)
+         values(i) = real(size(values) - i, dp)
       end do
 
-      ! Sort the data
-      call sort(data)
+      call ord_sort(values, err=err)
+      if (err%has_error()) call err%fatal()
 
-      ! Stop timing
       call timer%stop()
-      elapsed = timer%elapsed()
+      elapsed = timer%get_elapsed_time()
 
-      ! Log results
-      call log_info("Sorted " // to_string(size(data)) // " elements")
-      call log_info("Time: " // to_string(elapsed) // " seconds")
+      call global_logger%info("Sorted "//to_string(size(values))//" elements")
+      call global_logger%info("Sorted correctly: "//to_string(is_sorted(values)))
+      call global_logger%info("Time: "//to_string(elapsed)//" seconds")
 
    end program pic_demo
 
