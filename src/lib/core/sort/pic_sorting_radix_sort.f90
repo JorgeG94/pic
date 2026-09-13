@@ -208,6 +208,21 @@ contains
             end if
             error stop "int32_radix_sort: work array is too small."
          end if
+      end if
+! An array of fewer than two elements is already sorted, and reversing one is a
+! no-op, so there is nothing left to do once `work` has been validated. This
+! return is not an optimisation. The sign rotation further down reads array(1)
+! and array(N), which at N == 0 are both outside the array; with bounds checking
+! that is a hard error, and without it the two reads pick up whatever happens to
+! sit next to the array. If they satisfy `array(1) >= 0 .and. array(N) < 0` the
+! rotation enters its binary search with start = 1, end = 0 and middle = 0, and
+! every iteration recomputes middle = (1 + 0)/2 = 0 and start = 1, so
+! `start == end` is never true and the `do while (.true.)` never exits. That is
+! a hang whose occurrence depends on adjacent memory, which is why it appears on
+! some platforms and not others. The sp and dp specialisations additionally form
+! c_loc on a zero-sized array, which is not legal either.
+      if (N < 2) return
+      if (present(work)) then
          use_internal_buffer = .false.
          buffer => work
       else
@@ -278,6 +293,21 @@ contains
             end if
             error stop "sp_radix_sort: work array is too small."
          end if
+      end if
+! An array of fewer than two elements is already sorted, and reversing one is a
+! no-op, so there is nothing left to do once `work` has been validated. This
+! return is not an optimisation. The sign rotation further down reads array(1)
+! and array(N), which at N == 0 are both outside the array; with bounds checking
+! that is a hard error, and without it the two reads pick up whatever happens to
+! sit next to the array. If they satisfy `array(1) >= 0 .and. array(N) < 0` the
+! rotation enters its binary search with start = 1, end = 0 and middle = 0, and
+! every iteration recomputes middle = (1 + 0)/2 = 0 and start = 1, so
+! `start == end` is never true and the `do while (.true.)` never exits. That is
+! a hang whose occurrence depends on adjacent memory, which is why it appears on
+! some platforms and not others. The sp and dp specialisations additionally form
+! c_loc on a zero-sized array, which is not legal either.
+      if (N < 2) return
+      if (present(work)) then
          use_internal_buffer = .false.
          call c_f_pointer(c_loc(work), buffer, [N])
       else
@@ -349,6 +379,21 @@ contains
             end if
             error stop "int64_radix_sort: work array is too small."
          end if
+      end if
+! An array of fewer than two elements is already sorted, and reversing one is a
+! no-op, so there is nothing left to do once `work` has been validated. This
+! return is not an optimisation. The sign rotation further down reads array(1)
+! and array(N), which at N == 0 are both outside the array; with bounds checking
+! that is a hard error, and without it the two reads pick up whatever happens to
+! sit next to the array. If they satisfy `array(1) >= 0 .and. array(N) < 0` the
+! rotation enters its binary search with start = 1, end = 0 and middle = 0, and
+! every iteration recomputes middle = (1 + 0)/2 = 0 and start = 1, so
+! `start == end` is never true and the `do while (.true.)` never exits. That is
+! a hang whose occurrence depends on adjacent memory, which is why it appears on
+! some platforms and not others. The sp and dp specialisations additionally form
+! c_loc on a zero-sized array, which is not legal either.
+      if (N < 2) return
+      if (present(work)) then
          use_internal_buffer = .false.
          buffer => work
       else
@@ -419,6 +464,21 @@ contains
             end if
             error stop "dp_radix_sort: work array is too small."
          end if
+      end if
+! An array of fewer than two elements is already sorted, and reversing one is a
+! no-op, so there is nothing left to do once `work` has been validated. This
+! return is not an optimisation. The sign rotation further down reads array(1)
+! and array(N), which at N == 0 are both outside the array; with bounds checking
+! that is a hard error, and without it the two reads pick up whatever happens to
+! sit next to the array. If they satisfy `array(1) >= 0 .and. array(N) < 0` the
+! rotation enters its binary search with start = 1, end = 0 and middle = 0, and
+! every iteration recomputes middle = (1 + 0)/2 = 0 and start = 1, so
+! `start == end` is never true and the `do while (.true.)` never exits. That is
+! a hang whose occurrence depends on adjacent memory, which is why it appears on
+! some platforms and not others. The sp and dp specialisations additionally form
+! c_loc on a zero-sized array, which is not legal either.
+      if (N < 2) return
+      if (present(work)) then
          use_internal_buffer = .false.
          call c_f_pointer(c_loc(work), buffer, [N])
       else
