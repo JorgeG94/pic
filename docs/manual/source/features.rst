@@ -449,6 +449,46 @@ untestable. ``remove`` preserves the relative order of what remains.
 
 Keys are deferred-length character, so there is no key-length limit.
 
+Random Distributions (``pic_random_dist``, ``pic_random_dist_real``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Distributions on top of the generators in ``pic_rng``, split into two modules
+by whether their output can be reproduced across compilers.
+
+``pic_random_dist`` returns integers and logicals, and every routine in it is
+computed with integer arithmetic alone:
+
+- ``next_range(gen, lo, hi[, err])`` --- uniform on the inclusive range, by
+  rejection so there is no modulo bias. The span is formed in unsigned 64-bit
+  arithmetic, so the full width of ``default_int`` works.
+- ``next_bernoulli_ppm(gen, ppm)`` --- true with probability ``ppm`` in a
+  million, clamped rather than rejected at the ends.
+- ``next_exponential_int(gen, mean[, err])`` --- exponential integer, from a
+  committed inverse-CDF table in Q32.32 fixed point.
+- ``next_poisson_int(gen, mean_milli[, err])`` --- Poisson count, the mean
+  given a thousand times over so fractional means need no real type.
+
+``pic_random_dist_real`` returns ``real(dp)``: ``next_exponential_dp`` and
+``next_normal_dp``.
+
+.. important::
+
+   The two tiers are separate modules so that the choice between them is
+   deliberate. The real tier calls ``log``, ``sqrt`` and ``cos``, and libm is
+   not the same function on every platform --- GNU, Intel, NVIDIA and LFortran
+   do not agree to the last bit, and nothing obliges them to. Anything that
+   reaches state which will be compared across runs or across machines must
+   use the integer tier, whose outputs are pinned by tests.
+
+.. note::
+
+   The exponential's top table cell runs to infinity and cannot be
+   interpolated into. Rather than capping it at a finite value --- which
+   biases the mean by 0.147% --- the sampler uses the memorylessness of the
+   exponential: a draw landing in the top cell adds ``ln(4096)`` and draws
+   again. That is exact, costs an extra draw once in 4096, and leaves a mean
+   error of 0.002%, all of it linear interpolation inside the body cells.
+
 Array State Hashing (``pic_array_hash``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
