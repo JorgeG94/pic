@@ -296,7 +296,12 @@ Heap-backed arrays that grow on demand:
 - ``shrink_to_fit``, ``as_array``, ``take``, ``destroy``
 
 The method names deliberately match ``pic_fixed_array``, so moving from a
-bounded container to a growable one is a type change and nothing else. Choose
+bounded container to a growable one is mostly a type change. Not entirely,
+though: a failure is ``ERROR_BOUNDS`` here and ``ERROR_VALIDATION`` in
+``pic_fixed_array``; ``pic_fixed_array`` zeroes ``value`` on a failed ``at``
+or ``pop_back`` where this leaves it undefined; and there is no
+``vector_int_t`` to replace ``fixed_array_int_t``, because a ``default_int``
+element would change width with ``PIC_DEFAULT_INT8``. Choose
 ``pic_fixed_array`` in hot loops and inside OpenMP/OpenACC regions, where its
 storage lives inside the object and never touches the heap; choose
 ``pic_vector`` when the final length is not known until the input has been
