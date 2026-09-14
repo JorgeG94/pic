@@ -23,6 +23,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
   a growable one is a type change and nothing else. `take` moves the storage
   out without copying, which is the idiom for building an array whose final
   length is not known until the input has been read.
+- `pic_ansi`: the half of a terminal interface that is pure string
+  processing. Escape builders for the cursor, the alternate screen, the
+  sixteen named colours, 256-colour and 24-bit colour, all `pure` functions
+  returning a string and none of them doing I/O. A key decoder that turns raw
+  bytes into `key_event_t` values and carries partial escape sequences across
+  reads, so an arrow key split between two reads still decodes; both the
+  `ESC [` and `ESC O` cursor forms are handled. A `frame_t` that composes a
+  screen and renders only the rows that changed, so an otherwise idle board
+  updating a clock writes one line. Width is counted in UTF-8 code points, so
+  a row of box-drawing characters truncates without being cut mid-character.
 - `pic_cli`: a declarative command line parser. Declare options, flags and
   positionals, `parse` once, then read values back by name with a generic
   `get` over `int32`, `int64`, `sp`, `dp`, `logical`, `character` and
