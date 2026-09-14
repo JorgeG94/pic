@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
 
 ## [Unreleased]
 ### Added
--
+- `pic_clock`: monotonic elapsed time as whole milliseconds or microseconds
+  (`monotonic_ms`, `monotonic_us`), wall-clock date and time (`now_local`,
+  `now_utc`, `datetime_t`), and integer-only conversions (`unix_time_ms`,
+  `format_iso8601`). Complements `pic_timer`, which reports `real(dp)`
+  seconds: integers compare and accumulate exactly, so a loop pacing itself
+  against the wall clock does not drift with rounding. `system_clock` is
+  called with `integer(int64)` arguments to get a finer tick than the default
+  kind provides, and a processor with no clock reports `PIC_CLOCK_NO_CLOCK`
+  (-1) rather than zero, which is a valid reading.
 
 ### Changed
 -

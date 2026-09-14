@@ -203,6 +203,47 @@ Uses ``omp_get_wtime`` when built with OpenMP and ``system_clock`` otherwise.
    clock" from "no measurable time passed" from the result alone — both mean
    the same thing to any arithmetic downstream.
 
+Clocks (``pic_clock``)
+^^^^^^^^^^^^^^^^^^^^^^
+
+Two unrelated notions of time, kept apart on purpose:
+
+- ``monotonic_ms``, ``monotonic_us`` - elapsed time from an unspecified
+  origin, only ever moving forward
+- ``now_local``, ``now_utc``, ``datetime_t`` - calendar date and time
+- ``unix_time_ms`` - milliseconds since 1970-01-01T00:00:00Z
+- ``format_iso8601`` - for example ``2026-09-14T09:46:00.123Z``
+
+Monotonic readings are for measuring how long something took, or pacing a
+loop against real time; differences are meaningful, the absolute value is
+not. Wall-clock time is for stamping a log line or naming a file, and can
+jump backwards when the system clock is corrected, so it must never be used
+to measure a duration.
+
+Where ``pic_timer`` reports ``real(dp)`` seconds, which is what a benchmark
+wants, this module reports whole milliseconds or microseconds as
+``integer(int64)``, which is what a simulation pacing itself against the wall
+clock wants: integers compare and accumulate exactly, so a frame budget does
+not drift with rounding.
+
+``system_clock`` is called with ``integer(int64)`` arguments, which selects a
+finer tick than the default integer kind does on every supported compiler. A
+processor with no clock returns ``PIC_CLOCK_NO_CLOCK`` (-1) rather than zero,
+since zero is a perfectly valid reading.
+
+The calendar conversions are integer-only and exact for every date in the
+``int64`` range, including the full Gregorian leap rule. ``format_iso8601``
+builds its text with ``zfill`` rather than an internal ``write``, because the
+``I0.N`` edit descriptor and list-directed output are processor dependent and
+this text is compared byte for byte.
+
+.. note::
+
+   Nothing here is reproducible between runs, by definition. Code whose
+   results must replay identically from a seed must not call it.
+   ``format_iso8601`` and ``unix_time_ms`` are the exceptions: both are pure
+   functions of their arguments.
+
 Profiler (``pic_profiler``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
