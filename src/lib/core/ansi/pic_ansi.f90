@@ -479,7 +479,15 @@ contains
          if (complete) then
             if (event%code /= KEY_NONE) call emit(events, n_events, event%code, event%char_code)
             used = used - consumed
-            if (used > 0_default_int) work(1:used) = work(consumed + 1:consumed + used)
+            ! A leftover can only be the byte appended a moment ago, since
+            ! `match_sequence` consumes everything else it decides on. Put it
+            ! back in the input rather than leaving it in the buffer, so the
+            ! next turn classifies it from scratch -- it may be an ESC opening
+            ! a new sequence.
+            if (used > 0_default_int) then
+               i = i - used
+               used = 0_default_int
+            end if
          end if
       end do
 
@@ -554,7 +562,13 @@ contains
       ! the first in normal mode and the second in application cursor mode,
       ! and a program that handles only one loses the arrow keys in the other.
       if (seq(2:2) /= "[" .and. seq(2:2) /= "O") then
-         complete = .true.                        ! ESC followed by something else
+         ! Nothing can continue from here, so the ESC was the Escape key. Only
+         ! the ESC is consumed: the byte after it has not been classified yet
+         ! and may itself start a sequence, as it does when the user presses
+         ! Escape and then an arrow key inside one read.
+         complete = .true.
+         event%code = KEY_ESC
+         consumed = 1_default_int
          return
       end if
       if (n == 2_default_int) return
@@ -649,10 +663,16 @@ contains
             n = j - start + 1_default_int  ! final byte, sequence complete
             return
          end if
-         if (byte < 32_default_int .or. byte > 63_default_int) exit
+         if (byte < 32_default_int .or. byte > 63_default_int) then
+            ! A byte that is neither parameter, intermediate nor final aborts
+            ! the sequence where it stands -- which is what a terminal does
+            ! with it. Everything from here on is ordinary text again.
+            n = j - start
+            return
+         end if
          j = j + 1_default_int
       end do
-      n = last - start + 1_default_int     ! unterminated; nowhere safe to cut
+      n = last - start + 1_default_int     ! ran off the end; nowhere safe to cut
    end function escape_length
 
    pure function display_width(text) result(width)
@@ -827,7 +847,15 @@ contains
 
       do i = 1_default_int, this%rows
          if (.not. this%full_redraw) then
-            if (this%current(i) == this%shown(i)) cycle
+            ! Compared through `char` with an explicit length test.
+            ! `string_type`'s `==` is Fortran character comparison, which pads
+            ! the shorter side with blanks, so "abc" and "abc   " compare
+            ! equal. Those are the same text but not the same row: with a
+            ! background colour still open at the end of the line, the three
+            ! extra cells are painted.
+            if (len(char(this%current(i))) == len(char(this%shown(i)))) then
+               if (char(this%current(i)) == char(this%shown(i))) cycle
+            end if
          end if
          output = output//ansi_move_to(i, 1_default_int)//ansi_clear_line()// &
                   char(this%current(i))

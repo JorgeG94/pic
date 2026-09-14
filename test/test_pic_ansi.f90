@@ -48,7 +48,10 @@ contains
                   new_unittest("width_skips_escapes", test_width_skips_escapes), &
                   new_unittest("truncate_keeps_escapes", test_truncate_keeps_escapes), &
                   new_unittest("frame_holds_styled_rows", test_frame_holds_styled_rows), &
-                  new_unittest("frame_rows_survive_blanking", test_frame_rows_survive_blanking) &
+                  new_unittest("frame_rows_survive_blanking", test_frame_rows_survive_blanking), &
+                  new_unittest("escape_then_sequence", test_escape_then_sequence), &
+                  new_unittest("frame_diff_sees_trailing_blanks", test_frame_trailing_blanks), &
+                  new_unittest("aborted_sequence_ends_there", test_aborted_sequence) &
                   ]
    end subroutine collect_pic_ansi_tests
 
@@ -383,7 +386,16 @@ contains
 
       ! ESC followed by an ordinary letter is not a sequence we know
       call decode_keys(pending, ESC//"q"//"y", events, n)
-      call check(error, events(n)%code == KEY_CHAR .and. events(n)%char_code == iachar("y"), &
+      ! Checked before indexing: if the decoder ever regressed to n == 0 this
+      ! would read events(0) rather than fail cleanly.
+      call check(error, n == 3_default_int, "ESC, then q, then y")
+      if (allocated(error)) return
+      call check(error, events(1)%code == KEY_ESC, "the ESC is the Escape key")
+      if (allocated(error)) return
+      call check(error, events(2)%code == KEY_CHAR .and. events(2)%char_code == iachar("q"), &
+                 "the byte that ended it is not swallowed with it")
+      if (allocated(error)) return
+      call check(error, events(3)%code == KEY_CHAR .and. events(3)%char_code == iachar("y"), &
                  "decoding continues after an unknown ESC pair")
    end subroutine test_decode_unknown_resyncs
 
@@ -413,8 +425,14 @@ contains
       type(key_event_t) :: events(4)
       integer(default_int) :: n
 
+      ! `ESC [ 1 2` completes at four bytes as an unknown sequence and is
+      ! dropped; the rest is ordinary text and fills the four event slots.
+      ! The old assertion here was `n >= 0`, which an event count always is.
       call decode_keys(pending, ESC//"[123456789012345678901234567890", events, n)
-      call check(error, n >= 0_default_int, "a long unknown sequence does not abort")
+      call check(error, n == 4_default_int, "the remaining text fills the event array")
+      if (allocated(error)) return
+      call check(error, events(1)%code == KEY_CHAR .and. events(1)%char_code == iachar("3"), &
+                 "and decoding resumes at the byte after the unknown sequence")
       if (allocated(error)) return
 
       call pending%clear()
@@ -751,5 +769,98 @@ contains
       out = frame%render()
       call check(error, index(out, repeat("y", 200)) > 0, "two hundred columns survive intact")
    end subroutine test_frame_rows_survive_blanking
+
+   subroutine test_escape_then_sequence(error)
+      !! Escape followed by anything that cannot continue a sequence used to
+      !! discard both bytes. `ESC ESC [ A` came out as the characters `[` and
+      !! `A`; a held Escape followed by `q` lost the Escape and the `q`.
+      type(error_type), allocatable, intent(out) :: error
+      type(pending_t) :: pending
+      type(key_event_t) :: events(16)
+      integer(default_int) :: n
+
+      ! Escape then Up, in one read
+      call decode_keys(pending, ESC//ESC//"[A", events, n)
+      call check(error, n == 2_default_int, "Escape then Up is two events")
+      if (allocated(error)) return
+      call check(error, events(1)%code == KEY_ESC, "the first is Escape")
+      if (allocated(error)) return
+      call check(error, events(2)%code == KEY_UP, "the second is the arrow, not two characters")
+      if (allocated(error)) return
+
+      ! Escape pressed twice
+      call pending%clear()
+      call decode_keys(pending, ESC//ESC, events, n)
+      call check(error, n == 1_default_int, "the first of two Escapes is reported at once")
+      if (allocated(error)) return
+      call check(error, events(1)%code == KEY_ESC, "and it is an Escape")
+      if (allocated(error)) return
+      call decode_keys(pending, "", events, n)
+      call check(error, n == 1_default_int .and. events(1)%code == KEY_ESC, &
+                 "the second is released by the empty read")
+      if (allocated(error)) return
+
+      ! a held Escape, then ordinary text in the next read
+      call pending%clear()
+      call decode_keys(pending, ESC, events, n)
+      call check(error, n == 0_default_int, "the Escape is held")
+      if (allocated(error)) return
+      call decode_keys(pending, "q", events, n)
+      call check(error, n == 2_default_int, "the next read releases it and decodes the byte")
+      if (allocated(error)) return
+      call check(error, events(1)%code == KEY_ESC .and. events(2)%code == KEY_CHAR &
+                 .and. events(2)%char_code == iachar("q"), "Escape then q, neither lost")
+      if (allocated(error)) return
+
+      ! a held Escape, then a real sequence in the next read
+      call pending%clear()
+      call decode_keys(pending, ESC, events, n)
+      call decode_keys(pending, CSI//"D", events, n)
+      call check(error, n == 2_default_int, "Escape then Left across two reads")
+      if (allocated(error)) return
+      call check(error, events(1)%code == KEY_ESC .and. events(2)%code == KEY_LEFT, &
+                 "and the arrow still decodes")
+   end subroutine test_escape_then_sequence
+
+   subroutine test_frame_trailing_blanks(error)
+      !! `string_type`'s `==` is blank-padded character comparison, so "abc"
+      !! and "abc   " compare equal. They are the same text but not the same
+      !! row: with a background colour open at the end of the line, those
+      !! three cells are painted.
+      type(error_type), allocatable, intent(out) :: error
+      type(frame_t) :: frame
+      character(len=:), allocatable :: out
+
+      call frame%resize(1_default_int, 20_default_int)
+      call frame%set_line(1_default_int, ansi_bg(ANSI_BLUE)//"abc")
+      out = frame%render()
+      call check(error, len(out) > 0, "the first render emits the row")
+      if (allocated(error)) return
+
+      out = frame%render()
+      call check(error, len(out) == 0, "an unchanged row still renders to nothing")
+      if (allocated(error)) return
+
+      call frame%set_line(1_default_int, ansi_bg(ANSI_BLUE)//"abc   ")
+      out = frame%render()
+      call check(error, len(out) > 0, &
+                 "three more painted cells is a change, not a no-op")
+   end subroutine test_frame_trailing_blanks
+
+   subroutine test_aborted_sequence(error)
+      !! A CSI aborted by a byte that cannot appear in one ends there, as it
+      !! does in a terminal. Treating it as unterminated swallowed the rest of
+      !! the row.
+      type(error_type), allocatable, intent(out) :: error
+
+      call check(error, display_width(CSI//"3"//ESC//"[31m"//"abc") == 3_default_int, &
+                 "text after an aborted sequence is still three columns")
+      if (allocated(error)) return
+      call check(error, display_width(CSI//"12") == 0_default_int, &
+                 "but a sequence that runs off the end still swallows the rest")
+      if (allocated(error)) return
+      call check(error, truncate_to_width(CSI//"3"//ESC//"[31m"//"abc", 1_default_int) &
+                 /= CSI//"3"//ESC//"[31m"//"abc", "and truncation is not fooled by it")
+   end subroutine test_aborted_sequence
 
 end module test_pic_ansi

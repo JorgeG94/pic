@@ -101,6 +101,10 @@ module pic_cli
          !! One-line description, for `help_text`.
       type(string_type) :: value
          !! Current value: the default until parsing overwrites it.
+      type(string_type) :: default
+         !! The declared default, kept so that a second `parse_args` can put
+         !! `value` back. Without it a re-parse silently inherits the previous
+         !! run's values.
       integer(default_int) :: kind = KIND_OPTION
          !! One of the KIND_* codes.
       logical :: required = .false.
@@ -214,8 +218,10 @@ contains
       end if
       if (present(default)) then
          this%entries(this%count)%value = default
+         this%entries(this%count)%default = default
       else
          this%entries(this%count)%value = ""
+         this%entries(this%count)%default = ""
       end if
    end subroutine cli_add_option
 
@@ -240,6 +246,7 @@ contains
       this%entries(this%count)%required = .false.
       this%entries(this%count)%seen = 0_default_int
       this%entries(this%count)%value = "false"
+      this%entries(this%count)%default = "false"
       if (present(short)) then
          this%entries(this%count)%short = short
       else
@@ -273,8 +280,10 @@ contains
       end if
       if (present(default)) then
          this%entries(this%count)%value = default
+         this%entries(this%count)%default = default
       else
          this%entries(this%count)%value = ""
+         this%entries(this%count)%default = ""
       end if
    end subroutine cli_add_positional
 
@@ -430,6 +439,7 @@ contains
       this%parsed = .true.
       do i = 1_default_int, this%count
          this%entries(i)%seen = 0_default_int
+         this%entries(i)%value = this%entries(i)%default
       end do
 
       n = size(args, kind=default_int)
@@ -462,6 +472,14 @@ contains
             end if
 
             idx = this%find(name)
+            ! `find` matches every kind, including positionals. A positional
+            ! reached as `--name` would be filled without advancing the
+            ! positional counter, so the extra-argument check downstream would
+            ! not see it and `--scenario a b` would quietly succeed where
+            ! `a b` correctly fails.
+            if (idx /= 0_default_int) then
+               if (this%entries(idx)%kind == KIND_POSITIONAL) idx = 0_default_int
+            end if
             if (idx == 0_default_int) then
                call fail(err, ERROR_PARSE, "pic_cli: unknown option --"//name)
                return
@@ -518,6 +536,19 @@ contains
             cycle
          end if
 
+         ! A dash-prefixed token that matched no option form above is a
+         ! mistake, not a positional. Grouped short flags (`-abc`), `-s=5` and
+         ! `-s5` are out of scope, and out of scope has to mean rejected:
+         ! filing them as positionals turns a typo into the scenario
+         ! filename. Negative numbers are the deliberate exception, since they
+         ! have to be able to reach a positional.
+         if (.not. options_done .and. len(arg) > 1) then
+            if (arg(1:1) == "-" .and. .not. looks_numeric(arg)) then
+               call fail(err, ERROR_PARSE, "pic_cli: unknown option "//arg)
+               return
+            end if
+         end if
+
          ! anything else fills the next declared positional
          call next_positional(this, positional, idx)
          if (idx == 0_default_int) then
@@ -543,6 +574,29 @@ contains
          return
       end do
    end subroutine cli_parse_args
+
+   pure function looks_numeric(arg) result(r)
+      !! Whether `arg` is a negative number rather than an option.
+      !!
+      !! Only the shape is tested, not whether it parses: `-5`, `-1.5` and
+      !! `-.5` are numbers, `-s` and `-verbose` are not. Getting this wrong in
+      !! the permissive direction would let a mistyped option through as a
+      !! positional, which is the bug this guards.
+      character(len=*), intent(in) :: arg
+         !! Token to classify; known to start with `-` and be longer than one.
+      logical :: r
+
+      character(len=1) :: c
+
+      r = .false.
+      c = arg(2:2)
+      if (c >= "0" .and. c <= "9") then
+         r = .true.
+      else if (c == "." .and. len(arg) > 2) then
+         c = arg(3:3)
+         r = c >= "0" .and. c <= "9"
+      end if
+   end function looks_numeric
 
    pure function is_long(arg) result(r)
       !! Whether `arg` is a `--name` form. A bare `--` is not.

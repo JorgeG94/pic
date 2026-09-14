@@ -38,12 +38,12 @@ module pic_rng
    !! 2. **No reliance on signed overflow.** Fortran has no unsigned integer
    !!    type, and signed overflow is not defined by the standard: a build with
    !!    `-ftrapv` or `-fsanitize=signed-integer-overflow` may abort on it. All
-   !!    modular arithmetic goes through `u64_add` and `u64_mul`, which split
-   !!    their operands into 16-bit limbs with `ibits` so that every intermediate
-   !!    product stays below 2**35 and every accumulation stays well inside the
-   !!    signed 64-bit range. The results are reassembled with `ior`/`ishft`,
-   !!    which are bit-model intrinsics and are exactly defined for every bit
-   !!    pattern, sign bit included.
+   !!    modular arithmetic goes through `u64_add` and `u64_mul` in `pic_uint64`,
+   !!    which work on limbs so that no intermediate ever leaves the signed
+   !!    64-bit range, and reassemble with `ior`/`ishft`, which are bit-model
+   !!    intrinsics and exactly defined for every bit pattern, sign bit
+   !!    included. See that module for the limb widths and the bounds; they are
+   !!    stated once, where they are implemented.
    !! 3. **No `transfer` between reals and integers.** nvfortran and LFortran do
    !!    not agree on the result of bit-casting a double to an integer. Reals are
    !!    built arithmetically instead (see `next_real_dp`).
@@ -51,9 +51,10 @@ module pic_rng
    !!    `ishft(x, -n)` is standard but its interaction with the sign bit is a
    !!    recurring source of confusion, and `shiftr`/`shifta` are Fortran 2008
    !!    and not uniformly available on the older compilers PIC targets. Every
-   !!    logical right shift here is written as `ibits(x, n, 64 - n)`, which is
-   !!    Fortran 90, zero-filling by definition, and correct for negative `x`.
-   !!    `ishft` is used only with non-negative (left-shift) counts.
+   !!    logical right shift goes through `u64_shr` in `pic_uint64`, which is
+   !!    built from `ibits`: Fortran 90, zero-filling by definition, and correct
+   !!    for negative `x`. `ishft` is used only with non-negative (left-shift)
+   !!    counts.
    use pic_types, only: default_int, dp, int32, int64
    use pic_error, only: error_t, ERROR_VALIDATION
    use pic_uint64, only: u64_add, u64_mul, u64_shr

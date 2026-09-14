@@ -14,7 +14,18 @@ module pic_vector
    !! `pic_vector` grows without a compile-time bound, at the cost of
    !! allocating. Use it where the final length is not known until the input
    !! has been read. The two share a method vocabulary on purpose, so moving
-   !! between them is a type change and nothing else.
+   !! between them is mostly a type change -- but not entirely, and the
+   !! differences are the kind that fail quietly:
+   !!
+   !! * A bounds or underflow failure is `ERROR_BOUNDS` here and
+   !!   `ERROR_VALIDATION` in `pic_fixed_array`. Code that branches on the code
+   !!   stops branching after the swap.
+   !! * `pic_fixed_array` sets `value` to zero when `at` or `pop_back` fails;
+   !!   here `value` is `intent(out)` and left undefined, so a caller that
+   !!   ignores `err` reads something deterministic before the swap and not
+   !!   after.
+   !! * There is no `vector_int_t`. `fixed_array_int_t` holds `default_int`,
+   !!   which changes width with `PIC_DEFAULT_INT8`; see below.
    !!
    !! ### Element kinds are fixed width
    !!
@@ -174,9 +185,14 @@ contains
 
       if (needed <= vec_int32_capacity(self)) return
 
-      if (needed > PIC_VECTOR_MAX_CAPACITY) then
+      ! `needed` is negative only if a caller's arithmetic wrapped on the way
+      ! in. It cannot be compared against PIC_VECTOR_MAX_CAPACITY, which is
+      ! `huge(0_default_int)` and so can never be exceeded by a value of that
+      ! kind -- a guard written that way is dead code. The callers below check
+      ! their headroom before adding; this catches anything that slips past.
+      if (needed < 0_default_int) then
          call error_raise(err, ERROR_ALLOC, &
-                          "vector_int32_t: requested capacity exceeds PIC_VECTOR_MAX_CAPACITY.")
+                          "vector_int32_t: requested capacity overflowed.")
          return
       end if
 
@@ -211,6 +227,15 @@ contains
       integer(int32), intent(in) :: value
       type(error_t), intent(inout), optional :: err
 
+      ! Checked before adding, not after: `n_items + 1` at the maximum wraps
+      ! negative, and every downstream test would then read as "plenty of
+      ! room" while the append walked off the end of the array.
+      if (self%n_items >= PIC_VECTOR_MAX_CAPACITY) then
+         call error_raise(err, ERROR_ALLOC, &
+                          "vector_int32_t: already holds PIC_VECTOR_MAX_CAPACITY elements.")
+         return
+      end if
+
       call vec_int32_grow(self, self%n_items + 1, err)
       if (self%n_items + 1 > vec_int32_capacity(self)) return
 
@@ -228,6 +253,15 @@ contains
 
       n_new = size(values, kind=default_int)
       if (n_new == 0) return
+
+      ! Rearranged from `n_items + n_new > MAX` so that the sum is never
+      ! formed; the subtraction cannot overflow because `n_items` is
+      ! non-negative and PIC_VECTOR_MAX_CAPACITY is `huge`.
+      if (n_new > PIC_VECTOR_MAX_CAPACITY - self%n_items) then
+         call error_raise(err, ERROR_ALLOC, &
+                          "vector_int32_t: append would exceed PIC_VECTOR_MAX_CAPACITY.")
+         return
+      end if
 
       call vec_int32_grow(self, self%n_items + n_new, err)
       if (self%n_items + n_new > vec_int32_capacity(self)) return
@@ -440,9 +474,14 @@ contains
 
       if (needed <= vec_int64_capacity(self)) return
 
-      if (needed > PIC_VECTOR_MAX_CAPACITY) then
+      ! `needed` is negative only if a caller's arithmetic wrapped on the way
+      ! in. It cannot be compared against PIC_VECTOR_MAX_CAPACITY, which is
+      ! `huge(0_default_int)` and so can never be exceeded by a value of that
+      ! kind -- a guard written that way is dead code. The callers below check
+      ! their headroom before adding; this catches anything that slips past.
+      if (needed < 0_default_int) then
          call error_raise(err, ERROR_ALLOC, &
-                          "vector_int64_t: requested capacity exceeds PIC_VECTOR_MAX_CAPACITY.")
+                          "vector_int64_t: requested capacity overflowed.")
          return
       end if
 
@@ -477,6 +516,15 @@ contains
       integer(int64), intent(in) :: value
       type(error_t), intent(inout), optional :: err
 
+      ! Checked before adding, not after: `n_items + 1` at the maximum wraps
+      ! negative, and every downstream test would then read as "plenty of
+      ! room" while the append walked off the end of the array.
+      if (self%n_items >= PIC_VECTOR_MAX_CAPACITY) then
+         call error_raise(err, ERROR_ALLOC, &
+                          "vector_int64_t: already holds PIC_VECTOR_MAX_CAPACITY elements.")
+         return
+      end if
+
       call vec_int64_grow(self, self%n_items + 1, err)
       if (self%n_items + 1 > vec_int64_capacity(self)) return
 
@@ -494,6 +542,15 @@ contains
 
       n_new = size(values, kind=default_int)
       if (n_new == 0) return
+
+      ! Rearranged from `n_items + n_new > MAX` so that the sum is never
+      ! formed; the subtraction cannot overflow because `n_items` is
+      ! non-negative and PIC_VECTOR_MAX_CAPACITY is `huge`.
+      if (n_new > PIC_VECTOR_MAX_CAPACITY - self%n_items) then
+         call error_raise(err, ERROR_ALLOC, &
+                          "vector_int64_t: append would exceed PIC_VECTOR_MAX_CAPACITY.")
+         return
+      end if
 
       call vec_int64_grow(self, self%n_items + n_new, err)
       if (self%n_items + n_new > vec_int64_capacity(self)) return
@@ -706,9 +763,14 @@ contains
 
       if (needed <= vec_dp_capacity(self)) return
 
-      if (needed > PIC_VECTOR_MAX_CAPACITY) then
+      ! `needed` is negative only if a caller's arithmetic wrapped on the way
+      ! in. It cannot be compared against PIC_VECTOR_MAX_CAPACITY, which is
+      ! `huge(0_default_int)` and so can never be exceeded by a value of that
+      ! kind -- a guard written that way is dead code. The callers below check
+      ! their headroom before adding; this catches anything that slips past.
+      if (needed < 0_default_int) then
          call error_raise(err, ERROR_ALLOC, &
-                          "vector_dp_t: requested capacity exceeds PIC_VECTOR_MAX_CAPACITY.")
+                          "vector_dp_t: requested capacity overflowed.")
          return
       end if
 
@@ -743,6 +805,15 @@ contains
       real(dp), intent(in) :: value
       type(error_t), intent(inout), optional :: err
 
+      ! Checked before adding, not after: `n_items + 1` at the maximum wraps
+      ! negative, and every downstream test would then read as "plenty of
+      ! room" while the append walked off the end of the array.
+      if (self%n_items >= PIC_VECTOR_MAX_CAPACITY) then
+         call error_raise(err, ERROR_ALLOC, &
+                          "vector_dp_t: already holds PIC_VECTOR_MAX_CAPACITY elements.")
+         return
+      end if
+
       call vec_dp_grow(self, self%n_items + 1, err)
       if (self%n_items + 1 > vec_dp_capacity(self)) return
 
@@ -760,6 +831,15 @@ contains
 
       n_new = size(values, kind=default_int)
       if (n_new == 0) return
+
+      ! Rearranged from `n_items + n_new > MAX` so that the sum is never
+      ! formed; the subtraction cannot overflow because `n_items` is
+      ! non-negative and PIC_VECTOR_MAX_CAPACITY is `huge`.
+      if (n_new > PIC_VECTOR_MAX_CAPACITY - self%n_items) then
+         call error_raise(err, ERROR_ALLOC, &
+                          "vector_dp_t: append would exceed PIC_VECTOR_MAX_CAPACITY.")
+         return
+      end if
 
       call vec_dp_grow(self, self%n_items + n_new, err)
       if (self%n_items + n_new > vec_dp_capacity(self)) return
@@ -972,9 +1052,14 @@ contains
 
       if (needed <= vec_string_capacity(self)) return
 
-      if (needed > PIC_VECTOR_MAX_CAPACITY) then
+      ! `needed` is negative only if a caller's arithmetic wrapped on the way
+      ! in. It cannot be compared against PIC_VECTOR_MAX_CAPACITY, which is
+      ! `huge(0_default_int)` and so can never be exceeded by a value of that
+      ! kind -- a guard written that way is dead code. The callers below check
+      ! their headroom before adding; this catches anything that slips past.
+      if (needed < 0_default_int) then
          call error_raise(err, ERROR_ALLOC, &
-                          "vector_string_t: requested capacity exceeds PIC_VECTOR_MAX_CAPACITY.")
+                          "vector_string_t: requested capacity overflowed.")
          return
       end if
 
@@ -1009,6 +1094,15 @@ contains
       type(string_type), intent(in) :: value
       type(error_t), intent(inout), optional :: err
 
+      ! Checked before adding, not after: `n_items + 1` at the maximum wraps
+      ! negative, and every downstream test would then read as "plenty of
+      ! room" while the append walked off the end of the array.
+      if (self%n_items >= PIC_VECTOR_MAX_CAPACITY) then
+         call error_raise(err, ERROR_ALLOC, &
+                          "vector_string_t: already holds PIC_VECTOR_MAX_CAPACITY elements.")
+         return
+      end if
+
       call vec_string_grow(self, self%n_items + 1, err)
       if (self%n_items + 1 > vec_string_capacity(self)) return
 
@@ -1026,6 +1120,15 @@ contains
 
       n_new = size(values, kind=default_int)
       if (n_new == 0) return
+
+      ! Rearranged from `n_items + n_new > MAX` so that the sum is never
+      ! formed; the subtraction cannot overflow because `n_items` is
+      ! non-negative and PIC_VECTOR_MAX_CAPACITY is `huge`.
+      if (n_new > PIC_VECTOR_MAX_CAPACITY - self%n_items) then
+         call error_raise(err, ERROR_ALLOC, &
+                          "vector_string_t: append would exceed PIC_VECTOR_MAX_CAPACITY.")
+         return
+      end if
 
       call vec_string_grow(self, self%n_items + n_new, err)
       if (self%n_items + n_new > vec_string_capacity(self)) return
