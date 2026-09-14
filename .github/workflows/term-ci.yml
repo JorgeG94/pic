@@ -39,11 +39,23 @@ jobs:
         with:
           compiler: gcc
 
+      # Ninja on every platform, not for speed: on windows-latest CMake's
+      # default generator is Visual Studio, which cannot drive the gfortran
+      # that setup-fortran just installed, so the configure step fails before
+      # it compiles anything. Ninja is a single-config generator, hence no
+      # --config on the build line.
+      - name: Install Ninja
+        run: pip install --upgrade ninja
+
       - name: Configure with the terminal layer on
-        run: cmake -B build -DPIC_ENABLE_TESTING=ON -DPIC_ENABLE_TERM=ON
+        run: >
+          cmake -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DPIC_ENABLE_TESTING=ON
+          -DPIC_ENABLE_TERM=ON
 
       - name: Build
-        run: cmake --build build --config Release
+        run: cmake --build build
 
       # These must all pass with no terminal attached, which is the case that
       # matters: a library that only behaves when attached to a tty is one

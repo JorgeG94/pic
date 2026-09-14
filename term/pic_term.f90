@@ -53,6 +53,7 @@ module pic_term
    !! type(error_t) :: err
    !! character(len=64) :: buf
    !! integer(default_int) :: n, rows, cols
+   !! logical :: done
    !!
    !! if (.not. term_is_tty(TERM_STDIN)) return   ! piped: do not draw
    !! call term_enable_vt(err)
@@ -60,7 +61,8 @@ module pic_term
    !! if (.haserror. err) return
    !!
    !! call term_size(rows, cols, err)
-   !! call term_read(buf, n, 100_default_int, err)   ! 100 ms timeout
+   !! call term_read(buf, n, 100_default_int, err, at_eof=done)
+   !! if (done) exit                                ! input closed
    !!
    !! call term_raw_leave()
    !! ```
@@ -99,6 +101,10 @@ module pic_term
       !! The system call failed.
    integer(c_int), parameter :: STATUS_TIMEOUT = 4_c_int
       !! A timed read expired with nothing to report.
+   integer(c_int), parameter :: STATUS_EOF = 5_c_int
+      !! Input reached end of file: the other end of the pipe closed, or the
+      !! user pressed the terminal's end-of-file key. Distinct from a timeout,
+      !! because a timeout will eventually yield something and this will not.
 
    interface
       function c_sleep_ms(ms) bind(c, name="pic_term_sleep_ms") result(status)
@@ -292,7 +298,7 @@ contains
       r = c_raw_is_active() /= 0_c_int
    end function term_raw_is_active
 
-   subroutine term_read(buf, nread, timeout_ms, err)
+   subroutine term_read(buf, nread, timeout_ms, err, at_eof)
       !! Read whatever bytes are available, waiting at most `timeout_ms`.
       !!
       !! Returns as soon as anything arrives, so an interactive loop stays
@@ -300,27 +306,62 @@ contains
       !! is the ordinary idle case and not a failure. A negative timeout waits
       !! indefinitely.
       !!
+      !! End of input is a third outcome, and not the same as a timeout. When
+      !! stdin is a pipe whose writer has gone, or the user presses the
+      !! terminal's end-of-file key, the stream is readable for ever and every
+      !! read returns nothing. A loop that treats that as an idle tick never
+      !! ends and spins at full CPU, so it is reported separately: through
+      !! `at_eof` when the caller asked for it, and otherwise as `ERROR_IO`,
+      !! on the principle that a caller with no way to see the condition is
+      !! better told than left looping.
+      !!
       !! The bytes go straight to `pic_ansi`'s `decode_keys`, which is why
       !! this makes no attempt to interpret them.
       character(len=*), intent(out) :: buf
          !! Destination; at most `len(buf)` bytes are read.
       integer(default_int), intent(out) :: nread
-         !! Bytes actually read; 0 on a timeout.
+         !! Bytes actually read; 0 on a timeout and at end of input.
       integer(default_int), intent(in) :: timeout_ms
-         !! Milliseconds to wait; negative means forever.
+         !! Milliseconds to wait; negative means forever. Clamped to the
+         !! largest value the C layer can carry, which is over 24 days.
       type(error_t), intent(inout), optional :: err
-         !! Set to `ERROR_IO` when the read fails. A timeout is not a failure.
+         !! Set to `ERROR_IO` when the read fails, and at end of input if
+         !! `at_eof` was not supplied. A timeout is not a failure.
+      logical, intent(out), optional :: at_eof
+         !! `.true.` when the input stream has ended. Supplying it makes end
+         !! of input an ordinary result rather than an error.
 
       character(kind=c_char) :: raw(len(buf))
       integer(c_int) :: status, got
       integer(default_int) :: i
+      integer(default_int) :: wait_ms
 
       buf = ""
       nread = 0_default_int
+      if (present(at_eof)) at_eof = .false.
       if (len(buf) == 0) return
 
-      status = c_read(raw, int(len(buf), c_int), int(timeout_ms, c_int), got)
+      ! Clamped rather than converted. Under -DPIC_DEFAULT_INT8 `default_int`
+      ! is 64-bit while the C side takes an int, so a caller passing a
+      ! timeout beyond huge(c_int) would have it wrap -- and a large positive
+      ! wait would become a negative one, which means "block forever".
+      wait_ms = timeout_ms
+      if (wait_ms > int(huge(0_c_int), default_int)) then
+         wait_ms = int(huge(0_c_int), default_int)
+      else if (wait_ms < -1_default_int) then
+         wait_ms = -1_default_int
+      end if
+
+      status = c_read(raw, int(len(buf), c_int), int(wait_ms, c_int), got)
       if (status == STATUS_TIMEOUT) return
+      if (status == STATUS_EOF) then
+         if (present(at_eof)) then
+            at_eof = .true.
+         else if (present(err)) then
+            call err%set(ERROR_IO, "pic_term: end of input")
+         end if
+         return
+      end if
       if (status /= STATUS_OK) then
          if (present(err)) call err%set(ERROR_IO, "pic_term: read failed")
          return

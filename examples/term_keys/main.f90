@@ -8,7 +8,7 @@ program term_keys
    !! pic thinks they do -- is exactly what an automated test cannot tell you.
    !!
    !! Build with -DPIC_ENABLE_TERM=ON, then run it and press some keys.
-   use pic_types, only: default_int, int64
+   use pic_types, only: default_int
    use pic_error, only: error_t
    use pic_ansi, only: key_event_t, pending_t, decode_keys, &
                        KEY_CHAR, KEY_ENTER, KEY_BACKSPACE, KEY_TAB, KEY_ESC, &
@@ -28,6 +28,7 @@ program term_keys
    character(len=64) :: buf
    integer(default_int) :: n_events, n_read, i
    logical :: running
+   logical :: at_eof
 
    if (.not. term_is_tty(TERM_STDIN)) then
       write (*, "(a)") "term_keys needs a terminal; standard input is not one."
@@ -45,8 +46,11 @@ program term_keys
 
    running = .true.
    do while (running)
-      call term_read(buf, n_read, 200_default_int, err)
+      call term_read(buf, n_read, 200_default_int, err, at_eof=at_eof)
       if (err%has_error()) exit
+      ! Ctrl-D closes the stream. Without this the loop would keep asking a
+      ! stream that is permanently readable and permanently empty.
+      if (at_eof) exit
       call decode_keys(pending, buf(1:n_read), events, n_events)
       do i = 1_default_int, n_events
          call term_write(describe(events(i))//new_line("a")//achar(13))
