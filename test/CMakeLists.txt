@@ -27,6 +27,7 @@ set(tests
     "pic_math"
     "pic_statistics"
     "pic_rng"
+    "pic_random_dist"
     "pic_tokenizer"
     "pic_format"
     "pic_fixed_array"
