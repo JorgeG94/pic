@@ -34,6 +34,7 @@ program pic_tester
    use test_pic_random_dist, only: collect_pic_random_dist_tests
    use test_pic_tokenizer, only: collect_pic_tokenizer_tests
    use test_pic_cli, only: collect_pic_cli_tests
+   use test_pic_ansi, only: collect_pic_ansi_tests
    use test_pic_clock, only: collect_pic_clock_tests
    use test_pic_vector, only: collect_pic_vector_tests
    use test_pic_uint64, only: collect_pic_uint64_tests
@@ -62,7 +63,7 @@ program pic_tester
    stat = 0_int32
    ! we allocate like this because some compilers will complain about doing on the fly allocation
    ! looking at you lfortran
-   allocate (testsuites(42))
+   allocate (testsuites(43))
    testsuites = [ &
                 new_testsuite("base_utils", collect_suite1), &
                 new_testsuite("pic_string", collect_pic_string_tests), &
@@ -93,6 +94,7 @@ program pic_tester
                 new_testsuite("pic_random_dist", collect_pic_random_dist_tests), &
                 new_testsuite("pic_tokenizer", collect_pic_tokenizer_tests), &
                 new_testsuite("pic_cli", collect_pic_cli_tests), &
+                new_testsuite("pic_ansi", collect_pic_ansi_tests), &
                 new_testsuite("pic_clock", collect_pic_clock_tests), &
                 new_testsuite("pic_vector", collect_pic_vector_tests), &
                 new_testsuite("pic_uint64", collect_pic_uint64_tests), &

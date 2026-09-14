@@ -449,6 +449,47 @@ untestable. ``remove`` preserves the relative order of what remains.
 
 Keys are deferred-length character, so there is no key-length limit.
 
+Terminal Escapes and Framing (``pic_ansi``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The half of a terminal interface that is pure string processing: escape
+sequences, key decoding and frame composition. Nothing here does I/O or asks
+the operating system anything, so all of it is testable without a terminal.
+
+- **Escape builders** --- ``ansi_clear_screen``, ``ansi_move_to``,
+  ``ansi_hide_cursor``, ``ansi_alt_screen_enter``, ``ansi_fg``/``ansi_bg``
+  over the sixteen named colours, ``ansi_fg_256``, ``ansi_fg_rgb``,
+  ``ansi_bold``, ``ansi_reset``, and a ``styled`` convenience wrapper. All
+  ``pure`` functions returning ``character(len=:), allocatable``. Numbers are
+  converted with ``to_string``, never with internal I/O --- which a ``pure``
+  procedure may not do anyway.
+- **Key decoding** --- ``decode_keys`` turns raw bytes into ``key_event_t``
+  values: printable bytes, Enter, Backspace, Tab, Ctrl-C, the arrows, Home,
+  End and Delete.
+- **Frame composition** --- ``frame_t`` holds a screen of text lines and
+  ``render`` emits only the rows that changed since the last call, as one
+  string for the caller to write in a single ``write``.
+
+.. note::
+
+   The decoder carries state between calls in a ``pending_t``, because a
+   terminal is free to split ``ESC [ A`` across two reads. Both the ``ESC [``
+   and ``ESC O`` cursor forms are decoded: xterm sends the second in
+   application cursor mode, and a program that handled only the first would
+   lose its arrow keys there.
+
+   A lone ``ESC`` is indistinguishable from a truncated sequence until more
+   bytes arrive or do not, so it is held and reported as ``KEY_ESC`` on the
+   next call. That is one read of latency on the Escape key and no ambiguity.
+
+.. note::
+
+   Width is counted in UTF-8 **code points**, not bytes, so a row of
+   box-drawing characters --- three bytes each, one column each --- truncates
+   at a character boundary rather than a third of the way into one. East
+   Asian wide characters count as one column here; getting those right needs
+   a character-width table and is out of scope.
+
 Command Line Parsing (``pic_cli``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
