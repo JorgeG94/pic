@@ -276,7 +276,7 @@ contains
       type(error_t) :: err
 
       call now_local(dt, err)
-      call check(error, .not. err%has_error(), "now_local succeeds on a normal processor")
+      call check(error,.not. err%has_error(), "now_local succeeds on a normal processor")
       if (allocated(error)) return
       call check(error, dt%year >= 2020 .and. dt%year < 3000, "the year is plausible")
       if (allocated(error)) return
