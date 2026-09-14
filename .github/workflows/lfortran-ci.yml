@@ -28,16 +28,17 @@ on:
 env:
   # Pinned deliberately. `setup-fortran-conda` installs whatever conda-forge
   # currently calls latest, so an upstream release silently changes what this
-  # workflow tests -- which is how three suites started failing here without
-  # any commit touching them, and why the failure looked like it belonged to
-  # whichever PR happened to be open. Bump this on purpose, in its own PR, so
-  # the change is attributable to a commit.
+  # workflow tests -- which is how pic_format, pic_array_hash and
+  # pic_soa_particle started failing here without any commit touching them,
+  # and why the failure looked like it belonged to whichever PR happened to be
+  # open. Bump this on purpose, in its own PR, so the change is attributable
+  # to a commit and a regression can be bisected.
   #
   # `env` is deliberately used here rather than a `matrix` entry: the env
   # context is not available when a strategy matrix is evaluated, so a
   # ${{ env.* }} reference there expands to the empty string and silently
   # un-pins the version again.
-  LFORTRAN_VERSION: '0.65.0'
+  LFORTRAN_VERSION: '0.66.0'
 
 permissions:
   contents: read
