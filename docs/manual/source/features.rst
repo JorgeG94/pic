@@ -449,6 +449,63 @@ untestable. ``remove`` preserves the relative order of what remains.
 
 Keys are deferred-length character, so there is no key-length limit.
 
+Terminal OS Layer (``pic_term``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Raw mode, terminal size, timed reads and sleeping --- the part of a terminal
+interface that has to talk to the operating system. ``pic_ansi`` is the part
+that does not.
+
+Built only with ``-DPIC_ENABLE_TERM=ON``. Its sources live in ``term/``
+rather than ``src/``, so neither the default CMake build nor any fpm build
+sees them: these are pic's first C sources, and pic exists to build
+everywhere.
+
+.. code-block:: fortran
+
+   if (.not. term_is_tty(TERM_STDIN)) return    ! piped: do not draw
+   call term_enable_vt(err)
+   call term_raw_enter(err)
+   if (.haserror. err) return
+
+   call term_size(rows, cols, err)
+   call term_read(buf, n, 100_default_int, err) ! 100 ms timeout
+   call term_raw_leave()
+
+.. note::
+
+   Every operating system conditional lives in one C file,
+   ``term/pic_term_os.c``. ``pic_term.f90`` is byte-for-byte the same source
+   on Linux, macOS and Windows and has no preprocessor conditional in it.
+
+   The reasoning is a counting argument: a ``#ifdef`` in Fortran has to be
+   right for each of six compilers *and* three operating systems, where one
+   in C has to be right for three operating systems. Only ``int``,
+   ``int64_t`` and ``char`` with a length cross the boundary --- no struct,
+   because ``termios`` and ``winsize`` layouts differ between Linux, macOS
+   and the BSDs.
+
+.. important::
+
+   A program that leaves the shell in raw mode has committed the most
+   user-hostile failure available: no echo, no line editing, and the user
+   cannot see what they type to fix it.
+
+   ``term_raw_enter`` therefore registers an ``atexit`` handler on its first
+   success --- covering a normal return, ``stop``, and ``error stop``, since
+   ``error stop`` exits through ``exit()`` --- plus SIGINT, SIGTERM and
+   SIGHUP handlers that restore the mode and re-raise with the default
+   disposition, so the process still dies of the signal it was sent. Both
+   ``term_raw_enter`` and ``term_raw_leave`` are idempotent.
+
+   A segfault restores nothing. Nothing can. Run ``reset``.
+
+``term_size`` reports failure rather than inventing 24x80: a caller told the
+size is unavailable can pick a fallback knowingly, where one handed a
+plausible lie cannot. Output stays on the Fortran side --- the C file never
+writes to stdout, so two runtimes cannot interleave their buffering of the
+same stream.
+
 Terminal Escapes and Framing (``pic_ansi``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
