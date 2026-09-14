@@ -39,6 +39,11 @@ module test_pic_random_dist
    integer(default_int), parameter :: BULK = 1000000_default_int
       !! Draws in the distribution-shape tests.
 
+   real(dp), parameter :: EXPECTED_MEAN_AT_2 = 1.9793233_dp
+      !! `exp(-1/4) / (1 - exp(-1/2))`, the mean of `round(2*X)` for
+      !! `X ~ Exp(1)`. Computed independently, not measured from this code.
+      !! Draws in the distribution-shape tests.
+
    integer(default_int), parameter :: RANGE_SM(32) = [ &
            1_default_int, 3_default_int, 3_default_int, 5_default_int, 2_default_int, 1_default_int, 4_default_int, 2_default_int, &
            5_default_int, 2_default_int, 1_default_int, 4_default_int, 6_default_int, 3_default_int, 3_default_int, 1_default_int, &
@@ -409,7 +414,16 @@ contains
 
    subroutine test_exponential_small_mean(error)
       !! A mean of 2 is where truncating the fixed-point fraction instead of
-      !! rounding it would show up as a 25% error.
+      !! rounding it would show up as a 23% error.
+      !!
+      !! Pinned to the closed form rather than to 2.0. Discretising an
+      !! exponential to integers leaves a residual bias that rounding does not
+      !! remove: `E[round(m*X)] = exp(-1/(2m)) / (1 - exp(-1/m))`, which is
+      !! 1.97932 at m = 2. The old band, +/-0.05 around 2.0, did catch
+      !! truncation -- that gives 1.5415, well outside it -- but it pinned a
+      !! value the algorithm cannot reach, and at 25 sigma wide it could not
+      !! have caught a regression in the rounding term itself. This band is
+      !! 5 sigma around what the algorithm is actually supposed to produce.
       type(error_type), allocatable, intent(out) :: error
       type(splitmix64_t) :: gen
       integer(default_int) :: i
@@ -422,8 +436,8 @@ contains
       end do
       mean = total/real(BULK, dp)
 
-      call check(error, abs(mean - 2.0_dp) < 0.05_dp, &
-                 "a small mean is badly biased")
+      call check(error, abs(mean - EXPECTED_MEAN_AT_2) < 0.01_dp, &
+                 "a small mean is off its closed-form expectation")
    end subroutine test_exponential_small_mean
 
    subroutine test_poisson_edges(error)
