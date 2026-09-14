@@ -25,6 +25,20 @@ on:
 #     Release also avoids the -g debug-info step that needs llvm-dwarfdump to
 #     link the test executable, which is not always present on the runner.
 
+env:
+  # Pinned deliberately. `setup-fortran-conda` installs whatever conda-forge
+  # currently calls latest, so an upstream release silently changes what this
+  # workflow tests -- which is how three suites started failing here without
+  # any commit touching them, and why the failure looked like it belonged to
+  # whichever PR happened to be open. Bump this on purpose, in its own PR, so
+  # the change is attributable to a commit.
+  #
+  # `env` is deliberately used here rather than a `matrix` entry: the env
+  # context is not available when a strategy matrix is evaluated, so a
+  # ${{ env.* }} reference there expands to the empty string and silently
+  # un-pins the version again.
+  LFORTRAN_VERSION: '0.65.0'
+
 permissions:
   contents: read
 
@@ -49,10 +63,13 @@ jobs:
         uses: gha3mi/setup-fortran-conda@v0.17.1
         with:
           compiler: ${{ matrix.compiler }}
+          compiler-version: ${{ env.LFORTRAN_VERSION }}
           platform: ${{ matrix.os }}
 
-      - name: fpm versioning
-        run: fpm --version
+      - name: report toolchain versions
+        run: |
+          lfortran --version
+          fpm --version
 
       - name: Set linker if macOS
         if: matrix.os == 'macos-latest'
@@ -128,8 +145,14 @@ jobs:
         uses: gha3mi/setup-fortran-conda@v0.17.1
         with:
           compiler: ${{ matrix.compiler }}
+          compiler-version: ${{ env.LFORTRAN_VERSION }}
           platform: ${{ matrix.os }}
           extra-packages: "cmake, ninja"
+
+      - name: report toolchain versions
+        run: |
+          lfortran --version
+          cmake --version
 
       # Release avoids the -g debug info step that requires llvm-dwarfdump.
       - name: cmake test (release)
