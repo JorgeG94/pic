@@ -29,6 +29,7 @@ set(tests
     "pic_rng"
     "pic_random_dist"
     "pic_tokenizer"
+    "pic_cli"
     "pic_format"
     "pic_fixed_array"
     "pic_heap"

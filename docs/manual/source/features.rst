@@ -449,6 +449,54 @@ untestable. ``remove`` preserves the relative order of what remains.
 
 Keys are deferred-length character, so there is no key-length limit.
 
+Command Line Parsing (``pic_cli``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Declare what the program accepts, parse once, read values back by name.
+
+.. code-block:: fortran
+
+   type(cli_t) :: cli
+   type(error_t) :: err
+   integer(int64) :: seed
+
+   call cli%set_program("fairport", "Deterministic airport simulator")
+   call cli%add_positional("scenario", "Scenario script to run", required=.true.)
+   call cli%add_option("seed", "Master RNG seed", short="s", default="0")
+   call cli%add_flag("hash", "Print the event-log hash and exit")
+   call cli%parse(err)
+
+   if (cli%help_requested()) then
+      write (*, "(a)") cli%help_text()
+      stop 0
+   end if
+   call cli%get("seed", seed, err)
+
+Grammar: ``--name value``, ``--name=value``, ``-s value``, and ``--`` to end
+option parsing. ``-h`` and ``--help`` are reserved. Subcommands, grouped short
+flags, environment fallbacks and range validation are out of scope.
+
+``get`` is generic over ``int32``, ``int64``, ``sp``, ``dp``, ``logical``,
+``character(len=:)`` and ``string_type``. Conversions use
+``pic_tokenizer``'s strict parsers, so ``--seed 42x`` is ``ERROR_PARSE``
+rather than 42.
+
+.. important::
+
+   The library never prints and never stops. ``help_text()`` returns the
+   text; ``help_requested()`` reports the request. A library that prints has
+   assumed the program has a terminal, that the text belongs on
+   ``output_unit`` rather than in a log, and that English is wanted. A
+   library that stops has assumed there is nothing left to clean up. Both are
+   the caller's decisions.
+
+.. note::
+
+   ``parse_args(args, err)`` takes the arguments as an array and is the real
+   implementation; ``parse`` only collects ``get_command_argument`` and
+   forwards to it. Tests therefore never need a real command line, and every
+   error path is reachable without a shell.
+
 Random Distributions (``pic_random_dist``, ``pic_random_dist_real``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -23,6 +23,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
   a growable one is a type change and nothing else. `take` moves the storage
   out without copying, which is the idiom for building an array whose final
   length is not known until the input has been read.
+- `pic_cli`: a declarative command line parser. Declare options, flags and
+  positionals, `parse` once, then read values back by name with a generic
+  `get` over `int32`, `int64`, `sp`, `dp`, `logical`, `character` and
+  `string_type`. Conversions go through `pic_tokenizer`'s strict
+  `parse_int`/`parse_real`, so `--seed 42x` is `ERROR_PARSE` rather than 42.
+  Nothing is printed and nothing is stopped: `help_text()` returns the text
+  and `help_requested()` reports the request, leaving both decisions to the
+  caller. `parse_args` takes the arguments as an array and is the real
+  implementation, so every path is testable without a shell. A repeated
+  option is last-wins, and `occurrences(name)` reports the count so a caller
+  that wants to reject a repeat can.
 - `pic_random_dist`: integer-valued distributions that are bit-identical on
   every supported compiler -- `next_range` (inclusive, exactly uniform over
   the full width of `default_int`), `next_bernoulli_ppm`,
@@ -56,6 +67,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
   reports 2**63 as less than zero.
 
 ### Changed
+- `get_first_arg_from_command_line` takes an optional `err`. With it, a
+  missing argument is `ERROR_VALIDATION` and nothing is written or stopped;
+  without it the old usage line and `stop 1` are kept, because callers
+  written against that behaviour rely on not continuing past it. The
+  stopping path is deprecated -- pass `err`, or use `pic_cli`.
 - `pic_rng` now takes its modular arithmetic from `pic_uint64`. Generator
   output is unchanged, verified bit-for-bit over 1800 values across both
   generators (`next_u64`, `next`, `next_below`, `next_real_dp` bit patterns
