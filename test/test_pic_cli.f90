@@ -37,7 +37,10 @@ contains
                   new_unittest("negative_numbers", test_negative_numbers), &
                   new_unittest("reparse_resets", test_reparse_resets), &
                   new_unittest("help_text_is_stable", test_help_text_is_stable), &
-                  new_unittest("many_options_grow", test_many_options_grow) &
+                  new_unittest("many_options_grow", test_many_options_grow), &
+                  new_unittest("reparse_restores_defaults", test_reparse_restores_defaults), &
+                  new_unittest("stray_dash_tokens_are_errors", test_stray_dash_tokens), &
+                  new_unittest("positional_is_not_an_option", test_positional_not_option) &
                   ]
    end subroutine collect_pic_cli_tests
 
@@ -598,5 +601,138 @@ contains
       call cli%get("o9d", value, err)
       call check(error, value == 99_int32, "and a late one has its own")
    end subroutine test_many_options_grow
+
+   subroutine test_reparse_restores_defaults(error)
+      !! `test_reparse_resets` checked `is_set` and `occurrences` and passed
+      !! while `get` still returned the previous run's value, because only the
+      !! seen-count was being reset. The values are what a caller actually
+      !! reads, so they are what this checks.
+      type(error_type), allocatable, intent(out) :: error
+      type(cli_t) :: cli
+      type(error_t) :: err
+      type(string_type), allocatable :: args(:)
+      integer(int64) :: seed
+      logical :: hash
+      character(len=:), allocatable :: speed
+
+      call sample_cli(cli)
+      call make_args("run.txt --hash --seed 5 --speed instant", args)
+      call cli%parse_args(args, err)
+      call cli%get("seed", seed, err)
+      call check(error, seed == 5_int64, "the first parse takes")
+      if (allocated(error)) return
+
+      call make_args("other.txt", args)
+      call cli%parse_args(args, err)
+
+      call cli%get("seed", seed, err)
+      call check(error, seed == 0_int64, "an option absent the second time is back to its default")
+      if (allocated(error)) return
+      call cli%get("speed", speed, err)
+      call check(error, speed == "1", "and so is a string option")
+      if (allocated(error)) return
+      call cli%get("hash", hash, err)
+      call check(error,.not. hash, "a flag absent the second time reads false again")
+      if (allocated(error)) return
+
+      ! and the positional really did change, so the second parse did happen
+      block
+         character(len=:), allocatable :: scenario
+         call cli%get("scenario", scenario, err)
+         call check(error, scenario == "other.txt", "the second parse took effect")
+      end block
+   end subroutine test_reparse_restores_defaults
+
+   subroutine test_stray_dash_tokens(error)
+      !! Forms that are out of scope have to be rejected. Filing them as
+      !! positionals turns `-s5` or a mistyped `-verbose` into the scenario
+      !! filename, and the program runs on the wrong input.
+      type(error_type), allocatable, intent(out) :: error
+      type(cli_t) :: cli
+      type(error_t) :: err
+      type(string_type), allocatable :: args(:)
+      character(len=:), allocatable :: scenario
+      integer(default_int) :: i
+      character(len=9), parameter :: BAD(4) = ["-s=5     ", "-s5      ", "-abc     ", "-verbose "]
+
+      do i = 1_default_int, 4_default_int
+         call sample_cli(cli)
+         call make_args(trim(BAD(i)), args)
+         call err%clear()
+         call cli%parse_args(args, err)
+         call check(error, err%has_error(), "must be rejected: "//trim(BAD(i)))
+         if (allocated(error)) return
+         call check(error, err%code == ERROR_PARSE, "and as ERROR_PARSE: "//trim(BAD(i)))
+         if (allocated(error)) return
+      end do
+
+      ! negative numbers remain the deliberate exception
+      call sample_cli(cli)
+      call make_args("-5", args)
+      call err%clear()
+      call cli%parse_args(args, err)
+      call check(error,.not. err%has_error(), "a negative integer is still a positional")
+      if (allocated(error)) return
+      call cli%get("scenario", scenario, err)
+      call check(error, scenario == "-5", "and reaches the positional intact")
+      if (allocated(error)) return
+
+      call sample_cli(cli)
+      call make_args("-1.5", args)
+      call err%clear()
+      call cli%parse_args(args, err)
+      call check(error,.not. err%has_error(), "so is a negative real")
+      if (allocated(error)) return
+
+      call sample_cli(cli)
+      call make_args("-.5", args)
+      call err%clear()
+      call cli%parse_args(args, err)
+      call check(error,.not. err%has_error(), "and one written without a leading zero")
+      if (allocated(error)) return
+
+      ! after `--`, a dash-prefixed token is a positional again
+      call sample_cli(cli)
+      call make_args("-- -abc", args)
+      call err%clear()
+      call cli%parse_args(args, err)
+      call check(error,.not. err%has_error(), "-- turns off the rejection")
+      if (allocated(error)) return
+      call cli%get("scenario", scenario, err)
+      call check(error, scenario == "-abc", "and the token reaches the positional")
+   end subroutine test_stray_dash_tokens
+
+   subroutine test_positional_not_option(error)
+      !! A positional's name must not be reachable as `--name`. It was, and
+      !! because that path never advanced the positional counter, the
+      !! extra-argument check downstream could not see the slot was taken.
+      type(error_type), allocatable, intent(out) :: error
+      type(cli_t) :: cli
+      type(error_t) :: err
+      type(string_type), allocatable :: args(:)
+
+      call sample_cli(cli)
+      call make_args("--scenario a", args)
+      call err%clear()
+      call cli%parse_args(args, err)
+      call check(error, err%has_error(), "--scenario is not an option")
+      if (allocated(error)) return
+      call check(error, index(err%message, "scenario") > 0, "and the message names it")
+      if (allocated(error)) return
+
+      call sample_cli(cli)
+      call make_args("--scenario=a", args)
+      call err%clear()
+      call cli%parse_args(args, err)
+      call check(error, err%has_error(), "nor in the equals form")
+      if (allocated(error)) return
+
+      ! the check it was bypassing still works
+      call sample_cli(cli)
+      call make_args("a b", args)
+      call err%clear()
+      call cli%parse_args(args, err)
+      call check(error, err%has_error(), "one positional too many is still an error")
+   end subroutine test_positional_not_option
 
 end module test_pic_cli
