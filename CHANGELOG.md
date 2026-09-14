@@ -31,8 +31,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
   reads, so an arrow key split between two reads still decodes; both the
   `ESC [` and `ESC O` cursor forms are handled. A `frame_t` that composes a
   screen and renders only the rows that changed, so an otherwise idle board
-  updating a clock writes one line. Width is counted in UTF-8 code points, so
-  a row of box-drawing characters truncates without being cut mid-character.
+  updating a clock writes one line. Rows are held as `string_type`, so a
+  styled row is capped by nothing. Width is counted in columns -- UTF-8 code
+  points, with escape sequences skipped -- so a row of box-drawing characters
+  truncates without being cut mid-character, a styled row is measured by what
+  it shows rather than how it is spelled, and a cut never lands inside an
+  escape sequence.
 - `pic_cli`: a declarative command line parser. Declare options, flags and
   positionals, `parse` once, then read values back by name with a generic
   `get` over `int32`, `int64`, `sp`, `dp`, `logical`, `character` and

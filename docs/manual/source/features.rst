@@ -484,11 +484,16 @@ the operating system anything, so all of it is testable without a terminal.
 
 .. note::
 
-   Width is counted in UTF-8 **code points**, not bytes, so a row of
-   box-drawing characters --- three bytes each, one column each --- truncates
-   at a character boundary rather than a third of the way into one. East
-   Asian wide characters count as one column here; getting those right needs
-   a character-width table and is out of scope.
+   Width is counted in **columns**: UTF-8 code points rather than bytes, so a
+   row of box-drawing characters --- three bytes each, one column each ---
+   truncates at a character boundary rather than a third of the way into one,
+   and escape sequences, which take no space on screen, are skipped. That
+   second part matters for truncation as much as for measurement: cutting
+   inside an escape sequence does not merely lose a colour, it leaves the
+   terminal reading the rest of the row as parameters.
+
+   East Asian wide characters count as one column here; getting those right
+   needs a character-width table and is out of scope.
 
 Command Line Parsing (``pic_cli``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

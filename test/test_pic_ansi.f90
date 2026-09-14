@@ -44,7 +44,11 @@ contains
                   new_unittest("frame_invalidate", test_frame_invalidate), &
                   new_unittest("frame_resize", test_frame_resize), &
                   new_unittest("frame_truncates", test_frame_truncates), &
-                  new_unittest("frame_edges", test_frame_edges) &
+                  new_unittest("frame_edges", test_frame_edges), &
+                  new_unittest("width_skips_escapes", test_width_skips_escapes), &
+                  new_unittest("truncate_keeps_escapes", test_truncate_keeps_escapes), &
+                  new_unittest("frame_holds_styled_rows", test_frame_holds_styled_rows), &
+                  new_unittest("frame_rows_survive_blanking", test_frame_rows_survive_blanking) &
                   ]
    end subroutine collect_pic_ansi_tests
 
@@ -628,5 +632,124 @@ contains
       if (allocated(error)) return
       call check(error, frame%col_count() == 0_default_int, "negative columns clamp to zero")
    end subroutine test_frame_edges
+
+   subroutine test_width_skips_escapes(error)
+      !! An escape sequence takes no columns. Counting its bytes made
+      !! `styled("ARRIVALS", fg=ANSI_RED)` measure seventeen wide instead of
+      !! eight, which is the width the module's own quick start relies on.
+      type(error_type), allocatable, intent(out) :: error
+      character(len=:), allocatable :: painted
+
+      painted = styled("ARRIVALS", fg=ANSI_RED)
+
+      call check(error, len(painted) == 17, "the styled string really is seventeen bytes")
+      if (allocated(error)) return
+      call check(error, display_width(painted) == 8_default_int, &
+                 "but eight columns wide")
+      if (allocated(error)) return
+
+      call check(error, display_width(ansi_reset()) == 0_default_int, &
+                 "a bare escape sequence is zero wide")
+      if (allocated(error)) return
+      call check(error, display_width(ansi_move_to(12_default_int, 34_default_int)) == 0_default_int, &
+                 "including one with multi-digit parameters")
+      if (allocated(error)) return
+      call check(error, display_width(styled("x", fg=ANSI_RED, bg=ANSI_BLUE, bold=.true.)) &
+                 == 1_default_int, "three attributes and a reset still leave one column")
+      if (allocated(error)) return
+
+      ! a lone ESC, and an unterminated sequence, must not run off the end
+      call check(error, display_width(ESC) == 0_default_int, "a trailing ESC is consumed")
+      if (allocated(error)) return
+      call check(error, display_width(CSI//"12") == 0_default_int, &
+                 "an unterminated sequence consumes the rest")
+   end subroutine test_width_skips_escapes
+
+   subroutine test_truncate_keeps_escapes(error)
+      !! Cutting inside an escape sequence does not merely lose a colour: the
+      !! terminal reads the rest of the row as parameters.
+      type(error_type), allocatable, intent(out) :: error
+      character(len=:), allocatable :: cut
+
+      cut = truncate_to_width(styled("ARRIVALS", fg=ANSI_RED), 4_default_int)
+      call check(error, display_width(cut) == 4_default_int, "four columns survive")
+      if (allocated(error)) return
+      call check(error, index(cut, CSI//"31m") > 0, "and the colour that preceded them")
+      if (allocated(error)) return
+      call check(error, index(cut, "ARRI") > 0, "with the right four characters")
+      if (allocated(error)) return
+      call check(error, index(cut, "ARRIV") == 0, "and not a fifth")
+      if (allocated(error)) return
+
+      ! the cut must never land inside a sequence
+      cut = truncate_to_width(CSI//"31m"//"abc", 2_default_int)
+      call check(error, cut == CSI//"31m"//"ab", "the sequence is kept whole")
+      if (allocated(error)) return
+
+      ! a styled string shorter than the width comes back untouched
+      cut = truncate_to_width(styled("hi", fg=ANSI_GREEN), 10_default_int)
+      call check(error, cut == styled("hi", fg=ANSI_GREEN), "no truncation, no change")
+      if (allocated(error)) return
+
+      cut = truncate_to_width(styled("hi", fg=ANSI_GREEN), 0_default_int)
+      call check(error, cut == "", "a width of zero keeps nothing, escapes included")
+   end subroutine test_truncate_keeps_escapes
+
+   subroutine test_frame_holds_styled_rows(error)
+      !! The frame's rows are `string_type`, so there is no byte-length cap to
+      !! overrun. Per-character colouring runs to about ten bytes a column,
+      !! which any fixed multiple of the width would have truncated.
+      type(error_type), allocatable, intent(out) :: error
+      type(frame_t) :: frame
+      character(len=:), allocatable :: out, loud
+      integer(default_int) :: i
+
+      loud = ""
+      do i = 1_default_int, 40_default_int
+         loud = loud//styled("x", fg=ANSI_RED, bg=ANSI_BLUE, bold=.true.)
+      end do
+      call check(error, display_width(loud) == 40_default_int, "forty columns")
+      if (allocated(error)) return
+      call check(error, len(loud) > 400, "but well over four hundred bytes")
+      if (allocated(error)) return
+
+      call frame%resize(1_default_int, 40_default_int)
+      call frame%set_line(1_default_int, loud)
+      out = frame%render()
+      call check(error, index(out, loud) > 0, &
+                 "the whole styled row survives, uncapped and untruncated")
+   end subroutine test_frame_holds_styled_rows
+
+   subroutine test_frame_rows_survive_blanking(error)
+      !! A regression guard. The rows used to be a deferred-length allocatable
+      !! character array blanked with a whole-array `= ""`, which F2018
+      !! 10.2.1.3 lets a compiler read as "reallocate to length zero" -- GNU,
+      !! AOCC and LFortran kept the length, Intel and NVIDIA did not, and every
+      !! row came out empty there.
+      type(error_type), allocatable, intent(out) :: error
+      type(frame_t) :: frame
+      character(len=:), allocatable :: out
+
+      call frame%resize(3_default_int, 40_default_int)
+
+      ! the first thing written after a resize must survive
+      call frame%set_line(1_default_int, "first")
+      out = frame%render()
+      call check(error, index(out, "first") > 0, &
+                 "a row written straight after resize is not blanked away")
+      if (allocated(error)) return
+
+      ! and a resize must genuinely clear what was there
+      call frame%resize(3_default_int, 40_default_int)
+      out = frame%render()
+      call check(error, index(out, "first") == 0, "a resize really does clear the rows")
+      if (allocated(error)) return
+
+      ! a long row, well past any plausible fixed buffer
+      call frame%resize(1_default_int, 200_default_int)
+      call frame%set_line(1_default_int, repeat("y", 200))
+      out = frame%render()
+      call check(error, index(out, repeat("y", 200)) > 0, "two hundred columns survive intact")
+   end subroutine test_frame_rows_survive_blanking
 
 end module test_pic_ansi

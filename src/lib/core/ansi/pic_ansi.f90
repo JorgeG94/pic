@@ -41,6 +41,7 @@ module pic_ansi
    !! needs a character-width table and is out of scope here.
    use pic_types, only: default_int, int32
    use pic_strings, only: to_string
+   use pic_string_type, only: string_type, char, assignment(=), operator(==)
    implicit none
    private
 
@@ -135,9 +136,25 @@ module pic_ansi
       !! clock writes one line rather than twenty-four. That is what makes the
       !! simple model flicker-free.
       private
-      character(len=:), allocatable :: current(:)
+      type(string_type), allocatable :: current(:)
          !! Lines as set since the last render.
-      character(len=:), allocatable :: shown(:)
+         !!
+         !! `string_type` rather than `character(len=:), allocatable :: (:)`
+         !! for two reasons, both learned the hard way.
+         !!
+         !! A deferred-length allocatable *array* cannot be blanked with a
+         !! whole-array `= ""`: F2018 10.2.1.3 deallocates and reallocates an
+         !! allocatable whose length type parameter differs from the
+         !! expression's, so that assignment sets the length to zero. GNU,
+         !! AOCC and LFortran keep the length and blank-pad; Intel and NVIDIA
+         !! reallocate. Both readings are defensible and the construct is
+         !! therefore unusable here.
+         !!
+         !! And a fixed row length has to be guessed. Escape sequences make a
+         !! styled line far longer in bytes than in columns -- per-character
+         !! colouring runs to about ten bytes a column -- so any constant
+         !! multiple of the width is a cap waiting to truncate someone's row.
+      type(string_type), allocatable :: shown(:)
          !! Lines as of the last render, for diffing.
       integer(default_int) :: rows = 0_default_int
          !! Number of lines.
@@ -589,41 +606,107 @@ contains
 
    ! ---- width ---------------------------------------------------------------
 
+   pure function escape_length(text, start) result(n)
+      !! Length of the escape sequence beginning at `start`, or 0.
+      !!
+      !! Escape sequences occupy no columns, so measuring and truncating both
+      !! have to step over them rather than count them. Without this,
+      !! `styled("ARRIVALS", fg=ANSI_RED)` measures seventeen wide rather than
+      !! eight, and truncating a styled row could cut an escape sequence in
+      !! half -- which does not merely lose the colour, it leaves the terminal
+      !! reading the rest of the row as parameters.
+      !!
+      !! Recognises the CSI form, `ESC [` then parameter and intermediate
+      !! bytes then a final byte in the range `@` to `~`, which is what
+      !! everything in this module emits. An unterminated sequence swallows
+      !! the remaining text, since there is no position in it that could
+      !! safely be cut. Any other `ESC` pair counts as two bytes.
+      character(len=*), intent(in) :: text
+         !! Text being scanned.
+      integer(default_int), intent(in) :: start
+         !! Index to examine.
+      integer(default_int) :: n
+
+      integer(default_int) :: j, last, byte
+
+      n = 0_default_int
+      last = len(text, kind=default_int)
+      if (start > last) return
+      if (text(start:start) /= ESC) return
+      if (start == last) then
+         n = 1_default_int                 ! a lone trailing ESC
+         return
+      end if
+      if (text(start + 1_default_int:start + 1_default_int) /= "[") then
+         n = 2_default_int                 ! ESC followed by something else
+         return
+      end if
+
+      j = start + 2_default_int
+      do while (j <= last)
+         byte = iachar(text(j:j), default_int)
+         if (byte >= 64_default_int .and. byte <= 126_default_int) then
+            n = j - start + 1_default_int  ! final byte, sequence complete
+            return
+         end if
+         if (byte < 32_default_int .or. byte > 63_default_int) exit
+         j = j + 1_default_int
+      end do
+      n = last - start + 1_default_int     ! unterminated; nowhere safe to cut
+   end function escape_length
+
    pure function display_width(text) result(width)
-      !! Number of UTF-8 code points in `text`.
+      !! Number of columns `text` occupies.
       !!
-      !! Continuation bytes, which are those with the top two bits `10`, do
-      !! not start a character and so do not count. A byte that is not valid
-      !! UTF-8 counts as one, so invalid input degrades to the byte count
-      !! rather than to something arbitrary.
+      !! Counts UTF-8 code points and skips ANSI escape sequences, which take
+      !! no space on screen. Continuation bytes, those with the top two bits
+      !! `10`, do not start a character and so do not count. A byte that is
+      !! not valid UTF-8 counts as one, so invalid input degrades to the byte
+      !! count rather than to something arbitrary.
       !!
-      !! This is code points, not columns: an East Asian wide character
-      !! occupies two columns and is counted once here. Getting that right
-      !! needs a width table, and is out of scope.
+      !! One column per code point: an East Asian wide character occupies two
+      !! and is counted once here. Getting that right needs a width table, and
+      !! is out of scope.
       character(len=*), intent(in) :: text
          !! Text to measure.
       integer(default_int) :: width
 
-      integer(default_int) :: i, byte
+      integer(default_int) :: i, byte, skip
 
       width = 0_default_int
-      do i = 1_default_int, len(text, kind=default_int)
+      i = 1_default_int
+      do while (i <= len(text, kind=default_int))
+         skip = escape_length(text, i)
+         if (skip > 0_default_int) then
+            i = i + skip
+            cycle
+         end if
          byte = iachar(text(i:i), default_int)
          if (byte < 128_default_int .or. byte >= 192_default_int) then
             width = width + 1_default_int
          end if
+         i = i + 1_default_int
       end do
    end function display_width
 
    pure function truncate_to_width(text, width) result(cut)
-      !! Cut `text` to at most `width` code points, never mid-character.
+      !! Cut `text` to at most `width` columns, never mid-character and never
+      !! inside an escape sequence.
+      !!
+      !! Escape sequences are kept and cost nothing, so a styled row keeps its
+      !! colours and is cut by what it shows rather than by how it is spelled.
+      !! Note that a cut can leave an attribute set with its reset dropped;
+      !! `ansi_reset()` after writing a truncated row settles that.
+      !!
+      !! A `width` of zero still keeps nothing at all, escape sequences
+      !! included: a caller asking for no columns wants no bytes.
       character(len=*), intent(in) :: text
          !! Text to truncate.
       integer(default_int), intent(in) :: width
-         !! Maximum width in code points.
+         !! Maximum width in columns.
       character(len=:), allocatable :: cut
 
-      integer(default_int) :: i, byte, seen
+      integer(default_int) :: i, byte, seen, skip, last
 
       if (width <= 0_default_int) then
          cut = ""
@@ -631,7 +714,14 @@ contains
       end if
 
       seen = 0_default_int
-      do i = 1_default_int, len(text, kind=default_int)
+      last = len(text, kind=default_int)
+      i = 1_default_int
+      do while (i <= last)
+         skip = escape_length(text, i)
+         if (skip > 0_default_int) then
+            i = i + skip
+            cycle
+         end if
          byte = iachar(text(i:i), default_int)
          if (byte < 128_default_int .or. byte >= 192_default_int) then
             if (seen == width) then
@@ -640,6 +730,7 @@ contains
             end if
             seen = seen + 1_default_int
          end if
+         i = i + 1_default_int
       end do
       cut = text
    end function truncate_to_width
@@ -657,7 +748,7 @@ contains
       integer(default_int), intent(in) :: cols
          !! Width in code points; below 0 is treated as 0.
 
-      integer(default_int) :: r, c
+      integer(default_int) :: r, c, i
 
       r = max(0_default_int, rows)
       c = max(0_default_int, cols)
@@ -665,12 +756,12 @@ contains
       if (allocated(this%shown)) deallocate (this%shown)
       this%rows = r
       this%cols = c
-      allocate (character(len=max(1_default_int, 4_default_int*c)) :: this%current(r))
-      allocate (character(len=max(1_default_int, 4_default_int*c)) :: this%shown(r))
-      if (r > 0_default_int) then
-         this%current = ""
-         this%shown = ""
-      end if
+      allocate (this%current(r))
+      allocate (this%shown(r))
+      do i = 1_default_int, r
+         this%current(i) = ""
+         this%shown(i) = ""
+      end do
       this%full_redraw = .true.
    end subroutine frame_resize
 
@@ -739,7 +830,7 @@ contains
             if (this%current(i) == this%shown(i)) cycle
          end if
          output = output//ansi_move_to(i, 1_default_int)//ansi_clear_line()// &
-                  trim(this%current(i))
+                  char(this%current(i))
          this%shown(i) = this%current(i)
       end do
       this%full_redraw = .false.
