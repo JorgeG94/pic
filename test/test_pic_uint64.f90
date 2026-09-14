@@ -145,10 +145,16 @@ contains
          h = u64_mul(ieor(h, u64_shr(h, 30_default_int)), -7046029254386353131_int64)
          h = u64_add(h, -1640531527_int64)
       end do
-      ! commutativity is a cheap invariant that a broken carry would violate
-      consistent = u64_mul(h, 6364136223846793005_int64) == u64_mul(6364136223846793005_int64, h) &
-                   .and. u64_add(h, ALL_ONES) == u64_add(ALL_ONES, h)
-      call check(error, consistent, "mul and add stay commutative after 2000 wrapping rounds")
+      ! The loop's final value, computed independently in Python big-integer
+      ! arithmetic. Commutativity was checked here before and proved worthless:
+      ! every stage of `u64_mul` is symmetric in its operands
+      ! (`a0*b1 + a1*b0`, and so on), so swapping them replays the identical
+      ! sequence of intermediates. A wrong mask, a wrong carry width or a wrong
+      ! reassembly shift all give the same wrong answer both ways round, and
+      ! the assertion held for every one of them. This equality does not: it
+      ! carries 2000 rounds of carry propagation through all four limbs.
+      consistent = h == -8700969152592207136_int64
+      call check(error, consistent, "2000 wrapping rounds diverged from the reference value")
       if (allocated(error)) return
    end subroutine test_stress
 

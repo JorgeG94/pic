@@ -20,7 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
   bounds-checked access, for `int32`, `int64`, `dp` and `string_type`
   elements. Generated from `tools/autogen/pic_vector.fypp`. The method
   vocabulary matches `pic_fixed_array`, so moving from a bounded container to
-  a growable one is a type change and nothing else. `take` moves the storage
+  a growable one is mostly a type change -- the error code differs
+  (`ERROR_BOUNDS` rather than `ERROR_VALIDATION`), `value` is left undefined
+  rather than zeroed on a failed read, and there is no `vector_int_t`. `take`
+  moves the storage
   out without copying, which is the idiom for building an array whose final
   length is not known until the input has been read.
 - `pic_uint64`: portable arithmetic modulo 2**64 on `integer(int64)` without
