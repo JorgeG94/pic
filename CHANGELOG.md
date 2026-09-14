@@ -15,7 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
   against the wall clock does not drift with rounding. `system_clock` is
   called with `integer(int64)` arguments to get a finer tick than the default
   kind provides, and a processor with no clock reports `PIC_CLOCK_NO_CLOCK`
-  (-1) rather than zero, which is a valid reading.
+  (-1) rather than zero, which is a valid reading. `datetime_t` carries a
+  `utc_offset_known` flag, because zero is a real offset: a processor that
+  cannot supply one would otherwise be indistinguishable from Greenwich, and
+  its local time would format as `...Z`. `datetime_from_unix_ms` is public,
+  as the inverse of `unix_time_ms`.
 - `pic_vector`: growable, heap-backed arrays with amortised O(1) growth and
   bounds-checked access, for `int32`, `int64`, `dp` and `string_type`
   elements. Generated from `tools/autogen/pic_vector.fypp`. The method
