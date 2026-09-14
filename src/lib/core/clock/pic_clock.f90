@@ -42,6 +42,7 @@ module pic_clock
    public :: now_local
    public :: now_utc
    public :: unix_time_ms
+   public :: datetime_from_unix_ms
    public :: format_iso8601
    public :: PIC_CLOCK_NO_CLOCK
 
@@ -71,7 +72,14 @@ module pic_clock
       !!
       !! `utc_offset_min` is the number of minutes local time is **ahead** of
       !! UTC, so it is negative in the Americas. A value of zero means the
-      !! instant is expressed in UTC.
+      !! instant is expressed in UTC -- but only when `utc_offset_known` is
+      !! true.
+      !!
+      !! `utc_offset_known` exists because zero is a real offset. A processor
+      !! that cannot tell you its offset from UTC leaves the field at zero,
+      !! and without a separate flag that is indistinguishable from being on
+      !! the Greenwich meridian: the time would format as `...Z` and convert
+      !! as though it were UTC, silently wrong by the size of the offset.
       integer(default_int) :: year = 1970
       integer(default_int) :: month = 1
       integer(default_int) :: day = 1
@@ -80,6 +88,9 @@ module pic_clock
       integer(default_int) :: second = 0
       integer(default_int) :: millisecond = 0
       integer(default_int) :: utc_offset_min = 0
+      logical :: utc_offset_known = .true.
+         !! False when the processor could not supply an offset from UTC. The
+         !! date and time are still valid; only their relation to UTC is not.
    end type datetime_t
 
 contains
@@ -153,13 +164,16 @@ contains
       dt%second = int(values(7), default_int)
       dt%millisecond = int(values(8), default_int)
 
-      ! The UTC offset is the field most often unavailable; local time is
-      ! still valid without it, so it is reported as zero and only `now_utc`
-      ! treats its absence as an error.
+      ! The UTC offset is the field most often unavailable. Local time is
+      ! still valid without it, so this is not an error here -- only `now_utc`
+      ! treats its absence as one -- but it is recorded rather than flattened
+      ! to zero, which would read as "on the Greenwich meridian".
       if (values(4) == -huge(0)) then
          dt%utc_offset_min = 0
+         dt%utc_offset_known = .false.
       else
          dt%utc_offset_min = int(values(4), default_int)
+         dt%utc_offset_known = .true.
       end if
    end subroutine now_local
 
@@ -200,6 +214,12 @@ contains
       !! below, so the result is exact and identical on every compiler. The
       !! `utc_offset_min` field is subtracted, so a local time and the same
       !! instant expressed in UTC give the same answer.
+      !!
+      !! A `datetime_t` whose `utc_offset_known` is false has no UTC instant
+      !! to compute; this returns the value its zero offset implies, which is
+      !! the local time read as though it were UTC. There is no error channel
+      !! here -- the function is `pure` and total -- so a caller that may be
+      !! handed such a value must test the flag itself.
       type(datetime_t), intent(in) :: dt
       integer(int64) :: ms
 
@@ -316,6 +336,11 @@ contains
       !! rendered as `+HH:MM` or `-HH:MM`, so the text always identifies the
       !! instant rather than quietly presenting local time as UTC.
       !!
+      !! When `utc_offset_known` is false no designator is written at all.
+      !! ISO 8601 calls that a local time, which is exactly what it is: the
+      !! alternative, a `Z` the processor never justified, would be a wrong
+      !! instant rather than an incomplete one.
+      !!
       !! Built with `zfill` rather than an internal `write`: the `I0.N` edit
       !! descriptor and list-directed output are processor dependent, and this
       !! text is compared byte for byte by tests and golden files.
@@ -324,7 +349,8 @@ contains
 
       text = pad(dt%year, 4)//"-"//pad(dt%month, 2)//"-"//pad(dt%day, 2)//"T"// &
              pad(dt%hour, 2)//":"//pad(dt%minute, 2)//":"//pad(dt%second, 2)//"."// &
-             pad(dt%millisecond, 3)//offset_text(dt%utc_offset_min)
+             pad(dt%millisecond, 3)
+      if (dt%utc_offset_known) text = text//offset_text(dt%utc_offset_min)
    end function format_iso8601
 
    pure function offset_text(offset_min) result(text)
@@ -352,11 +378,26 @@ contains
    pure function pad(value, width) result(text)
       !! `value` in decimal, zero filled on the left to `width` characters.
       !! A value too wide to fit is not truncated; the field simply grows.
+      !!
+      !! A negative value keeps its sign at the front: zero filling the text
+      !! of `-5` to four characters gives `00-5`, which is not a number. The
+      !! digits are padded to `width` and the sign prepended, so the answer is
+      !! `-0005` -- sign plus four digits, which is what ISO 8601 asks for in
+      !! an expanded year.
+      !!
+      !! The sign is removed from the text rather than by negating `value`,
+      !! because negating the most negative value of a kind is signed
+      !! overflow.
       integer(default_int), intent(in) :: value
       integer, intent(in) :: width
       character(len=:), allocatable :: text
 
-      text = zfill(to_string(value), width)
+      text = to_string(value)
+      if (value < 0_default_int) then
+         text = "-"//zfill(text(2:), width)
+      else
+         text = zfill(text, width)
+      end if
    end function pad
 
 end module pic_clock

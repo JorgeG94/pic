@@ -157,7 +157,7 @@ module pic_array_hash
    !! are exact for IEEE binary formats. Bytes are extracted with `ibits`, never
    !! with a shift by a negative count. The FNV multiply is carried out in
    !! `int64` and reduced modulo 2**32 by masking; the 64-bit multiply, which
-   !! has no wider kind to spill into, is carried out on 16-bit limbs instead
+   !! has no wider kind to spill into, is carried out on 32-bit limbs instead
    !! (see `fnv1a_byte64`). Neither can overflow a signed integer. NaN and infinity are detected by comparison (unordered
    !! comparisons against zero, plus `abs(x) > huge(x)`) rather than through
    !! `ieee_arithmetic`, which LFortran does not fully provide.
@@ -229,7 +229,8 @@ module pic_array_hash
       !! 2**32 - 1. The multiply by `FNV64_SMALL` is carried out on 32-bit
       !! limbs, where no partial product can reach 2**41.
    integer(default_int), parameter :: LIMB_BITS = 32_default_int
-      !! Width of one limb of that multiply.
+      !! Width of one limb of that multiply. Also the position of the high
+      !! limb, which is why `ibits(h, LIMB_BITS, LIMB_BITS)` reads it.
 
    integer(int64), parameter :: CLASS_ZERO = 0_int64
       !! Class code shared by -0.0 and +0.0.
@@ -1517,7 +1518,7 @@ contains
       h = ieor(state, byte_value)
 
       low = iand(h, LIMB_MASK)*FNV64_SMALL
-      high = iand(ishft(h, -LIMB_BITS), LIMB_MASK)*FNV64_SMALL
+      high = ibits(h, LIMB_BITS, LIMB_BITS)*FNV64_SMALL
 
       ! The high limb's product is shifted back up, which drops the bits that
       ! leave the top -- part of the same reduction modulo 2**64. `ishft` is
