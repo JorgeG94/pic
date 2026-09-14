@@ -59,7 +59,7 @@ contains
       do i = 1, 5
          call v%push_back(int(i*10, int32), err)
       end do
-      call check(error, .not. err%has_error(), "five pushes succeed")
+      call check(error,.not. err%has_error(), "five pushes succeed")
       if (allocated(error)) return
       call check(error, v%size() == 5, "size is 5")
       if (allocated(error)) return
@@ -120,7 +120,7 @@ contains
       do i = 1, 100000
          call v%push_back(int(i, int64), err)
       end do
-      call check(error, .not. err%has_error(), "100k pushes without error")
+      call check(error,.not. err%has_error(), "100k pushes without error")
       if (allocated(error)) return
       call check(error, v%size() == 100000, "size is 100000")
       if (allocated(error)) return
@@ -329,7 +329,7 @@ contains
       integer(int32), allocatable :: a(:)
 
       call v%take(a, err)
-      call check(error, .not. err%has_error(), "taking from a never-used vector is not an error")
+      call check(error,.not. err%has_error(), "taking from a never-used vector is not an error")
       if (allocated(error)) return
       call check(error, allocated(a), "the result is allocated")
       if (allocated(error)) return
