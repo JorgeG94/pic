@@ -18,6 +18,8 @@ set(tests
     "pic_optional"
     "pic_hash"
     "pic_clock"
+    "pic_vector"
+    "pic_uint64"
     "pic_sorting"
     "pic_pure_logger"
     "pic_error"
