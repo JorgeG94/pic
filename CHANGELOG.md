@@ -23,6 +23,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
   a growable one is a type change and nothing else. `take` moves the storage
   out without copying, which is the idiom for building an array whose final
   length is not known until the input has been read.
+- `pic_term`: the terminal operating system layer -- raw mode, terminal size,
+  timed reads, `sleep_ms` and `term_is_tty`. Built only with
+  `-DPIC_ENABLE_TERM=ON`, and its sources live in `term/` rather than `src/`,
+  so neither the default CMake build nor any fpm build is affected. These are
+  pic's first C sources and its first operating system conditionals, and all
+  of them are in one file, `term/pic_term_os.c`: the Fortran side is
+  byte-for-byte identical on Linux, macOS and Windows and contains no
+  preprocessor conditional at all. Only `int`, `int64_t` and `char` with a
+  length cross the boundary -- no struct, because `termios` and `winsize`
+  differ between platforms. Raw mode is restored by an `atexit` handler and
+  by SIGINT/SIGTERM/SIGHUP handlers that re-raise after restoring; a CI job
+  verifies this under a real pty by comparing `stty -g` across an
+  `error stop`, and refuses to pass if its own negative control cannot tell
+  a raw terminal from a cooked one.
 - `pic_ansi`: the half of a terminal interface that is pure string
   processing. Escape builders for the cursor, the alternate screen, the
   sixteen named colours, 256-colour and 24-bit colour, all `pure` functions

@@ -21,6 +21,23 @@ option(PIC_ENABLE_TESTING "Enable testing for PIC" ON)
 option(PIC_BUILD_STRESS "Build dgemm flop stress case" OFF)
 option(PIC_DISABLE_PROFILER "Disable the profiler for zero overhead" OFF)
 option(PIC_USE_NVTX "Enable NVTX annotations for Nsight Systems" OFF)
+# The terminal OS layer (term/): raw mode, terminal size, timed reads.
+#
+# OFF by default, and its sources live outside src/ rather than under it. Both
+# of those are deliberate.
+#
+# These are the first C sources in pic and the first operating system
+# conditionals anywhere in it, and pic exists to build everywhere -- including
+# under LFortran, whose CI builds through both fpm and CMake. fpm compiles every
+# .c under its library source-dir automatically and offers no way to opt out, so
+# a C file under src/ would join every fpm build whether the user wanted the
+# terminal or not. Keeping term/ outside src/ leaves fpm untouched; keeping the
+# option OFF leaves the default CMake build untouched.
+#
+# Turn it on with -DPIC_ENABLE_TERM=ON. The dedicated CI job does exactly that,
+# so the layer is still built and tested on Linux, macOS and Windows.
+option(PIC_ENABLE_TERM
+       "Build the terminal OS layer (pic_term); requires a C compiler" OFF)
 option(PIC_USE_C_KINDS
        "Use iso_c_binding kinds for sp, dp, qp, and default_int" OFF)
 
@@ -95,6 +112,10 @@ endif()
 # Print summary info
 
 add_subdirectory(src)
+
+if(PIC_ENABLE_TERM)
+  add_subdirectory(term)
+endif()
 if(PIC_ENABLE_TESTING)
   add_subdirectory(test)
 endif()

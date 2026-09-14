@@ -1,0 +1,77 @@
+name: Terminal layer
+
+# The terminal OS layer is the only part of pic with C sources and operating
+# system conditionals, and it is off by default so that the main matrix and
+# the LFortran jobs are unaffected by it. This workflow is what actually
+# builds and tests it, on all three platforms.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - 'term/**'
+      - 'tools/ci/check_term_restores.sh'
+      - '.github/workflows/term-ci.yml'
+      - 'CMakeLists.txt'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Fortran
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: gcc
+
+      - name: Configure with the terminal layer on
+        run: cmake -B build -DPIC_ENABLE_TESTING=ON -DPIC_ENABLE_TERM=ON
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      # These must all pass with no terminal attached, which is the case that
+      # matters: a library that only behaves when attached to a tty is one
+      # that breaks in CI, in a pipe and under nohup.
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  restores-terminal:
+    name: terminal is restored after error stop
+    runs-on: ubuntu-latest
+    # Needs a real pty, which a CI job does not have; script(1) provides one.
+    # POSIX only: the Windows console has no stty to compare against.
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Fortran
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: gcc
+
+      - name: Build
+        run: |
+          cmake -B build -DPIC_ENABLE_TESTING=ON -DPIC_ENABLE_TERM=ON
+          cmake --build build
+
+      # The script refuses to pass if its own negative control cannot tell a
+      # raw terminal from a cooked one, so a green result here cannot be
+      # vacuous.
+      - name: Raw mode is restored after error stop
+        run: tools/ci/check_term_restores.sh build/term/pic-term-raw-crash
