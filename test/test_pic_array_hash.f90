@@ -1029,7 +1029,11 @@ contains
       if (allocated(error)) return
       ! the digests themselves must not coincide in the low 32 bits: different
       ! parameters over the same bytes
-      call check(error, int(wide%digest(), int32) /= narrow%digest(), &
+      ! Compared through the low 32 bits rather than `int(..., int32)`: F2018
+      ! requires the value passed to INT to be representable in the target
+      ! kind, and a 64-bit digest usually is not. Every target compiler wraps
+      ! in practice, but a test has no business relying on that.
+      call check(error, ibits(wide%digest(), 0, 32) /= ibits(int(narrow%digest(), int64), 0, 32), &
                  "the two widths are genuinely different hashes")
    end subroutine test_widths_share_one_stream
 

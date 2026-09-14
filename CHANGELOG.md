@@ -15,12 +15,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
   against the wall clock does not drift with rounding. `system_clock` is
   called with `integer(int64)` arguments to get a finer tick than the default
   kind provides, and a processor with no clock reports `PIC_CLOCK_NO_CLOCK`
-  (-1) rather than zero, which is a valid reading.
+  (-1) rather than zero, which is a valid reading. `datetime_t` carries a
+  `utc_offset_known` flag, because zero is a real offset: a processor that
+  cannot supply one would otherwise be indistinguishable from Greenwich, and
+  its local time would format as `...Z`. `datetime_from_unix_ms` is public,
+  as the inverse of `unix_time_ms`.
 - `pic_vector`: growable, heap-backed arrays with amortised O(1) growth and
   bounds-checked access, for `int32`, `int64`, `dp` and `string_type`
   elements. Generated from `tools/autogen/pic_vector.fypp`. The method
   vocabulary matches `pic_fixed_array`, so moving from a bounded container to
-  a growable one is a type change and nothing else. `take` moves the storage
+  a growable one is mostly a type change -- the error code differs
+  (`ERROR_BOUNDS` rather than `ERROR_VALIDATION`), `value` is left undefined
+  rather than zeroed on a failed read, and there is no `vector_int_t`. `take`
+  moves the storage
   out without copying, which is the idiom for building an array whose final
   length is not known until the input has been read.
 - `pic_ansi`: the half of a terminal interface that is pure string
