@@ -4,7 +4,8 @@ module test_pic_clock
    use pic_types, only: default_int, int64
    use pic_error, only: error_t, ERROR_GENERIC
    use pic_clock, only: datetime_t, monotonic_ms, monotonic_us, now_local, now_utc, &
-                        unix_time_ms, format_iso8601, PIC_CLOCK_NO_CLOCK
+                        unix_time_ms, datetime_from_unix_ms, format_iso8601, &
+                        PIC_CLOCK_NO_CLOCK
    implicit none
    private
    public :: collect_pic_clock_tests
@@ -26,7 +27,10 @@ contains
                   new_unittest("iso8601-format", test_iso8601), &
                   new_unittest("iso8601-with-offset", test_iso8601_offset), &
                   new_unittest("iso8601-pads-every-field", test_iso8601_padding), &
-                  new_unittest("now-local-is-sane", test_now_local) &
+                  new_unittest("now-local-is-sane", test_now_local), &
+                  new_unittest("inverse-against-reference", test_inverse_reference), &
+                  new_unittest("unknown-offset-is-not-utc", test_unknown_offset), &
+                  new_unittest("negative-years-pad", test_negative_years) &
                   ]
    end subroutine collect_pic_clock_tests
 
@@ -167,7 +171,7 @@ contains
       do day = 1_int64, 40000_int64
          current = previous + 86400000_int64
          ! round-trip the instant through the calendar and back
-         if (unix_time_ms(datetime_from_ms_via_public_api(current)) /= current) then
+         if (unix_time_ms(datetime_from_unix_ms(current)) /= current) then
             contiguous = .false.
             exit
          end if
@@ -176,52 +180,6 @@ contains
       call check(error, contiguous, "every day over 40000 days round-trips exactly")
       if (allocated(error)) return
    end subroutine test_round_trip
-
-   !> `now_utc` is the only public route to the inverse conversion, so the
-   !> round-trip test reconstructs a datetime the same way `now_utc` does:
-   !> by asserting that a known instant formats and re-parses consistently.
-   !> Here we simply rebuild the fields arithmetically and compare.
-   function datetime_from_ms_via_public_api(ms) result(dt)
-      integer(int64), intent(in) :: ms
-      type(datetime_t) :: dt
-      integer(int64) :: days, rem, z, era, doe, yoe, doy, mp, y, m, d
-
-      days = ms/86400000_int64
-      rem = mod(ms, 86400000_int64)
-      if (rem < 0_int64) then
-         days = days - 1_int64
-         rem = rem + 86400000_int64
-      end if
-      z = days + 719468_int64
-      if (z >= 0_int64) then
-         era = z/146097_int64
-      else
-         era = (z - 146096_int64)/146097_int64
-      end if
-      doe = z - era*146097_int64
-      yoe = (doe - doe/1460_int64 + doe/36524_int64 - doe/146096_int64)/365_int64
-      y = yoe + era*400_int64
-      doy = doe - (365_int64*yoe + yoe/4_int64 - yoe/100_int64)
-      mp = (5_int64*doy + 2_int64)/153_int64
-      d = doy - (153_int64*mp + 2_int64)/5_int64 + 1_int64
-      if (mp < 10_int64) then
-         m = mp + 3_int64
-      else
-         m = mp - 9_int64
-      end if
-      if (m <= 2_int64) y = y + 1_int64
-
-      dt%year = int(y, default_int)
-      dt%month = int(m, default_int)
-      dt%day = int(d, default_int)
-      dt%hour = int(rem/3600000_int64, default_int)
-      rem = mod(rem, 3600000_int64)
-      dt%minute = int(rem/60000_int64, default_int)
-      rem = mod(rem, 60000_int64)
-      dt%second = int(rem/1000_int64, default_int)
-      dt%millisecond = int(mod(rem, 1000_int64), default_int)
-      dt%utc_offset_min = 0
-   end function datetime_from_ms_via_public_api
 
    subroutine test_utc_offset(error)
       type(error_type), allocatable, intent(out) :: error
@@ -290,5 +248,119 @@ contains
                  "the millisecond is in range")
       if (allocated(error)) return
    end subroutine test_now_local
+
+   subroutine test_inverse_reference(error)
+      !! `datetime_from_unix_ms` against values from Python's `datetime`, not
+      !! against this library.
+      !!
+      !! It used to have no test at all. The round-trip test above reached it
+      !! only through a copy of the same algorithm living in this file, so a
+      !! typo in the module's own `civil_from_days` could not fail anything.
+      type(error_type), allocatable, intent(out) :: error
+      type(datetime_t) :: dt
+
+      dt = datetime_from_unix_ms(0_int64)
+      call check(error, dt%year == 1970 .and. dt%month == 1 .and. dt%day == 1 &
+                 .and. dt%hour == 0 .and. dt%minute == 0 .and. dt%second == 0 &
+                 .and. dt%millisecond == 0, "the epoch")
+      if (allocated(error)) return
+
+      ! one millisecond before the epoch: the floored-division path
+      dt = datetime_from_unix_ms(-1_int64)
+      call check(error, dt%year == 1969 .and. dt%month == 12 .and. dt%day == 31 &
+                 .and. dt%hour == 23 .and. dt%minute == 59 .and. dt%second == 59 &
+                 .and. dt%millisecond == 999, "one millisecond before the epoch")
+      if (allocated(error)) return
+
+      ! 2000-02-29, a leap day in a year divisible by 400
+      dt = datetime_from_unix_ms(951782400000_int64)
+      call check(error, dt%year == 2000 .and. dt%month == 2 .and. dt%day == 29, &
+                 "2000-02-29")
+      if (allocated(error)) return
+
+      ! 1900-03-01: 1900 is divisible by 100 and is not a leap year
+      dt = datetime_from_unix_ms(-2203891200000_int64)
+      call check(error, dt%year == 1900 .and. dt%month == 3 .and. dt%day == 1, &
+                 "1900-03-01")
+      if (allocated(error)) return
+
+      ! the 32-bit time_t rollover
+      dt = datetime_from_unix_ms(2147483647000_int64)
+      call check(error, dt%year == 2038 .and. dt%month == 1 .and. dt%day == 19 &
+                 .and. dt%hour == 3 .and. dt%minute == 14 .and. dt%second == 7, &
+                 "2038-01-19T03:14:07Z")
+      if (allocated(error)) return
+
+      ! 1600-02-29, leap and well before the epoch
+      dt = datetime_from_unix_ms(-11670998400000_int64)
+      call check(error, dt%year == 1600 .and. dt%month == 2 .and. dt%day == 29, &
+                 "1600-02-29")
+      if (allocated(error)) return
+
+      call check(error, dt%utc_offset_known, "a reconstructed instant knows its offset")
+   end subroutine test_inverse_reference
+
+   subroutine test_unknown_offset(error)
+      !! A processor that cannot supply its offset from UTC must not have its
+      !! local time formatted as `Z`, which would be a wrong instant rather
+      !! than an incomplete one.
+      type(error_type), allocatable, intent(out) :: error
+      type(datetime_t) :: dt
+
+      dt%year = 2026
+      dt%month = 9
+      dt%day = 14
+      dt%hour = 14
+      dt%minute = 0
+      dt%second = 0
+      dt%millisecond = 0
+
+      dt%utc_offset_min = 0
+      dt%utc_offset_known = .true.
+      call check(error, format_iso8601(dt) == "2026-09-14T14:00:00.000Z", &
+                 "a known zero offset is Z")
+      if (allocated(error)) return
+
+      dt%utc_offset_known = .false.
+      call check(error, format_iso8601(dt) == "2026-09-14T14:00:00.000", &
+                 "an unknown offset writes no designator at all")
+      if (allocated(error)) return
+      call check(error, index(format_iso8601(dt), "Z") == 0, &
+                 "and in particular does not claim UTC")
+      if (allocated(error)) return
+
+      ! the default is 'known', so an explicitly built UTC datetime still works
+      block
+         type(datetime_t) :: fresh
+         call check(error, fresh%utc_offset_known, &
+                    "a default datetime_t knows its offset is zero")
+      end block
+   end subroutine test_unknown_offset
+
+   subroutine test_negative_years(error)
+      !! Zero filling has to pad the magnitude, not the text: `-5` padded to
+      !! four characters as text gives `00-5`, which is not a number.
+      type(error_type), allocatable, intent(out) :: error
+      type(datetime_t) :: dt
+      character(len=:), allocatable :: text
+
+      dt = datetime_from_unix_ms(0_int64)
+      dt%year = -5
+      text = format_iso8601(dt)
+      call check(error, text(1:5) == "-0005", &
+                 "a negative year keeps its sign at the front")
+      if (allocated(error)) return
+
+      dt%year = -12345
+      text = format_iso8601(dt)
+      call check(error, text(1:6) == "-12345", &
+                 "a year too wide for the field grows rather than truncating")
+      if (allocated(error)) return
+
+      dt%year = 5
+      text = format_iso8601(dt)
+      call check(error, text(1:4) == "0005", &
+                 "and a small positive year still pads to four")
+   end subroutine test_negative_years
 
 end module test_pic_clock

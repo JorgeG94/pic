@@ -56,8 +56,12 @@ contains
       ! A shift of zero is handled separately rather than falling through to
       ! `ibits(x, 0, 64)`. That call is conforming -- F2018 16.9.105 requires
       ! only POS + LEN <= BIT_SIZE(I) -- but LFortran 0.65.0 returns 0 from it
-      ! for every input, while `ibits(x, 1, 63)` is correct. Reproducer in
-      ! test/test_pic_uint64.f90 ("shr by 0 is identity").
+      ! for every input, while `ibits(x, 1, 63)` is correct.
+      !
+      ! test_pic_uint64's "shr by 0 is identity" is the regression test for
+      ! this guard, not a reproducer of the defect: with the guard in place
+      ! the offending call is never reached. To see the bug itself, call
+      ! `ibits(x, 0, 64)` directly under LFortran.
       if (n <= 0_default_int) then
          r = x
       else
@@ -130,7 +134,7 @@ contains
       !! values.
       !!
       !! Fortran's `<` compares the two's-complement patterns as signed, so it
-      !! reports `huge(0_int64) + 1` (which is 2**63 unsigned) as *less than*
+      !! reports `-huge(0_int64) - 1_int64` (that is, 2**63 unsigned) as *less than*
       !! zero. Flipping the sign bit of both operands maps the unsigned order
       !! onto the signed order exactly, which is why this is a comparison of
       !! `ieor(a, SIGN_BIT)` against `ieor(b, SIGN_BIT)` and not a sequence of

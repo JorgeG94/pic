@@ -221,7 +221,15 @@ contains
       !!
       !! The fraction is rounded to nearest rather than truncated. Truncating
       !! would lose on average half a unit per draw, which is invisible at a
-      !! mean of 4000 ticks and a 25% error at a mean of 2.
+      !! mean of 4000 ticks and a 23% error at a mean of 2.
+      !!
+      !! Rounding shrinks that but does not remove it. Discretising an
+      !! exponential to integers leaves `E[round(mean*X)]` at
+      !! `exp(-1/(2*mean)) / (1 - exp(-1/mean))`, which is 4.0% low at a mean
+      !! of 1, 1.0% at 2, 0.46% at 3 and 0.04% at 10. Above about 100 it is
+      !! gone. That is inherent to an integer result, not a defect in the
+      !! scaling, but a caller working in units that small should know the
+      !! mean it gets is not quite the mean it asked for.
       integer(int64), intent(in) :: x_q32
          !! Deviate in Q32.32 fixed point.
       integer(int64), intent(in) :: mean
@@ -229,7 +237,7 @@ contains
       integer(int64) :: r
 
       r = u64_shr(x_q32, 32_default_int)*mean &
-          + ishft(iand(x_q32, Q32_MASK)*mean + Q32_HALF, -32_default_int)
+          + u64_shr(iand(x_q32, Q32_MASK)*mean + Q32_HALF, 32_default_int)
    end function scale_by_mean
 
 #:for name, gtype in GENERATORS
@@ -340,7 +348,7 @@ contains
             if (cell >= EXP_TOP_CELL) cell = EXP_TOP_CELL - 1_default_int
             frac = int(ibits(word, 33_default_int, FRAC_BITS), default_int)
             gap = EXP_TABLE(cell + 1_default_int) - EXP_TABLE(cell)
-            x_q32 = x_q32 + EXP_TABLE(cell) + ishft(gap*int(frac, int64), -FRAC_BITS)
+            x_q32 = x_q32 + EXP_TABLE(cell) + u64_shr(gap*int(frac, int64), FRAC_BITS)
             exit
          end if
          x_q32 = x_q32 + EXP_LN_CELLS
@@ -359,7 +367,7 @@ contains
          !! Set to `ERROR_VALIDATION` when `mean_milli` is out of range.
       integer(int32) :: r
 
-      integer(int64) :: gap_mean, elapsed
+      integer(int64) :: gap_mean, window, elapsed
 
       r = 0_int32
       if (mean_milli < 0_default_int .or. mean_milli > POISSON_MAX_MEAN_MILLI) then
@@ -372,11 +380,21 @@ contains
       if (mean_milli == 0_default_int) return
 
       ! Mean gap between arrivals, in window ticks: window / (mean_milli/1000).
+      ! That division truncates, so the gap actually used is a little short of
+      ! the one asked for, and the count over a fixed window comes out high --
+      ! by up to 0.048%, worst at mean_milli = 999596.
+      !
+      ! Fixing the gap and deriving the window from it instead turns that
+      ! round-off to the sampler's advantage: whatever gap the truncation
+      ! landed on, the window is the one for which that gap is exactly right.
+      ! The residual is the truncation of the window itself, under 1e-6
+      ! relative.
       gap_mean = (POISSON_WINDOW*1000_int64)/int(mean_milli, int64)
+      window = (gap_mean*int(mean_milli, int64))/1000_int64
       elapsed = 0_int64
       do
          elapsed = elapsed + ${name}$_next_exponential_int(gen, gap_mean)
-         if (elapsed > POISSON_WINDOW) exit
+         if (elapsed > window) exit
          r = r + 1_int32
       end do
    end function ${name}$_next_poisson_int
