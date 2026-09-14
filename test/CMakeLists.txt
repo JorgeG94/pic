@@ -17,6 +17,7 @@ set(tests
     "pic_array"
     "pic_optional"
     "pic_hash"
+    "pic_uint64"
     "pic_sorting"
     "pic_pure_logger"
     "pic_error"

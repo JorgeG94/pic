@@ -7,10 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
 
 ## [Unreleased]
 ### Added
--
+- `pic_uint64`: portable arithmetic modulo 2**64 on `integer(int64)` without
+  signed overflow (`u64_add`, `u64_mul`, `u64_shr`, `u64_less`). Extracted
+  from `pic_rng`, where the first three were private, so that hashing and
+  distribution code can share one audited implementation. `u64_less` is new:
+  Fortran's `<` compares the two's-complement patterns as signed, so it
+  reports 2**63 as less than zero.
 
 ### Changed
--
+- `pic_rng` now takes its modular arithmetic from `pic_uint64`. Generator
+  output is unchanged, verified bit-for-bit over 1800 values across both
+  generators (`next_u64`, `next`, `next_below`, `next_real_dp` bit patterns
+  and `stream_for`).
 
 ### Deprecated
 -
@@ -19,7 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
 -
 
 ### Fixed
--
+- `u64_shr` (formerly `pic_rng`'s private `shr64`) returned zero instead of
+  its argument for a shift of zero under LFortran 0.65.0, which evaluates the
+  conforming `ibits(x, 0, 64)` as 0. No caller in 0.7.0 used a zero shift, so
+  nothing was affected; the zero case is now handled without `ibits`.
 
 
 ## [0.7.0] – 2026-09-13

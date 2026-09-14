@@ -69,6 +69,27 @@ projects should use 100 and above, and can pass their own name table to
    do I/O and are therefore impure; calling them from a ``pure`` procedure
    is a compile-time error, as it should be.
 
+Unsigned 64-bit Arithmetic (``pic_uint64``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Arithmetic modulo 2**64 for algorithms specified in terms of wrapping 64-bit
+words -- hashes, counter-based generators, fixed-point tables:
+
+- ``u64_add``, ``u64_mul`` - wrapping add and multiply
+- ``u64_shr`` - logical (zero-filling) right shift
+- ``u64_less`` - unsigned comparison
+
+Fortran has no unsigned integer type and signed overflow is undefined, so the
+obvious spelling of a wrapping multiply is undefined behaviour that
+``-ftrapv`` or ``-fsanitize=signed-integer-overflow`` will abort on. Every
+routine splits its operands into limbs so no intermediate leaves the signed
+range.
+
+A 64-bit unsigned value is carried as the ``integer(int64)`` holding its
+two's-complement pattern, so values at or above 2**63 appear negative. That is
+why ``u64_less`` exists: Fortran's own ``<`` compares them as signed and
+reports 2**63 as *less than* zero.
+
 Strings (``pic_strings``, ``pic_string_type``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
