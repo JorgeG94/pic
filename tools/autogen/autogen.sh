@@ -18,6 +18,7 @@ fypp stdlib_pic_strings.fypp     >& pic_strings.f90
 fypp stdlib_pic_string_type_constructor.fypp >& pic_string_type_constructor.f90
 fypp stdlib_pic_strings_to_strings.fypp >& pic_strings_to_strings.F90
 fypp pic_soa.fypp >& pic_soa_particle.f90
+fypp pic_vector.fypp >& pic_vector.f90
 
 # copy
 cp pic_array.f90 ../../src/lib/core/arrays/
@@ -29,6 +30,7 @@ cp pic_strings.f90 ../../src/lib/core/strings
 cp pic_string_type_constructor.f90 ../../src/lib/core/strings
 cp pic_strings_to_strings.F90 ../../src/lib/core/strings
 cp pic_soa_particle.f90 ../../src/lib/core/soa
+cp pic_vector.f90 ../../src/lib/core/vector
 
 # cleanup
 rm *.f90

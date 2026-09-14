@@ -264,6 +264,56 @@ an OpenMP/OpenACC region without touching the heap. Every failure mode
    putting heap traffic back into the hot path of a container whose whole
    purpose is not having any.
 
+Growable Vectors (``pic_vector``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Heap-backed arrays that grow on demand:
+
+- ``vector_int32_t``, ``vector_int64_t``, ``vector_dp_t``, ``vector_string_t``
+- ``push_back``, ``append``, ``pop_back``, ``at``, ``set``, ``get_unchecked``
+- ``size``, ``capacity``, ``is_empty``, ``reserve``, ``resize``, ``clear``
+- ``shrink_to_fit``, ``as_array``, ``take``, ``destroy``
+
+The method names deliberately match ``pic_fixed_array``, so moving from a
+bounded container to a growable one is a type change and nothing else. Choose
+``pic_fixed_array`` in hot loops and inside OpenMP/OpenACC regions, where its
+storage lives inside the object and never touches the heap; choose
+``pic_vector`` when the final length is not known until the input has been
+read.
+
+``take`` is the reason this is not just "an array you resize yourself": it
+hands the backing storage to an ``allocatable`` array with ``move_alloc``,
+exactly sized, without copying the elements. ``as_array`` copies; ``take``
+does not.
+
+.. code-block:: fortran
+
+   use pic_vector, only: vector_int32_t
+   use pic_types, only: int32
+   use pic_error, only: error_t
+
+   type(vector_int32_t) :: v
+   type(error_t) :: err
+   integer(int32), allocatable :: final(:)
+
+   call v%push_back(42_int32, err)
+   call v%append([7_int32, 9_int32], err)
+   call v%take(final, err)       ! v is empty; `final` has exactly 3 elements
+
+Element kinds are fixed width. There is no ``vector_int_t`` following
+``default_int``, because the same source would mean a 32-bit container in one
+build and a 64-bit one in the other. Sizes and indices are ``default_int``.
+
+The backing storage is **private**. Only ``1:size()`` is meaningful, and a
+public component would let ``v%items(v%size() + 1)`` compile and read spare
+capacity. The two cases that genuinely need to avoid a copy are served
+directly by ``take`` and ``get_unchecked``.
+
+Every operation is ``pure``, so a vector can be built and consumed inside a
+``pure`` procedure. Failures report through ``error_t``: ``ERROR_ALLOC`` when
+storage cannot be grown, ``ERROR_BOUNDS`` for an out-of-range index or a pop
+from an empty vector, ``ERROR_VALIDATION`` for a negative ``resize``.
+
 Sorting (``pic_sorting``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 

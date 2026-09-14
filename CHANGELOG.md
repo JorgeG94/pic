@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
 
 ## [Unreleased]
 ### Added
--
+- `pic_vector`: growable, heap-backed arrays with amortised O(1) growth and
+  bounds-checked access, for `int32`, `int64`, `dp` and `string_type`
+  elements. Generated from `tools/autogen/pic_vector.fypp`. The method
+  vocabulary matches `pic_fixed_array`, so moving from a bounded container to
+  a growable one is a type change and nothing else. `take` moves the storage
+  out without copying, which is the idiom for building an array whose final
+  length is not known until the input has been read.
 
 ### Changed
 -
