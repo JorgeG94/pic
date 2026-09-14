@@ -456,6 +456,27 @@ A stable digest of an array's contents, for answering "did this run produce
 the same state as that run" without diffing gigabytes. Covers the intrinsic
 types and both real kinds, ranks 1 to 3.
 
+Available at two widths. ``array_hash`` and ``array_hash_t`` give a 32-bit
+digest; ``array_hash64`` and ``array_hash64_t`` a 64-bit one, with
+``array_hash64_hex`` formatting it as sixteen lowercase hex characters. Both
+are generated from ``tools/autogen/pic_array_hash.fypp`` over a single byte
+stream definition, so the two cannot drift apart: everything below --- the
+canonical real record, the ``-0.0`` and NaN rules, shape insensitivity,
+streaming being equal to concatenation --- holds identically at both widths,
+and only the FNV parameters folded over the stream differ.
+
+Which width to use depends on what the digest is *for*. Comparing two digests
+of the same thing is safe at 32 bits: a false match has probability
+2\ :sup:`-32`. Using digests as identifiers is not --- among 10\ :sup:`5`
+distinct 32-bit digests the chance that some pair collides is about 69%,
+against 3x10\ :sup:`-10` at 64 bits. Keying a determinism log by digest, or
+deduplicating states, wants ``array_hash64``.
+
+.. note::
+
+   Neither width is a cryptographic checksum, and neither is collision
+   resistant against an adversary.
+
 .. note::
 
    ``transfer`` between real and integer kinds is **not** used, even though it
@@ -523,8 +544,11 @@ Struct-of-Arrays (``pic_soa``, ``pic_soa_particle``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Struct-of-arrays containers generated from an fypp template, with amortized
-``resize``, ``checkpoint`` through ``pic_serialize``, and ``state_hash``
-through ``pic_array_hash``.
+``resize``, ``checkpoint`` through ``pic_serialize``, and ``state_hash`` /
+``state_hash64`` through ``pic_array_hash``. Both digests fold the same
+stream --- the schema string, the element count, then every field's live
+slice in declaration order --- so they agree about what changed and differ
+only in width.
 
 Fields are parallel arrays sharing a size and capacity, so each field is
 contiguous and can be handed to BLAS, MPI or a GPU kernel without a gather.

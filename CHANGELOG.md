@@ -23,6 +23,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
   a growable one is a type change and nothing else. `take` moves the storage
   out without copying, which is the idiom for building an array whose final
   length is not known until the input has been read.
+- `pic_array_hash` now also hashes at 64 bits: `array_hash64`,
+  `array_hash64_t`, `array_hash64_hex` and `ARRAY_HASH64_OFFSET_BASIS`. 32
+  bits is enough to compare two digests of the same thing, but not to use
+  digests as identifiers: among 10**5 distinct 32-bit digests some pair
+  collides with probability about 69%, against 3e-10 at 64 bits. The module
+  is now generated from `tools/autogen/pic_array_hash.fypp`, so both widths
+  come from one byte stream definition and cannot drift apart. The 64-bit FNV
+  multiply exploits the prime being exactly 2**40 + 435, forming the
+  remainder on two 32-bit limbs: two multiplies per byte, and 1.77x the
+  32-bit cost per byte rather than the 10x a general `u64_mul` would give.
+- `pic_soa` containers gain `state_hash64` next to `state_hash`, over
+  byte-for-byte the same stream.
 - `pic_uint64`: portable arithmetic modulo 2**64 on `integer(int64)` without
   signed overflow (`u64_add`, `u64_mul`, `u64_shr`, `u64_less`). Extracted
   from `pic_rng`, where the first three were private, so that hashing and
