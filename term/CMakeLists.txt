@@ -27,22 +27,38 @@ if(PIC_ENABLE_TESTING)
                              PRIVATE "${CMAKE_BINARY_DIR}/modules")
   target_link_libraries(pic-term-eof-probe PRIVATE ${main_lib} ${core_lib})
   if(WIN32)
-    # The redirection goes in a batch file rather than on the command line. `cmd
-    # /c "prog < NUL"` does not survive CreateProcess: cmd only strips the
-    # quotes it is handed when nothing between them is special, and `<` is
-    # special, so it tries to run the whole quoted string as a program name and
-    # answers "The syntax of the command is incorrect." Inside a .bat the
-    # redirect is parsed by cmd's own reader, and the command line ctest builds
-    # has no metacharacters left in it.
+    # Two separate pieces of cmd.exe pedantry, each of which cost a CI cycle and
+    # produced the identical, unhelpful "The syntax of the command is
+    # incorrect."
+    #
+    # The redirect cannot go on ctest's command line. `cmd /c "probe < NUL"`
+    # does not survive CreateProcess: cmd strips the quotes it is handed only
+    # when nothing between them is special, and `<` is special, so it keeps them
+    # and tries to run the whole quoted string as a program name. Hence a .bat,
+    # where the redirect is read by cmd's own parser instead.
+    #
+    # And the path to that .bat has to be spelled with backslashes. CMake stores
+    # paths with forward slashes, and in `cmd /c D:/a/pic/...` -- which is
+    # unquoted, having no spaces in it -- cmd reads `/a`, `/pic` and the rest as
+    # switches. file(TO_NATIVE_PATH) rather than $<SHELL_PATH>, because it
+    # converts at configure time on the machine that will run the test, where
+    # the answer is not in doubt; $<SHELL_PATH> decides from the generator's
+    # shell and cannot be checked from a POSIX host at all. `$<CONFIG>` survives
+    # it untouched, having no separator in it.
     set(_eof_script "${CMAKE_CURRENT_BINARY_DIR}/run_eof_probe_$<CONFIG>.bat")
+    file(TO_NATIVE_PATH "${_eof_script}" _eof_script_native)
     file(
       GENERATE
       OUTPUT "${_eof_script}"
       CONTENT
-        "@echo off\n\"$<SHELL_PATH:$<TARGET_FILE:pic-term-eof-probe>>\" < NUL\nexit /b %ERRORLEVEL%\n"
+        "@echo off\n\"$<TARGET_FILE:pic-term-eof-probe>\" < NUL\nexit /b %ERRORLEVEL%\n"
         NEWLINE_STYLE
         CRLF)
-    add_test(NAME pic/pic_term_eof COMMAND cmd /c "${_eof_script}")
+    # Printed because it is the string that has twice been wrong, and the
+    # runner's error message ("The syntax of the command is incorrect.") names
+    # neither the path nor what it objected to.
+    message(STATUS "pic_term_eof runs: cmd /c ${_eof_script_native}")
+    add_test(NAME pic/pic_term_eof COMMAND cmd /c "${_eof_script_native}")
   else()
     add_test(NAME pic/pic_term_eof
              COMMAND sh -c "exec $<TARGET_FILE:pic-term-eof-probe> < /dev/null")
