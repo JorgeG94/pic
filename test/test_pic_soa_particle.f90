@@ -38,6 +38,8 @@ contains
                   new_unittest("hash_tracks_every_field", test_hash_tracks_every_field), &
                   new_unittest("hash_tracks_size", test_hash_tracks_size), &
                   new_unittest("hash_survives_round_trip", test_hash_survives_round_trip), &
+                  new_unittest("hash64_tracks_every_field", test_hash64_tracks_every_field), &
+                  new_unittest("hash64_agrees_with_hash32", test_hash64_agrees_with_hash32), &
                   new_unittest("schema_mismatch_rejected", test_schema_mismatch_rejected), &
                   new_unittest("short_field_rejected", test_short_field_rejected), &
                   new_unittest("every_field_rolls_back", test_every_field_rolls_back), &
@@ -592,6 +594,115 @@ contains
       p%active(2) = .not. p%active(2)
       call check(error, p%state_hash() == base, "and restoring it restores the digest")
    end subroutine test_hash_tracks_every_field
+
+   subroutine test_hash64_tracks_every_field(error)
+      !! The 64-bit fold must visit every field too. A width that reached the
+      !! fields through a different path could skip one on its own.
+      type(error_type), allocatable, intent(out) :: error
+      type(particle_soa_t) :: p
+      type(error_t) :: err
+      integer(int64) :: base
+
+      call fill(p, 4_default_int, err)
+      base = p%state_hash64()
+
+      p%id(2) = 99_int32
+      call check(error, p%state_hash64() /= base, "id takes part in the digest")
+      if (allocated(error)) return
+      p%id(2) = 2_int32
+      call check(error, p%state_hash64() == base, "and restoring it restores the digest")
+      if (allocated(error)) return
+
+      p%x(3) = -1.0_dp
+      call check(error, p%state_hash64() /= base, "x takes part in the digest")
+      if (allocated(error)) return
+      p%x(3) = 3.0_dp
+      call check(error, p%state_hash64() == base, "and restoring it restores the digest")
+      if (allocated(error)) return
+
+      p%y(1) = 12.5_dp
+      call check(error, p%state_hash64() /= base, "y takes part in the digest")
+      if (allocated(error)) return
+      p%y(1) = 1.25_dp
+      call check(error, p%state_hash64() == base, "and restoring it restores the digest")
+      if (allocated(error)) return
+
+      p%z(4) = 7.75_dp
+      call check(error, p%state_hash64() /= base, "z takes part in the digest")
+      if (allocated(error)) return
+      p%z(4) = 4.5_dp
+      call check(error, p%state_hash64() == base, "and restoring it restores the digest")
+      if (allocated(error)) return
+
+      p%mass(2) = 100.0_dp
+      call check(error, p%state_hash64() /= base, "mass takes part in the digest")
+      if (allocated(error)) return
+      p%mass(2) = 3.0_dp
+      call check(error, p%state_hash64() == base, "and restoring it restores the digest")
+      if (allocated(error)) return
+
+      p%active(2) = .not. p%active(2)
+      call check(error, p%state_hash64() /= base, "active takes part in the digest")
+      if (allocated(error)) return
+      p%active(2) = .not. p%active(2)
+      call check(error, p%state_hash64() == base, "and restoring it restores the digest")
+   end subroutine test_hash64_tracks_every_field
+
+   subroutine test_hash64_agrees_with_hash32(error)
+      !! The two widths are one byte stream. Nothing here can read the stream
+      !! back, but both digests are folded over it independently, so anything
+      !! that made them disagree about what to feed -- a field visited by one
+      !! and not the other, a different element count, a different schema
+      !! string -- shows up as one width noticing a change the other missed.
+      type(error_type), allocatable, intent(out) :: error
+      type(particle_soa_t) :: p, q
+      type(error_t) :: err
+      integer(int32) :: base32
+      integer(int64) :: base64
+
+      call fill(p, 6_default_int, err)
+      call fill(q, 6_default_int, err)
+
+      call check(error, p%state_hash() == q%state_hash(), "identical state, same 32-bit digest")
+      if (allocated(error)) return
+      call check(error, p%state_hash64() == q%state_hash64(), &
+                 "identical state, same 64-bit digest")
+      if (allocated(error)) return
+
+      base32 = p%state_hash()
+      base64 = p%state_hash64()
+
+      ! every perturbation must move both digests, or neither
+      p%x(2) = p%x(2) + 1.0_dp
+      call check(error, (p%state_hash() /= base32) .eqv. (p%state_hash64() /= base64), &
+                 "a changed real moves both widths or neither")
+      if (allocated(error)) return
+      call check(error, p%state_hash64() /= base64, "and it does move them")
+      if (allocated(error)) return
+      p%x(2) = p%x(2) - 1.0_dp
+
+      call p%resize(7_default_int, err)
+      call check(error, (p%state_hash() /= base32) .eqv. (p%state_hash64() /= base64), &
+                 "a changed element count moves both widths or neither")
+      if (allocated(error)) return
+      call check(error, p%state_hash64() /= base64, "and it does move them")
+      if (allocated(error)) return
+      call p%resize(6_default_int, err)
+      call check(error, p%state_hash64() == base64, "shrinking back restores the 64-bit digest")
+      if (allocated(error)) return
+      call check(error, p%state_hash() == base32, "and the 32-bit one")
+      if (allocated(error)) return
+
+      ! -0.0 canonicalisation is a property of the shared record, so it holds
+      ! at both widths
+      p%x(1) = 0.0_dp
+      base32 = p%state_hash()
+      base64 = p%state_hash64()
+      p%x(1) = sign(0.0_dp, -1.0_dp)
+      call check(error, p%state_hash() == base32, "-0.0 hashes like +0.0 at 32 bits")
+      if (allocated(error)) return
+      call check(error, p%state_hash64() == base64, "-0.0 hashes like +0.0 at 64 bits")
+   end subroutine test_hash64_agrees_with_hash32
 
    subroutine test_hash_tracks_size(error)
       type(error_type), allocatable, intent(out) :: error

@@ -7,6 +7,93 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
 
 ## [Unreleased]
 ### Added
+- `pic_clock`: monotonic elapsed time as whole milliseconds or microseconds
+  (`monotonic_ms`, `monotonic_us`), wall-clock date and time (`now_local`,
+  `now_utc`, `datetime_t`), and integer-only conversions (`unix_time_ms`,
+  `format_iso8601`). Complements `pic_timer`, which reports `real(dp)`
+  seconds: integers compare and accumulate exactly, so a loop pacing itself
+  against the wall clock does not drift with rounding. `system_clock` is
+  called with `integer(int64)` arguments to get a finer tick than the default
+  kind provides, and a processor with no clock reports `PIC_CLOCK_NO_CLOCK`
+  (-1) rather than zero, which is a valid reading. `datetime_t` carries a
+  `utc_offset_known` flag, because zero is a real offset: a processor that
+  cannot supply one would otherwise be indistinguishable from Greenwich, and
+  its local time would format as `...Z`. `datetime_from_unix_ms` is public,
+  as the inverse of `unix_time_ms`.
+- `pic_vector`: growable, heap-backed arrays with amortised O(1) growth and
+  bounds-checked access, for `int32`, `int64`, `dp` and `string_type`
+  elements. Generated from `tools/autogen/pic_vector.fypp`. The method
+  vocabulary matches `pic_fixed_array`, so moving from a bounded container to
+  a growable one is mostly a type change -- the error code differs
+  (`ERROR_BOUNDS` rather than `ERROR_VALIDATION`), `value` is left undefined
+  rather than zeroed on a failed read, and there is no `vector_int_t`. `take`
+  moves the storage
+  out without copying, which is the idiom for building an array whose final
+  length is not known until the input has been read.
+- `pic_term`: the terminal operating system layer -- raw mode, terminal size,
+  timed reads, `sleep_ms` and `term_is_tty`. Built only with
+  `-DPIC_ENABLE_TERM=ON`, and its sources live in `term/` rather than `src/`,
+  so neither the default CMake build nor any fpm build is affected. These are
+  pic's first C sources and its first operating system conditionals, and all
+  of them are in one file, `term/pic_term_os.c`: the Fortran side is
+  byte-for-byte identical on Linux, macOS and Windows and contains no
+  preprocessor conditional at all. Only `int`, `int64_t` and `char` with a
+  length cross the boundary -- no struct, because `termios` and `winsize`
+  differ between platforms. Raw mode is restored by an `atexit` handler and
+  by SIGINT/SIGTERM/SIGHUP handlers that re-raise after restoring; a CI job
+  verifies this under a real pty by comparing `stty -g` across an
+  `error stop`, and refuses to pass if its own negative control cannot tell
+  a raw terminal from a cooked one.
+- `pic_ansi`: the half of a terminal interface that is pure string
+  processing. Escape builders for the cursor, the alternate screen, the
+  sixteen named colours, 256-colour and 24-bit colour, all `pure` functions
+  returning a string and none of them doing I/O. A key decoder that turns raw
+  bytes into `key_event_t` values and carries partial escape sequences across
+  reads, so an arrow key split between two reads still decodes; both the
+  `ESC [` and `ESC O` cursor forms are handled. A `frame_t` that composes a
+  screen and renders only the rows that changed, so an otherwise idle board
+  updating a clock writes one line. Rows are held as `string_type`, so a
+  styled row is capped by nothing. Width is counted in columns -- UTF-8 code
+  points, with escape sequences skipped -- so a row of box-drawing characters
+  truncates without being cut mid-character, a styled row is measured by what
+  it shows rather than how it is spelled, and a cut never lands inside an
+  escape sequence.
+- `pic_cli`: a declarative command line parser. Declare options, flags and
+  positionals, `parse` once, then read values back by name with a generic
+  `get` over `int32`, `int64`, `sp`, `dp`, `logical`, `character` and
+  `string_type`. Conversions go through `pic_tokenizer`'s strict
+  `parse_int`/`parse_real`, so `--seed 42x` is `ERROR_PARSE` rather than 42.
+  Nothing is printed and nothing is stopped: `help_text()` returns the text
+  and `help_requested()` reports the request, leaving both decisions to the
+  caller. `parse_args` takes the arguments as an array and is the real
+  implementation, so every path is testable without a shell. A repeated
+  option is last-wins, and `occurrences(name)` reports the count so a caller
+  that wants to reject a repeat can.
+- `pic_random_dist`: integer-valued distributions that are bit-identical on
+  every supported compiler -- `next_range` (inclusive, exactly uniform over
+  the full width of `default_int`), `next_bernoulli_ppm`,
+  `next_exponential_int` and `next_poisson_int`. Generic over both generators
+  in `pic_rng`. Nothing here touches a real type, so nothing here depends on
+  libm; the tests pin the first 32 outputs of every routine for a fixed seed
+  on both generators, and those pins are the cross-compiler contract.
+  Exponential deviates come from a committed inverse-CDF table generated by
+  `tools/autogen/gen_exp_table.py` with 60-digit decimal arithmetic.
+- `pic_random_dist_real`: `next_exponential_dp` and `next_normal_dp`. These
+  call `log`, `sqrt` and `cos`, so their values differ between compilers.
+  They are a separate module on purpose: code that never names it cannot
+  reach a non-reproducible deviate by accident.
+- `pic_array_hash` now also hashes at 64 bits: `array_hash64`,
+  `array_hash64_t`, `array_hash64_hex` and `ARRAY_HASH64_OFFSET_BASIS`. 32
+  bits is enough to compare two digests of the same thing, but not to use
+  digests as identifiers: among 10**5 distinct 32-bit digests some pair
+  collides with probability about 69%, against 3e-10 at 64 bits. The module
+  is now generated from `tools/autogen/pic_array_hash.fypp`, so both widths
+  come from one byte stream definition and cannot drift apart. The 64-bit FNV
+  multiply exploits the prime being exactly 2**40 + 435, forming the
+  remainder on two 32-bit limbs: two multiplies per byte, and 1.77x the
+  32-bit cost per byte rather than the 10x a general `u64_mul` would give.
+- `pic_soa` containers gain `state_hash64` next to `state_hash`, over
+  byte-for-byte the same stream.
 - `pic_uint64`: portable arithmetic modulo 2**64 on `integer(int64)` without
   signed overflow (`u64_add`, `u64_mul`, `u64_shr`, `u64_less`). Extracted
   from `pic_rng`, where the first three were private, so that hashing and
@@ -15,6 +102,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
   reports 2**63 as less than zero.
 
 ### Changed
+- `get_first_arg_from_command_line` takes an optional `err`. With it, a
+  missing argument is `ERROR_VALIDATION` and nothing is written or stopped;
+  without it the old usage line and `stop 1` are kept, because callers
+  written against that behaviour rely on not continuing past it. The
+  stopping path is deprecated -- pass `err`, or use `pic_cli`.
 - `pic_rng` now takes its modular arithmetic from `pic_uint64`. Generator
   output is unchanged, verified bit-for-bit over 1800 values across both
   generators (`next_u64`, `next`, `next_below`, `next_real_dp` bit patterns

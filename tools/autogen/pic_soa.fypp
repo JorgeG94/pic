@@ -56,7 +56,7 @@ module ${module_name}$
    !! the hash in exactly the order they are declared below.
    use pic_types, only: default_int, int32, int64${''.join([', ' + k for k in KINDS])}$
    use pic_error, only: error_t
-   use pic_array_hash, only: array_hash_t
+   use pic_array_hash, only: array_hash_t, array_hash64_t
    use pic_soa, only: soa_extent_t, SOA_SCHEMA_PREFIX, &
                       ${', '.join(FIELD_CONSTS)}$, &
                       soa_plan_resize, soa_resize_field, &
@@ -107,6 +107,7 @@ module ${module_name}$
       procedure :: serialize => ${schema_name}$_soa_serialize
       procedure :: deserialize => ${schema_name}$_soa_deserialize
       procedure :: state_hash => ${schema_name}$_soa_state_hash
+      procedure :: state_hash64 => ${schema_name}$_soa_state_hash64
    end type ${type_name}$
 
 contains
@@ -305,6 +306,33 @@ contains
 #:endfor
       digest = hasher%digest()
    end function ${schema_name}$_soa_state_hash
+
+   function ${schema_name}$_soa_state_hash64(this) result(digest)
+      !! 64-bit FNV-1a digest of the container's live state.
+      !!
+      !! Byte for byte the same stream as `state_hash`: the schema string, the
+      !! element count as an explicit `int64`, then every field's live slice in
+      !! declaration order. Only the digest width differs.
+      !!
+      !! Prefer this one when digests are used as identifiers rather than
+      !! compared pairwise -- a determinism log keyed by digest, or
+      !! deduplicating identical states. Among 10**5 distinct 32-bit digests
+      !! the chance that some pair collides is about 69%; at 64 bits it is
+      !! 3e-10.
+      class(${type_name}$), intent(in) :: this
+         !! Container to fingerprint.
+      integer(int64) :: digest
+
+      type(array_hash64_t) :: hasher
+      integer(default_int) :: n
+
+      n = this%extent%used
+      call soa_hash_begin(hasher, ${schema_name.upper()}$_SOA_SCHEMA, n)
+#:for f in fields
+      call soa_hash_field(hasher, this%${f[0]}$, n)
+#:endfor
+      digest = hasher%digest()
+   end function ${schema_name}$_soa_state_hash64
 
 end module ${module_name}$
 #:enddef

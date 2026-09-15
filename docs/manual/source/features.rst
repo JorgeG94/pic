@@ -224,6 +224,47 @@ Uses ``omp_get_wtime`` when built with OpenMP and ``system_clock`` otherwise.
    clock" from "no measurable time passed" from the result alone — both mean
    the same thing to any arithmetic downstream.
 
+Clocks (``pic_clock``)
+^^^^^^^^^^^^^^^^^^^^^^
+
+Two unrelated notions of time, kept apart on purpose:
+
+- ``monotonic_ms``, ``monotonic_us`` - elapsed time from an unspecified
+  origin, only ever moving forward
+- ``now_local``, ``now_utc``, ``datetime_t`` - calendar date and time
+- ``unix_time_ms`` - milliseconds since 1970-01-01T00:00:00Z
+- ``format_iso8601`` - for example ``2026-09-14T09:46:00.123Z``
+
+Monotonic readings are for measuring how long something took, or pacing a
+loop against real time; differences are meaningful, the absolute value is
+not. Wall-clock time is for stamping a log line or naming a file, and can
+jump backwards when the system clock is corrected, so it must never be used
+to measure a duration.
+
+Where ``pic_timer`` reports ``real(dp)`` seconds, which is what a benchmark
+wants, this module reports whole milliseconds or microseconds as
+``integer(int64)``, which is what a simulation pacing itself against the wall
+clock wants: integers compare and accumulate exactly, so a frame budget does
+not drift with rounding.
+
+``system_clock`` is called with ``integer(int64)`` arguments, which selects a
+finer tick than the default integer kind does on every supported compiler. A
+processor with no clock returns ``PIC_CLOCK_NO_CLOCK`` (-1) rather than zero,
+since zero is a perfectly valid reading.
+
+The calendar conversions are integer-only and exact for every date in the
+``int64`` range, including the full Gregorian leap rule. ``format_iso8601``
+builds its text with ``zfill`` rather than an internal ``write``, because the
+``I0.N`` edit descriptor and list-directed output are processor dependent and
+this text is compared byte for byte.
+
+.. note::
+
+   Nothing here is reproducible between runs, by definition. Code whose
+   results must replay identically from a seed must not call it.
+   ``format_iso8601`` and ``unix_time_ms`` are the exceptions: both are pure
+   functions of their arguments.
+
 Profiler (``pic_profiler``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -284,6 +325,61 @@ an OpenMP/OpenACC region without touching the heap. Every failure mode
    compiler to deallocate its ``message`` component on entry to *every* call,
    putting heap traffic back into the hot path of a container whose whole
    purpose is not having any.
+
+Growable Vectors (``pic_vector``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Heap-backed arrays that grow on demand:
+
+- ``vector_int32_t``, ``vector_int64_t``, ``vector_dp_t``, ``vector_string_t``
+- ``push_back``, ``append``, ``pop_back``, ``at``, ``set``, ``get_unchecked``
+- ``size``, ``capacity``, ``is_empty``, ``reserve``, ``resize``, ``clear``
+- ``shrink_to_fit``, ``as_array``, ``take``, ``destroy``
+
+The method names deliberately match ``pic_fixed_array``, so moving from a
+bounded container to a growable one is mostly a type change. Not entirely,
+though: a failure is ``ERROR_BOUNDS`` here and ``ERROR_VALIDATION`` in
+``pic_fixed_array``; ``pic_fixed_array`` zeroes ``value`` on a failed ``at``
+or ``pop_back`` where this leaves it undefined; and there is no
+``vector_int_t`` to replace ``fixed_array_int_t``, because a ``default_int``
+element would change width with ``PIC_DEFAULT_INT8``. Choose
+``pic_fixed_array`` in hot loops and inside OpenMP/OpenACC regions, where its
+storage lives inside the object and never touches the heap; choose
+``pic_vector`` when the final length is not known until the input has been
+read.
+
+``take`` is the reason this is not just "an array you resize yourself": it
+hands the backing storage to an ``allocatable`` array with ``move_alloc``,
+exactly sized, without copying the elements. ``as_array`` copies; ``take``
+does not.
+
+.. code-block:: fortran
+
+   use pic_vector, only: vector_int32_t
+   use pic_types, only: int32
+   use pic_error, only: error_t
+
+   type(vector_int32_t) :: v
+   type(error_t) :: err
+   integer(int32), allocatable :: final(:)
+
+   call v%push_back(42_int32, err)
+   call v%append([7_int32, 9_int32], err)
+   call v%take(final, err)       ! v is empty; `final` has exactly 3 elements
+
+Element kinds are fixed width. There is no ``vector_int_t`` following
+``default_int``, because the same source would mean a 32-bit container in one
+build and a 64-bit one in the other. Sizes and indices are ``default_int``.
+
+The backing storage is **private**. Only ``1:size()`` is meaningful, and a
+public component would let ``v%items(v%size() + 1)`` compile and read spare
+capacity. The two cases that genuinely need to avoid a copy are served
+directly by ``take`` and ``get_unchecked``.
+
+Every operation is ``pure``, so a vector can be built and consumed inside a
+``pure`` procedure. Failures report through ``error_t``: ``ERROR_ALLOC`` when
+storage cannot be grown, ``ERROR_BOUNDS`` for an out-of-range index or a pop
+from an empty vector, ``ERROR_VALIDATION`` for a negative ``resize``.
 
 Sorting (``pic_sorting``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -358,12 +454,224 @@ untestable. ``remove`` preserves the relative order of what remains.
 
 Keys are deferred-length character, so there is no key-length limit.
 
+Terminal OS Layer (``pic_term``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Raw mode, terminal size, timed reads and sleeping --- the part of a terminal
+interface that has to talk to the operating system. ``pic_ansi`` is the part
+that does not.
+
+Built only with ``-DPIC_ENABLE_TERM=ON``. Its sources live in ``term/``
+rather than ``src/``, so neither the default CMake build nor any fpm build
+sees them: these are pic's first C sources, and pic exists to build
+everywhere.
+
+.. code-block:: fortran
+
+   if (.not. term_is_tty(TERM_STDIN)) return    ! piped: do not draw
+   call term_enable_vt(err)
+   call term_raw_enter(err)
+   if (.haserror. err) return
+
+   call term_size(rows, cols, err)
+   call term_read(buf, n, 100_default_int, err) ! 100 ms timeout
+   call term_raw_leave()
+
+.. note::
+
+   Every operating system conditional lives in one C file,
+   ``term/pic_term_os.c``. ``pic_term.f90`` is byte-for-byte the same source
+   on Linux, macOS and Windows and has no preprocessor conditional in it.
+
+   The reasoning is a counting argument: a ``#ifdef`` in Fortran has to be
+   right for each of six compilers *and* three operating systems, where one
+   in C has to be right for three operating systems. Only ``int``,
+   ``int64_t`` and ``char`` with a length cross the boundary --- no struct,
+   because ``termios`` and ``winsize`` layouts differ between Linux, macOS
+   and the BSDs.
+
+.. important::
+
+   A program that leaves the shell in raw mode has committed the most
+   user-hostile failure available: no echo, no line editing, and the user
+   cannot see what they type to fix it.
+
+   ``term_raw_enter`` therefore registers an ``atexit`` handler on its first
+   success --- covering a normal return, ``stop``, and ``error stop``, since
+   ``error stop`` exits through ``exit()`` --- plus SIGINT, SIGTERM and
+   SIGHUP handlers that restore the mode and re-raise with the default
+   disposition, so the process still dies of the signal it was sent. Both
+   ``term_raw_enter`` and ``term_raw_leave`` are idempotent.
+
+   A segfault restores nothing. Nothing can. Run ``reset``.
+
+``term_size`` reports failure rather than inventing 24x80: a caller told the
+size is unavailable can pick a fallback knowingly, where one handed a
+plausible lie cannot. Output stays on the Fortran side --- the C file never
+writes to stdout, so two runtimes cannot interleave their buffering of the
+same stream.
+
+Terminal Escapes and Framing (``pic_ansi``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The half of a terminal interface that is pure string processing: escape
+sequences, key decoding and frame composition. Nothing here does I/O or asks
+the operating system anything, so all of it is testable without a terminal.
+
+- **Escape builders** --- ``ansi_clear_screen``, ``ansi_move_to``,
+  ``ansi_hide_cursor``, ``ansi_alt_screen_enter``, ``ansi_fg``/``ansi_bg``
+  over the sixteen named colours, ``ansi_fg_256``, ``ansi_fg_rgb``,
+  ``ansi_bold``, ``ansi_reset``, and a ``styled`` convenience wrapper. All
+  ``pure`` functions returning ``character(len=:), allocatable``. Numbers are
+  converted with ``to_string``, never with internal I/O --- which a ``pure``
+  procedure may not do anyway.
+- **Key decoding** --- ``decode_keys`` turns raw bytes into ``key_event_t``
+  values: printable bytes, Enter, Backspace, Tab, Ctrl-C, the arrows, Home,
+  End and Delete.
+- **Frame composition** --- ``frame_t`` holds a screen of text lines and
+  ``render`` emits only the rows that changed since the last call, as one
+  string for the caller to write in a single ``write``.
+
+.. note::
+
+   The decoder carries state between calls in a ``pending_t``, because a
+   terminal is free to split ``ESC [ A`` across two reads. Both the ``ESC [``
+   and ``ESC O`` cursor forms are decoded: xterm sends the second in
+   application cursor mode, and a program that handled only the first would
+   lose its arrow keys there.
+
+   A lone ``ESC`` is indistinguishable from a truncated sequence until more
+   bytes arrive or do not, so it is held and reported as ``KEY_ESC`` on the
+   next call. That is one read of latency on the Escape key and no ambiguity.
+
+.. note::
+
+   Width is counted in **columns**: UTF-8 code points rather than bytes, so a
+   row of box-drawing characters --- three bytes each, one column each ---
+   truncates at a character boundary rather than a third of the way into one,
+   and escape sequences, which take no space on screen, are skipped. That
+   second part matters for truncation as much as for measurement: cutting
+   inside an escape sequence does not merely lose a colour, it leaves the
+   terminal reading the rest of the row as parameters.
+
+   East Asian wide characters count as one column here; getting those right
+   needs a character-width table and is out of scope.
+
+Command Line Parsing (``pic_cli``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Declare what the program accepts, parse once, read values back by name.
+
+.. code-block:: fortran
+
+   type(cli_t) :: cli
+   type(error_t) :: err
+   integer(int64) :: seed
+
+   call cli%set_program("fairport", "Deterministic airport simulator")
+   call cli%add_positional("scenario", "Scenario script to run", required=.true.)
+   call cli%add_option("seed", "Master RNG seed", short="s", default="0")
+   call cli%add_flag("hash", "Print the event-log hash and exit")
+   call cli%parse(err)
+
+   if (cli%help_requested()) then
+      write (*, "(a)") cli%help_text()
+      stop 0
+   end if
+   call cli%get("seed", seed, err)
+
+Grammar: ``--name value``, ``--name=value``, ``-s value``, and ``--`` to end
+option parsing. ``-h`` and ``--help`` are reserved. Subcommands, grouped short
+flags, environment fallbacks and range validation are out of scope.
+
+``get`` is generic over ``int32``, ``int64``, ``sp``, ``dp``, ``logical``,
+``character(len=:)`` and ``string_type``. Conversions use
+``pic_tokenizer``'s strict parsers, so ``--seed 42x`` is ``ERROR_PARSE``
+rather than 42.
+
+.. important::
+
+   The library never prints and never stops. ``help_text()`` returns the
+   text; ``help_requested()`` reports the request. A library that prints has
+   assumed the program has a terminal, that the text belongs on
+   ``output_unit`` rather than in a log, and that English is wanted. A
+   library that stops has assumed there is nothing left to clean up. Both are
+   the caller's decisions.
+
+.. note::
+
+   ``parse_args(args, err)`` takes the arguments as an array and is the real
+   implementation; ``parse`` only collects ``get_command_argument`` and
+   forwards to it. Tests therefore never need a real command line, and every
+   error path is reachable without a shell.
+
+Random Distributions (``pic_random_dist``, ``pic_random_dist_real``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Distributions on top of the generators in ``pic_rng``, split into two modules
+by whether their output can be reproduced across compilers.
+
+``pic_random_dist`` returns integers and logicals, and every routine in it is
+computed with integer arithmetic alone:
+
+- ``next_range(gen, lo, hi[, err])`` --- uniform on the inclusive range, by
+  rejection so there is no modulo bias. The span is formed in unsigned 64-bit
+  arithmetic, so the full width of ``default_int`` works.
+- ``next_bernoulli_ppm(gen, ppm)`` --- true with probability ``ppm`` in a
+  million, clamped rather than rejected at the ends.
+- ``next_exponential_int(gen, mean[, err])`` --- exponential integer, from a
+  committed inverse-CDF table in Q32.32 fixed point.
+- ``next_poisson_int(gen, mean_milli[, err])`` --- Poisson count, the mean
+  given a thousand times over so fractional means need no real type.
+
+``pic_random_dist_real`` returns ``real(dp)``: ``next_exponential_dp`` and
+``next_normal_dp``.
+
+.. important::
+
+   The two tiers are separate modules so that the choice between them is
+   deliberate. The real tier calls ``log``, ``sqrt`` and ``cos``, and libm is
+   not the same function on every platform --- GNU, Intel, NVIDIA and LFortran
+   do not agree to the last bit, and nothing obliges them to. Anything that
+   reaches state which will be compared across runs or across machines must
+   use the integer tier, whose outputs are pinned by tests.
+
+.. note::
+
+   The exponential's top table cell runs to infinity and cannot be
+   interpolated into. Rather than capping it at a finite value --- which
+   biases the mean by 0.147% --- the sampler uses the memorylessness of the
+   exponential: a draw landing in the top cell adds ``ln(4096)`` and draws
+   again. That is exact, costs an extra draw once in 4096, and leaves a mean
+   error of 0.002%, all of it linear interpolation inside the body cells.
+
 Array State Hashing (``pic_array_hash``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A stable digest of an array's contents, for answering "did this run produce
 the same state as that run" without diffing gigabytes. Covers the intrinsic
 types and both real kinds, ranks 1 to 3.
+
+Available at two widths. ``array_hash`` and ``array_hash_t`` give a 32-bit
+digest; ``array_hash64`` and ``array_hash64_t`` a 64-bit one, with
+``array_hash64_hex`` formatting it as sixteen lowercase hex characters. Both
+are generated from ``tools/autogen/pic_array_hash.fypp`` over a single byte
+stream definition, so the two cannot drift apart: everything below --- the
+canonical real record, the ``-0.0`` and NaN rules, shape insensitivity,
+streaming being equal to concatenation --- holds identically at both widths,
+and only the FNV parameters folded over the stream differ.
+
+Which width to use depends on what the digest is *for*. Comparing two digests
+of the same thing is safe at 32 bits: a false match has probability
+2\ :sup:`-32`. Using digests as identifiers is not --- among 10\ :sup:`5`
+distinct 32-bit digests the chance that some pair collides is about 69%,
+against 3x10\ :sup:`-10` at 64 bits. Keying a determinism log by digest, or
+deduplicating states, wants ``array_hash64``.
+
+.. note::
+
+   Neither width is a cryptographic checksum, and neither is collision
+   resistant against an adversary.
 
 .. note::
 
@@ -432,8 +740,11 @@ Struct-of-Arrays (``pic_soa``, ``pic_soa_particle``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Struct-of-arrays containers generated from an fypp template, with amortized
-``resize``, ``checkpoint`` through ``pic_serialize``, and ``state_hash``
-through ``pic_array_hash``.
+``resize``, ``checkpoint`` through ``pic_serialize``, and ``state_hash`` /
+``state_hash64`` through ``pic_array_hash``. Both digests fold the same
+stream --- the schema string, the element count, then every field's live
+slice in declaration order --- so they agree about what changed and differ
+only in width.
 
 Fields are parallel arrays sharing a size and capacity, so each field is
 contiguous and can be handed to BLAS, MPI or a GPU kernel without a gather.

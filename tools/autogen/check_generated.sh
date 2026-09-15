@@ -11,6 +11,8 @@
 #
 # The list of templates, output names and destination directories is parsed out
 # of autogen.sh itself, so adding a module there is automatically covered here.
+# The same goes for the `python3 <script>.py` lines, whose .inc output is
+# committed alongside the templates that include it.
 #
 # Usage: tools/autogen/check_generated.sh
 # Exit status: 0 when everything matches, 1 when a generated file has drifted.
@@ -25,6 +27,35 @@ trap 'rm -rf "$work"' EXIT
 status=0
 drifted=()
 checked=0
+
+# Some templates #:include a file that is itself generated, by a Python script
+# rather than by fypp -- the exponential inverse-CDF table, for one. Those
+# scripts write into tools/autogen and their output is committed there, so
+# check them by re-running each in a scratch copy of the directory and diffing.
+while read -r script; do
+   [ -n "$script" ] || continue
+   gen_work="$work/gen-${script%.py}"
+   mkdir -p "$gen_work"
+   cp "$here"/*.py "$gen_work/" 2>/dev/null
+   if ! (cd "$gen_work" && python3 "$script" >/dev/null); then
+      echo "check_generated.sh: $script failed" >&2
+      status=1
+      continue
+   fi
+   for produced in "$gen_work"/*.inc; do
+      [ -f "$produced" ] || continue
+      name="$(basename "$produced")"
+      checked=$((checked + 1))
+      if diff -u --label "regenerated/$name" --label "tools/autogen/$name" \
+              "$produced" "$here/$name"; then
+         echo "ok: tools/autogen/$name matches $script"
+      else
+         echo "DRIFT: tools/autogen/$name no longer matches $script" >&2
+         drifted+=("tools/autogen/$name")
+         status=1
+      fi
+   done
+done < <(sed -nE 's|^[[:space:]]*python3[[:space:]]+([^[:space:]]+\.py).*|\1|p' "$here/autogen.sh")
 
 # Map generated file name -> destination directory, from the `cp` lines of
 # autogen.sh (paths there are relative to tools/autogen).
