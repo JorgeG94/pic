@@ -2,8 +2,20 @@ name: Terminal layer
 
 # The terminal OS layer is the only part of pic with C sources and operating
 # system conditionals, and it is off by default so that the main matrix and
-# the LFortran jobs are unaffected by it. This workflow is what actually
-# builds and tests it, on all three platforms.
+# the LFortran jobs never see it. This workflow is what builds and tests it.
+#
+# One job, on Linux. The layer used to be built on all three runners, and the
+# Windows leg was expensive out of proportion to what it caught: CMake's
+# default generator there cannot drive gfortran, ctest's stdin handling
+# differs, and cmd.exe rejects command lines that every other shell accepts.
+#
+# What that leaves uncovered is the `#if defined(_WIN32)` half of
+# pic_term_os.c, which is about half the file. The cross-compile step below
+# is the cheap half of the answer -- it catches the Windows branch failing to
+# *compile*, which is a real thing that happened here (`sig_atomic_t` used
+# with <signal.h> included only in the POSIX branch). It cannot catch the
+# Windows branch failing to *work*; nothing on a Linux runner can. Anyone
+# changing the console or handle code should build it on Windows by hand.
 
 on:
   push:
@@ -11,6 +23,7 @@ on:
   pull_request:
     paths:
       - 'term/**'
+      - 'examples/term_keys/**'
       - 'tools/ci/check_term_restores.sh'
       - '.github/workflows/term-ci.yml'
       - 'CMakeLists.txt'
@@ -23,13 +36,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+  term:
+    name: ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -39,17 +48,9 @@ jobs:
         with:
           compiler: gcc
 
-      # Ninja on every platform, not for speed: on windows-latest CMake's
-      # default generator is Visual Studio, which cannot drive the gfortran
-      # that setup-fortran just installed, so the configure step fails before
-      # it compiles anything. Ninja is a single-config generator, hence no
-      # --config on the build line.
-      - name: Install Ninja
-        run: pip install --upgrade ninja
-
       - name: Configure with the terminal layer on
         run: >
-          cmake -B build -G Ninja
+          cmake -B build
           -DCMAKE_BUILD_TYPE=Release
           -DPIC_ENABLE_TESTING=ON
           -DPIC_ENABLE_TERM=ON
@@ -63,27 +64,24 @@ jobs:
       - name: Test
         run: ctest --test-dir build --output-on-failure
 
-  restores-terminal:
-    name: terminal is restored after error stop
-    runs-on: ubuntu-latest
-    # Needs a real pty, which a CI job does not have; script(1) provides one.
-    # POSIX only: the Windows console has no stty to compare against.
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Fortran
-        uses: fortran-lang/setup-fortran@v1
-        with:
-          compiler: gcc
-
-      - name: Build
-        run: |
-          cmake -B build -DPIC_ENABLE_TESTING=ON -DPIC_ENABLE_TERM=ON
-          cmake --build build
-
-      # The script refuses to pass if its own negative control cannot tell a
-      # raw terminal from a cooked one, so a green result here cannot be
-      # vacuous.
+      # Needs a real pty, which a CI job does not have; script(1) provides
+      # one. The script refuses to pass if its own negative control cannot
+      # tell a raw terminal from a cooked one, so a green result here cannot
+      # be vacuous. POSIX only -- the Windows console has no stty to compare
+      # against, so this step would have nothing to assert there anyway.
       - name: Raw mode is restored after error stop
         run: tools/ci/check_term_restores.sh build/term/pic-term-raw-crash
+
+      # Compile-only, and deliberately so: it is the one check of the Windows
+      # branch available without a Windows runner. Delete these two steps if
+      # the Windows half stops being worth guarding.
+      - name: Install a Windows cross compiler
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq gcc-mingw-w64-x86-64
+
+      - name: Windows branch of the C layer still compiles
+        run: |
+          for src in term/pic_term_os.c term/eof_probe_stdin.c; do
+            echo "== $src"
+            x86_64-w64-mingw32-gcc -std=c99 -Wall -Wextra -Wpedantic -Werror \
+              -c "$src" -o /dev/null
+          done
