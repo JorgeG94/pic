@@ -27,8 +27,22 @@ if(PIC_ENABLE_TESTING)
                              PRIVATE "${CMAKE_BINARY_DIR}/modules")
   target_link_libraries(pic-term-eof-probe PRIVATE ${main_lib} ${core_lib})
   if(WIN32)
-    add_test(NAME pic/pic_term_eof
-             COMMAND cmd /c "$<TARGET_FILE:pic-term-eof-probe> < NUL")
+    # The redirection goes in a batch file rather than on the command line. `cmd
+    # /c "prog < NUL"` does not survive CreateProcess: cmd only strips the
+    # quotes it is handed when nothing between them is special, and `<` is
+    # special, so it tries to run the whole quoted string as a program name and
+    # answers "The syntax of the command is incorrect." Inside a .bat the
+    # redirect is parsed by cmd's own reader, and the command line ctest builds
+    # has no metacharacters left in it.
+    set(_eof_script "${CMAKE_CURRENT_BINARY_DIR}/run_eof_probe_$<CONFIG>.bat")
+    file(
+      GENERATE
+      OUTPUT "${_eof_script}"
+      CONTENT
+        "@echo off\n\"$<SHELL_PATH:$<TARGET_FILE:pic-term-eof-probe>>\" < NUL\nexit /b %ERRORLEVEL%\n"
+        NEWLINE_STYLE
+        CRLF)
+    add_test(NAME pic/pic_term_eof COMMAND cmd /c "${_eof_script}")
   else()
     add_test(NAME pic/pic_term_eof
              COMMAND sh -c "exec $<TARGET_FILE:pic-term-eof-probe> < /dev/null")
