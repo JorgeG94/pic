@@ -19,50 +19,15 @@ if(PIC_ENABLE_TESTING)
   add_test(NAME pic/pic_term COMMAND pic-term-tester)
 
   # Standard input at end of file must be distinguishable from an idle timeout.
-  # Needs a stream that is actually closed, which ctest's own stdin is not, so
-  # the redirection happens in the test command itself -- hence a shell rather
-  # than the program on its own.
-  add_executable(pic-term-eof-probe eof_probe.f90)
+  # The probe points its own standard input at the null device (see
+  # term/eof_probe_stdin.c), so ctest runs it directly: no shell, no redirection
+  # on the command line, and the same test entry on every platform.
+  add_executable(pic-term-eof-probe eof_probe.f90 eof_probe_stdin.c)
+  set_source_files_properties(eof_probe_stdin.c PROPERTIES LANGUAGE C)
   target_include_directories(pic-term-eof-probe
                              PRIVATE "${CMAKE_BINARY_DIR}/modules")
   target_link_libraries(pic-term-eof-probe PRIVATE ${main_lib} ${core_lib})
-  if(WIN32)
-    # Two separate pieces of cmd.exe pedantry, each of which cost a CI cycle and
-    # produced the identical, unhelpful "The syntax of the command is
-    # incorrect."
-    #
-    # The redirect cannot go on ctest's command line. `cmd /c "probe < NUL"`
-    # does not survive CreateProcess: cmd strips the quotes it is handed only
-    # when nothing between them is special, and `<` is special, so it keeps them
-    # and tries to run the whole quoted string as a program name. Hence a .bat,
-    # where the redirect is read by cmd's own parser instead.
-    #
-    # And the path to that .bat has to be spelled with backslashes. CMake stores
-    # paths with forward slashes, and in `cmd /c D:/a/pic/...` -- which is
-    # unquoted, having no spaces in it -- cmd reads `/a`, `/pic` and the rest as
-    # switches. file(TO_NATIVE_PATH) rather than $<SHELL_PATH>, because it
-    # converts at configure time on the machine that will run the test, where
-    # the answer is not in doubt; $<SHELL_PATH> decides from the generator's
-    # shell and cannot be checked from a POSIX host at all. `$<CONFIG>` survives
-    # it untouched, having no separator in it.
-    set(_eof_script "${CMAKE_CURRENT_BINARY_DIR}/run_eof_probe_$<CONFIG>.bat")
-    file(TO_NATIVE_PATH "${_eof_script}" _eof_script_native)
-    file(
-      GENERATE
-      OUTPUT "${_eof_script}"
-      CONTENT
-        "@echo off\n\"$<TARGET_FILE:pic-term-eof-probe>\" < NUL\nexit /b %ERRORLEVEL%\n"
-        NEWLINE_STYLE
-        CRLF)
-    # Printed because it is the string that has twice been wrong, and the
-    # runner's error message ("The syntax of the command is incorrect.") names
-    # neither the path nor what it objected to.
-    message(STATUS "pic_term_eof runs: cmd /c ${_eof_script_native}")
-    add_test(NAME pic/pic_term_eof COMMAND cmd /c "${_eof_script_native}")
-  else()
-    add_test(NAME pic/pic_term_eof
-             COMMAND sh -c "exec $<TARGET_FILE:pic-term-eof-probe> < /dev/null")
-  endif()
+  add_test(NAME pic/pic_term_eof COMMAND pic-term-eof-probe)
 
   # A third, tiny program for tools/ci/check_term_restores.sh, which runs it
   # under a pty from script(1). It is not a ctest test: it deliberately dies of

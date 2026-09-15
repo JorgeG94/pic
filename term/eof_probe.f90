@@ -3,22 +3,36 @@
 program pic_term_eof_probe
    !! Checks that a closed standard input is reported as end of input.
    !!
-   !! Run by ctest with standard input redirected from the null device, which
-   !! is the cheapest stream that is permanently readable and permanently
-   !! empty -- the same shape as a pipe whose writer has exited, and the case
-   !! that matters. `poll` says "ready", `read` returns nothing, and if that is
+   !! It points its own standard input at the null device first, which is the
+   !! cheapest stream that is permanently readable and permanently empty --
+   !! the same shape as a pipe whose writer has exited, and the case that
+   !! matters. `poll` says "ready", `read` returns nothing, and if that is
    !! reported as a successful zero-byte read then every input loop in the
    !! module documentation turns into a spin at 100% of a core. So the one
    !! thing this asserts is that it is *not* reported that way.
+   !!
+   !! The redirection is done in-process rather than by the test command,
+   !! because a redirect in the test command has to be written in a shell and
+   !! the shell differs by platform -- see the comment in eof_probe_stdin.c.
+   !! This way ctest runs the program with no shell at all.
    !!
    !! Its own negative control is the iteration count: if the reads were
    !! genuinely timing out rather than hitting end of input, the loop would
    !! exhaust its budget and the program would fail rather than pass by
    !! default.
+   use, intrinsic :: iso_c_binding, only: c_int
    use pic_types, only: default_int
    use pic_error, only: error_t
    use pic_term, only: term_read
    implicit none
+
+   interface
+      subroutine stdin_from_null(status) bind(c, name="pic_term_test_stdin_from_null")
+         import :: c_int
+         implicit none
+         integer(c_int), intent(out) :: status
+      end subroutine stdin_from_null
+   end interface
 
    integer(default_int), parameter :: MAX_READS = 100_default_int
 
@@ -27,8 +41,18 @@ program pic_term_eof_probe
    type(error_t) :: err
    logical :: at_eof
    integer(default_int) :: failures
+   integer(c_int) :: redirect_status
 
    failures = 0_default_int
+
+   call stdin_from_null(redirect_status)
+   if (redirect_status /= 0_c_int) then
+      ! Without this the rest would be meaningless rather than merely failing:
+      ! reads of the inherited standard input would time out, and a timeout is
+      ! exactly what this test exists to tell apart from end of input.
+      write (*, "(a)") "  FAIL  could not point standard input at the null device"
+      error stop 1
+   end if
 
    at_eof = .false.
    do i = 1_default_int, MAX_READS
