@@ -11,10 +11,10 @@ if(PIC_ENABLE_TESTING)
   # under this option, and registering it in the shared runner would put a
   # preprocessor conditional into a file every other suite also edits.
   add_executable(pic-term-tester test_pic_term.f90)
-  # The library's .mod files land in ${CMAKE_BINARY_DIR}/modules, which is set
+  # The library's .mod files land in ${PROJECT_BINARY_DIR}/modules, which is set
   # on the library targets after this directory is added.
   target_include_directories(pic-term-tester
-                             PRIVATE "${CMAKE_BINARY_DIR}/modules")
+                             PRIVATE "${PROJECT_BINARY_DIR}/modules")
   target_link_libraries(pic-term-tester PRIVATE ${main_lib} ${core_lib})
   add_test(NAME pic/pic_term COMMAND pic-term-tester)
 
@@ -25,7 +25,7 @@ if(PIC_ENABLE_TESTING)
   add_executable(pic-term-eof-probe eof_probe.f90 eof_probe_stdin.c)
   set_source_files_properties(eof_probe_stdin.c PROPERTIES LANGUAGE C)
   target_include_directories(pic-term-eof-probe
-                             PRIVATE "${CMAKE_BINARY_DIR}/modules")
+                             PRIVATE "${PROJECT_BINARY_DIR}/modules")
   target_link_libraries(pic-term-eof-probe PRIVATE ${main_lib} ${core_lib})
   add_test(NAME pic/pic_term_eof COMMAND pic-term-eof-probe)
 
@@ -35,10 +35,10 @@ if(PIC_ENABLE_TESTING)
   # the shell around it can see.
   add_executable(pic-term-raw-crash raw_crash_check.f90)
   target_include_directories(pic-term-raw-crash
-                             PRIVATE "${CMAKE_BINARY_DIR}/modules")
+                             PRIVATE "${PROJECT_BINARY_DIR}/modules")
   target_link_libraries(pic-term-raw-crash PRIVATE ${main_lib} ${core_lib})
 endif()
 
 # The manual demo lives in examples/ but is only buildable with this option on.
-add_subdirectory(${CMAKE_SOURCE_DIR}/examples/term_keys
-                 ${CMAKE_BINARY_DIR}/examples/term_keys)
+add_subdirectory(${PROJECT_SOURCE_DIR}/examples/term_keys
+                 ${PROJECT_BINARY_DIR}/examples/term_keys)

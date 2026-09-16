@@ -79,3 +79,16 @@ jobs:
       - name: Raw mode is restored after error stop
         if: runner.os == 'Linux'
         run: tools/ci/check_term_restores.sh build/term/pic-term-raw-crash
+
+      # Every job in this repository builds pic as the TOP-LEVEL project,
+      # where CMAKE_SOURCE_DIR and PROJECT_SOURCE_DIR are the same directory.
+      # That makes a whole class of bug invisible here and fatal for everyone
+      # else, and one of them shipped in 0.8.1: `PIC_ENABLE_TERM=ON` was a
+      # hard configure failure for any project fetching pic, because
+      # examples/term_keys was located through the top-level source dir.
+      #
+      # Linux only -- the mistake is in CMake, not in an OS conditional, so
+      # one platform finds it.
+      - name: pic builds as somebody else's subproject
+        if: runner.os == 'Linux'
+        run: tools/ci/check_consumer_build.sh
