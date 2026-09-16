@@ -25,5 +25,24 @@ cmake --build "$BUILD"
 # link if a stale .mod is lying around in a shared directory.
 "$BUILD/consumer_app"
 
+echo "-- subproject: ok"
+
+# Second half: install pic, then consume it the way a packaged dependency is
+# consumed. Linking the namespaced target must be enough on this path too.
+INST="${BUILD}-install"
+PREFIX="${BUILD}-prefix"
+cmake -S "$PIC_SRC" -B "$INST" -DCMAKE_INSTALL_PREFIX="$PREFIX" \
+      -DPIC_ENABLE_TESTING=OFF -DPIC_ENABLE_TERM=ON \
+      ${CMAKE_GENERATOR:+-G "$CMAKE_GENERATOR"} >/dev/null
+cmake --build "$INST" >/dev/null
+cmake --install "$INST" >/dev/null
+
+cmake -S "$HERE/find_package" -B "${BUILD}-fp" -Dpic_DIR="$PREFIX/lib/cmake/pic" \
+      ${CMAKE_GENERATOR:+-G "$CMAKE_GENERATOR"} >/dev/null
+cmake --build "${BUILD}-fp" >/dev/null
+"${BUILD}-fp/found_app"
+echo "-- find_package: ok"
+
 echo
-echo "ok: pic configures, builds and runs as a subproject with PIC_ENABLE_TERM=ON"
+echo "ok: pic is usable as a subproject and as an installed package, in both"
+echo "    cases by linking the target alone"

@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/) (also mention if you do).
 
 ## [Unreleased]
+### Fixed
+- A consumer that links `pic` or `pic_core` as a subproject now gets pic's
+  module directory from the target, instead of having to know where pic puts
+  its `.mod` files. 0.8.2 moved them out of the top-level build tree and into
+  pic's own — correct, but it broke every consumer that had hardcoded the old
+  location, in a patch release. Carrying the path on the target's `INTERFACE`
+  means moving it again is not a breaking change.
+
+  `BUILD_INTERFACE` only: the installed package already carried the right
+  include directory through `INCLUDES DESTINATION` on `install(TARGETS)`, so
+  `find_package(pic)` consumers were never affected. Reported by the first
+  external consumer of `pic_term`.
+
+### Changed
+- `tools/ci/check_consumer_build.sh` no longer sets an include path by hand,
+  so it fails if that propagation regresses, and it now checks the installed
+  `find_package` path as well as the subproject one. The two are configured in
+  different places and can drift apart.
+
 
 ## [0.8.2] – 2026-09-16
 A single fix, for a bug that made the terminal layer unusable by anyone

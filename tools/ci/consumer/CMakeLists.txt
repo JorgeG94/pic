@@ -18,6 +18,11 @@ set(PIC_ENABLE_TESTING
 add_subdirectory("${PIC_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/pic")
 
 add_executable(consumer_app app.f90)
-target_include_directories(consumer_app
-                           PRIVATE "${CMAKE_BINARY_DIR}/pic/modules")
+
+# Deliberately NO target_include_directories. Linking the target has to be
+# enough: pic carries its module directory on the target's INTERFACE, so a
+# consumer needs no knowledge of pic's build layout. Setting the path by hand
+# here would make this check pass even with that propagation broken -- which it
+# was until 0.8.2 moved the module directory and every consumer that had
+# hardcoded the old spelling stopped compiling.
 target_link_libraries(consumer_app PRIVATE pic pic_core)
