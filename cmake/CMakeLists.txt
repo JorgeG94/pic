@@ -10,7 +10,28 @@ endif()
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/modules/"
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
-# Compiler-specific configurations
+# Compiler-specific configurations What `-check` sub-checks the Intel compilers
+# get in a Debug build.
+#
+# Not `all`. `-check all` bundles sub-checks that do not look for bugs but
+# redefine conforming behaviour, and pic has tests asserting the behaviour they
+# redefine:
+#
+# output_conversion  A value too wide for its edit descriptor is filled with
+# asterisks by the standard, with iostat left zero. This check makes it an error
+# instead, so `to_string(-100._dp, "F6.2")` returns pic's `[*]` sentinel rather
+# than `******` -- which is what test_pic_string_to_string asserts. udio_iostat
+# Conformance checking for user-defined derived-type I/O, which is exactly what
+# `string_type`'s read and write procedures are, and what
+# test_pic_string_derivedtype_io exercises across child data transfers. format
+# Format and data-type consistency, including the DT edit descriptors that same
+# defined I/O uses.
+#
+# What is left is the set that catches real memory and logic faults. The `-fpe0`
+# that used to sit alongside this is gone for the same reason as the GNU trap
+# list below: see that comment.
+set(pic_intel_checks "bounds,uninit,pointers,stack")
+
 if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
   set(standard_compile_flags "-std=f2018 -ffree-line-length-none -fbacktrace")
   if(CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 15.1)
@@ -36,15 +57,10 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
   set(fpe "-ffpe-trap=zero")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
   set(standard_compile_flags "-traceback")
-  # `-fpe0` and not `-fpe1`/`-fpe3` would be the analogue of the gfortran line
-  # above, but `-fpe` has no per-exception selection: 0 enables invalid,
-  # divide-by-zero and overflow together. Since two of those three are reachable
-  # by design (see the comment on the GNU branch), the whole flag goes and
-  # `-check all` -- which is the part that catches real bugs -- stays.
-  set(fpe "-check all")
+  set(fpe "-check ${pic_intel_checks}")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "IntelLLVM")
   set(standard_compile_flags "-axAVX2 -traceback")
-  set(fpe "-check all")
+  set(fpe "-check ${pic_intel_checks}")
 elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
   set(standard_compile_flags " -traceback")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "LLVMFlang")

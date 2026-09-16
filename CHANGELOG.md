@@ -25,9 +25,18 @@ public names.
   trapped: `parse_real` on a literal too large for `real(dp)` needs `strtod` to
   raise overflow before it can report `ERROR_PARSE`, and `array_hash`
   canonicalises NaN, which means forming one. GNU now traps `zero` only — the
-  one of the three that is essentially always a real bug in library code — and
-  Intel keeps `-check all` without `-fpe`, which has no per-exception
-  selection. Neither test was changed.
+  one of the three that is essentially always a real bug in library code.
+  Neither test was changed.
+- Intel Debug builds, which had never been exercised: `-check all` was set on
+  the Intel branches but applied only to `CMAKE_Fortran_FLAGS_DEBUG`, and no CI
+  job built Debug. Three of its sub-checks do not look for bugs but redefine
+  conforming behaviour that pic's tests assert — `output_conversion` turns the
+  standard's asterisk fill for an over-wide edit descriptor into an iostat
+  error, so `to_string(-100._dp, "F6.2")` returned pic's `[*]` sentinel instead
+  of `******`; `udio_iostat` and `format` police the user-defined derived-type
+  I/O that `string_type` implements. The check set is now
+  `bounds,uninit,pointers,stack`, and `-fpe0` is gone for the same reason it is
+  on GNU.
 
 ### Added
 - A Debug CI job, on GNU and Intel. Every other job builds Release, which is
