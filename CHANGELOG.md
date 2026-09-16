@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/) (also mention if you do).
 
 ## [Unreleased]
+### Fixed
+- `-DPIC_ENABLE_TERM=ON` was a hard configure failure for any project that
+  consumed pic through `FetchContent` or `add_subdirectory`. `term/` located
+  `examples/term_keys` through `CMAKE_SOURCE_DIR`, which is the *top-level*
+  project's source directory — pic's own only when pic is the top-level
+  project — so a consumer got `add_subdirectory given source
+  "<their-project>/examples/term_keys" which is not an existing directory`,
+  with no way to work around it since the broken line is inside the fetched
+  source. Reported by the first external consumer of `pic_term`.
+
+  Every `CMAKE_SOURCE_DIR` and `CMAKE_BINARY_DIR` in the build system is now
+  `PROJECT_SOURCE_DIR` / `PROJECT_BINARY_DIR`, not just the line that failed.
+  The others were consistent with each other so they worked, but they put
+  pic's `.mod` files in the consumer's build root and would have installed the
+  consumer's modules alongside pic's.
+
+### Added
+- `tools/ci/check_consumer_build.sh`, run by the terminal workflow: builds a
+  project that consumes pic as a subproject with the terminal layer on, and
+  runs the result. Every other job builds pic as the top-level project, which
+  is exactly why the above was invisible.
+
 
 ## [0.8.1] – 2026-09-16
 Release metadata and build-type fixes. No library behaviour changes, no new

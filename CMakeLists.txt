@@ -122,7 +122,7 @@ endif()
 
 foreach(lib ${all_libs})
   set_target_properties(${lib} PROPERTIES Fortran_MODULE_DIRECTORY
-                                          ${CMAKE_BINARY_DIR}/modules)
+                                          ${PROJECT_BINARY_DIR}/modules)
 endforeach()
 if(PIC_ENABLE_OMP)
   find_package(
@@ -139,7 +139,7 @@ target_link_libraries(${main_lib} ${core_lib} ${libraries_to_link})
 
 set(exe_name app)
 add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.F90)
-target_include_directories(${exe_name} PRIVATE "${CMAKE_BINARY_DIR}/modules")
+target_include_directories(${exe_name} PRIVATE "${PROJECT_BINARY_DIR}/modules")
 target_link_libraries(${exe_name} PRIVATE ${main_lib} ${libraries_to_link}
                                           ${external_libraries_to_link})
 
@@ -154,7 +154,7 @@ foreach(tgt ${all_libs})
 endforeach()
 
 install(
-  DIRECTORY ${CMAKE_BINARY_DIR}/modules/
+  DIRECTORY ${PROJECT_BINARY_DIR}/modules/
   DESTINATION include/pic
   FILES_MATCHING
   PATTERN "*.mod")
@@ -211,6 +211,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Coverage")
     COMMAND lcov --ignore-errors unused --remove coverage.info '/usr/*'
             '*/build/*' --output-file coverage_filtered.info
     COMMAND genhtml coverage_filtered.info --output-directory coverage_report
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
     COMMENT "Generating code coverage report")
 endif()

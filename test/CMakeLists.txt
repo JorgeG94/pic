@@ -60,10 +60,10 @@ add_executable("${project_name}-tester" "${test-srcs}")
 
 set_target_properties(
   "${project_name}-tester"
-  PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-             Fortran_MODULE_DIRECTORY "${CMAKE_BINARY_DIR}/tests/modules")
+  PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib"
+             Fortran_MODULE_DIRECTORY "${PROJECT_BINARY_DIR}/tests/modules")
 target_include_directories("${project_name}-tester"
-                           PRIVATE "${CMAKE_BINARY_DIR}/modules")
+                           PRIVATE "${PROJECT_BINARY_DIR}/modules")
 target_link_libraries(
   "${project_name}-tester" PRIVATE "${main_lib}" "${core_lib}"
                                    test-drive::test-drive)
