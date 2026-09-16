@@ -29,8 +29,20 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/modules/"
 #
 # What is left is the set that catches real memory and logic faults. The `-fpe0`
 # that used to sit alongside this is gone for the same reason as the GNU trap
-# list below: see that comment.
-set(pic_intel_checks "bounds,uninit,pointers,stack")
+# list below: see that comment. `uninit` is out for a different and more
+# absolute reason than the three above. On ifx it is implemented with
+# MemorySanitizer, and MSan only gives sound answers when every object linked
+# into the binary is instrumented. Intel ships its own runtime prebuilt and
+# uninstrumented, so the first thing that happens is a report against a static
+# initializer inside libirc:
+#
+# MemorySanitizer: use-of-uninitialized-value #0 _GLOBAL__sub_I_fast_mem_ops.c
+# fast_mem_ops.c #1 __libc_start_main
+#
+# That fires before `main`, so every test binary dies having run nothing -- 0 of
+# 46, not a scattering. Nothing in pic can fix it, because none of it is pic's
+# code.
+set(pic_intel_checks "bounds,pointers,stack")
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
   set(standard_compile_flags "-std=f2018 -ffree-line-length-none -fbacktrace")

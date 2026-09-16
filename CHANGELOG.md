@@ -34,9 +34,12 @@ public names.
   standard's asterisk fill for an over-wide edit descriptor into an iostat
   error, so `to_string(-100._dp, "F6.2")` returned pic's `[*]` sentinel instead
   of `******`; `udio_iostat` and `format` police the user-defined derived-type
-  I/O that `string_type` implements. The check set is now
-  `bounds,uninit,pointers,stack`, and `-fpe0` is gone for the same reason it is
-  on GNU.
+  I/O that `string_type` implements. `uninit` is out for a harder reason: on
+  ifx it is MemorySanitizer, which is only sound when every linked object is
+  instrumented, and Intel's own runtime is not — so a report fires against a
+  static initializer in libirc before `main` and every test binary dies having
+  run nothing. The check set is now `bounds,pointers,stack`, and `-fpe0` is
+  gone for the same reason it is on GNU.
 
 ### Added
 - A Debug CI job, on GNU and Intel. Every other job builds Release, which is
