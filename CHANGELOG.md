@@ -6,6 +6,64 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/) (also mention if you do).
 
 ## [Unreleased]
+
+## [0.8.1] – 2026-09-16
+Release metadata and build-type fixes. No library behaviour changes, no new
+public names.
+
+### Fixed
+- The version string. `fpm.toml` and `CMakeLists.txt` both still said 0.7.0
+  after 0.8.0 was tagged, so `find_package(pic 0.8 REQUIRED)` failed against a
+  0.8.0 tree, the installed `picConfigVersion.cmake` advertised 0.7.0, and the
+  release links in the published documentation — interpolated from `.VERSION`,
+  which `configure_file` writes from `PROJECT_VERSION` — pointed at the 0.7.0
+  docs. The `v0.8.0` tag is left where it is; 0.8.1 is the first release whose
+  metadata describes itself correctly.
+- A Debug build could not run its own test suite. `-ffpe-trap=invalid,zero,overflow`
+  on GNU and `-fpe0` on Intel turned `pic_tokenizer` and `pic_array_hash` into
+  SIGFPE crashes, because those two suites cover exactly the conditions being
+  trapped: `parse_real` on a literal too large for `real(dp)` needs `strtod` to
+  raise overflow before it can report `ERROR_PARSE`, and `array_hash`
+  canonicalises NaN, which means forming one. GNU now traps `zero` only — the
+  one of the three that is essentially always a real bug in library code.
+  Neither test was changed.
+- Intel Debug builds, which had never been exercised: `-check all` was set on
+  the Intel branches but applied only to `CMAKE_Fortran_FLAGS_DEBUG`, and no CI
+  job built Debug. Three of its sub-checks do not look for bugs but redefine
+  conforming behaviour that pic's tests assert — `output_conversion` turns the
+  standard's asterisk fill for an over-wide edit descriptor into an iostat
+  error, so `to_string(-100._dp, "F6.2")` returned pic's `[*]` sentinel instead
+  of `******`; `udio_iostat` and `format` police the user-defined derived-type
+  I/O that `string_type` implements. `uninit` is out for a harder reason: on
+  ifx it is MemorySanitizer, which is only sound when every linked object is
+  instrumented, and Intel's own runtime is not — so a report fires against a
+  static initializer in libirc before `main` and every test binary dies having
+  run nothing. The check set is now `bounds,pointers,stack`, and `-fpe0` is
+  gone for the same reason it is on GNU.
+
+### Added
+- Intel compiler dispatch that can tell ifx from ifort. The branches used
+  `MATCHES`, which is a regex, and `"IntelLLVM"` matches `"Intel"` — so ifort's
+  arm swallowed ifx too and the `IntelLLVM` arm had never executed since it was
+  written. Both now use `STREQUAL`. The `-axAVX2` that unreachable arm asked
+  for is deliberately not reinstated: ifx has been built without it all along,
+  and switching it on would change generated code for every ifx consumer.
+- A Debug CI job, on GNU and Intel. Every other job builds Release, which is
+  how the above went unnoticed across two releases.
+- `tools/autogen/` is installed to `${CMAKE_INSTALL_DATADIR}/pic/autogen`, and
+  `find_package(pic)` exports that path as `PIC_AUTOGEN_DIR`. A project can now
+  generate its own struct-of-arrays container with
+  `fypp -I ${PIC_AUTOGEN_DIR}` instead of editing pic's source tree, which is
+  what the manual previously told it to do.
+
+### Changed
+- `tools/autogen/pic_soa.fypp` is now a macro library only. It used to end with
+  a bare `$:soa_module('pic_soa_particle', ...)` at file scope, so any
+  downstream template that included it also emitted `pic_soa_particle` into its
+  own output. That invocation moved to `tools/autogen/pic_soa_particle.fypp`.
+  `pic_soa_particle.f90` regenerates byte-identically.
+
+## [0.8.0] – 2026-09-15
 ### Added
 - `pic_clock`: monotonic elapsed time as whole milliseconds or microseconds
   (`monotonic_ms`, `monotonic_us`), wall-clock date and time (`now_local`,

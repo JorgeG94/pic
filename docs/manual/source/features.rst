@@ -751,8 +751,49 @@ contiguous and can be handed to BLAS, MPI or a GPU kernel without a gather.
 A live slice such as ``p%x(1:p%size())`` reaches a callee with its contiguity
 intact rather than being copied.
 
-To generate a container for your own particle type, edit
-``tools/autogen/pic_soa.fypp`` and regenerate — see :doc:`contributing`.
+Generating a container for your own type
+""""""""""""""""""""""""""""""""""""""""
+
+``pic_soa`` is the runtime; the containers over it are generated. The macro
+library that generates them is installed with pic, so a project can make its
+own without touching pic's source tree.
+
+Write a short template naming the module, the derived type, the field prefix,
+and the fields as ``(name, kind, documentation)`` triples:
+
+.. code-block:: text
+
+   #:include 'pic_soa.fypp'
+   $:soa_module('my_particles', 'my_particle_soa_t', 'my', [('id', 'i32', 'Identifier.'), ('x', 'r64', 'Cartesian x coordinate.'), ('active', 'bool', 'Whether this one is live.')])
+
+Field kinds are ``i32``, ``i64``, ``r32``, ``r64`` and ``bool``. Rank-2 and
+``character(len=N)`` fields are not expressible; flatten them at the edge, or
+keep them as sibling arrays outside the container.
+
+Generate with ``fypp``, pointing ``-I`` at the installed macro library. Under
+CMake, ``find_package(pic)`` exports that path as ``PIC_AUTOGEN_DIR``:
+
+.. code-block:: cmake
+
+   find_package(pic REQUIRED)
+   add_custom_command(
+     OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/my_particles.f90
+     COMMAND fypp -I ${PIC_AUTOGEN_DIR}
+             ${CMAKE_CURRENT_SOURCE_DIR}/my_particles.fypp
+             ${CMAKE_CURRENT_BINARY_DIR}/my_particles.f90
+     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/my_particles.fypp)
+
+**Commit the generated** ``.f90``, exactly as pic commits its own. Generating
+is a build-time step for you, not for the projects that depend on you --- they
+should not need fypp.
+
+.. note::
+
+   The generated container's **serialized layout is not yet covered by a
+   compatibility promise**. The schema string embeds ``pic_soa/1``, but pic
+   does not yet guarantee that a checkpoint written by one release reads back
+   under the next. If you write checkpoints you intend to keep, pin pic by
+   commit rather than by version range until that promise exists.
 
 I/O (``pic_io``)
 ^^^^^^^^^^^^^^^^

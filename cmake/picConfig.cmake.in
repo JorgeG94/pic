@@ -16,3 +16,13 @@ endforeach()
 unset(_pic_pair)
 unset(_pic_stable)
 unset(_pic_suffixed)
+
+# Where pic's fypp macro library was installed, for consumers that generate
+# their own struct-of-arrays containers from `pic_soa.fypp`:
+#
+#   fypp -I ${PIC_AUTOGEN_DIR} my_soa.fypp > my_soa.f90
+#
+# Generating is a build-time step for the consumer, not a run-time one; commit
+# the generated .f90 as pic commits its own, so that projects depending on
+# yours need no fypp either.
+set_and_check(PIC_AUTOGEN_DIR "@PACKAGE_PIC_AUTOGEN_DIR@")
