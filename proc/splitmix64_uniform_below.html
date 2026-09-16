@@ -1,0 +1,726 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>splitmix64_uniform_below &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>splitmix64_uniform_below
+      <small>Function</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.1% of total for procedures.">15 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_random_dist.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_random_dist.f90.html'>pic_random_dist.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_random_dist.html'>pic_random_dist</a></li>
+            <li class="breadcrumb-item active" aria-current="page">splitmix64_uniform_below</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../proc/splitmix64_uniform_below.html#variable-mask~2">mask</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/splitmix64_uniform_below.html#src">splitmix64_uniform_below</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private  function splitmix64_uniform_below(gen, span_minus_1) result(r)  
+</h2>
+    
+
+    <p>Uniform unsigned integer in <code>[0, span_minus_1]</code>, by rejection.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-span_minus_1~2"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>span_minus_1</strong></td>
+            <td>
+                <p>Inclusive upper bound, read as unsigned.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <h3>Return Value
+        <small>
+          <span class="anchor" id="variable-r~32"></span>
+          integer(kind=int64)
+        </small>
+      </h3>
+      
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~splitmix64_uniform_below~~CallsGraph Pages: 1 -->
+<svg id="procsplitmix64_uniform_belowCallsGraph" width="641pt" height="94pt"
+ viewBox="0.00 0.00 641.00 94.26" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~splitmix64_uniform_below~~CallsGraph" class="graph" transform="scale(0.82 0.82) rotate(0) translate(4 111)">
+<title>proc~~splitmix64_uniform_below~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-111 778,-111 778,4 -4,4"/>
+<!-- proc~splitmix64_uniform_below -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_node1" class="node">
+<title>proc~splitmix64_uniform_below</title>
+<polygon fill="none" stroke="black" points="151,-66 0,-66 0,-42 151,-42 151,-66"/>
+<text text-anchor="middle" x="75.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50">splitmix64_uniform_below</text>
+</g>
+<!-- proc~rejection_mask -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_node2" class="node">
+<title>proc~rejection_mask</title>
+<g id="a_proc~~splitmix64_uniform_below~~CallsGraph_node2"><a xlink:href="../proc/rejection_mask.html" xlink:title="rejection_mask">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="548,-107 455,-107 455,-83 548,-83 548,-107"/>
+<text text-anchor="middle" x="501.5" y="-92.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">rejection_mask</text>
+</a>
+</g>
+</g>
+<!-- proc~splitmix64_uniform_below&#45;&gt;proc~rejection_mask -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_edge1" class="edge">
+<title>proc~splitmix64_uniform_below&#45;&gt;proc~rejection_mask</title>
+<path fill="none" stroke="#ff0000" d="M132.5,-66.04C149.89,-69.4 169.18,-72.75 187,-75 276.82,-86.36 381.98,-91.39 444.81,-93.53"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="444.8,-97.03 454.91,-93.86 445.03,-90.04 444.8,-97.03"/>
+</g>
+<!-- proc~splitmix64_next_u64 -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_node3" class="node">
+<title>proc~splitmix64_next_u64</title>
+<g id="a_proc~~splitmix64_uniform_below~~CallsGraph_node3"><a xlink:href="../proc/splitmix64_next_u64.html" xlink:title="splitmix64_t%splitmix64_next_u64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="381,-66 187,-66 187,-42 381,-42 381,-66"/>
+<text text-anchor="middle" x="284" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">splitmix64_t%splitmix64_next_u64</text>
+</a>
+</g>
+</g>
+<!-- proc~splitmix64_uniform_below&#45;&gt;proc~splitmix64_next_u64 -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_edge2" class="edge">
+<title>proc~splitmix64_uniform_below&#45;&gt;proc~splitmix64_next_u64</title>
+<path fill="none" stroke="#ff0000" d="M151.05,-54C159.44,-54 168.1,-54 176.79,-54"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="176.99,-57.5 186.99,-54 176.99,-50.5 176.99,-57.5"/>
+</g>
+<!-- proc~u64_less -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_node4" class="node">
+<title>proc~u64_less</title>
+<g id="a_proc~~splitmix64_uniform_below~~CallsGraph_node4"><a xlink:href="../proc/u64_less.html" xlink:title="u64_less">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="313,-24 255,-24 255,0 313,0 313,-24"/>
+<text text-anchor="middle" x="284" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">u64_less</text>
+</a>
+</g>
+</g>
+<!-- proc~splitmix64_uniform_below&#45;&gt;proc~u64_less -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_edge3" class="edge">
+<title>proc~splitmix64_uniform_below&#45;&gt;proc~u64_less</title>
+<path fill="none" stroke="#ff0000" d="M135.67,-41.96C170.8,-34.82 214.29,-25.97 244.89,-19.75"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="245.64,-23.17 254.74,-17.75 244.24,-16.31 245.64,-23.17"/>
+</g>
+<!-- proc~u64_shr -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_node6" class="node">
+<title>proc~u64_shr</title>
+<g id="a_proc~~splitmix64_uniform_below~~CallsGraph_node6"><a xlink:href="../proc/u64_shr.html" xlink:title="u64_shr">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="772.5,-107 717.5,-107 717.5,-83 772.5,-83 772.5,-107"/>
+<text text-anchor="middle" x="745" y="-92.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">u64_shr</text>
+</a>
+</g>
+</g>
+<!-- proc~rejection_mask&#45;&gt;proc~u64_shr -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_edge4" class="edge">
+<title>proc~rejection_mask&#45;&gt;proc~u64_shr</title>
+<path fill="none" stroke="#ff0000" d="M548.21,-95C594.22,-95 664.32,-95 706.97,-95"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="707.19,-98.5 717.19,-95 707.19,-91.5 707.19,-98.5"/>
+</g>
+<!-- proc~splitmix64_next -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_node5" class="node">
+<title>proc~splitmix64_next</title>
+<g id="a_proc~~splitmix64_uniform_below~~CallsGraph_node5"><a xlink:href="../proc/splitmix64_next.html" xlink:title="splitmix64_t%splitmix64_next">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="586,-65 417,-65 417,-41 586,-41 586,-65"/>
+<text text-anchor="middle" x="501.5" y="-50.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">splitmix64_t%splitmix64_next</text>
+</a>
+</g>
+</g>
+<!-- proc~splitmix64_next_u64&#45;&gt;proc~splitmix64_next -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_edge5" class="edge">
+<title>proc~splitmix64_next_u64&#45;&gt;proc~splitmix64_next</title>
+<path fill="none" stroke="#00ff00" d="M381.09,-53.55C389.55,-53.51 398.1,-53.48 406.54,-53.44"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="406.79,-56.94 416.77,-53.39 406.75,-49.94 406.79,-56.94"/>
+</g>
+<!-- proc~mix64 -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_node7" class="node">
+<title>proc~mix64</title>
+<g id="a_proc~~splitmix64_uniform_below~~CallsGraph_node7"><a xlink:href="../proc/mix64.html" xlink:title="mix64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="678,-66 624,-66 624,-42 678,-42 678,-66"/>
+<text text-anchor="middle" x="651" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mix64</text>
+</a>
+</g>
+</g>
+<!-- proc~splitmix64_next&#45;&gt;proc~mix64 -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_edge6" class="edge">
+<title>proc~splitmix64_next&#45;&gt;proc~mix64</title>
+<path fill="none" stroke="#ff0000" d="M586.16,-53.57C595.76,-53.63 605.14,-53.7 613.61,-53.75"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="613.8,-57.25 623.82,-53.82 613.85,-50.25 613.8,-57.25"/>
+</g>
+<!-- proc~u64_add -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_node8" class="node">
+<title>proc~u64_add</title>
+<g id="a_proc~~splitmix64_uniform_below~~CallsGraph_node8"><a xlink:href="../proc/u64_add.html" xlink:title="u64_add">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="680,-24 622,-24 622,0 680,0 680,-24"/>
+<text text-anchor="middle" x="651" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">u64_add</text>
+</a>
+</g>
+</g>
+<!-- proc~splitmix64_next&#45;&gt;proc~u64_add -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_edge7" class="edge">
+<title>proc~splitmix64_next&#45;&gt;proc~u64_add</title>
+<path fill="none" stroke="#ff0000" d="M545.96,-40.92C566.89,-35.1 591.77,-28.19 611.95,-22.58"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="613.04,-25.91 621.74,-19.86 611.16,-19.16 613.04,-25.91"/>
+</g>
+<!-- proc~mix64&#45;&gt;proc~u64_shr -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_edge9" class="edge">
+<title>proc~mix64&#45;&gt;proc~u64_shr</title>
+<path fill="none" stroke="#ff0000" d="M678.12,-65.64C687.46,-69.8 698.15,-74.57 708.17,-79.03"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="706.94,-82.32 717.5,-83.19 709.79,-75.92 706.94,-82.32"/>
+</g>
+<!-- proc~u64_mul -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_node9" class="node">
+<title>proc~u64_mul</title>
+<g id="a_proc~~splitmix64_uniform_below~~CallsGraph_node9"><a xlink:href="../proc/u64_mul.html" xlink:title="u64_mul">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="774,-65 716,-65 716,-41 774,-41 774,-65"/>
+<text text-anchor="middle" x="745" y="-50.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">u64_mul</text>
+</a>
+</g>
+</g>
+<!-- proc~mix64&#45;&gt;proc~u64_mul -->
+<g id="proc~~splitmix64_uniform_below~~CallsGraph_edge8" class="edge">
+<title>proc~mix64&#45;&gt;proc~u64_mul</title>
+<path fill="none" stroke="#ff0000" d="M678.12,-53.72C686.69,-53.62 696.39,-53.52 705.67,-53.42"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="705.92,-56.91 715.89,-53.31 705.85,-49.91 705.92,-56.91"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocsplitmix64_uniform_belowCallsGraph = svgPanZoom('#procsplitmix64_uniform_belowCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~splitmix64_uniform_below~~CalledByGraph Pages: 1 -->
+<svg id="procsplitmix64_uniform_belowCalledByGraph" width="525pt" height="74pt"
+ viewBox="0.00 0.00 525.00 74.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~splitmix64_uniform_below~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 70)">
+<title>proc~~splitmix64_uniform_below~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-70 521,-70 521,4 -4,4"/>
+<!-- proc~splitmix64_uniform_below -->
+<g id="proc~~splitmix64_uniform_below~~CalledByGraph_node1" class="node">
+<title>proc~splitmix64_uniform_below</title>
+<polygon fill="none" stroke="black" points="517,-45 366,-45 366,-21 517,-21 517,-45"/>
+<text text-anchor="middle" x="441.5" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50">splitmix64_uniform_below</text>
+</g>
+<!-- proc~splitmix64_next_bernoulli_ppm -->
+<g id="proc~~splitmix64_uniform_below~~CalledByGraph_node2" class="node">
+<title>proc~splitmix64_next_bernoulli_ppm</title>
+<g id="a_proc~~splitmix64_uniform_below~~CalledByGraph_node2"><a xlink:href="../proc/splitmix64_next_bernoulli_ppm.html" xlink:title="splitmix64_next_bernoulli_ppm">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="330,-66 153,-66 153,-42 330,-42 330,-66"/>
+<text text-anchor="middle" x="241.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">splitmix64_next_bernoulli_ppm</text>
+</a>
+</g>
+</g>
+<!-- proc~splitmix64_next_bernoulli_ppm&#45;&gt;proc~splitmix64_uniform_below -->
+<g id="proc~~splitmix64_uniform_below~~CalledByGraph_edge1" class="edge">
+<title>proc~splitmix64_next_bernoulli_ppm&#45;&gt;proc~splitmix64_uniform_below</title>
+<path fill="none" stroke="#ff0000" d="M330.21,-44.7C338.67,-43.8 347.24,-42.89 355.66,-42"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="356.28,-45.45 365.86,-40.92 355.55,-38.49 356.28,-45.45"/>
+</g>
+<!-- proc~splitmix64_next_range -->
+<g id="proc~~splitmix64_uniform_below~~CalledByGraph_node3" class="node">
+<title>proc~splitmix64_next_range</title>
+<g id="a_proc~~splitmix64_uniform_below~~CalledByGraph_node3"><a xlink:href="../proc/splitmix64_next_range.html" xlink:title="splitmix64_next_range">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="307.5,-24 175.5,-24 175.5,0 307.5,0 307.5,-24"/>
+<text text-anchor="middle" x="241.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">splitmix64_next_range</text>
+</a>
+</g>
+</g>
+<!-- proc~splitmix64_next_range&#45;&gt;proc~splitmix64_uniform_below -->
+<g id="proc~~splitmix64_uniform_below~~CalledByGraph_edge2" class="edge">
+<title>proc~splitmix64_next_range&#45;&gt;proc~splitmix64_uniform_below</title>
+<path fill="none" stroke="#ff0000" d="M307.61,-18.91C323.01,-20.54 339.65,-22.3 355.78,-24.01"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="355.43,-27.5 365.74,-25.07 356.17,-20.54 355.43,-27.5"/>
+</g>
+<!-- interface~next_bernoulli_ppm -->
+<g id="proc~~splitmix64_uniform_below~~CalledByGraph_node4" class="node">
+<title>interface~next_bernoulli_ppm</title>
+<g id="a_proc~~splitmix64_uniform_below~~CalledByGraph_node4"><a xlink:href="../interface/next_bernoulli_ppm.html" xlink:title="next_bernoulli_ppm">
+<polygon fill="#a7506f" stroke="#a7506f" points="117,-66 0,-66 0,-42 117,-42 117,-66"/>
+<text text-anchor="middle" x="58.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">next_bernoulli_ppm</text>
+</a>
+</g>
+</g>
+<!-- interface~next_bernoulli_ppm&#45;&gt;proc~splitmix64_next_bernoulli_ppm -->
+<g id="proc~~splitmix64_uniform_below~~CalledByGraph_edge3" class="edge">
+<title>interface~next_bernoulli_ppm&#45;&gt;proc~splitmix64_next_bernoulli_ppm</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M117.27,-54C125.45,-54 134.04,-54 142.72,-54"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="142.93,-57.5 152.93,-54 142.93,-50.5 142.93,-57.5"/>
+</g>
+<!-- interface~next_range -->
+<g id="proc~~splitmix64_uniform_below~~CalledByGraph_node5" class="node">
+<title>interface~next_range</title>
+<g id="a_proc~~splitmix64_uniform_below~~CalledByGraph_node5"><a xlink:href="../interface/next_range.html" xlink:title="next_range">
+<polygon fill="#a7506f" stroke="#a7506f" points="94.5,-24 22.5,-24 22.5,0 94.5,0 94.5,-24"/>
+<text text-anchor="middle" x="58.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">next_range</text>
+</a>
+</g>
+</g>
+<!-- interface~next_range&#45;&gt;proc~splitmix64_next_range -->
+<g id="proc~~splitmix64_uniform_below~~CalledByGraph_edge4" class="edge">
+<title>interface~next_range&#45;&gt;proc~splitmix64_next_range</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M94.83,-12C114.81,-12 140.6,-12 164.91,-12"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="165.22,-15.5 175.22,-12 165.22,-8.5 165.22,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    <section>    
+      <h2>Variables</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mask~2"></span>
+              integer(kind=int64),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mask</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">function </span><span class="n">splitmix64_uniform_below</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span><span class="w"> </span><span class="n">span_minus_1</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="w">      </span><span class="c">!! Uniform unsigned integer in `[0, span_minus_1]`, by rejection.</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">splitmix64_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">gen</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">span_minus_1</span>
+<span class="w">         </span><span class="c">!! Inclusive upper bound, read as unsigned.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">r</span>
+
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">mask</span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">span_minus_1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0_int64</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_int64</span>
+<span class="w">         </span><span class="k">return</span>
+<span class="k">      end if</span>
+<span class="k">      </span><span class="n">mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rejection_mask</span><span class="p">(</span><span class="n">span_minus_1</span><span class="p">)</span>
+<span class="w">      </span><span class="k">do</span>
+<span class="k">         </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">iand</span><span class="p">(</span><span class="n">gen</span><span class="p">%</span><span class="n">next_u64</span><span class="p">(),</span><span class="w"> </span><span class="n">mask</span><span class="p">)</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">u64_less</span><span class="p">(</span><span class="n">span_minus_1</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">))</span><span class="w"> </span><span class="k">exit</span>
+<span class="k">      end do</span>
+<span class="k">   end function </span><span class="n">splitmix64_uniform_below</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-16 00:47 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

@@ -38,12 +38,12 @@ module pic_rng
    !! 2. **No reliance on signed overflow.** Fortran has no unsigned integer
    !!    type, and signed overflow is not defined by the standard: a build with
    !!    `-ftrapv` or `-fsanitize=signed-integer-overflow` may abort on it. All
-   !!    modular arithmetic goes through `u64_add` and `u64_mul`, which split
-   !!    their operands into 16-bit limbs with `ibits` so that every intermediate
-   !!    product stays below 2**35 and every accumulation stays well inside the
-   !!    signed 64-bit range. The results are reassembled with `ior`/`ishft`,
-   !!    which are bit-model intrinsics and are exactly defined for every bit
-   !!    pattern, sign bit included.
+   !!    modular arithmetic goes through `u64_add` and `u64_mul` in `pic_uint64`,
+   !!    which work on limbs so that no intermediate ever leaves the signed
+   !!    64-bit range, and reassemble with `ior`/`ishft`, which are bit-model
+   !!    intrinsics and exactly defined for every bit pattern, sign bit
+   !!    included. See that module for the limb widths and the bounds; they are
+   !!    stated once, where they are implemented.
    !! 3. **No `transfer` between reals and integers.** nvfortran and LFortran do
    !!    not agree on the result of bit-casting a double to an integer. Reals are
    !!    built arithmetically instead (see `next_real_dp`).
@@ -51,11 +51,13 @@ module pic_rng
    !!    `ishft(x, -n)` is standard but its interaction with the sign bit is a
    !!    recurring source of confusion, and `shiftr`/`shifta` are Fortran 2008
    !!    and not uniformly available on the older compilers PIC targets. Every
-   !!    logical right shift here is written as `ibits(x, n, 64 - n)`, which is
-   !!    Fortran 90, zero-filling by definition, and correct for negative `x`.
-   !!    `ishft` is used only with non-negative (left-shift) counts.
+   !!    logical right shift goes through `u64_shr` in `pic_uint64`, which is
+   !!    built from `ibits`: Fortran 90, zero-filling by definition, and correct
+   !!    for negative `x`. `ishft` is used only with non-negative (left-shift)
+   !!    counts.
    use pic_types, only: default_int, dp, int32, int64
    use pic_error, only: error_t, ERROR_VALIDATION
+   use pic_uint64, only: u64_add, u64_mul, u64_shr
    implicit none
    private
 
@@ -65,8 +67,6 @@ module pic_rng
    public :: next_below
    public :: stream_for
 
-   integer(int64), parameter :: MASK16 = 65535_int64
-      !! Low 16-bit mask, used by the limb arithmetic helpers.
    integer(int64), parameter :: MASK32 = 4294967295_int64
       !! Low 32-bit mask (2**32 - 1).
    integer(int64), parameter :: TWO_TO_31 = 2147483648_int64
@@ -161,78 +161,6 @@ module pic_rng
 
 contains
 
-   pure function shr64(x, n) result(r)
-      !! Logical (zero-filling) right shift of a 64-bit word by `n` bits,
-      !! `0 <= n <= 63`. Written with `ibits` rather than `ishft(x, -n)` or the
-      !! Fortran 2008 `shiftr` for the portability reasons given in the module
-      !! documentation.
-      integer(int64), intent(in) :: x
-      integer(default_int), intent(in) :: n
-      integer(int64) :: r
-
-      r = ibits(x, n, 64 - n)
-   end function shr64
-
-   pure function u64_add(a, b) result(r)
-      !! `(a + b)` reduced modulo 2**64, without ever overflowing a signed
-      !! 64-bit integer. Operands are split into 32-bit halves with `ibits`, so
-      !! each half sum stays below 2**33.
-      integer(int64), intent(in) :: a
-      integer(int64), intent(in) :: b
-      integer(int64) :: r
-
-      integer(int64) :: low, high
-
-      low = ibits(a, 0, 32) + ibits(b, 0, 32)
-      high = ibits(a, 32, 32) + ibits(b, 32, 32) + ibits(low, 32, 32)
-      r = ior(ishft(iand(high, MASK32), 32), iand(low, MASK32))
-   end function u64_add
-
-   pure function u64_mul(a, b) result(r)
-      !! `(a * b)` reduced modulo 2**64, without ever overflowing a signed
-      !! 64-bit integer.
-      !!
-      !! Schoolbook multiplication on 16-bit limbs: each partial product is
-      !! below 2**32 and at most four of them plus a carry are accumulated, so
-      !! every intermediate stays below 2**35 and signed overflow is impossible
-      !! regardless of the sign of the inputs. Limbs are extracted with `ibits`
-      !! (bit-model, sign-safe) and the result is reassembled with `ior`/`ishft`.
-      integer(int64), intent(in) :: a
-      integer(int64), intent(in) :: b
-      integer(int64) :: r
-
-      integer(int64) :: a0, a1, a2, a3
-      integer(int64) :: b0, b1, b2, b3
-      integer(int64) :: t, carry
-      integer(int64) :: r0, r1, r2, r3
-
-      a0 = ibits(a, 0, 16)
-      a1 = ibits(a, 16, 16)
-      a2 = ibits(a, 32, 16)
-      a3 = ibits(a, 48, 16)
-      b0 = ibits(b, 0, 16)
-      b1 = ibits(b, 16, 16)
-      b2 = ibits(b, 32, 16)
-      b3 = ibits(b, 48, 16)
-
-      t = a0*b0
-      r0 = iand(t, MASK16)
-      carry = ibits(t, 16, 48)
-
-      t = a0*b1 + a1*b0 + carry
-      r1 = iand(t, MASK16)
-      carry = ibits(t, 16, 48)
-
-      t = a0*b2 + a1*b1 + a2*b0 + carry
-      r2 = iand(t, MASK16)
-      carry = ibits(t, 16, 48)
-
-      t = a0*b3 + a1*b2 + a2*b1 + a3*b0 + carry
-      r3 = iand(t, MASK16)
-
-      r = ior(ior(ishft(r3, 48), ishft(r2, 32)), ior(ishft(r1, 16), r0))
-   end function u64_mul
-
    pure function mix64(x) result(r)
       !! The SplitMix64 finalising mix (the "MurmurHash3-style" avalanche used
       !! by `splitmix64.c`). Used both as the generator output stage and as the
@@ -240,9 +168,9 @@ contains
       integer(int64), intent(in) :: x
       integer(int64) :: r
 
-      r = u64_mul(ieor(x, shr64(x, 30_default_int)), MIX_C1)
-      r = u64_mul(ieor(r, shr64(r, 27_default_int)), MIX_C2)
-      r = ieor(r, shr64(r, 31_default_int))
+      r = u64_mul(ieor(x, u64_shr(x, 30_default_int)), MIX_C1)
+      r = u64_mul(ieor(r, u64_shr(r, 27_default_int)), MIX_C2)
+      r = ieor(r, u64_shr(r, 31_default_int))
    end function mix64
 
    pure function rotate_right32(x, rot) result(r)
@@ -366,7 +294,7 @@ contains
 
       old = self%state
       self%state = u64_add(u64_mul(old, PCG_MULTIPLIER), self%increment)
-      r = rotate_right32(ibits(ieor(shr64(old, 18_default_int), old), 27, 32), &
+      r = rotate_right32(ibits(ieor(u64_shr(old, 18_default_int), old), 27, 32), &
                          ibits(old, 59, 5))
    end function pcg32_step
 

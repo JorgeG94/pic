@@ -25,7 +25,7 @@ module pic_soa_particle
    !! the hash in exactly the order they are declared below.
    use pic_types, only: default_int, int32, int64, dp
    use pic_error, only: error_t
-   use pic_array_hash, only: array_hash_t
+   use pic_array_hash, only: array_hash_t, array_hash64_t
    use pic_soa, only: soa_extent_t, SOA_SCHEMA_PREFIX, &
                       SOA_FIELD_INT32, SOA_FIELD_LOGICAL, SOA_FIELD_REAL_DP, &
                       soa_plan_resize, soa_resize_field, &
@@ -87,6 +87,7 @@ module pic_soa_particle
       procedure :: serialize => particle_soa_serialize
       procedure :: deserialize => particle_soa_deserialize
       procedure :: state_hash => particle_soa_state_hash
+      procedure :: state_hash64 => particle_soa_state_hash64
    end type particle_soa_t
 
 contains
@@ -330,5 +331,35 @@ contains
       call soa_hash_field(hasher, this%active, n)
       digest = hasher%digest()
    end function particle_soa_state_hash
+
+   function particle_soa_state_hash64(this) result(digest)
+      !! 64-bit FNV-1a digest of the container's live state.
+      !!
+      !! Byte for byte the same stream as `state_hash`: the schema string, the
+      !! element count as an explicit `int64`, then every field's live slice in
+      !! declaration order. Only the digest width differs.
+      !!
+      !! Prefer this one when digests are used as identifiers rather than
+      !! compared pairwise -- a determinism log keyed by digest, or
+      !! deduplicating identical states. Among 10**5 distinct 32-bit digests
+      !! the chance that some pair collides is about 69%; at 64 bits it is
+      !! 3e-10.
+      class(particle_soa_t), intent(in) :: this
+         !! Container to fingerprint.
+      integer(int64) :: digest
+
+      type(array_hash64_t) :: hasher
+      integer(default_int) :: n
+
+      n = this%extent%used
+      call soa_hash_begin(hasher, PARTICLE_SOA_SCHEMA, n)
+      call soa_hash_field(hasher, this%id, n)
+      call soa_hash_field(hasher, this%x, n)
+      call soa_hash_field(hasher, this%y, n)
+      call soa_hash_field(hasher, this%z, n)
+      call soa_hash_field(hasher, this%mass, n)
+      call soa_hash_field(hasher, this%active, n)
+      digest = hasher%digest()
+   end function particle_soa_state_hash64
 
 end module pic_soa_particle

@@ -121,7 +121,7 @@ module pic_soa
                             PIC_TAG_REAL_SP, PIC_TAG_REAL_DP, PIC_TAG_CHAR, &
                             record_bytes, write_header, read_header, &
                             write_array, read_array
-   use pic_array_hash, only: array_hash_t
+   use pic_array_hash, only: array_hash_t, array_hash64_t
    implicit none
    private
 
@@ -258,7 +258,22 @@ module pic_soa
       module procedure soa_hash_real_sp_field
       module procedure soa_hash_real_dp_field
       module procedure soa_hash_logical_field
+      module procedure soa_hash64_int32_field
+      module procedure soa_hash64_int64_field
+      module procedure soa_hash64_real_sp_field
+      module procedure soa_hash64_real_dp_field
+      module procedure soa_hash64_logical_field
    end interface soa_hash_field
+
+   interface soa_hash_begin
+      !! Reset a hash accumulator and fold in a container's identity.
+      !!
+      !! Resolves on the accumulator's type, so the same call site serves a
+      !! 32-bit `array_hash_t` and a 64-bit `array_hash64_t`. Both feed the
+      !! identical byte stream; only the digest width differs.
+      module procedure soa_hash_begin_32
+      module procedure soa_hash_begin_64
+   end interface soa_hash_begin
 
 contains
 
@@ -747,6 +762,61 @@ contains
       call hasher%update(values(1:n))
    end subroutine soa_hash_logical_field
 
+   subroutine soa_hash64_int32_field(hasher, values, n)
+      !! Fold the first `n` elements of an `integer(int32)` field into a 64-bit hash.
+      type(array_hash64_t), intent(inout) :: hasher
+      integer(int32), allocatable, intent(in) :: values(:)
+      integer(default_int), intent(in) :: n
+
+      if (.not. allocated(values)) return
+      if (n <= 0) return
+      call hasher%update(values(1:n))
+   end subroutine soa_hash64_int32_field
+
+   subroutine soa_hash64_int64_field(hasher, values, n)
+      !! Fold the first `n` elements of an `integer(int64)` field into a 64-bit hash.
+      type(array_hash64_t), intent(inout) :: hasher
+      integer(int64), allocatable, intent(in) :: values(:)
+      integer(default_int), intent(in) :: n
+
+      if (.not. allocated(values)) return
+      if (n <= 0) return
+      call hasher%update(values(1:n))
+   end subroutine soa_hash64_int64_field
+
+   subroutine soa_hash64_real_sp_field(hasher, values, n)
+      !! Fold the first `n` elements of a `real(sp)` field into a 64-bit hash.
+      type(array_hash64_t), intent(inout) :: hasher
+      real(sp), allocatable, intent(in) :: values(:)
+      integer(default_int), intent(in) :: n
+
+      if (.not. allocated(values)) return
+      if (n <= 0) return
+      call hasher%update(values(1:n))
+   end subroutine soa_hash64_real_sp_field
+
+   subroutine soa_hash64_real_dp_field(hasher, values, n)
+      !! Fold the first `n` elements of a `real(dp)` field into a 64-bit hash.
+      type(array_hash64_t), intent(inout) :: hasher
+      real(dp), allocatable, intent(in) :: values(:)
+      integer(default_int), intent(in) :: n
+
+      if (.not. allocated(values)) return
+      if (n <= 0) return
+      call hasher%update(values(1:n))
+   end subroutine soa_hash64_real_dp_field
+
+   subroutine soa_hash64_logical_field(hasher, values, n)
+      !! Fold the first `n` elements of a `logical` field into a 64-bit hash.
+      type(array_hash64_t), intent(inout) :: hasher
+      logical, allocatable, intent(in) :: values(:)
+      integer(default_int), intent(in) :: n
+
+      if (.not. allocated(values)) return
+      if (n <= 0) return
+      call hasher%update(values(1:n))
+   end subroutine soa_hash64_logical_field
+
    ! ------------------------------------------------------------- field read
 
    subroutine soa_read_int32_field(unit, name, values, n, swapped, err)
@@ -1029,8 +1099,8 @@ contains
 
    ! ------------------------------------------------------------- state hash
 
-   subroutine soa_hash_begin(hasher, schema, n)
-      !! Reset a hash accumulator and fold in a container's identity.
+   subroutine soa_hash_begin_32(hasher, schema, n)
+      !! Reset a 32-bit hash accumulator and fold in a container's identity.
       !!
       !! Feeds the schema string and then the element count as an explicit
       !! `int64`, so the digest is the same in a default build and in a
@@ -1051,6 +1121,24 @@ contains
       call hasher%reset()
       call hasher%update(schema)
       call hasher%update(int(n, int64))
-   end subroutine soa_hash_begin
+   end subroutine soa_hash_begin_32
+
+   subroutine soa_hash_begin_64(hasher, schema, n)
+      !! Reset a 64-bit hash accumulator and fold in a container's identity.
+      !!
+      !! Byte for byte the same stream as `soa_hash_begin_32`: the schema
+      !! string, then the element count as an explicit `int64`. Only the FNV
+      !! parameters folded over it differ.
+      type(array_hash64_t), intent(inout) :: hasher
+         !! Accumulator to restart.
+      character(len=*), intent(in) :: schema
+         !! The container's schema string.
+      integer(default_int), intent(in) :: n
+         !! Number of live elements.
+
+      call hasher%reset()
+      call hasher%update(schema)
+      call hasher%update(int(n, int64))
+   end subroutine soa_hash_begin_64
 
 end module pic_soa

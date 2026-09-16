@@ -1,0 +1,2303 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>pic_random_dist &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>pic_random_dist
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.3% of total for modules and submodules.">267 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_random_dist.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_random_dist.f90.html'>pic_random_dist.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">pic_random_dist</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-exponential_max_mean">EXPONENTIAL_MAX_MEAN</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-poisson_max_mean_milli">POISSON_MAX_MEAN_MILLI</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-ppm_one">PPM_ONE</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-exp_cells">EXP_CELLS</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-exp_cell_bits">EXP_CELL_BITS</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-exp_ln_cells">EXP_LN_CELLS</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-exp_max_tail">EXP_MAX_TAIL</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-exp_table">EXP_TABLE</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-exp_top_cell">EXP_TOP_CELL</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-frac_bits">FRAC_BITS</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-poisson_window">POISSON_WINDOW</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-q32_half">Q32_HALF</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#variable-q32_mask">Q32_MASK</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#inters-0"
+         aria-expanded="false" aria-controls="inters-0">
+         <h4 class="card-header bg-primary text-white">Interfaces</h4>
+      </a>
+      <div id="inters-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_random_dist.html#interface-next_bernoulli_ppm">next_bernoulli_ppm</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#interface-next_exponential_int">next_exponential_int</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#interface-next_poisson_int">next_poisson_int</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#interface-next_range">next_range</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#funcs-0"
+         aria-expanded="false" aria-controls="funcs-0">
+         <h4 class="card-header bg-primary text-white">Functions</h4>
+      </a>
+      <div id="funcs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_random_dist.html#proc-pcg32_next_bernoulli_ppm">pcg32_next_bernoulli_ppm</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#proc-pcg32_next_exponential_int">pcg32_next_exponential_int</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#proc-pcg32_next_poisson_int">pcg32_next_poisson_int</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#proc-pcg32_next_range">pcg32_next_range</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#proc-pcg32_uniform_below">pcg32_uniform_below</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#proc-rejection_mask">rejection_mask</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#proc-scale_by_mean">scale_by_mean</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#proc-splitmix64_next_bernoulli_ppm">splitmix64_next_bernoulli_ppm</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#proc-splitmix64_next_exponential_int">splitmix64_next_exponential_int</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#proc-splitmix64_next_poisson_int">splitmix64_next_poisson_int</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#proc-splitmix64_next_range">splitmix64_next_range</a>
+            <a class="list-group-item" href="../module/pic_random_dist.html#proc-splitmix64_uniform_below">splitmix64_uniform_below</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <p>Distributions whose output is an integer or a logical, and which are
+therefore bit-identical on every supported compiler.</p>
+<h3 id="why-a-separate-module-from-the-real-valued-one">Why a separate module from the real-valued one</h3>
+<p>A textbook exponential deviate is <code>-mean * log(u)</code>. That calls libm,
+and libm is not the same function on every platform: GNU, Intel and
+NVIDIA do not agree to the last bit, and they are not obliged to. Any
+value derived that way is unusable in state that has to be compared
+across runs or across compilers.</p>
+<p>Everything in this module is computed with integer arithmetic only &ndash;
+no real type appears in any expression that reaches a result &ndash; so a
+given generator and seed produce the same sequence everywhere. The
+tests pin the first outputs of every routine for a fixed seed, and
+those pins are the contract.</p>
+<p>The real-valued distributions live in <code>pic_random_dist_real</code>. Keeping
+them in a different module means a translation unit that only uses this
+one cannot reach a non-reproducible deviate by accident.</p>
+<h3 id="quick-start">Quick start</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">use </span><span class="n">pic_rng</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="n">splitmix64_t</span>
+<span class="k">use </span><span class="n">pic_random_dist</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="n">next_range</span><span class="p">,</span><span class="w"> </span><span class="n">next_bernoulli_ppm</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                           </span><span class="n">next_exponential_int</span>
+
+<span class="k">type</span><span class="p">(</span><span class="n">splitmix64_t</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">gen</span>
+<span class="k">call </span><span class="n">gen</span><span class="p">%</span><span class="n">seed</span><span class="p">(</span><span class="mi">20250914_int64</span><span class="p">)</span>
+
+<span class="n">die</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next_range</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="w">                  </span><span class="c">! inclusive</span>
+<span class="n">stolen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next_bernoulli_ppm</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span><span class="w"> </span><span class="mi">2500</span><span class="p">)</span><span class="w">       </span><span class="c">! 0.25% chance</span>
+<span class="n">gap_ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next_exponential_int</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span><span class="w"> </span><span class="mi">4000_int64</span><span class="p">)</span><span class="w">   </span><span class="c">! mean 4 seconds</span>
+</code></pre></div>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='pic_uint64.html'>pic_uint64</a></li>
+                  <li class="list-inline-item"><a href='pic_types.html'>pic_types</a></li>
+                  <li class="list-inline-item"><a href='pic_error.html'>pic_error</a></li>
+                  <li class="list-inline-item"><a href='pic_rng.html'>pic_rng</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~pic_random_dist~~UsesGraph Pages: 1 -->
+<svg id="modulepic_random_distUsesGraph" width="641pt" height="135pt"
+ viewBox="0.00 0.00 641.00 135.02" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_random_dist~~UsesGraph" class="graph" transform="scale(0.93 0.93) rotate(0) translate(4 141.77)">
+<title>module~~pic_random_dist~~UsesGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-141.77 688,-141.77 688,4 -4,4"/>
+<!-- module~pic_random_dist -->
+<g id="module~~pic_random_dist~~UsesGraph_node1" class="node">
+<title>module~pic_random_dist</title>
+<polygon fill="none" stroke="black" points="684,-97.77 584,-97.77 584,-73.77 684,-73.77 684,-97.77"/>
+<text text-anchor="middle" x="634" y="-83.37" font-family="Helvetica,sans-Serif" font-size="10.50">pic_random_dist</text>
+</g>
+<!-- module~pic_error -->
+<g id="module~~pic_random_dist~~UsesGraph_node2" class="node">
+<title>module~pic_error</title>
+<g id="a_module~~pic_random_dist~~UsesGraph_node2"><a xlink:href="../module/pic_error.html" xlink:title="pic_error">
+<polygon fill="#337ab7" stroke="#337ab7" points="454.5,-137.77 394.5,-137.77 394.5,-113.77 454.5,-113.77 454.5,-137.77"/>
+<text text-anchor="middle" x="424.5" y="-123.37" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_error</text>
+</a>
+</g>
+</g>
+<!-- module~pic_random_dist&#45;&gt;module~pic_error -->
+<g id="module~~pic_random_dist~~UsesGraph_edge1" class="edge">
+<title>module~pic_random_dist&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M587.29,-97.85C574.62,-100.98 560.82,-104.19 548,-106.77 520.43,-112.3 489.09,-117.13 465.01,-120.54"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="464.26,-117.11 454.83,-121.96 465.22,-124.05 464.26,-117.11"/>
+</g>
+<!-- module~pic_rng -->
+<g id="module~~pic_random_dist~~UsesGraph_node3" class="node">
+<title>module~pic_rng</title>
+<g id="a_module~~pic_random_dist~~UsesGraph_node3"><a xlink:href="../module/pic_rng.html" xlink:title="pic_rng">
+<polygon fill="#337ab7" stroke="#337ab7" points="548,-97.77 494,-97.77 494,-73.77 548,-73.77 548,-97.77"/>
+<text text-anchor="middle" x="521" y="-83.37" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_rng</text>
+</a>
+</g>
+</g>
+<!-- module~pic_random_dist&#45;&gt;module~pic_rng -->
+<g id="module~~pic_random_dist~~UsesGraph_edge2" class="edge">
+<title>module~pic_random_dist&#45;&gt;module~pic_rng</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M583.99,-85.77C575.33,-85.77 566.46,-85.77 558.24,-85.77"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="558.23,-82.27 548.23,-85.77 558.23,-89.27 558.23,-82.27"/>
+</g>
+<!-- module~pic_types -->
+<g id="module~~pic_random_dist~~UsesGraph_node4" class="node">
+<title>module~pic_types</title>
+<g id="a_module~~pic_random_dist~~UsesGraph_node4"><a xlink:href="../module/pic_types.html" xlink:title="pic_types">
+<polygon fill="#337ab7" stroke="#337ab7" points="192,-97.77 130,-97.77 130,-73.77 192,-73.77 192,-97.77"/>
+<text text-anchor="middle" x="161" y="-83.37" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_types</text>
+</a>
+</g>
+</g>
+<!-- module~pic_random_dist&#45;&gt;module~pic_types -->
+<g id="module~~pic_random_dist~~UsesGraph_edge3" class="edge">
+<title>module~pic_random_dist&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M622.92,-73.76C605.09,-53.76 565.72,-14.89 522,-5.77"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M520,-5.77C419.51,15.22 393.77,-28.9 292.5,-45.77"/>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M290.5,-45.77C259.95,-50.7 226.63,-61.23 201.57,-70.25"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="200.23,-67.01 192.05,-73.74 202.65,-73.58 200.23,-67.01"/>
+</g>
+<!-- module~pic_uint64 -->
+<g id="module~~pic_random_dist~~UsesGraph_node5" class="node">
+<title>module~pic_uint64</title>
+<g id="a_module~~pic_random_dist~~UsesGraph_node5"><a xlink:href="../module/pic_uint64.html" xlink:title="pic_uint64">
+<polygon fill="#337ab7" stroke="#337ab7" points="458,-57.77 391,-57.77 391,-33.77 458,-33.77 458,-57.77"/>
+<text text-anchor="middle" x="424.5" y="-43.37" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_uint64</text>
+</a>
+</g>
+</g>
+<!-- module~pic_random_dist&#45;&gt;module~pic_uint64 -->
+<g id="module~~pic_random_dist~~UsesGraph_edge4" class="edge">
+<title>module~pic_random_dist&#45;&gt;module~pic_uint64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M520,-5.77C494.11,-0.36 466.46,-14.68 447.8,-27.67"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="445.64,-24.91 439.66,-33.65 449.79,-30.55 445.64,-24.91"/>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_types -->
+<g id="module~~pic_random_dist~~UsesGraph_edge6" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M394.4,-124.85C355.95,-123.21 286.29,-118.73 228,-106.77 219.45,-105.01 210.44,-102.56 201.92,-99.96"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="202.79,-96.56 192.2,-96.85 200.67,-103.23 202.79,-96.56"/>
+</g>
+<!-- module~pic_global_definitions -->
+<g id="module~~pic_random_dist~~UsesGraph_node8" class="node">
+<title>module~pic_global_definitions</title>
+<g id="a_module~~pic_random_dist~~UsesGraph_node8"><a xlink:href="../module/pic_global_definitions.html" xlink:title="pic_global_definitions">
+<polygon fill="#337ab7" stroke="#337ab7" points="355,-97.77 228,-97.77 228,-73.77 355,-73.77 355,-97.77"/>
+<text text-anchor="middle" x="291.5" y="-83.37" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_global_definitions</text>
+</a>
+</g>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_global_definitions -->
+<g id="module~~pic_random_dist~~UsesGraph_edge5" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_global_definitions</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M394.43,-116.89C378.91,-112.15 359.39,-106.19 341.6,-100.76"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="342.51,-97.38 331.93,-97.8 340.47,-104.07 342.51,-97.38"/>
+</g>
+<!-- module~pic_rng&#45;&gt;module~pic_error -->
+<g id="module~~pic_random_dist~~UsesGraph_edge7" class="edge">
+<title>module~pic_rng&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#7fff00" stroke-dasharray="5,2" d="M493.93,-96.8C484.57,-100.76 473.82,-105.31 463.65,-109.62"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="461.99,-106.52 454.14,-113.64 464.72,-112.97 461.99,-106.52"/>
+</g>
+<!-- module~pic_rng&#45;&gt;module~pic_types -->
+<g id="module~~pic_random_dist~~UsesGraph_edge8" class="edge">
+<title>module~pic_rng&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#7fff00" stroke-dasharray="5,2" d="M493.73,-82.4C467.61,-78.93 426.42,-73.14 391,-66.77 346.95,-58.83 336.77,-39.13 292.5,-45.77"/>
+</g>
+<!-- module~pic_rng&#45;&gt;module~pic_uint64 -->
+<g id="module~~pic_random_dist~~UsesGraph_edge9" class="edge">
+<title>module~pic_rng&#45;&gt;module~pic_uint64</title>
+<path fill="none" stroke="#7fff00" stroke-dasharray="5,2" d="M493.93,-74.73C484.57,-70.77 473.82,-66.22 463.65,-61.91"/>
+<polygon fill="#7fff00" stroke="#7fff00" points="464.72,-58.57 454.14,-57.89 461.99,-65.01 464.72,-58.57"/>
+</g>
+<!-- iso_c_binding -->
+<g id="module~~pic_random_dist~~UsesGraph_node6" class="node">
+<title>iso_c_binding</title>
+<g id="a_module~~pic_random_dist~~UsesGraph_node6"><a xlink:href="http://fortranwiki.org/fortran/show/iso_c_binding" xlink:title="iso_c_binding">
+<polygon fill="#337ab7" stroke="#337ab7" points="89,-118.77 5,-118.77 5,-94.77 89,-94.77 89,-118.77"/>
+<text text-anchor="middle" x="47" y="-104.37" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_c_binding</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_c_binding -->
+<g id="module~~pic_random_dist~~UsesGraph_edge10" class="edge">
+<title>module~pic_types&#45;&gt;iso_c_binding</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M129.99,-91.39C120.46,-93.18 109.64,-95.21 99.07,-97.19"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="98.23,-93.79 89.05,-99.07 99.52,-100.67 98.23,-93.79"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~pic_random_dist~~UsesGraph_node7" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~pic_random_dist~~UsesGraph_node7"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-76.77 0,-76.77 0,-52.77 94,-52.77 94,-76.77"/>
+<text text-anchor="middle" x="47" y="-62.37" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_fortran_env -->
+<g id="module~~pic_random_dist~~UsesGraph_edge11" class="edge">
+<title>module~pic_types&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M129.99,-80.14C121.98,-78.64 113.07,-76.97 104.15,-75.29"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="104.6,-71.82 94.13,-73.42 103.31,-78.7 104.6,-71.82"/>
+</g>
+<!-- module~pic_uint64&#45;&gt;module~pic_types -->
+<g id="module~~pic_random_dist~~UsesGraph_edge12" class="edge">
+<title>module~pic_uint64&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#7f00ff" stroke-dasharray="5,2" d="M390.73,-43.09C364.11,-41.55 325.68,-40.8 292.5,-45.77"/>
+</g>
+<!-- module~pic_global_definitions&#45;&gt;module~pic_types -->
+<g id="module~~pic_random_dist~~UsesGraph_edge13" class="edge">
+<title>module~pic_global_definitions&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#0000ff" stroke-dasharray="5,2" d="M227.76,-85.77C219.16,-85.77 210.53,-85.77 202.48,-85.77"/>
+<polygon fill="#0000ff" stroke="#0000ff" points="202.28,-82.27 192.28,-85.77 202.28,-89.27 202.28,-82.27"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panmodulepic_random_distUsesGraph = svgPanZoom('#modulepic_random_distUsesGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      
+      <br>
+
+
+        <section>
+          <h2>Variables</h2>
+            <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-exponential_max_mean"></span>
+              integer(kind=int64),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>EXPONENTIAL_MAX_MEAN</strong></td>
+<td> =</td>
+                <td>2147483647_int64</td>
+            <td>
+                <p>Largest <code>mean</code> <code>next_exponential_int</code> accepts, <code>huge(int32)</code> as an
+<code>int64</code>. The bound is what makes the final fixed-point multiply
+provably free of signed overflow; see <code>scale_by_mean</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-poisson_max_mean_milli"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>POISSON_MAX_MEAN_MILLI</strong></td>
+<td> =</td>
+                <td>1000000_default_int</td>
+            <td>
+                <p>Largest <code>mean_milli</code> <code>next_poisson_int</code> accepts, that is a mean of
+1000 events. The sampler is O(mean), so this is a guard against
+silently getting slow rather than an arithmetic limit.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ppm_one"></span>
+              integer(kind=default_int),
+            </td>
+              <td>public,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>PPM_ONE</strong></td>
+<td> =</td>
+                <td>1000000_default_int</td>
+            <td>
+                <p>Parts per million corresponding to certainty, for
+<code>next_bernoulli_ppm</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-exp_cells"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>EXP_CELLS</strong></td>
+<td> =</td>
+                <td>4096_default_int</td>
+            <td>
+                <p>Number of cells in <code>EXP_TABLE</code>, and so 2**EXP_CELL_BITS.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-exp_cell_bits"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>EXP_CELL_BITS</strong></td>
+<td> =</td>
+                <td>12_default_int</td>
+            <td>
+                <p>Number of random bits that select a table cell; 2**12 == 4096.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-exp_ln_cells"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>EXP_LN_CELLS</strong></td>
+<td> =</td>
+                <td>EXP_TABLE(EXP_TOP_CELL)</td>
+            <td>
+                <p>ln(4096) in Q32.32. Taken from the table rather than written out
+again, because <code>-ln(1 - 4095/4096)</code> is exactly <code>ln(4096)</code> and a second
+copy of it could drift. Added once per turn around the tail loop.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-exp_max_tail"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>EXP_MAX_TAIL</strong></td>
+<td> =</td>
+                <td>8_default_int</td>
+            <td>
+                <p>Most times the tail loop may go round. Each turn needs the 12-bit
+draw to hit exactly one value, so reaching the cap has probability
+4096*<em>-8, about 3e-29, and bounds the result at 9</em>ln(4096) means.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-exp_table"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>EXP_TABLE</strong>(0:EXP_TOP_CELL)</td>
+<td> =</td>
+                <td>[0_int64, 1048704_int64, 2097664_int64, 3146881_int64, 4196353_int64, 5246083_int64, 6296069_int64, 7346311_int64, 8396811_int64, 9447567_int64, 10498581_int64, 11549852_int64, 12601380_int64, 13653166_int64, 14705209_int64, 15757511_int64, 16810070_int64, 17862887_int64, 18915962_int64, 19969295_int64, 21022887_int64, 22076738_int64, 23130847_int64, 24185215_int64, 25239841_int64, 26294727_int64, 27349872_int64, 28405276_int64, 29460940_int64, 30516863_int64, 31573046_int64, 32629488_int64, 33686191_int64, 34743153_int64, 35800376_int64, 36857859_int64, 37915602_int64, 38973606_int64, 40031871_int64, 41090397_int64, 42149183_int64, 43208231_int64, 44267539_int64, 45327110_int64, 46386941_int64, 47447034_int64, 48507389_int64, 49568006_int64, 50628884_int64, 51690025_int64, 52751428_int64, 53813094_int64, 54875022_int64, 55937212_int64, 56999665_int64, 58062381_int64, 59125361_int64, 60188603_int64, 61252108_int64, 62315877_int64, 63379910_int64, 64444206_int64, 65508766_int64, 66573590_int64, 67638678_int64, 68704030_int64, 69769647_int64, 70835528_int64, 71901673_int64, 72968084_int64, 74034759_int64, 75101699_int64, 76168904_int64, 77236374_int64, 78304110_int64, 79372112_int64, 80440379_int64, 81508911_int64, 82577710_int64, 83646775_int64, 84716105_int64, 85785703_int64, 86855566_int64, 87925696_int64, 88996093_int64, 90066757_int64, 91137687_int64, 92208885_int64, 93280350_int64, 94352082_int64, 95424082_int64, 96496350_int64, 97568885_int64, 98641688_int64, 99714759_int64, 100788099_int64, 101861706_int64, 102935582_int64, 104009727_int64, 105084140_int64, 106158822_int64, 107233774_int64, 108308994_int64, 109384483_int64, 110460242_int64, 111536271_int64, 112612569_int64, 113689136_int64, 114765974_int64, 115843082_int64, 116920460_int64, 117998108_int64, 119076027_int64, 120154216_int64, 121232676_int64, 122311407_int64, 123390409_int64, 124469683_int64, 125549227_int64, 126629043_int64, 127709130_int64, 128789489_int64, 129870120_int64, 130951023_int64, 132032198_int64, 133113645_int64, 134195364_int64, 135277356_int64, 136359621_int64, 137442158_int64, 138524969_int64, 139608052_int64, 140691409_int64, 141775039_int64, 142858942_int64, 143943119_int64, 145027570_int64, 146112295_int64, 147197293_int64, 148282566_int64, 149368113_int64, 150453935_int64, 151540031_int64, 152626402_int64, 153713048_int64, 154799969_int64, 155887164_int64, 156974636_int64, 158062382_int64, 159150404_int64, 160238702_int64, 161327276_int64, 162416125_int64, 163505251_int64, 164594653_int64, 165684331_int64, 166774286_int64, 167864518_int64, 168955026_int64, 170045812_int64, 171136874_int64, 172228214_int64, 173319831_int64, 174411725_int64, 175503898_int64, 176596348_int64, 177689076_int64, 178782082_int64, 179875366_int64, 180968929_int64, 182062770_int64, 183156890_int64, 184251288_int64, 185345966_int64, 186440922_int64, 187536158_int64, 188631673_int64, 189727468_int64, 190823542_int64, 191919897_int64, 193016531_int64, 194113445_int64, 195210639_int64, 196308114_int64, 197405869_int64, 198503905_int64, 199602222_int64, 200700819_int64, 201799698_int64, 202898858_int64, 203998299_int64, 205098022_int64, 206198026_int64, 207298313_int64, 208398881_int64, 209499731_int64, 210600863_int64, 211702278_int64, 212803976_int64, 213905956_int64, 215008219_int64, 216110765_int64, 217213594_int64, 218316706_int64, 219420101_int64, 220523780_int64, 221627743_int64, 222731990_int64, 223836520_int64, 224941335_int64, 226046434_int64, 227151818_int64, 228257486_int64, 229363438_int64, 230469676_int64, 231576198_int64, 232683006_int64, 233790099_int64, 234897478_int64, 236005142_int64, 237113091_int64, 238221327_int64, 239329849_int64, 240438657_int64, 241547751_int64, 242657132_int64, 243766799_int64, 244876753_int64, 245986994_int64, 247097522_int64, 248208337_int64, 249319440_int64, 250430830_int64, 251542508_int64, 252654474_int64, 253766727_int64, 254879269_int64, 255992099_int64, 257105217_int64, 258218624_int64, 259332320_int64, 260446305_int64, 261560578_int64, 262675141_int64, 263789993_int64, 264905134_int64, 266020565_int64, 267136286_int64, 268252297_int64, 269368598_int64, 270485189_int64, 271602070_int64, 272719242_int64, 273836704_int64, 274954458_int64, 276072502_int64, 277190838_int64, 278309464_int64, 279428382_int64, 280547592_int64, 281667094_int64, 282786887_int64, 283906972_int64, 285027350_int64, 286148020_int64, 287268982_int64, 288390237_int64, 289511785_int64, 290633626_int64, 291755760_int64, 292878187_int64, 294000907_int64, 295123921_int64, 296247229_int64, 297370831_int64, 298494726_int64, 299618916_int64, 300743400_int64, 301868179_int64, 302993252_int64, 304118620_int64, 305244284_int64, 306370242_int64, 307496495_int64, 308623044_int64, 309749888_int64, 310877028_int64, 312004464_int64, 313132196_int64, 314260224_int64, 315388549_int64, 316517170_int64, 317646088_int64, 318775302_int64, 319904814_int64, 321034622_int64, 322164728_int64, 323295131_int64, 324425832_int64, 325556831_int64, 326688127_int64, 327819722_int64, 328951615_int64, 330083806_int64, 331216296_int64, 332349084_int64, 333482172_int64, 334615558_int64, 335749243_int64, 336883228_int64, 338017512_int64, 339152096_int64, 340286980_int64, 341422164_int64, 342557647_int64, 343693431_int64, 344829516_int64, 345965901_int64, 347102587_int64, 348239573_int64, 349376861_int64, 350514450_int64, 351652341_int64, 352790532_int64, 353929026_int64, 355067822_int64, 356206919_int64, 357346319_int64, 358486021_int64, 359626026_int64, 360766333_int64, 361906943_int64, 363047856_int64, 364189072_int64, 365330592_int64, 366472415_int64, 367614542_int64, 368756972_int64, 369899706_int64, 371042745_int64, 372186088_int64, 373329735_int64, 374473687_int64, 375617944_int64, 376762505_int64, 377907372_int64, 379052544_int64, 380198021_int64, 381343804_int64, 382489893_int64, 383636287_int64, 384782988_int64, 385929995_int64, 387077308_int64, 388224928_int64, 389372855_int64, 390521088_int64, 391669629_int64, 392818476_int64, 393967632_int64, 395117094_int64, 396266865_int64, 397416943_int64, 398567329_int64, 399718024_int64, 400869027_int64, 402020338_int64, 403171958_int64, 404323887_int64, 405476125_int64, 406628673_int64, 407781529_int64, 408934695_int64, 410088171_int64, 411241957_int64, 412396053_int64, 413550459_int64, 414705175_int64, 415860202_int64, 417015539_int64, 418171188_int64, 419327147_int64, 420483418_int64, 421640000_int64, 422796893_int64, 423954099_int64, 425111616_int64, 426269445_int64, 427427586_int64, 428586040_int64, 429744806_int64, 430903885_int64, 432063277_int64, 433222982_int64, 434383000_int64, 435543332_int64, 436703977_int64, 437864936_int64, 439026209_int64, 440187796_int64, 441349697_int64, 442511912_int64, 443674442_int64, 444837287_int64, 446000447_int64, 447163922_int64, 448327712_int64, 449491817_int64, 450656238_int64, 451820975_int64, 452986028_int64, 454151397_int64, 455317082_int64, 456483084_int64, 457649402_int64, 458816038_int64, 459982990_int64, 461150259_int64, 462317846_int64, 463485750_int64, 464653971_int64, 465822511_int64, 466991369_int64, 468160544_int64, 469330039_int64, 470499851_int64, 471669983_int64, 472840433_int64, 474011202_int64, 475182291_int64, 476353699_int64, 477525426_int64, 478697474_int64, 479869841_int64, 481042528_int64, 482215536_int64, 483388864_int64, 484562513_int64, 485736482_int64, 486910773_int64, 488085384_int64, 489260317_int64, 490435571_int64, 491611148_int64, 492787046_int64, 493963266_int64, 495139808_int64, 496316672_int64, 497493860_int64, 498671369_int64, 499849202_int64, 501027358_int64, 502205837_int64, 503384640_int64, 504563766_int64, 505743216_int64, 506922990_int64, 508103088_int64, 509283511_int64, 510464258_int64, 511645330_int64, 512826726_int64, 514008448_int64, 515190495_int64, 516372867_int64, 517555565_int64, 518738589_int64, 519921938_int64, 521105614_int64, 522289616_int64, 523473944_int64, 524658600_int64, 525843582_int64, 527028891_int64, 528214527_int64, 529400490_int64, 530586782_int64, 531773401_int64, 532960348_int64, 534147623_int64, 535335226_int64, 536523158_int64, 537711418_int64, 538900007_int64, 540088926_int64, 541278173_int64, 542467750_int64, 543657656_int64, 544847893_int64, 546038459_int64, 547229355_int64, 548420582_int64, 549612139_int64, 550804026_int64, 551996245_int64, 553188794_int64, 554381675_int64, 555574887_int64, 556768431_int64, 557962307_int64, 559156514_int64, 560351054_int64, 561545926_int64, 562741130_int64, 563936668_int64, 565132538_int64, 566328741_int64, 567525277_int64, 568722147_int64, 569919350_int64, 571116888_int64, 572314759_int64, 573512964_int64, 574711504_int64, 575910378_int64, 577109588_int64, 578309132_int64, 579509011_int64, 580709225_int64, 581909775_int64, 583110661_int64, 584311882_int64, 585513440_int64, 586715333_int64, 587917563_int64, 589120130_int64, 590323034_int64, 591526274_int64, 592729852_int64, 593933767_int64, 595138020_int64, 596342611_int64, 597547539_int64, 598752806_int64, 599958410_int64, 601164354_int64, 602370636_int64, 603577257_int64, 604784217_int64, 605991516_int64, 607199155_int64, 608407133_int64, 609615452_int64, 610824110_int64, 612033109_int64, 613242448_int64, 614452127_int64, 615662147_int64, 616872509_int64, 618083211_int64, 619294255_int64, 620505641_int64, 621717368_int64, 622929437_int64, 624141849_int64, 625354602_int64, 626567699_int64, 627781138_int64, 628994920_int64, 630209045_int64, 631423513_int64, 632638325_int64, 633853480_int64, 635068980_int64, 636284823_int64, 637501011_int64, 638717544_int64, 639934421_int64, 641151642_int64, 642369209_int64, 643587122_int64, 644805379_int64, 646023983_int64, 647242932_int64, 648462227_int64, 649681868_int64, 650901856_int64, 652122191_int64, 653342872_int64, 654563900_int64, 655785276_int64, 657006999_int64, 658229070_int64, 659451488_int64, 660674255_int64, 661897369_int64, 663120833_int64, 664344644_int64, 665568805_int64, 666793314_int64, 668018173_int64, 669243381_int64, 670468939_int64, 671694847_int64, 672921104_int64, 674147712_int64, 675374671_int64, 676601979_int64, 677829639_int64, 679057650_int64, 680286012_int64, 681514725_int64, 682743790_int64, 683973207_int64, 685202975_int64, 686433096_int64, 687663570_int64, 688894396_int64, 690125574_int64, 691357106_int64, 692588991_int64, 693821230_int64, 695053822_int64, 696286768_int64, 697520068_int64, 698753722_int64, 699987731_int64, 701222094_int64, 702456813_int64, 703691886_int64, 704927314_int64, 706163098_int64, 707399238_int64, 708635734_int64, 709872585_int64, 711109793_int64, 712347358_int64, 713585279_int64, 714823557_int64, 716062192_int64, 717301184_int64, 718540534_int64, 719780242_int64, 721020308_int64, 722260731_int64, 723501514_int64, 724742654_int64, 725984154_int64, 727226012_int64, 728468230_int64, 729710807_int64, 730953743_int64, 732197040_int64, 733440696_int64, 734684713_int64, 735929090_int64, 737173827_int64, 738418926_int64, 739664385_int64, 740910206_int64, 742156389_int64, 743402933_int64, 744649838_int64, 745897106_int64, 747144737_int64, 748392730_int64, 749641085_int64, 750889804_int64, 752138885_int64, 753388330_int64, 754638139_int64, 755888311_int64, 757138848_int64, 758389748_int64, 759641013_int64, 760892643_int64, 762144638_int64, 763396997_int64, 764649722_int64, 765902813_int64, 767156269_int64, 768410091_int64, 769664279_int64, 770918833_int64, 772173754_int64, 773429042_int64, 774684697_int64, 775940719_int64, 777197109_int64, 778453866_int64, 779710991_int64, 780968484_int64, 782226345_int64, 783484575_int64, 784743173_int64, 786002141_int64, 787261477_int64, 788521183_int64, 789781259_int64, 791041704_int64, 792302519_int64, 793563705_int64, 794825261_int64, 796087187_int64, 797349485_int64, 798612153_int64, 799875193_int64, 801138605_int64, 802402388_int64, 803666543_int64, 804931071_int64, 806195971_int64, 807461243_int64, 808726888_int64, 809992907_int64, 811259298_int64, 812526063_int64, 813793202_int64, 815060715_int64, 816328602_int64, 817596864_int64, 818865500_int64, 820134511_int64, 821403897_int64, 822673658_int64, 823943795_int64, 825214307_int64, 826485195_int64, 827756460_int64, 829028101_int64, 830300118_int64, 831572513_int64, 832845284_int64, 834118433_int64, 835391959_int64, 836665863_int64, 837940145_int64, 839214805_int64, 840489844_int64, 841765261_int64, 843041057_int64, 844317232_int64, 845593787_int64, 846870721_int64, 848148034_int64, 849425728_int64, 850703802_int64, 851982256_int64, 853261091_int64, 854540307_int64, 855819904_int64, 857099882_int64, 858380242_int64, 859660984_int64, 860942108_int64, 862223614_int64, 863505502_int64, 864787773_int64, 866070428_int64, 867353465_int64, 868636886_int64, 869920690_int64, 871204878_int64, 872489450_int64, 873774407_int64, 875059748_int64, 876345474_int64, 877631585_int64, 878918081_int64, 880204963_int64, 881492230_int64, 882779883_int64, 884067922_int64, 885356348_int64, 886645161_int64, 887934360_int64, 889223946_int64, 890513920_int64, 891804281_int64, 893095030_int64, 894386167_int64, 895677692_int64, 896969606_int64, 898261909_int64, 899554600_int64, 900847681_int64, 902141151_int64, 903435011_int64, 904729260_int64, 906023900_int64, 907318930_int64, 908614351_int64, 909910162_int64, 911206365_int64, 912502959_int64, 913799944_int64, 915097321_int64, 916395091_int64, 917693252_int64, 918991806_int64, 920290753_int64, 921590093_int64, 922889825_int64, 924189952_int64, 925490472_int64, 926791386_int64, 928092694_int64, 929394396_int64, 930696493_int64, 931998985_int64, 933301872_int64, 934605155_int64, 935908833_int64, 937212907_int64, 938517377_int64, 939822243_int64, 941127506_int64, 942433166_int64, 943739222_int64, 945045676_int64, 946352528_int64, 947659777_int64, 948967424_int64, 950275470_int64, 951583913_int64, 952892756_int64, 954201998_int64, 955511639_int64, 956821679_int64, 958132119_int64, 959442959_int64, 960754199_int64, 962065840_int64, 963377881_int64, 964690324_int64, 966003167_int64, 967316412_int64, 968630059_int64, 969944107_int64, 971258558_int64, 972573411_int64, 973888666_int64, 975204325_int64, 976520386_int64, 977836852_int64, 979153720_int64, 980470993_int64, 981788670_int64, 983106751_int64, 984425236_int64, 985744127_int64, 987063423_int64, 988383124_int64, 989703231_int64, 991023743_int64, 992344662_int64, 993665987_int64, 994987719_int64, 996309858_int64, 997632403_int64, 998955357_int64, 1000278717_int64, 1001602486_int64, 1002926663_int64, 1004251248_int64, 1005576242_int64, 1006901644_int64, 1008227456_int64, 1009553677_int64, 1010880308_int64, 1012207349_int64, 1013534800_int64, 1014862661_int64, 1016190933_int64, 1017519616_int64, 1018848710_int64, 1020178215_int64, 1021508132_int64, 1022838461_int64, 1024169203_int64, 1025500356_int64, 1026831923_int64, 1028163902_int64, 1029496295_int64, 1030829101_int64, 1032162320_int64, 1033495954_int64, 1034830002_int64, 1036164464_int64, 1037499342_int64, 1038834634_int64, 1040170341_int64, 1041506464_int64, 1042843003_int64, 1044179958_int64, 1045517329_int64, 1046855117_int64, 1048193321_int64, 1049531943_int64, 1050870982_int64, 1052210438_int64, 1053550312_int64, 1054890605_int64, 1056231316_int64, 1057572445_int64, 1058913994_int64, 1060255961_int64, 1061598348_int64, 1062941155_int64, 1064284382_int64, 1065628029_int64, 1066972096_int64, 1068316584_int64, 1069661493_int64, 1071006824_int64, 1072352576_int64, 1073698750_int64, 1075045345_int64, 1076392363_int64, 1077739804_int64, 1079087668_int64, 1080435955_int64, 1081784665_int64, 1083133798_int64, 1084483356_int64, 1085833338_int64, 1087183744_int64, 1088534575_int64, 1089885831_int64, 1091237513_int64, 1092589619_int64, 1093942152_int64, 1095295111_int64, 1096648496_int64, 1098002307_int64, 1099356546_int64, 1100711211_int64, 1102066305_int64, 1103421825_int64, 1104777774_int64, 1106134151_int64, 1107490956_int64, 1108848190_int64, 1110205853_int64, 1111563946_int64, 1112922468_int64, 1114281420_int64, 1115640802_int64, 1117000614_int64, 1118360857_int64, 1119721531_int64, 1121082636_int64, 1122444173_int64, 1123806141_int64, 1125168542_int64, 1126531374_int64, 1127894640_int64, 1129258338_int64, 1130622469_int64, 1131987034_int64, 1133352032_int64, 1134717464_int64, 1136083331_int64, 1137449632_int64, 1138816368_int64, 1140183539_int64, 1141551145_int64, 1142919187_int64, 1144287664_int64, 1145656578_int64, 1147025929_int64, 1148395716_int64, 1149765940_int64, 1151136601_int64, 1152507700_int64, 1153879237_int64, 1155251212_int64, 1156623625_int64, 1157996477_int64, 1159369768_int64, 1160743498_int64, 1162117668_int64, 1163492277_int64, 1164867327_int64, 1166242817_int64, 1167618747_int64, 1168995119_int64, 1170371931_int64, 1171749186_int64, 1173126882_int64, 1174505020_int64, 1175883600_int64, 1177262623_int64, 1178642089_int64, 1180021998_int64, 1181402351_int64, 1182783148_int64, 1184164388_int64, 1185546073_int64, 1186928202_int64, 1188310777_int64, 1189693796_int64, 1191077261_int64, 1192461172_int64, 1193845529_int64, 1195230332_int64, 1196615582_int64, 1198001279_int64, 1199387423_int64, 1200774015_int64, 1202161054_int64, 1203548542_int64, 1204936477_int64, 1206324862_int64, 1207713695_int64, 1209102978_int64, 1210492710_int64, 1211882892_int64, 1213273524_int64, 1214664607_int64, 1216056140_int64, 1217448124_int64, 1218840560_int64, 1220233447_int64, 1221626786_int64, 1223020577_int64, 1224414820_int64, 1225809517_int64, 1227204666_int64, 1228600269_int64, 1229996325_int64, 1231392835_int64, 1232789800_int64, 1234187219_int64, 1235585093_int64, 1236983422_int64, 1238382206_int64, 1239781446_int64, 1241181142_int64, 1242581295_int64, 1243981904_int64, 1245382969_int64, 1246784492_int64, 1248186473_int64, 1249588911_int64, 1250991808_int64, 1252395162_int64, 1253798976_int64, 1255203248_int64, 1256607980_int64, 1258013171_int64, 1259418823_int64, 1260824934_int64, 1262231506_int64, 1263638539_int64, 1265046033_int64, 1266453988_int64, 1267862405_int64, 1269271284_int64, 1270680625_int64, 1272090429_int64, 1273500695_int64, 1274911425_int64, 1276322619_int64, 1277734276_int64, 1279146397_int64, 1280558983_int64, 1281972034_int64, 1283385550_int64, 1284799531_int64, 1286213977_int64, 1287628890_int64, 1289044269_int64, 1290460114_int64, 1291876427_int64, 1293293206_int64, 1294710453_int64, 1296128168_int64, 1297546351_int64, 1298965003_int64, 1300384123_int64, 1301803712_int64, 1303223771_int64, 1304644299_int64, 1306065298_int64, 1307486766_int64, 1308908705_int64, 1310331115_int64, 1311753997_int64, 1313177350_int64, 1314601174_int64, 1316025471_int64, 1317450241_int64, 1318875483_int64, 1320301198_int64, 1321727387_int64, 1323154049_int64, 1324581186_int64, 1326008797_int64, 1327436882_int64, 1328865443_int64, 1330294479_int64, 1331723990_int64, 1333153978_int64, 1334584442_int64, 1336015382_int64, 1337446799_int64, 1338878693_int64, 1340311065_int64, 1341743915_int64, 1343177243_int64, 1344611050_int64, 1346045335_int64, 1347480099_int64, 1348915343_int64, 1350351067_int64, 1351787271_int64, 1353223955_int64, 1354661120_int64, 1356098766_int64, 1357536893_int64, 1358975502_int64, 1360414593_int64, 1361854167_int64, 1363294223_int64, 1364734762_int64, 1366175784_int64, 1367617290_int64, 1369059280_int64, 1370501755_int64, 1371944714_int64, 1373388158_int64, 1374832087_int64, 1376276502_int64, 1377721402_int64, 1379166789_int64, 1380612663_int64, 1382059023_int64, 1383505871_int64, 1384953206_int64, 1386401029_int64, 1387849341_int64, 1389298141_int64, 1390747429_int64, 1392197207_int64, 1393647475_int64, 1395098232_int64, 1396549480_int64, 1398001218_int64, 1399453447_int64, 1400906167_int64, 1402359379_int64, 1403813083_int64, 1405267279_int64, 1406721967_int64, 1408177148_int64, 1409632823_int64, 1411088990_int64, 1412545652_int64, 1414002808_int64, 1415460459_int64, 1416918604_int64, 1418377245_int64, 1419836381_int64, 1421296013_int64, 1422756141_int64, 1424216766_int64, 1425677888_int64, 1427139507_int64, 1428601623_int64, 1430064238_int64, 1431527351_int64, 1432990962_int64, 1434455072_int64, 1435919682_int64, 1437384791_int64, 1438850400_int64, 1440316509_int64, 1441783119_int64, 1443250230_int64, 1444717842_int64, 1446185956_int64, 1447654572_int64, 1449123691_int64, 1450593312_int64, 1452063436_int64, 1453534063_int64, 1455005194_int64, 1456476829_int64, 1457948969_int64, 1459421613_int64, 1460894763_int64, 1462368418_int64, 1463842578_int64, 1465317245_int64, 1466792419_int64, 1468268099_int64, 1469744286_int64, 1471220981_int64, 1472698184_int64, 1474175895_int64, 1475654115_int64, 1477132844_int64, 1478612082_int64, 1480091829_int64, 1481572087_int64, 1483052855_int64, 1484534133_int64, 1486015923_int64, 1487498224_int64, 1488981037_int64, 1490464362_int64, 1491948199_int64, 1493432549_int64, 1494917413_int64, 1496402790_int64, 1497888681_int64, 1499375086_int64, 1500862005_int64, 1502349440_int64, 1503837390_int64, 1505325855_int64, 1506814837_int64, 1508304335_int64, 1509794349_int64, 1511284881_int64, 1512775930_int64, 1514267498_int64, 1515759583_int64, 1517252186_int64, 1518745309_int64, 1520238951_int64, 1521733113_int64, 1523227794_int64, 1524722996_int64, 1526218719_int64, 1527714962_int64, 1529211727_int64, 1530709014_int64, 1532206823_int64, 1533705155_int64, 1535204009_int64, 1536703387_int64, 1538203288_int64, 1539703713_int64, 1541204663_int64, 1542706137_int64, 1544208137_int64, 1545710662_int64, 1547213712_int64, 1548717289_int64, 1550221393_int64, 1551726023_int64, 1553231181_int64, 1554736866_int64, 1556243079_int64, 1557749821_int64, 1559257091_int64, 1560764891_int64, 1562273220_int64, 1563782079_int64, 1565291469_int64, 1566801389_int64, 1568311840_int64, 1569822822_int64, 1571334336_int64, 1572846382_int64, 1574358961_int64, 1575872073_int64, 1577385718_int64, 1578899896_int64, 1580414609_int64, 1581929855_int64, 1583445637_int64, 1584961954_int64, 1586478806_int64, 1587996194_int64, 1589514119_int64, 1591032580_int64, 1592551578_int64, 1594071114_int64, 1595591187_int64, 1597111799_int64, 1598632949_int64, 1600154638_int64, 1601676866_int64, 1603199634_int64, 1604722943_int64, 1606246791_int64, 1607771181_int64, 1609296111_int64, 1610821584_int64, 1612347598_int64, 1613874155_int64, 1615401254_int64, 1616928897_int64, 1618457083_int64, 1619985813_int64, 1621515088_int64, 1623044907_int64, 1624575271_int64, 1626106181_int64, 1627637637_int64, 1629169639_int64, 1630702187_int64, 1632235283_int64, 1633768926_int64, 1635303117_int64, 1636837856_int64, 1638373143_int64, 1639908980_int64, 1641445366_int64, 1642982302_int64, 1644519788_int64, 1646057825_int64, 1647596412_int64, 1649135551_int64, 1650675242_int64, 1652215485_int64, 1653756281_int64, 1655297629_int64, 1656839531_int64, 1658381986_int64, 1659924996_int64, 1661468560_int64, 1663012679_int64, 1664557354_int64, 1666102584_int64, 1667648370_int64, 1669194713_int64, 1670741613_int64, 1672289070_int64, 1673837085_int64, 1675385658_int64, 1676934790_int64, 1678484480_int64, 1680034730_int64, 1681585540_int64, 1683136909_int64, 1684688840_int64, 1686241331_int64, 1687794384_int64, 1689347998_int64, 1690902175_int64, 1692456914_int64, 1694012217_int64, 1695568083_int64, 1697124512_int64, 1698681506_int64, 1700239064_int64, 1701797188_int64, 1703355877_int64, 1704915131_int64, 1706474953_int64, 1708035340_int64, 1709596295_int64, 1711157818_int64, 1712719908_int64, 1714282567_int64, 1715845794_int64, 1717409591_int64, 1718973957_int64, 1720538893_int64, 1722104400_int64, 1723670477_int64, 1725237126_int64, 1726804346_int64, 1728372138_int64, 1729940503_int64, 1731509441_int64, 1733078952_int64, 1734649037_int64, 1736219696_int64, 1737790930_int64, 1739362739_int64, 1740935123_int64, 1742508083_int64, 1744081619_int64, 1745655732_int64, 1747230422_int64, 1748805690_int64, 1750381536_int64, 1751957960_int64, 1753534963_int64, 1755112545_int64, 1756690707_int64, 1758269449_int64, 1759848771_int64, 1761428674_int64, 1763009159_int64, 1764590226_int64, 1766171875_int64, 1767754106_int64, 1769336921_int64, 1770920319_int64, 1772504301_int64, 1774088867_int64, 1775674018_int64, 1777259755_int64, 1778846077_int64, 1780432985_int64, 1782020480_int64, 1783608562_int64, 1785197231_int64, 1786786489_int64, 1788376334_int64, 1789966768_int64, 1791557791_int64, 1793149404_int64, 1794741607_int64, 1796334401_int64, 1797927785_int64, 1799521760_int64, 1801116328_int64, 1802711487_int64, 1804307240_int64, 1805903585_int64, 1807500524_int64, 1809098057_int64, 1810696185_int64, 1812294907_int64, 1813894224_int64, 1815494138_int64, 1817094647_int64, 1818695753_int64, 1820297457_int64, 1821899758_int64, 1823502656_int64, 1825106154_int64, 1826710250_int64, 1828314945_int64, 1829920240_int64, 1831526136_int64, 1833132632_int64, 1834739729_int64, 1836347428_int64, 1837955729_int64, 1839564632_int64, 1841174138_int64, 1842784248_int64, 1844394961_int64, 1846006279_int64, 1847618201_int64, 1849230729_int64, 1850843862_int64, 1852457602_int64, 1854071948_int64, 1855686901_int64, 1857302461_int64, 1858918629_int64, 1860535406_int64, 1862152792_int64, 1863770786_int64, 1865389391_int64, 1867008606_int64, 1868628431_int64, 1870248868_int64, 1871869916_int64, 1873491577_int64, 1875113849_int64, 1876736735_int64, 1878360235_int64, 1879984348_int64, 1881609075_int64, 1883234418_int64, 1884860375_int64, 1886486949_int64, 1888114139_int64, 1889741945_int64, 1891370369_int64, 1892999410_int64, 1894629070_int64, 1896259348_int64, 1897890245_int64, 1899521761_int64, 1901153898_int64, 1902786655_int64, 1904420033_int64, 1906054032_int64, 1907688653_int64, 1909323897_int64, 1910959763_int64, 1912596253_int64, 1914233367_int64, 1915871104_int64, 1917509467_int64, 1919148455_int64, 1920788068_int64, 1922428308_int64, 1924069174_int64, 1925710667_int64, 1927352788_int64, 1928995537_int64, 1930638915_int64, 1932282921_int64, 1933927558_int64, 1935572824_int64, 1937218720_int64, 1938865248_int64, 1940512407_int64, 1942160198_int64, 1943808622_int64, 1945457678_int64, 1947107368_int64, 1948757692_int64, 1950408650_int64, 1952060242_int64, 1953712471_int64, 1955365335_int64, 1957018835_int64, 1958672973_int64, 1960327747_int64, 1961983159_int64, 1963639210_int64, 1965295899_int64, 1966953228_int64, 1968611197_int64, 1970269805_int64, 1971929055_int64, 1973588946_int64, 1975249478_int64, 1976910653_int64, 1978572470_int64, 1980234931_int64, 1981898036_int64, 1983561784_int64, 1985226178_int64, 1986891217_int64, 1988556901_int64, 1990223232_int64, 1991890209_int64, 1993557834_int64, 1995226106_int64, 1996895027_int64, 1998564596_int64, 2000234815_int64, 2001905684_int64, 2003577202_int64, 2005249372_int64, 2006922193_int64, 2008595665_int64, 2010269790_int64, 2011944568_int64, 2013619999_int64, 2015296083_int64, 2016972823_int64, 2018650217_int64, 2020328266_int64, 2022006971_int64, 2023686333_int64, 2025366351_int64, 2027047027_int64, 2028728361_int64, 2030410353_int64, 2032093005_int64, 2033776315_int64, 2035460286_int64, 2037144917_int64, 2038830210_int64, 2040516164_int64, 2042202779_int64, 2043890058_int64, 2045577999_int64, 2047266605_int64, 2048955874_int64, 2050645808_int64, 2052336407_int64, 2054027672_int64, 2055719603_int64, 2057412201_int64, 2059105467_int64, 2060799400_int64, 2062494001_int64, 2064189272_int64, 2065885211_int64, 2067581821_int64, 2069279101_int64, 2070977052_int64, 2072675675_int64, 2074374970_int64, 2076074937_int64, 2077775577_int64, 2079476891_int64, 2081178880_int64, 2082881542_int64, 2084584881_int64, 2086288895_int64, 2087993585_int64, 2089698952_int64, 2091404997_int64, 2093111720_int64, 2094819121_int64, 2096527201_int64, 2098235960_int64, 2099945400_int64, 2101655520_int64, 2103366322_int64, 2105077805_int64, 2106789971_int64, 2108502819_int64, 2110216351_int64, 2111930567_int64, 2113645467_int64, 2115361052_int64, 2117077323_int64, 2118794279_int64, 2120511923_int64, 2122230253_int64, 2123949272_int64, 2125668978_int64, 2127389374_int64, 2129110459_int64, 2130832234_int64, 2132554699_int64, 2134277855_int64, 2136001703_int64, 2137726244_int64, 2139451477_int64, 2141177403_int64, 2142904023_int64, 2144631337_int64, 2146359347_int64, 2148088052_int64, 2149817453_int64, 2151547550_int64, 2153278345_int64, 2155009838_int64, 2156742028_int64, 2158474918_int64, 2160208508_int64, 2161942797_int64, 2163677787_int64, 2165413478_int64, 2167149870_int64, 2168886965_int64, 2170624763_int64, 2172363264_int64, 2174102470_int64, 2175842379_int64, 2177582994_int64, 2179324315_int64, 2181066342_int64, 2182809076_int64, 2184552517_int64, 2186296666_int64, 2188041524_int64, 2189787091_int64, 2191533367_int64, 2193280354_int64, 2195028052_int64, 2196776461_int64, 2198525583_int64, 2200275417_int64, 2202025964_int64, 2203777225_int64, 2205529200_int64, 2207281890_int64, 2209035296_int64, 2210789418_int64, 2212544256_int64, 2214299812_int64, 2216056086_int64, 2217813078_int64, 2219570789_int64, 2221329220_int64, 2223088371_int64, 2224848243_int64, 2226608836_int64, 2228370152_int64, 2230132189_int64, 2231894950_int64, 2233658435_int64, 2235422645_int64, 2237187579_int64, 2238953239_int64, 2240719624_int64, 2242486737_int64, 2244254577_int64, 2246023145_int64, 2247792442_int64, 2249562467_int64, 2251333223_int64, 2253104709_int64, 2254876925_int64, 2256649874_int64, 2258423554_int64, 2260197968_int64, 2261973114_int64, 2263748995_int64, 2265525610_int64, 2267302961_int64, 2269081047_int64, 2270859869_int64, 2272639429_int64, 2274419727_int64, 2276200762_int64, 2277982537_int64, 2279765051_int64, 2281548305_int64, 2283332299_int64, 2285117035_int64, 2286902513_int64, 2288688734_int64, 2290475698_int64, 2292263405_int64, 2294051857_int64, 2295841054_int64, 2297630997_int64, 2299421686_int64, 2301213122_int64, 2303005305_int64, 2304798236_int64, 2306591917_int64, 2308386346_int64, 2310181526_int64, 2311977456_int64, 2313774138_int64, 2315571571_int64, 2317369757_int64, 2319168697_int64, 2320968390_int64, 2322768837_int64, 2324570040_int64, 2326371998_int64, 2328174712_int64, 2329978184_int64, 2331782413_int64, 2333587400_int64, 2335393146_int64, 2337199652_int64, 2339006918_int64, 2340814945_int64, 2342623733_int64, 2344433283_int64, 2346243596_int64, 2348054672_int64, 2349866512_int64, 2351679117_int64, 2353492488_int64, 2355306624_int64, 2357121526_int64, 2358937196_int64, 2360753634_int64, 2362570841_int64, 2364388816_int64, 2366207562_int64, 2368027078_int64, 2369847365_int64, 2371668424_int64, 2373490255_int64, 2375312859_int64, 2377136238_int64, 2378960390_int64, 2380785318_int64, 2382611021_int64, 2384437501_int64, 2386264758_int64, 2388092793_int64, 2389921606_int64, 2391751198_int64, 2393581570_int64, 2395412722_int64, 2397244655_int64, 2399077370_int64, 2400910867_int64, 2402745147_int64, 2404580212_int64, 2406416060_int64, 2408252693_int64, 2410090113_int64, 2411928318_int64, 2413767311_int64, 2415607091_int64, 2417447660_int64, 2419289018_int64, 2421131166_int64, 2422974104_int64, 2424817833_int64, 2426662354_int64, 2428507668_int64, 2430353775_int64, 2432200675_int64, 2434048370_int64, 2435896861_int64, 2437746147_int64, 2439596230_int64, 2441447110_int64, 2443298788_int64, 2445151265_int64, 2447004541_int64, 2448858617_int64, 2450713494_int64, 2452569172_int64, 2454425653_int64, 2456282936_int64, 2458141022_int64, 2459999913_int64, 2461859609_int64, 2463720110_int64, 2465581418_int64, 2467443533_int64, 2469306455_int64, 2471170186_int64, 2473034725_int64, 2474900075_int64, 2476766235_int64, 2478633206_int64, 2480500989_int64, 2482369585_int64, 2484238994_int64, 2486109217_int64, 2487980255_int64, 2489852109_int64, 2491724778_int64, 2493598264_int64, 2495472568_int64, 2497347690_int64, 2499223632_int64, 2501100392_int64, 2502977974_int64, 2504856376_int64, 2506735601_int64, 2508615648_int64, 2510496518_int64, 2512378212_int64, 2514260732_int64, 2516144076_int64, 2518028247_int64, 2519913245_int64, 2521799070_int64, 2523685724_int64, 2525573207_int64, 2527461520_int64, 2529350663_int64, 2531240638_int64, 2533131444_int64, 2535023084_int64, 2536915557_int64, 2538808864_int64, 2540703006_int64, 2542597984_int64, 2544493798_int64, 2546390450_int64, 2548287939_int64, 2550186267_int64, 2552085435_int64, 2553985442_int64, 2555886291_int64, 2557787981_int64, 2559690514_int64, 2561593890_int64, 2563498109_int64, 2565403174_int64, 2567309083_int64, 2569215839_int64, 2571123442_int64, 2573031892_int64, 2574941191_int64, 2576851338_int64, 2578762336_int64, 2580674184_int64, 2582586884_int64, 2584500436_int64, 2586414841_int64, 2588330100_int64, 2590246213_int64, 2592163181_int64, 2594081005_int64, 2595999686_int64, 2597919225_int64, 2599839621_int64, 2601760877_int64, 2603682993_int64, 2605605969_int64, 2607529807_int64, 2609454506_int64, 2611380069_int64, 2613306495_int64, 2615233786_int64, 2617161942_int64, 2619090964_int64, 2621020853_int64, 2622951609_int64, 2624883233_int64, 2626815727_int64, 2628749091_int64, 2630683325_int64, 2632618431_int64, 2634554409_int64, 2636491260_int64, 2638428985_int64, 2640367585_int64, 2642307060_int64, 2644247411_int64, 2646188639_int64, 2648130745_int64, 2650073730_int64, 2652017594_int64, 2653962338_int64, 2655907963_int64, 2657854470_int64, 2659801859_int64, 2661750132_int64, 2663699289_int64, 2665649331_int64, 2667600258_int64, 2669552073_int64, 2671504774_int64, 2673458364_int64, 2675412843_int64, 2677368212_int64, 2679324471_int64, 2681281622_int64, 2683239665_int64, 2685198601_int64, 2687158431_int64, 2689119156_int64, 2691080776_int64, 2693043292_int64, 2695006706_int64, 2696971018_int64, 2698936228_int64, 2700902338_int64, 2702869349_int64, 2704837260_int64, 2706806074_int64, 2708775791_int64, 2710746412_int64, 2712717937_int64, 2714690367_int64, 2716663704_int64, 2718637948_int64, 2720613099_int64, 2722589160_int64, 2724566130_int64, 2726544010_int64, 2728522802_int64, 2730502506_int64, 2732483122_int64, 2734464653_int64, 2736447098_int64, 2738430459_int64, 2740414736_int64, 2742399930_int64, 2744386042_int64, 2746373073_int64, 2748361023_int64, 2750349894_int64, 2752339687_int64, 2754330402_int64, 2756322040_int64, 2758314602_int64, 2760308089_int64, 2762302501_int64, 2764297840_int64, 2766294107_int64, 2768291302_int64, 2770289426_int64, 2772288480_int64, 2774288464_int64, 2776289381_int64, 2778291230_int64, 2780294013_int64, 2782297730_int64, 2784302382_int64, 2786307970_int64, 2788314496_int64, 2790321959_int64, 2792330361_int64, 2794339702_int64, 2796349984_int64, 2798361207_int64, 2800373373_int64, 2802386481_int64, 2804400534_int64, 2806415532_int64, 2808431475_int64, 2810448365_int64, 2812466203_int64, 2814484989_int64, 2816504724_int64, 2818525410_int64, 2820547047_int64, 2822569636_int64, 2824593177_int64, 2826617673_int64, 2828643123_int64, 2830669529_int64, 2832696892_int64, 2834725212_int64, 2836754490_int64, 2838784727_int64, 2840815925_int64, 2842848084_int64, 2844881204_int64, 2846915288_int64, 2848950335_int64, 2850986347_int64, 2853023325_int64, 2855061269_int64, 2857100181_int64, 2859140061_int64, 2861180910_int64, 2863222729_int64, 2865265520_int64, 2867309283_int64, 2869354019_int64, 2871399728_int64, 2873446413_int64, 2875494073_int64, 2877542710_int64, 2879592324_int64, 2881642918_int64, 2883694490_int64, 2885747043_int64, 2887800578_int64, 2889855095_int64, 2891910595_int64, 2893967079_int64, 2896024548_int64, 2898083004_int64, 2900142446_int64, 2902202877_int64, 2904264296_int64, 2906326706_int64, 2908390106_int64, 2910454498_int64, 2912519882_int64, 2914586261_int64, 2916653634_int64, 2918722002_int64, 2920791367_int64, 2922861730_int64, 2924933091_int64, 2927005452_int64, 2929078813_int64, 2931153175_int64, 2933228540_int64, 2935304908_int64, 2937382281_int64, 2939460658_int64, 2941540042_int64, 2943620433_int64, 2945701832_int64, 2947784241_int64, 2949867659_int64, 2951952089_int64, 2954037531_int64, 2956123986_int64, 2958211455_int64, 2960299939_int64, 2962389439_int64, 2964479956_int64, 2966571491_int64, 2968664045_int64, 2970757619_int64, 2972852214_int64, 2974947832_int64, 2977044472_int64, 2979142136_int64, 2981240825_int64, 2983340540_int64, 2985441283_int64, 2987543053_int64, 2989645852_int64, 2991749681_int64, 2993854541_int64, 2995960434_int64, 2998067359_int64, 3000175319_int64, 3002284313_int64, 3004394344_int64, 3006505412_int64, 3008617517_int64, 3010730663_int64, 3012844848_int64, 3014960074_int64, 3017076343_int64, 3019193655_int64, 3021312011_int64, 3023431413_int64, 3025551861_int64, 3027673356_int64, 3029795900_int64, 3031919493_int64, 3034044137_int64, 3036169832_int64, 3038296580_int64, 3040424382_int64, 3042553238_int64, 3044683150_int64, 3046814119_int64, 3048946145_int64, 3051079231_int64, 3053213376_int64, 3055348582_int64, 3057484850_int64, 3059622182_int64, 3061760577_int64, 3063900038_int64, 3066040565_int64, 3068182159_int64, 3070324822_int64, 3072468554_int64, 3074613357_int64, 3076759231_int64, 3078906178_int64, 3081054199_int64, 3083203294_int64, 3085353466_int64, 3087504714_int64, 3089657040_int64, 3091810446_int64, 3093964932_int64, 3096120499_int64, 3098277148_int64, 3100434881_int64, 3102593699_int64, 3104753602_int64, 3106914592_int64, 3109076669_int64, 3111239836_int64, 3113404093_int64, 3115569441_int64, 3117735881_int64, 3119903414_int64, 3122072042_int64, 3124241765_int64, 3126412585_int64, 3128584503_int64, 3130757520_int64, 3132931636_int64, 3135106854_int64, 3137283174_int64, 3139460597_int64, 3141639125_int64, 3143818758_int64, 3145999498_int64, 3148181346_int64, 3150364303_int64, 3152548369_int64, 3154733547_int64, 3156919838_int64, 3159107242_int64, 3161295760_int64, 3163485394_int64, 3165676145_int64, 3167868014_int64, 3170061002_int64, 3172255111_int64, 3174450341_int64, 3176646693_int64, 3178844170_int64, 3181042771_int64, 3183242498_int64, 3185443353_int64, 3187645335_int64, 3189848448_int64, 3192052691_int64, 3194258065_int64, 3196464573_int64, 3198672215_int64, 3200880992_int64, 3203090906_int64, 3205301957_int64, 3207514148_int64, 3209727478_int64, 3211941949_int64, 3214157563_int64, 3216374321_int64, 3218592223_int64, 3220811271_int64, 3223031466_int64, 3225252809_int64, 3227475302_int64, 3229698946_int64, 3231923741_int64, 3234149689_int64, 3236376792_int64, 3238605050_int64, 3240834465_int64, 3243065037_int64, 3245296769_int64, 3247529660_int64, 3249763714_int64, 3251998930_int64, 3254235309_int64, 3256472854_int64, 3258711565_int64, 3260951444_int64, 3263192492_int64, 3265434709_int64, 3267678098_int64, 3269922659_int64, 3272168393_int64, 3274415303_int64, 3276663388_int64, 3278912651_int64, 3281163092_int64, 3283414713_int64, 3285667516_int64, 3287921500_int64, 3290176668_int64, 3292433021_int64, 3294690560_int64, 3296949285_int64, 3299209200_int64, 3301470304_int64, 3303732599_int64, 3305996087_int64, 3308260768_int64, 3310526643_int64, 3312793715_int64, 3315061984_int64, 3317331452_int64, 3319602119_int64, 3321873988_int64, 3324147058_int64, 3326421333_int64, 3328696812_int64, 3330973498_int64, 3333251391_int64, 3335530493_int64, 3337810805_int64, 3340092328_int64, 3342375064_int64, 3344659013_int64, 3346944178_int64, 3349230560_int64, 3351518159_int64, 3353806977_int64, 3356097016_int64, 3358388276_int64, 3360680759_int64, 3362974467_int64, 3365269400_int64, 3367565560_int64, 3369862948_int64, 3372161566_int64, 3374461415_int64, 3376762496_int64, 3379064810_int64, 3381368359_int64, 3383673144_int64, 3385979167_int64, 3388286429_int64, 3390594930_int64, 3392904674_int64, 3395215660_int64, 3397527890_int64, 3399841365_int64, 3402156088_int64, 3404472058_int64, 3406789278_int64, 3409107749_int64, 3411427472_int64, 3413748449_int64, 3416070681_int64, 3418394169_int64, 3420718914_int64, 3423044919_int64, 3425372184_int64, 3427700710_int64, 3430030500_int64, 3432361554_int64, 3434693874_int64, 3437027461_int64, 3439362317_int64, 3441698443_int64, 3444035840_int64, 3446374510_int64, 3448714455_int64, 3451055674_int64, 3453398171_int64, 3455741946_int64, 3458087000_int64, 3460433336_int64, 3462780954_int64, 3465129856_int64, 3467480043_int64, 3469831517_int64, 3472184280_int64, 3474538331_int64, 3476893674_int64, 3479250309_int64, 3481608238_int64, 3483967462_int64, 3486327983_int64, 3488689801_int64, 3491052920_int64, 3493417339_int64, 3495783060_int64, 3498150086_int64, 3500518416_int64, 3502888053_int64, 3505258999_int64, 3507631254_int64, 3510004819_int64, 3512379698_int64, 3514755890_int64, 3517133397_int64, 3519512222_int64, 3521892364_int64, 3524273827_int64, 3526656610_int64, 3529040717_int64, 3531426147_int64, 3533812903_int64, 3536200986_int64, 3538590398_int64, 3540981139_int64, 3543373213_int64, 3545766619_int64, 3548161359_int64, 3550557436_int64, 3552954850_int64, 3555353603_int64, 3557753697_int64, 3560155132_int64, 3562557911_int64, 3564962035_int64, 3567367506_int64, 3569774324_int64, 3572182492_int64, 3574592011_int64, 3577002882_int64, 3579415108_int64, 3581828689_int64, 3584243627_int64, 3586659924_int64, 3589077580_int64, 3591496599_int64, 3593916981_int64, 3596338727_int64, 3598761840_int64, 3601186321_int64, 3603612171_int64, 3606039391_int64, 3608467985_int64, 3610897952_int64, 3613329295_int64, 3615762015_int64, 3618196114_int64, 3620631593_int64, 3623068454_int64, 3625506699_int64, 3627946328_int64, 3630387344_int64, 3632829748_int64, 3635273542_int64, 3637718727_int64, 3640165304_int64, 3642613277_int64, 3645062645_int64, 3647513411_int64, 3649965576_int64, 3652419142_int64, 3654874111_int64, 3657330483_int64, 3659788262_int64, 3662247447_int64, 3664708041_int64, 3667170046_int64, 3669633463_int64, 3672098294_int64, 3674564540_int64, 3677032203_int64, 3679501284_int64, 3681971786_int64, 3684443710_int64, 3686917057_int64, 3689391829_int64, 3691868029_int64, 3694345656_int64, 3696824714_int64, 3699305203_int64, 3701787126_int64, 3704270484_int64, 3706755278_int64, 3709241511_int64, 3711729184_int64, 3714218299_int64, 3716708857_int64, 3719200860_int64, 3721694310_int64, 3724189209_int64, 3726685557_int64, 3729183357_int64, 3731682611_int64, 3734183320_int64, 3736685485_int64, 3739189110_int64, 3741694194_int64, 3744200741_int64, 3746708751_int64, 3749218226_int64, 3751729169_int64, 3754241580_int64, 3756755462_int64, 3759270817_int64, 3761787645_int64, 3764305949_int64, 3766825730_int64, 3769346991_int64, 3771869732_int64, 3774393957_int64, 3776919665_int64, 3779446860_int64, 3781975543_int64, 3784505715_int64, 3787037378_int64, 3789570535_int64, 3792105187_int64, 3794641336_int64, 3797178982_int64, 3799718130_int64, 3802258779_int64, 3804800932_int64, 3807344590_int64, 3809889756_int64, 3812436431_int64, 3814984617_int64, 3817534316_int64, 3820085529_int64, 3822638259_int64, 3825192506_int64, 3827748274_int64, 3830305563_int64, 3832864376_int64, 3835424714_int64, 3837986580_int64, 3840549974_int64, 3843114899_int64, 3845681357_int64, 3848249350_int64, 3850818879_int64, 3853389946_int64, 3855962553_int64, 3858536702_int64, 3861112394_int64, 3863689632_int64, 3866268418_int64, 3868848753_int64, 3871430639_int64, 3874014078_int64, 3876599072_int64, 3879185623_int64, 3881773732_int64, 3884363402_int64, 3886954634_int64, 3889547431_int64, 3892141793_int64, 3894737724_int64, 3897335225_int64, 3899934297_int64, 3902534944_int64, 3905137166_int64, 3907740965_int64, 3910346344_int64, 3912953305_int64, 3915561849_int64, 3918171978_int64, 3920783694_int64, 3923396999_int64, 3926011896_int64, 3928628385_int64, 3931246470_int64, 3933866151_int64, 3936487431_int64, 3939110312_int64, 3941734796_int64, 3944360884_int64, 3946988579_int64, 3949617882_int64, 3952248797_int64, 3954881323_int64, 3957515465_int64, 3960151223_int64, 3962788599_int64, 3965427596_int64, 3968068215_int64, 3970710459_int64, 3973354329_int64, 3975999828_int64, 3978646958_int64, 3981295720_int64, 3983946116_int64, 3986598149_int64, 3989251821_int64, 3991907133_int64, 3994564088_int64, 3997222687_int64, 3999882933_int64, 4002544828_int64, 4005208374_int64, 4007873572_int64, 4010540426_int64, 4013208936_int64, 4015879106_int64, 4018550936_int64, 4021224430_int64, 4023899588_int64, 4026576414_int64, 4029254910_int64, 4031935077_int64, 4034616917_int64, 4037300433_int64, 4039985627_int64, 4042672501_int64, 4045361056_int64, 4048051296_int64, 4050743221_int64, 4053436835_int64, 4056132140_int64, 4058829136_int64, 4061527828_int64, 4064228216_int64, 4066930303_int64, 4069634091_int64, 4072339583_int64, 4075046779_int64, 4077755683_int64, 4080466297_int64, 4083178623_int64, 4085892662_int64, 4088608418_int64, 4091325891_int64, 4094045086_int64, 4096766003_int64, 4099488645_int64, 4102213013_int64, 4104939111_int64, 4107666941_int64, 4110396504_int64, 4113127803_int64, 4115860840_int64, 4118595617_int64, 4121332136_int64, 4124070400_int64, 4126810412_int64, 4129552172_int64, 4132295683_int64, 4135040949_int64, 4137787970_int64, 4140536749_int64, 4143287288_int64, 4146039591_int64, 4148793657_int64, 4151549492_int64, 4154307095_int64, 4157066470_int64, 4159827619_int64, 4162590545_int64, 4165355249_int64, 4168121733_int64, 4170890001_int64, 4173660054_int64, 4176431895_int64, 4179205526_int64, 4181980949_int64, 4184758167_int64, 4187537182_int64, 4190317996_int64, 4193100612_int64, 4195885032_int64, 4198671258_int64, 4201459292_int64, 4204249138_int64, 4207040797_int64, 4209834272_int64, 4212629565_int64, 4215426678_int64, 4218225614_int64, 4221026375_int64, 4223828964_int64, 4226633383_int64, 4229439634_int64, 4232247720_int64, 4235057643_int64, 4237869406_int64, 4240683011_int64, 4243498460_int64, 4246315755_int64, 4249134900_int64, 4251955897_int64, 4254778748_int64, 4257603455_int64, 4260430021_int64, 4263258449_int64, 4266088741_int64, 4268920899_int64, 4271754925_int64, 4274590823_int64, 4277428595_int64, 4280268243_int64, 4283109769_int64, 4285953177_int64, 4288798469_int64, 4291645646_int64, 4294494713_int64, 4297345670_int64, 4300198521_int64, 4303053269_int64, 4305909915_int64, 4308768462_int64, 4311628913_int64, 4314491271_int64, 4317355537_int64, 4320221715_int64, 4323089807_int64, 4325959815_int64, 4328831743_int64, 4331705592_int64, 4334581365_int64, 4337459065_int64, 4340338695_int64, 4343220256_int64, 4346103752_int64, 4348989186_int64, 4351876559_int64, 4354765874_int64, 4357657135_int64, 4360550343_int64, 4363445501_int64, 4366342612_int64, 4369241679_int64, 4372142704_int64, 4375045690_int64, 4377950639_int64, 4380857555_int64, 4383766439_int64, 4386677294_int64, 4389590124_int64, 4392504931_int64, 4395421717_int64, 4398340485_int64, 4401261238_int64, 4404183979_int64, 4407108710_int64, 4410035434_int64, 4412964153_int64, 4415894872_int64, 4418827591_int64, 4421762314_int64, 4424699044_int64, 4427637783_int64, 4430578535_int64, 4433521301_int64, 4436466085_int64, 4439412890_int64, 4442361717_int64, 4445312571_int64, 4448265453_int64, 4451220367_int64, 4454177316_int64, 4457136301_int64, 4460097327_int64, 4463060395_int64, 4466025509_int64, 4468992671_int64, 4471961885_int64, 4474933152_int64, 4477906477_int64, 4480881861_int64, 4483859309_int64, 4486838821_int64, 4489820402_int64, 4492804055_int64, 4495789781_int64, 4498777584_int64, 4501767468_int64, 4504759434_int64, 4507753486_int64, 4510749626_int64, 4513747859_int64, 4516748185_int64, 4519750609_int64, 4522755133_int64, 4525761761_int64, 4528770495_int64, 4531781338_int64, 4534794293_int64, 4537809363_int64, 4540826551_int64, 4543845860_int64, 4546867294_int64, 4549890854_int64, 4552916545_int64, 4555944368_int64, 4558974327_int64, 4562006426_int64, 4565040666_int64, 4568077052_int64, 4571115586_int64, 4574156271_int64, 4577199110_int64, 4580244106_int64, 4583291263_int64, 4586340583_int64, 4589392070_int64, 4592445726_int64, 4595501555_int64, 4598559560_int64, 4601619743_int64, 4604682108_int64, 4607746659_int64, 4610813398_int64, 4613882327_int64, 4616953452_int64, 4620026774_int64, 4623102297_int64, 4626180023_int64, 4629259957_int64, 4632342101_int64, 4635426458_int64, 4638513032_int64, 4641601825_int64, 4644692842_int64, 4647786085_int64, 4650881557_int64, 4653979261_int64, 4657079202_int64, 4660181381_int64, 4663285803_int64, 4666392470_int64, 4669501386_int64, 4672612554_int64, 4675725978_int64, 4678841660_int64, 4681959603_int64, 4685079812_int64, 4688202289_int64, 4691327038_int64, 4694454062_int64, 4697583365_int64, 4700714949_int64, 4703848818_int64, 4706984975_int64, 4710123424_int64, 4713264168_int64, 4716407211_int64, 4719552555_int64, 4722700204_int64, 4725850162_int64, 4729002432_int64, 4732157017_int64, 4735313920_int64, 4738473146_int64, 4741634698_int64, 4744798578_int64, 4747964791_int64, 4751133339_int64, 4754304227_int64, 4757477457_int64, 4760653034_int64, 4763830960_int64, 4767011240_int64, 4770193876_int64, 4773378872_int64, 4776566232_int64, 4779755959_int64, 4782948057_int64, 4786142529_int64, 4789339379_int64, 4792538610_int64, 4795740225_int64, 4798944229_int64, 4802150625_int64, 4805359417_int64, 4808570608_int64, 4811784201_int64, 4815000201_int64, 4818218610_int64, 4821439433_int64, 4824662673_int64, 4827888334_int64, 4831116419_int64, 4834346933_int64, 4837579878_int64, 4840815258_int64, 4844053078_int64, 4847293340_int64, 4850536048_int64, 4853781207_int64, 4857028820_int64, 4860278890_int64, 4863531421_int64, 4866786417_int64, 4870043882_int64, 4873303819_int64, 4876566233_int64, 4879831127_int64, 4883098504_int64, 4886368369_int64, 4889640725_int64, 4892915576_int64, 4896192926_int64, 4899472779_int64, 4902755139_int64, 4906040009_int64, 4909327393_int64, 4912617296_int64, 4915909720_int64, 4919204670_int64, 4922502150_int64, 4925802163_int64, 4929104714_int64, 4932409807_int64, 4935717444_int64, 4939027631_int64, 4942340371_int64, 4945655668_int64, 4948973527_int64, 4952293950_int64, 4955616942_int64, 4958942508_int64, 4962270650_int64, 4965601373_int64, 4968934681_int64, 4972270578_int64, 4975609068_int64, 4978950155_int64, 4982293844_int64, 4985640137_int64, 4988989039_int64, 4992340555_int64, 4995694688_int64, 4999051443_int64, 5002410823_int64, 5005772833_int64, 5009137477_int64, 5012504758_int64, 5015874682_int64, 5019247251_int64, 5022622471_int64, 5026000346_int64, 5029380879_int64, 5032764075_int64, 5036149939_int64, 5039538473_int64, 5042929683_int64, 5046323573_int64, 5049720147_int64, 5053119409_int64, 5056521363_int64, 5059926014_int64, 5063333367_int64, 5066743424_int64, 5070156191_int64, 5073571672_int64, 5076989872_int64, 5080410794_int64, 5083834443_int64, 5087260823_int64, 5090689939_int64, 5094121794_int64, 5097556395_int64, 5100993744_int64, 5104433846_int64, 5107876705_int64, 5111322327_int64, 5114770715_int64, 5118221875_int64, 5121675809_int64, 5125132523_int64, 5128592022_int64, 5132054309_int64, 5135519390_int64, 5138987269_int64, 5142457949_int64, 5145931437_int64, 5149407736_int64, 5152886851_int64, 5156368787_int64, 5159853548_int64, 5163341138_int64, 5166831563_int64, 5170324826_int64, 5173820933_int64, 5177319888_int64, 5180821696_int64, 5184326362_int64, 5187833889_int64, 5191344284_int64, 5194857550_int64, 5198373692_int64, 5201892715_int64, 5205414623_int64, 5208939422_int64, 5212467116_int64, 5215997710_int64, 5219531209_int64, 5223067617_int64, 5226606939_int64, 5230149180_int64, 5233694346_int64, 5237242439_int64, 5240793467_int64, 5244347432_int64, 5247904341_int64, 5251464198_int64, 5255027008_int64, 5258592776_int64, 5262161507_int64, 5265733206_int64, 5269307877_int64, 5272885526_int64, 5276466158_int64, 5280049777_int64, 5283636388_int64, 5287225998_int64, 5290818610_int64, 5294414229_int64, 5298012861_int64, 5301614511_int64, 5305219184_int64, 5308826885_int64, 5312437618_int64, 5316051390_int64, 5319668205_int64, 5323288068_int64, 5326910984_int64, 5330536959_int64, 5334165998_int64, 5337798106_int64, 5341433288_int64, 5345071550_int64, 5348712896_int64, 5352357331_int64, 5356004862_int64, 5359655493_int64, 5363309230_int64, 5366966078_int64, 5370626041_int64, 5374289127_int64, 5377955339_int64, 5381624683_int64, 5385297165_int64, 5388972790_int64, 5392651563_int64, 5396333490_int64, 5400018576_int64, 5403706826_int64, 5407398246_int64, 5411092842_int64, 5414790619_int64, 5418491582_int64, 5422195737_int64, 5425903089_int64, 5429613644_int64, 5433327408_int64, 5437044385_int64, 5440764582_int64, 5444488004_int64, 5448214657_int64, 5451944547_int64, 5455677678_int64, 5459414057_int64, 5463153689_int64, 5466896580_int64, 5470642736_int64, 5474392162_int64, 5478144864_int64, 5481900848_int64, 5485660120_int64, 5489422684_int64, 5493188548_int64, 5496957717_int64, 5500730196_int64, 5504505991_int64, 5508285109_int64, 5512067555_int64, 5515853336_int64, 5519642456_int64, 5523434922_int64, 5527230739_int64, 5531029914_int64, 5534832453_int64, 5538638361_int64, 5542447645_int64, 5546260311_int64, 5550076364_int64, 5553895810_int64, 5557718656_int64, 5561544908_int64, 5565374571_int64, 5569207653_int64, 5573044158_int64, 5576884093_int64, 5580727465_int64, 5584574278_int64, 5588424541_int64, 5592278258_int64, 5596135436_int64, 5599996081_int64, 5603860199_int64, 5607727797_int64, 5611598881_int64, 5615473457_int64, 5619351532_int64, 5623233111_int64, 5627118201_int64, 5631006810_int64, 5634898941_int64, 5638794604_int64, 5642693803_int64, 5646596545_int64, 5650502836_int64, 5654412684_int64, 5658326094_int64, 5662243073_int64, 5666163628_int64, 5670087764_int64, 5674015490_int64, 5677946810_int64, 5681881732_int64, 5685820263_int64, 5689762408_int64, 5693708176_int64, 5697657571_int64, 5701610602_int64, 5705567274_int64, 5709527594_int64, 5713491570_int64, 5717459207_int64, 5721430514_int64, 5725405495_int64, 5729384159_int64, 5733366512_int64, 5737352561_int64, 5741342312_int64, 5745335774_int64, 5749332951_int64, 5753333853_int64, 5757338485_int64, 5761346854_int64, 5765358967_int64, 5769374832_int64, 5773394456_int64, 5777417845_int64, 5781445006_int64, 5785475947_int64, 5789510675_int64, 5793549196_int64, 5797591519_int64, 5801637649_int64, 5805687595_int64, 5809741363_int64, 5813798962_int64, 5817860397_int64, 5821925676_int64, 5825994807_int64, 5830067797_int64, 5834144652_int64, 5838225382_int64, 5842309992_int64, 5846398490_int64, 5850490884_int64, 5854587182_int64, 5858687389_int64, 5862791515_int64, 5866899566_int64, 5871011551_int64, 5875127476_int64, 5879247349_int64, 5883371177_int64, 5887498970_int64, 5891630733_int64, 5895766474_int64, 5899906202_int64, 5904049924_int64, 5908197647_int64, 5912349380_int64, 5916505130_int64, 5920664905_int64, 5924828713_int64, 5928996561_int64, 5933168458_int64, 5937344411_int64, 5941524428_int64, 5945708517_int64, 5949896686_int64, 5954088944_int64, 5958285297_int64, 5962485754_int64, 5966690324_int64, 5970899013_int64, 5975111831_int64, 5979328785_int64, 5983549883_int64, 5987775134_int64, 5992004546_int64, 5996238127_int64, 6000475885_int64, 6004717828_int64, 6008963965_int64, 6013214304_int64, 6017468854_int64, 6021727622_int64, 6025990617_int64, 6030257848_int64, 6034529322_int64, 6038805049_int64, 6043085037_int64, 6047369294_int64, 6051657829_int64, 6055950650_int64, 6060247766_int64, 6064549186_int64, 6068854918_int64, 6073164971_int64, 6077479353_int64, 6081798074_int64, 6086121141_int64, 6090448565_int64, 6094780352_int64, 6099116514_int64, 6103457057_int64, 6107801991_int64, 6112151326_int64, 6116505069_int64, 6120863230_int64, 6125225818_int64, 6129592841_int64, 6133964310_int64, 6138340232_int64, 6142720617_int64, 6147105474_int64, 6151494813_int64, 6155888642_int64, 6160286970_int64, 6164689807_int64, 6169097162_int64, 6173509045_int64, 6177925464_int64, 6182346429_int64, 6186771950_int64, 6191202035_int64, 6195636695_int64, 6200075938_int64, 6204519774_int64, 6208968213_int64, 6213421264_int64, 6217878936_int64, 6222341240_int64, 6226808186_int64, 6231279781_int64, 6235756037_int64, 6240236963_int64, 6244722569_int64, 6249212865_int64, 6253707860_int64, 6258207564_int64, 6262711987_int64, 6267221140_int64, 6271735031_int64, 6276253672_int64, 6280777071_int64, 6285305239_int64, 6289838187_int64, 6294375923_int64, 6298918459_int64, 6303465805_int64, 6308017970_int64, 6312574965_int64, 6317136800_int64, 6321703485_int64, 6326275031_int64, 6330851449_int64, 6335432748_int64, 6340018939_int64, 6344610032_int64, 6349206038_int64, 6353806967_int64, 6358412831_int64, 6363023639_int64, 6367639402_int64, 6372260131_int64, 6376885837_int64, 6381516530_int64, 6386152221_int64, 6390792921_int64, 6395438640_int64, 6400089390_int64, 6404745182_int64, 6409406026_int64, 6414071933_int64, 6418742915_int64, 6423418982_int64, 6428100146_int64, 6432786417_int64, 6437477808_int64, 6442174328_int64, 6446875989_int64, 6451582803_int64, 6456294781_int64, 6461011934_int64, 6465734273_int64, 6470461811_int64, 6475194557_int64, 6479932525_int64, 6484675725_int64, 6489424169_int64, 6494177869_int64, 6498936836_int64, 6503701082_int64, 6508470619_int64, 6513245458_int64, 6518025611_int64, 6522811091_int64, 6527601908_int64, 6532398075_int64, 6537199604_int64, 6542006507_int64, 6546818796_int64, 6551636483_int64, 6556459580_int64, 6561288099_int64, 6566122052_int64, 6570961452_int64, 6575806312_int64, 6580656642_int64, 6585512457_int64, 6590373767_int64, 6595240586_int64, 6600112926_int64, 6604990800_int64, 6609874220_int64, 6614763198_int64, 6619657748_int64, 6624557883_int64, 6629463614_int64, 6634374955_int64, 6639291919_int64, 6644214518_int64, 6649142766_int64, 6654076675_int64, 6659016258_int64, 6663961529_int64, 6668912500_int64, 6673869186_int64, 6678831598_int64, 6683799750_int64, 6688773656_int64, 6693753329_int64, 6698738782_int64, 6703730029_int64, 6708727083_int64, 6713729957_int64, 6718738666_int64, 6723753223_int64, 6728773641_int64, 6733799934_int64, 6738832117_int64, 6743870202_int64, 6748914204_int64, 6753964137_int64, 6759020014_int64, 6764081850_int64, 6769149659_int64, 6774223454_int64, 6779303251_int64, 6784389062_int64, 6789480903_int64, 6794578788_int64, 6799682730_int64, 6804792746_int64, 6809908848_int64, 6815031051_int64, 6820159371_int64, 6825293822_int64, 6830434418_int64, 6835581173_int64, 6840734104_int64, 6845893225_int64, 6851058550_int64, 6856230094_int64, 6861407874_int64, 6866591902_int64, 6871782196_int64, 6876978769_int64, 6882181637_int64, 6887390816_int64, 6892606320_int64, 6897828166_int64, 6903056368_int64, 6908290942_int64, 6913531903_int64, 6918779267_int64, 6924033051_int64, 6929293268_int64, 6934559937_int64, 6939833071_int64, 6945112687_int64, 6950398801_int64, 6955691430_int64, 6960990588_int64, 6966296292_int64, 6971608559_int64, 6976927405_int64, 6982252846_int64, 6987584898_int64, 6992923577_int64, 6998268901_int64, 7003620886_int64, 7008979549_int64, 7014344905_int64, 7019716972_int64, 7025095767_int64, 7030481307_int64, 7035873608_int64, 7041272688_int64, 7046678563_int64, 7052091251_int64, 7057510769_int64, 7062937134_int64, 7068370363_int64, 7073810475_int64, 7079257485_int64, 7084711413_int64, 7090172275_int64, 7095640088_int64, 7101114872_int64, 7106596644_int64, 7112085420_int64, 7117581221_int64, 7123084062_int64, 7128593963_int64, 7134110942_int64, 7139635017_int64, 7145166205_int64, 7150704526_int64, 7156249998_int64, 7161802639_int64, 7167362468_int64, 7172929503_int64, 7178503764_int64, 7184085269_int64, 7189674036_int64, 7195270086_int64, 7200873436_int64, 7206484106_int64, 7212102115_int64, 7217727482_int64, 7223360227_int64, 7229000369_int64, 7234647927_int64, 7240302921_int64, 7245965370_int64, 7251635295_int64, 7257312715_int64, 7262997649_int64, 7268690118_int64, 7274390142_int64, 7280097740_int64, 7285812934_int64, 7291535743_int64, 7297266187_int64, 7303004287_int64, 7308750063_int64, 7314503537_int64, 7320264728_int64, 7326033657_int64, 7331810346_int64, 7337594815_int64, 7343387084_int64, 7349187176_int64, 7354995111_int64, 7360810911_int64, 7366634596_int64, 7372466189_int64, 7378305710_int64, 7384153182_int64, 7390008625_int64, 7395872063_int64, 7401743516_int64, 7407623007_int64, 7413510557_int64, 7419406189_int64, 7425309925_int64, 7431221787_int64, 7437141798_int64, 7443069981_int64, 7449006356_int64, 7454950949_int64, 7460903780_int64, 7466864874_int64, 7472834253_int64, 7478811940_int64, 7484797958_int64, 7490792330_int64, 7496795081_int64, 7502806233_int64, 7508825809_int64, 7514853835_int64, 7520890332_int64, 7526935326_int64, 7532988840_int64, 7539050898_int64, 7545121524_int64, 7551200742_int64, 7557288578_int64, 7563385055_int64, 7569490198_int64, 7575604031_int64, 7581726580_int64, 7587857869_int64, 7593997924_int64, 7600146768_int64, 7606304429_int64, 7612470930_int64, 7618646297_int64, 7624830556_int64, 7631023733_int64, 7637225853_int64, 7643436942_int64, 7649657026_int64, 7655886131_int64, 7662124284_int64, 7668371510_int64, 7674627837_int64, 7680893290_int64, 7687167896_int64, 7693451682_int64, 7699744676_int64, 7706046904_int64, 7712358392_int64, 7718679169_int64, 7725009262_int64, 7731348699_int64, 7737697506_int64, 7744055712_int64, 7750423344_int64, 7756800431_int64, 7763187001_int64, 7769583081_int64, 7775988701_int64, 7782403889_int64, 7788828673_int64, 7795263082_int64, 7801707145_int64, 7808160891_int64, 7814624350_int64, 7821097550_int64, 7827580520_int64, 7834073291_int64, 7840575893_int64, 7847088354_int64, 7853610705_int64, 7860142976_int64, 7866685197_int64, 7873237398_int64, 7879799611_int64, 7886371865_int64, 7892954192_int64, 7899546622_int64, 7906149186_int64, 7912761916_int64, 7919384843_int64, 7926017999_int64, 7932661414_int64, 7939315122_int64, 7945979153_int64, 7952653540_int64, 7959338315_int64, 7966033511_int64, 7972739160_int64, 7979455295_int64, 7986181948_int64, 7992919153_int64, 7999666943_int64, 8006425351_int64, 8013194410_int64, 8019974155_int64, 8026764618_int64, 8033565835_int64, 8040377838_int64, 8047200663_int64, 8054034344_int64, 8060878915_int64, 8067734410_int64, 8074600866_int64, 8081478318_int64, 8088366799_int64, 8095266346_int64, 8102176995_int64, 8109098781_int64, 8116031740_int64, 8122975909_int64, 8129931323_int64, 8136898019_int64, 8143876034_int64, 8150865405_int64, 8157866168_int64, 8164878361_int64, 8171902022_int64, 8178937187_int64, 8185983894_int64, 8193042182_int64, 8200112089_int64, 8207193652_int64, 8214286911_int64, 8221391904_int64, 8228508670_int64, 8235637248_int64, 8242777678_int64, 8249929998_int64, 8257094249_int64, 8264270470_int64, 8271458701_int64, 8278658983_int64, 8285871357_int64, 8293095862_int64, 8300332540_int64, 8307581431_int64, 8314842578_int64, 8322116021_int64, 8329401803_int64, 8336699965_int64, 8344010549_int64, 8351333599_int64, 8358669155_int64, 8366017262_int64, 8373377962_int64, 8380751298_int64, 8388137314_int64, 8395536054_int64, 8402947561_int64, 8410371879_int64, 8417809054_int64, 8425259129_int64, 8432722150_int64, 8440198161_int64, 8447687208_int64, 8455189336_int64, 8462704591_int64, 8470233020_int64, 8477774668_int64, 8485329581_int64, 8492897807_int64, 8500479393_int64, 8508074386_int64, 8515682833_int64, 8523304783_int64, 8530940282_int64, 8538589380_int64, 8546252125_int64, 8553928565_int64, 8561618750_int64, 8569322730_int64, 8577040552_int64, 8584772269_int64, 8592517929_int64, 8600277583_int64, 8608051281_int64, 8615839075_int64, 8623641016_int64, 8631457156_int64, 8639287545_int64, 8647132236_int64, 8654991282_int64, 8662864735_int64, 8670752647_int64, 8678655073_int64, 8686572066_int64, 8694503679_int64, 8702449967_int64, 8710410984_int64, 8718386784_int64, 8726377423_int64, 8734382956_int64, 8742403439_int64, 8750438928_int64, 8758489478_int64, 8766555146_int64, 8774635990_int64, 8782732067_int64, 8790843433_int64, 8798970148_int64, 8807112268_int64, 8815269854_int64, 8823442962_int64, 8831631654_int64, 8839835987_int64, 8848056023_int64, 8856291821_int64, 8864543441_int64, 8872810946_int64, 8881094396_int64, 8889393852_int64, 8897709377_int64, 8906041033_int64, 8914388882_int64, 8922752989_int64, 8931133415_int64, 8939530226_int64, 8947943485_int64, 8956373257_int64, 8964819606_int64, 8973282599_int64, 8981762300_int64, 8990258776_int64, 8998772094_int64, 9007302319_int64, 9015849521_int64, 9024413766_int64, 9032995122_int64, 9041593658_int64, 9050209442_int64, 9058842545_int64, 9067493036_int64, 9076160985_int64, 9084846463_int64, 9093549541_int64, 9102270290_int64, 9111008781_int64, 9119765089_int64, 9128539285_int64, 9137331442_int64, 9146141634_int64, 9154969936_int64, 9163816422_int64, 9172681166_int64, 9181564246_int64, 9190465735_int64, 9199385712_int64, 9208324253_int64, 9217281435_int64, 9226257337_int64, 9235252036_int64, 9244265612_int64, 9253298144_int64, 9262349711_int64, 9271420395_int64, 9280510277_int64, 9289619437_int64, 9298747957_int64, 9307895921_int64, 9317063410_int64, 9326250510_int64, 9335457303_int64, 9344683874_int64, 9353930309_int64, 9363196693_int64, 9372483112_int64, 9381789654_int64, 9391116405_int64, 9400463454_int64, 9409830889_int64, 9419218800_int64, 9428627275_int64, 9438056406_int64, 9447506282_int64, 9456976997_int64, 9466468641_int64, 9475981308_int64, 9485515091_int64, 9495070083_int64, 9504646380_int64, 9514244076_int64, 9523863268_int64, 9533504051_int64, 9543166524_int64, 9552850784_int64, 9562556929_int64, 9572285058_int64, 9582035272_int64, 9591807670_int64, 9601602355_int64, 9611419427_int64, 9621258990_int64, 9631121146_int64, 9641006001_int64, 9650913657_int64, 9660844222_int64, 9670797801_int64, 9680774501_int64, 9690774429_int64, 9700797694_int64, 9710844406_int64, 9720914674_int64, 9731008609_int64, 9741126322_int64, 9751267926_int64, 9761433534_int64, 9771623259_int64, 9781837217_int64, 9792075523_int64, 9802338294_int64, 9812625645_int64, 9822937697_int64, 9833274566_int64, 9843636374_int64, 9854023241_int64, 9864435288_int64, 9874872638_int64, 9885335413_int64, 9895823739_int64, 9906337740_int64, 9916877543_int64, 9927443273_int64, 9938035060_int64, 9948653031_int64, 9959297317_int64, 9969968049_int64, 9980665358_int64, 9991389377_int64, 10002140239_int64, 10012918080_int64, 10023723035_int64, 10034555241_int64, 10045414835_int64, 10056301957_int64, 10067216746_int64, 10078159344_int64, 10089129892_int64, 10100128534_int64, 10111155414_int64, 10122210677_int64, 10133294470_int64, 10144406940_int64, 10155548236_int64, 10166718508_int64, 10177917908_int64, 10189146587_int64, 10200404699_int64, 10211692399_int64, 10223009842_int64, 10234357186_int64, 10245734590_int64, 10257142212_int64, 10268580214_int64, 10280048759_int64, 10291548009_int64, 10303078129_int64, 10314639286_int64, 10326231648_int64, 10337855382_int64, 10349510660_int64, 10361197653_int64, 10372916535_int64, 10384667478_int64, 10396450661_int64, 10408266259_int64, 10420114452_int64, 10431995421_int64, 10443909346_int64, 10455856411_int64, 10467836802_int64, 10479850705_int64, 10491898307_int64, 10503979798_int64, 10516095369_int64, 10528245214_int64, 10540429527_int64, 10552648503_int64, 10564902341_int64, 10577191240_int64, 10589515402_int64, 10601875028_int64, 10614270325_int64, 10626701498_int64, 10639168756_int64, 10651672308_int64, 10664212368_int64, 10676789148_int64, 10689402864_int64, 10702053734_int64, 10714741978_int64, 10727467816_int64, 10740231473_int64, 10753033173_int64, 10765873145_int64, 10778751617_int64, 10791668821_int64, 10804624992_int64, 10817620364_int64, 10830655177_int64, 10843729669_int64, 10856844083_int64, 10869998664_int64, 10883193658_int64, 10896429315_int64, 10909705886_int64, 10923023625_int64, 10936382787_int64, 10949783632_int64, 10963226420_int64, 10976711415_int64, 10990238882_int64, 11003809090_int64, 11017422310_int64, 11031078816_int64, 11044778882_int64, 11058522789_int64, 11072310818_int64, 11086143253_int64, 11100020381_int64, 11113942491_int64, 11127909877_int64, 11141922833_int64, 11155981658_int64, 11170086654_int64, 11184238124_int64, 11198436376_int64, 11212681720_int64, 11226974470_int64, 11241314941_int64, 11255703455_int64, 11270140333_int64, 11284625903_int64, 11299160493_int64, 11313744437_int64, 11328378070_int64, 11343061734_int64, 11357795770_int64, 11372580525_int64, 11387416351_int64, 11402303601_int64, 11417242633_int64, 11432233808_int64, 11447277492_int64, 11462374053_int64, 11477523865_int64, 11492727305_int64, 11507984754_int64, 11523296596_int64, 11538663222_int64, 11554085024_int64, 11569562401_int64, 11585095753_int64, 11600685488_int64, 11616332017_int64, 11632035754_int64, 11647797119_int64, 11663616538_int64, 11679494439_int64, 11695431256_int64, 11711427428_int64, 11727483399_int64, 11743599618_int64, 11759776539_int64, 11776014620_int64, 11792314325_int64, 11808676125_int64, 11825100494_int64, 11841587913_int64, 11858138867_int64, 11874753849_int64, 11891433354_int64, 11908177887_int64, 11924987957_int64, 11941864078_int64, 11958806772_int64, 11975816565_int64, 11992893993_int64, 12010039593_int64, 12027253914_int64, 12044537508_int64, 12061890935_int64, 12079314761_int64, 12096809561_int64, 12114375914_int64, 12132014408_int64, 12149725638_int64, 12167510207_int64, 12185368725_int64, 12203301809_int64, 12221310084_int64, 12239394183_int64, 12257554748_int64, 12275792429_int64, 12294107882_int64, 12312501775_int64, 12330974781_int64, 12349527584_int64, 12368160877_int64, 12386875361_int64, 12405671747_int64, 12424550754_int64, 12443513113_int64, 12462559563_int64, 12481690852_int64, 12500907740_int64, 12520210996_int64, 12539601400_int64, 12559079743_int64, 12578646826_int64, 12598303462_int64, 12618050473_int64, 12637888694_int64, 12657818972_int64, 12677842166_int64, 12697959146_int64, 12718170794_int64, 12738478006_int64, 12758881689_int64, 12779382765_int64, 12799982168_int64, 12820680846_int64, 12841479760_int64, 12862379885_int64, 12883382212_int64, 12904487745_int64, 12925697503_int64, 12947012521_int64, 12968433849_int64, 12989962552_int64, 13011599712_int64, 13033346429_int64, 13055203816_int64, 13077173006_int64, 13099255149_int64, 13121451412_int64, 13143762980_int64, 13166191059_int64, 13188736871_int64, 13211401658_int64, 13234186684_int64, 13257093231_int64, 13280122601_int64, 13303276120_int64, 13326555132_int64, 13349961006_int64, 13373495133_int64, 13397158924_int64, 13420953818_int64, 13444881274_int64, 13468942778_int64, 13493139841_int64, 13517473999_int64, 13541946813_int64, 13566559873_int64, 13591314797_int64, 13616213228_int64, 13641256840_int64, 13666447336_int64, 13691786449_int64, 13717275944_int64, 13742917616_int64, 13768713293_int64, 13794664836_int64, 13820774140_int64, 13847043135_int64, 13873473787_int64, 13900068096_int64, 13926828104_int64, 13953755887_int64, 13980853562_int64, 14008123287_int64, 14035567261_int64, 14063187725_int64, 14090986963_int64, 14118967305_int64, 14147131126_int64, 14175480848_int64, 14204018942_int64, 14232747927_int64, 14261670375_int64, 14290788909_int64, 14320106205_int64, 14349624997_int64, 14379348073_int64, 14409278280_int64, 14439418525_int64, 14469771777_int64, 14500341068_int64, 14531129496_int64, 14562140225_int64, 14593376488_int64, 14624841591_int64, 14656538911_int64, 14688471900_int64, 14720644090_int64, 14753059091_int64, 14785720597_int64, 14818632385_int64, 14851798320_int64, 14885222359_int64, 14918908550_int64, 14952861037_int64, 14987084065_int64, 15021581980_int64, 15056359233_int64, 15091420385_int64, 15126770110_int64, 15162413197_int64, 15198354555_int64, 15234599220_int64, 15271152354_int64, 15308019252_int64, 15345205349_int64, 15382716219_int64, 15420557585_int64, 15458735323_int64, 15497255468_int64, 15536124215_int64, 15575347934_int64, 15614933166_int64, 15654886638_int64, 15695215266_int64, 15735926161_int64, 15777026640_int64, 15818524232_int64, 15860426684_int64, 15902741975_int64, 15945478321_int64, 15988644184_int64, 16032248288_int64, 16076299621_int64, 16120807452_int64, 16165781342_int64, 16211231156_int64, 16257167073_int64, 16303599604_int64, 16350539604_int64, 16397998290_int64, 16445987250_int64, 16494518470_int64, 16543604345_int64, 16593257699_int64, 16643491808_int64, 16694320416_int64, 16745757765_int64, 16797818612_int64, 16850518259_int64, 16903872576_int64, 16957898034_int64, 17012611733_int64, 17068031435_int64, 17124175598_int64, 17181063413_int64, 17238714847_int64, 17297150677_int64, 17356392545_int64, 17416462997_int64, 17477385540_int64, 17539184697_int64, 17601886063_int64, 17665516372_int64, 17730103563_int64, 17795676857_int64, 17862266831_int64, 17929905509_int64, 17998626452_int64, 18068464857_int64, 18139457669_int64, 18211643692_int64, 18285063724_int64, 18359760690_int64, 18435779795_int64, 18513168687_int64, 18591977638_int64, 18672259738_int64, 18754071112_int64, 18837471156_int64, 18922522792_int64, 19009292760_int64, 19097851924_int64, 19188275628_int64, 19280644076_int64, 19375042761_int64, 19471562942_int64, 19570302171_int64, 19671364888_int64, 19774863084_int64, 19880917048_int64, 19989656205_int64, 20101220069_int64, 20215759318_int64, 20333437017_int64, 20454430012_int64, 20578930535_int64, 20707148035_int64, 20839311303_int64, 20975670924_int64, 21116502140_int64, 21262108196_int64, 21412824267_int64, 21569022109_int64, 21731115584_int64, 21899567264_int64, 22074896396_int64, 22257688548_int64, 22448607414_int64, 22648409360_int64, 22857961519_int64, 23078264541_int64, 23310481488_int64, 23555975007_int64, 23816355775_int64, 24093546612_int64, 24389868739_int64, 24708160056_int64, 25051940867_int64, 25425651886_int64, 25835005991_int64, 26287525960_int64, 26793400246_int64, 27366913211_int64, 28028985339_int64, 28812050463_int64, 29770444718_int64, 31006029811_int64, 32747489190_int64, 35724533662_int64]</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-exp_top_cell"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>EXP_TOP_CELL</strong></td>
+<td> =</td>
+                <td>EXP_CELLS-1_default_int</td>
+            <td>
+                <p>Index of the cell that runs off to infinity; handled by recursion.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-frac_bits"></span>
+              integer(kind=default_int),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>FRAC_BITS</strong></td>
+<td> =</td>
+                <td>31_default_int</td>
+            <td>
+                <p>Bits used to interpolate within a cell. Thirty-one and not thirty-two
+so that <code>gap * frac</code> fits a signed <code>int64</code> in a single multiply: the
+widest gap is below 2<strong>32 (asserted by the table generator), and
+(2</strong>32 - 1) * (2**31 - 1) is below huge(int64).</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-poisson_window"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>POISSON_WINDOW</strong></td>
+<td> =</td>
+                <td>2097152_int64</td>
+            <td>
+                <p>2**21 ticks. The count is the number of exponential inter-arrivals
+that fit in this window. Chosen as the largest power of two with
+<code>POISSON_WINDOW * 1000</code> still inside <code>EXPONENTIAL_MAX_MEAN</code>, so that
+a mean of one thousandth of an event is still expressible.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-q32_half"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>Q32_HALF</strong></td>
+<td> =</td>
+                <td>2147483648_int64</td>
+            <td>
+                <p>2**31, the Q32.32 representation of 0.5, added before the final shift
+so that the fraction rounds to nearest instead of truncating.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-q32_mask"></span>
+              integer(kind=int64),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>Q32_MASK</strong></td>
+<td> =</td>
+                <td>4294967295_int64</td>
+            <td>
+                <p>2**32 - 1, to take the fractional part of a Q32.32 value.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-next_bernoulli_ppm"></span>
+      <h3>public        interface <a href='../interface/next_bernoulli_ppm.html'>next_bernoulli_ppm</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Return true with probability <code>ppm</code> in a million.</p>
+<p><code>ppm</code> is clamped to <code>[0, PPM_ONE]</code>, so 0 never fires and 1000000
+always does, and no value in between can be mistyped into an error.
+Parts per million rather than a real probability because this reaches
+simulation state: an incident either happened or it did not, and two
+runs must agree on which.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/splitmix64_next_bernoulli_ppm.html'>splitmix64_next_bernoulli_ppm</a>(gen, ppm) result(r)  
+
+    </h3>
+    
+  <p>True with probability <code>ppm</code> in a million, from a splitmix64_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~3"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by the draw unless <code>ppm</code> is 0 or <code>PPM_ONE</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ppm"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ppm</strong></td>
+            <td>
+<p>Probability in parts per million, clamped to <code>[0, PPM_ONE]</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/pcg32_next_bernoulli_ppm.html'>pcg32_next_bernoulli_ppm</a>(gen, ppm) result(r)  
+
+    </h3>
+    
+  <p>True with probability <code>ppm</code> in a million, from a pcg32_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~8"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by the draw unless <code>ppm</code> is 0 or <code>PPM_ONE</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ppm~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ppm</strong></td>
+            <td>
+<p>Probability in parts per million, clamped to <code>[0, PPM_ONE]</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-next_exponential_int"></span>
+      <h3>public        interface <a href='../interface/next_exponential_int.html'>next_exponential_int</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Draw an exponentially distributed integer with the given mean, in
+whatever unit <code>mean</code> is expressed in.</p>
+<p>Sampling is a table lookup and two integer multiplies. <code>EXP_TABLE</code>
+holds the inverse CDF <code>-ln(1 - k/4096)</code> in Q32.32 fixed point,
+generated once by <code>tools/autogen/gen_exp_table.py</code> with 60-digit
+decimal arithmetic. Twelve random bits choose a cell, thirty-one more
+interpolate linearly inside it, and the result is scaled by <code>mean</code>.</p>
+<h3 id="the-tail">The tail</h3>
+<p>The top cell runs to infinity and cannot be interpolated into. It is
+handled with the memorylessness of the exponential instead: if <code>U</code> is
+uniform on the top cell then <code>-ln(1 - U)</code> is distributed as
+<code>ln(4096)</code> plus a fresh exponential, so the sampler adds <code>ln(4096)</code>
+and draws again. That is exact, and it costs an extra draw with
+probability 1/4096.</p>
+<p>Capping the top entry at a finite value and interpolating into it &ndash;
+the obvious alternative &ndash; biases the mean by 0.147%. This scheme
+leaves 0.002%, and all of that residue is linear interpolation inside
+the body cells, not the tail.</p>
+<p><code>mean</code> must be in <code>[0, EXPONENTIAL_MAX_MEAN]</code>. A mean of zero always
+returns zero without consuming a draw. Out of range returns zero and,
+if <code>err</code> is present, sets <code>ERROR_VALIDATION</code>.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/splitmix64_next_exponential_int.html'>splitmix64_next_exponential_int</a>(gen, mean, err) result(r)  
+
+    </h3>
+    
+  <p>Exponential integer with the given mean, from a splitmix64_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~4"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by one draw, or more in the tail.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean~2"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean</strong></td>
+            <td>
+<p>Mean of the distribution, in <code>[0, EXPONENTIAL_MAX_MEAN]</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~54"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Set to <code>ERROR_VALIDATION</code> when <code>mean</code> is out of range.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/pcg32_next_exponential_int.html'>pcg32_next_exponential_int</a>(gen, mean, err) result(r)  
+
+    </h3>
+    
+  <p>Exponential integer with the given mean, from a pcg32_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~9"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by one draw, or more in the tail.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean~3"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean</strong></td>
+            <td>
+<p>Mean of the distribution, in <code>[0, EXPONENTIAL_MAX_MEAN]</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~57"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Set to <code>ERROR_VALIDATION</code> when <code>mean</code> is out of range.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-next_poisson_int"></span>
+      <h3>public        interface <a href='../interface/next_poisson_int.html'>next_poisson_int</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Draw a Poisson-distributed count with mean <code>mean_milli/1000</code>.</p>
+<p>The mean is given a thousand times over so that fractional means are
+expressible without a real type: <code>mean_milli = 2500</code> means 2.5 events.</p>
+<p>Counts the exponential inter-arrivals that fit inside a fixed window,
+which is the defining construction of a Poisson process rather than
+an approximation of one. Cost is O(mean).</p>
+<p><code>mean_milli</code> must be in <code>[0, POISSON_MAX_MEAN_MILLI]</code>. Zero returns
+zero without consuming a draw. Out of range returns zero and, if <code>err</code>
+is present, sets <code>ERROR_VALIDATION</code>.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/splitmix64_next_poisson_int.html'>splitmix64_next_poisson_int</a>(gen, mean_milli, err) result(r)  
+
+    </h3>
+    
+  <p>Poisson count with mean <code>mean_milli/1000</code>, from a splitmix64_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~5"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced once per inter-arrival drawn.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean_milli"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean_milli</strong></td>
+            <td>
+<p>A thousand times the mean, in <code>[0, POISSON_MAX_MEAN_MILLI]</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~55"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Set to <code>ERROR_VALIDATION</code> when <code>mean_milli</code> is out of range.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/pcg32_next_poisson_int.html'>pcg32_next_poisson_int</a>(gen, mean_milli, err) result(r)  
+
+    </h3>
+    
+  <p>Poisson count with mean <code>mean_milli/1000</code>, from a pcg32_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~10"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced once per inter-arrival drawn.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean_milli~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean_milli</strong></td>
+            <td>
+<p>A thousand times the mean, in <code>[0, POISSON_MAX_MEAN_MILLI]</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~58"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Set to <code>ERROR_VALIDATION</code> when <code>mean_milli</code> is out of range.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-next_range"></span>
+      <h3>public        interface <a href='../interface/next_range.html'>next_range</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Draw a uniform integer in the inclusive range <code>[lo, hi]</code>.</p>
+<p>The span is computed in unsigned 64-bit arithmetic, so the full range
+of <code>default_int</code> works: <code>next_range(gen, -huge(1)-1, huge(1))</code> spans
+every <code>int32</code> value and is still exactly uniform. Rejection sampling
+gives every value in range exactly one preimage per draw, so there is
+no modulo bias.</p>
+<p><code>hi &lt; lo</code> is a usage error: it returns <code>lo</code> and, if <code>err</code> is present,
+sets <code>ERROR_VALIDATION</code>. <code>lo == hi</code> returns <code>lo</code> without consuming a
+draw.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/splitmix64_next_range.html'>splitmix64_next_range</a>(gen, lo, hi, err) result(r)  
+
+    </h3>
+    
+  <p>Uniform integer in <code>[lo, hi]</code> from a splitmix64_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~2"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by the draw.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lo~11"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lo</strong></td>
+            <td>
+<p>Inclusive lower bound.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hi~11"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hi</strong></td>
+            <td>
+<p>Inclusive upper bound; must not be below <code>lo</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~53"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Set to <code>ERROR_VALIDATION</code> when <code>hi &lt; lo</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/pcg32_next_range.html'>pcg32_next_range</a>(gen, lo, hi, err) result(r)  
+
+    </h3>
+    
+  <p>Uniform integer in <code>[lo, hi]</code> from a pcg32_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~7"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by the draw.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lo~12"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lo</strong></td>
+            <td>
+<p>Inclusive lower bound.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hi~12"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hi</strong></td>
+            <td>
+<p>Inclusive upper bound; must not be below <code>lo</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~56"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Set to <code>ERROR_VALIDATION</code> when <code>hi &lt; lo</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+        </section>
+        <br>
+
+
+
+        <section>
+          <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_next_bernoulli_ppm"></span> <h3>private  function <a href='../proc/pcg32_next_bernoulli_ppm.html'>pcg32_next_bernoulli_ppm</a>(gen, ppm) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>True with probability <code>ppm</code> in a million, from a pcg32_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~8"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by the draw unless <code>ppm</code> is 0 or <code>PPM_ONE</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ppm~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ppm</strong></td>
+            <td>
+<p>Probability in parts per million, clamped to <code>[0, PPM_ONE]</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_next_exponential_int"></span> <h3>private  function <a href='../proc/pcg32_next_exponential_int.html'>pcg32_next_exponential_int</a>(gen, mean, err) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Exponential integer with the given mean, from a pcg32_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~9"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by one draw, or more in the tail.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean~3"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean</strong></td>
+            <td>
+<p>Mean of the distribution, in <code>[0, EXPONENTIAL_MAX_MEAN]</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~57"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Set to <code>ERROR_VALIDATION</code> when <code>mean</code> is out of range.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_next_poisson_int"></span> <h3>private  function <a href='../proc/pcg32_next_poisson_int.html'>pcg32_next_poisson_int</a>(gen, mean_milli, err) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Poisson count with mean <code>mean_milli/1000</code>, from a pcg32_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~10"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced once per inter-arrival drawn.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean_milli~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean_milli</strong></td>
+            <td>
+<p>A thousand times the mean, in <code>[0, POISSON_MAX_MEAN_MILLI]</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~58"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Set to <code>ERROR_VALIDATION</code> when <code>mean_milli</code> is out of range.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_next_range"></span> <h3>private  function <a href='../proc/pcg32_next_range.html'>pcg32_next_range</a>(gen, lo, hi, err) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Uniform integer in <code>[lo, hi]</code> from a pcg32_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~7"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by the draw.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lo~12"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lo</strong></td>
+            <td>
+<p>Inclusive lower bound.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hi~12"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hi</strong></td>
+            <td>
+<p>Inclusive upper bound; must not be below <code>lo</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~56"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Set to <code>ERROR_VALIDATION</code> when <code>hi &lt; lo</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_uniform_below"></span> <h3>private  function <a href='../proc/pcg32_uniform_below.html'>pcg32_uniform_below</a>(gen, span_minus_1) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Uniform unsigned integer in <code>[0, span_minus_1]</code>, by rejection.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~6"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-span_minus_1~4"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>span_minus_1</strong></td>
+            <td>
+<p>Inclusive upper bound, read as unsigned.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-rejection_mask"></span> <h3>private pure function <a href='../proc/rejection_mask.html'>rejection_mask</a>(span_minus_1) result(mask)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Smallest <code>2**k - 1</code> that covers <code>span_minus_1</code> read as unsigned.</p><a href="../proc/rejection_mask.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-span_minus_1"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>span_minus_1</strong></td>
+            <td>
+<p>One less than the number of distinct values wanted, unsigned.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-scale_by_mean"></span> <h3>private pure function <a href='../proc/scale_by_mean.html'>scale_by_mean</a>(x_q32, mean) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Multiply a Q32.32 value by an integer mean and drop the fraction.</p><a href="../proc/scale_by_mean.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x_q32"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x_q32</strong></td>
+            <td>
+<p>Deviate in Q32.32 fixed point.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean</strong></td>
+            <td>
+<p>Mean, in <code>[0, EXPONENTIAL_MAX_MEAN]</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-splitmix64_next_bernoulli_ppm"></span> <h3>private  function <a href='../proc/splitmix64_next_bernoulli_ppm.html'>splitmix64_next_bernoulli_ppm</a>(gen, ppm) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>True with probability <code>ppm</code> in a million, from a splitmix64_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~3"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by the draw unless <code>ppm</code> is 0 or <code>PPM_ONE</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ppm"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ppm</strong></td>
+            <td>
+<p>Probability in parts per million, clamped to <code>[0, PPM_ONE]</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-splitmix64_next_exponential_int"></span> <h3>private  function <a href='../proc/splitmix64_next_exponential_int.html'>splitmix64_next_exponential_int</a>(gen, mean, err) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Exponential integer with the given mean, from a splitmix64_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~4"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by one draw, or more in the tail.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean~2"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean</strong></td>
+            <td>
+<p>Mean of the distribution, in <code>[0, EXPONENTIAL_MAX_MEAN]</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~54"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Set to <code>ERROR_VALIDATION</code> when <code>mean</code> is out of range.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-splitmix64_next_poisson_int"></span> <h3>private  function <a href='../proc/splitmix64_next_poisson_int.html'>splitmix64_next_poisson_int</a>(gen, mean_milli, err) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Poisson count with mean <code>mean_milli/1000</code>, from a splitmix64_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~5"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced once per inter-arrival drawn.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean_milli"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean_milli</strong></td>
+            <td>
+<p>A thousand times the mean, in <code>[0, POISSON_MAX_MEAN_MILLI]</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~55"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Set to <code>ERROR_VALIDATION</code> when <code>mean_milli</code> is out of range.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-splitmix64_next_range"></span> <h3>private  function <a href='../proc/splitmix64_next_range.html'>splitmix64_next_range</a>(gen, lo, hi, err) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Uniform integer in <code>[lo, hi]</code> from a splitmix64_t generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~2"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by the draw.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lo~11"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lo</strong></td>
+            <td>
+<p>Inclusive lower bound.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hi~11"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hi</strong></td>
+            <td>
+<p>Inclusive upper bound; must not be below <code>lo</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~53"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+<p>Set to <code>ERROR_VALIDATION</code> when <code>hi &lt; lo</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=default_int)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-splitmix64_uniform_below"></span> <h3>private  function <a href='../proc/splitmix64_uniform_below.html'>splitmix64_uniform_below</a>(gen, span_minus_1) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Uniform unsigned integer in <code>[0, span_minus_1]</code>, by rejection.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-span_minus_1~2"></span>
+              integer(kind=int64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>span_minus_1</strong></td>
+            <td>
+<p>Inclusive upper bound, read as unsigned.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int64)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-16 00:47 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

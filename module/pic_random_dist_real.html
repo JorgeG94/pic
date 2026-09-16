@@ -1,0 +1,1115 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>pic_random_dist_real &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>pic_random_dist_real
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.2% of total for modules and submodules.">50 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_random_dist_real.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_random_dist_real.f90.html'>pic_random_dist_real.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">pic_random_dist_real</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_random_dist_real.html#variable-two_pi">TWO_PI</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#inters-0"
+         aria-expanded="false" aria-controls="inters-0">
+         <h4 class="card-header bg-primary text-white">Interfaces</h4>
+      </a>
+      <div id="inters-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_random_dist_real.html#interface-next_exponential_dp">next_exponential_dp</a>
+            <a class="list-group-item" href="../module/pic_random_dist_real.html#interface-next_normal_dp">next_normal_dp</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#funcs-0"
+         aria-expanded="false" aria-controls="funcs-0">
+         <h4 class="card-header bg-primary text-white">Functions</h4>
+      </a>
+      <div id="funcs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/pic_random_dist_real.html#proc-pcg32_next_exponential_dp">pcg32_next_exponential_dp</a>
+            <a class="list-group-item" href="../module/pic_random_dist_real.html#proc-pcg32_next_normal_dp">pcg32_next_normal_dp</a>
+            <a class="list-group-item" href="../module/pic_random_dist_real.html#proc-splitmix64_next_exponential_dp">splitmix64_next_exponential_dp</a>
+            <a class="list-group-item" href="../module/pic_random_dist_real.html#proc-splitmix64_next_normal_dp">splitmix64_next_normal_dp</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <p>Distributions that return <code>real(dp)</code>.</p>
+<h3 id="read-this-before-using-these-in-simulation-state">Read this before using these in simulation state</h3>
+<p>These call <code>log</code>, <code>sqrt</code> and <code>cos</code>. Those are libm functions, and libm
+is not one function: GNU, Intel, NVIDIA, LLVM and LFortran do not agree
+to the last bit on any of them, and nothing obliges them to. Two runs of
+the same code with the same seed on two compilers will therefore produce
+different values here.</p>
+<p>That is fine for a histogram, a plot, a convergence study or a
+back-of-the-envelope estimate. It is not fine for anything that has to
+be compared across runs or across machines &ndash; a checkpoint digest, a
+determinism log, a bisected divergence. For those, use
+<code>pic_random_dist</code>, whose every routine is integer-only and pinned by
+tests.</p>
+<p>The two tiers are separate modules precisely so that this is a decision
+rather than an accident: code that never names this module cannot reach
+a non-reproducible deviate.</p>
+<h3 id="quick-start">Quick start</h3>
+<div class="codehilite"><pre><span></span><code><span class="k">use </span><span class="n">pic_rng</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="n">splitmix64_t</span>
+<span class="k">use </span><span class="n">pic_random_dist_real</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">:</span><span class="w"> </span><span class="n">next_exponential_dp</span><span class="p">,</span><span class="w"> </span><span class="n">next_normal_dp</span>
+
+<span class="k">type</span><span class="p">(</span><span class="n">splitmix64_t</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">gen</span>
+<span class="k">call </span><span class="n">gen</span><span class="p">%</span><span class="n">seed</span><span class="p">(</span><span class="mi">20250914_int64</span><span class="p">)</span>
+
+<span class="n">wait</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next_exponential_dp</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span><span class="w"> </span><span class="mf">4.0_dp</span><span class="p">)</span><span class="w">          </span><span class="c">! mean 4</span>
+<span class="n">noise</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next_normal_dp</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0_dp</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0_dp</span><span class="p">)</span><span class="w">      </span><span class="c">! standard normal</span>
+</code></pre></div>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='pic_types.html'>pic_types</a></li>
+                  <li class="list-inline-item"><a href='pic_rng.html'>pic_rng</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~pic_random_dist_real~~UsesGraph Pages: 1 -->
+<svg id="modulepic_random_dist_realUsesGraph" width="641pt" height="123pt"
+ viewBox="0.00 0.00 641.00 123.23" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~pic_random_dist_real~~UsesGraph" class="graph" transform="scale(0.9 0.9) rotate(0) translate(4 132.49)">
+<title>module~~pic_random_dist_real~~UsesGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-132.49 706,-132.49 706,4 -4,4"/>
+<!-- module~pic_random_dist_real -->
+<g id="module~~pic_random_dist_real~~UsesGraph_node1" class="node">
+<title>module~pic_random_dist_real</title>
+<polygon fill="none" stroke="black" points="702,-44.1 577,-44.1 577,-20.1 702,-20.1 702,-44.1"/>
+<text text-anchor="middle" x="639.5" y="-29.7" font-family="Helvetica,sans-Serif" font-size="10.50">pic_random_dist_real</text>
+</g>
+<!-- module~pic_rng -->
+<g id="module~~pic_random_dist_real~~UsesGraph_node2" class="node">
+<title>module~pic_rng</title>
+<g id="a_module~~pic_random_dist_real~~UsesGraph_node2"><a xlink:href="../module/pic_rng.html" xlink:title="pic_rng">
+<polygon fill="#337ab7" stroke="#337ab7" points="541,-74.1 487,-74.1 487,-50.1 541,-50.1 541,-74.1"/>
+<text text-anchor="middle" x="514" y="-59.7" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_rng</text>
+</a>
+</g>
+</g>
+<!-- module~pic_random_dist_real&#45;&gt;module~pic_rng -->
+<g id="module~~pic_random_dist_real~~UsesGraph_edge1" class="edge">
+<title>module~pic_random_dist_real&#45;&gt;module~pic_rng</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M588.98,-44.13C576.32,-47.21 562.94,-50.46 551.09,-53.34"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="550.02,-49.99 541.13,-55.76 551.67,-56.8 550.02,-49.99"/>
+</g>
+<!-- module~pic_types -->
+<g id="module~~pic_random_dist_real~~UsesGraph_node3" class="node">
+<title>module~pic_types</title>
+<g id="a_module~~pic_random_dist_real~~UsesGraph_node3"><a xlink:href="../module/pic_types.html" xlink:title="pic_types">
+<polygon fill="#337ab7" stroke="#337ab7" points="192,-74.1 130,-74.1 130,-50.1 192,-50.1 192,-74.1"/>
+<text text-anchor="middle" x="161" y="-59.7" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_types</text>
+</a>
+</g>
+</g>
+<!-- module~pic_random_dist_real&#45;&gt;module~pic_types -->
+<g id="module~~pic_random_dist_real~~UsesGraph_edge2" class="edge">
+<title>module~pic_random_dist_real&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M584.02,-20.07C504.11,-4.73 351.22,15.78 228,-20.1 212.05,-24.75 196.28,-34.54 184.15,-43.5"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="181.78,-40.91 176.01,-49.8 186.06,-46.45 181.78,-40.91"/>
+</g>
+<!-- module~pic_rng&#45;&gt;module~pic_types -->
+<g id="module~~pic_random_dist_real~~UsesGraph_edge4" class="edge">
+<title>module~pic_rng&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M499.31,-74.23C487.42,-84.03 469.27,-97.28 451,-104.1 384.53,-128.92 362.73,-133.15 292.5,-123.1"/>
+</g>
+<!-- module~pic_error -->
+<g id="module~~pic_random_dist_real~~UsesGraph_node6" class="node">
+<title>module~pic_error</title>
+<g id="a_module~~pic_random_dist_real~~UsesGraph_node6"><a xlink:href="../module/pic_error.html" xlink:title="pic_error">
+<polygon fill="#337ab7" stroke="#337ab7" points="451,-95.1 391,-95.1 391,-71.1 451,-71.1 451,-95.1"/>
+<text text-anchor="middle" x="421" y="-80.7" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_error</text>
+</a>
+</g>
+</g>
+<!-- module~pic_rng&#45;&gt;module~pic_error -->
+<g id="module~~pic_random_dist_real~~UsesGraph_edge3" class="edge">
+<title>module~pic_rng&#45;&gt;module~pic_error</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M486.68,-68.18C478.68,-70.02 469.71,-72.09 461.06,-74.09"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="460.09,-70.72 451.13,-76.38 461.66,-77.54 460.09,-70.72"/>
+</g>
+<!-- module~pic_uint64 -->
+<g id="module~~pic_random_dist_real~~UsesGraph_node7" class="node">
+<title>module~pic_uint64</title>
+<g id="a_module~~pic_random_dist_real~~UsesGraph_node7"><a xlink:href="../module/pic_uint64.html" xlink:title="pic_uint64">
+<polygon fill="#337ab7" stroke="#337ab7" points="325,-53.1 258,-53.1 258,-29.1 325,-29.1 325,-53.1"/>
+<text text-anchor="middle" x="291.5" y="-38.7" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_uint64</text>
+</a>
+</g>
+</g>
+<!-- module~pic_rng&#45;&gt;module~pic_uint64 -->
+<g id="module~~pic_random_dist_real~~UsesGraph_edge5" class="edge">
+<title>module~pic_rng&#45;&gt;module~pic_uint64</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M486.84,-59.61C449.37,-56.04 380.01,-49.44 335.09,-45.16"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="335.35,-41.67 325.06,-44.2 334.68,-48.64 335.35,-41.67"/>
+</g>
+<!-- iso_c_binding -->
+<g id="module~~pic_random_dist_real~~UsesGraph_node4" class="node">
+<title>iso_c_binding</title>
+<g id="a_module~~pic_random_dist_real~~UsesGraph_node4"><a xlink:href="http://fortranwiki.org/fortran/show/iso_c_binding" xlink:title="iso_c_binding">
+<polygon fill="#337ab7" stroke="#337ab7" points="89,-95.1 5,-95.1 5,-71.1 89,-71.1 89,-95.1"/>
+<text text-anchor="middle" x="47" y="-80.7" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_c_binding</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_c_binding -->
+<g id="module~~pic_random_dist_real~~UsesGraph_edge6" class="edge">
+<title>module~pic_types&#45;&gt;iso_c_binding</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M129.99,-67.73C120.46,-69.52 109.64,-71.55 99.07,-73.53"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="98.23,-70.12 89.05,-75.41 99.52,-77 98.23,-70.12"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~pic_random_dist_real~~UsesGraph_node5" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~pic_random_dist_real~~UsesGraph_node5"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-53.1 0,-53.1 0,-29.1 94,-29.1 94,-53.1"/>
+<text text-anchor="middle" x="47" y="-38.7" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~pic_types&#45;&gt;iso_fortran_env -->
+<g id="module~~pic_random_dist_real~~UsesGraph_edge7" class="edge">
+<title>module~pic_types&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M129.99,-56.48C121.98,-54.98 113.07,-53.3 104.15,-51.63"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="104.6,-48.16 94.13,-49.75 103.31,-55.04 104.6,-48.16"/>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_types -->
+<g id="module~~pic_random_dist_real~~UsesGraph_edge9" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M400.15,-95.26C375.47,-108.98 331.77,-128.72 292.5,-123.1"/>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M290.5,-123.1C261.76,-118.99 254.38,-116.23 228,-104.1 213.5,-97.44 198.41,-88.05 186.32,-79.83"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="188.31,-76.95 178.11,-74.12 184.32,-82.7 188.31,-76.95"/>
+</g>
+<!-- module~pic_global_definitions -->
+<g id="module~~pic_random_dist_real~~UsesGraph_node8" class="node">
+<title>module~pic_global_definitions</title>
+<g id="a_module~~pic_random_dist_real~~UsesGraph_node8"><a xlink:href="../module/pic_global_definitions.html" xlink:title="pic_global_definitions">
+<polygon fill="#337ab7" stroke="#337ab7" points="355,-95.1 228,-95.1 228,-71.1 355,-71.1 355,-95.1"/>
+<text text-anchor="middle" x="291.5" y="-80.7" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pic_global_definitions</text>
+</a>
+</g>
+</g>
+<!-- module~pic_error&#45;&gt;module~pic_global_definitions -->
+<g id="module~~pic_random_dist_real~~UsesGraph_edge8" class="edge">
+<title>module~pic_error&#45;&gt;module~pic_global_definitions</title>
+<path fill="none" stroke="#00ffff" stroke-dasharray="5,2" d="M390.75,-83.1C383,-83.1 374.29,-83.1 365.32,-83.1"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="365.14,-79.6 355.14,-83.1 365.14,-86.6 365.14,-79.6"/>
+</g>
+<!-- module~pic_uint64&#45;&gt;module~pic_types -->
+<g id="module~~pic_random_dist_real~~UsesGraph_edge10" class="edge">
+<title>module~pic_uint64&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#7f00ff" stroke-dasharray="5,2" d="M257.74,-46.46C240.76,-49.23 219.87,-52.65 201.94,-55.58"/>
+<polygon fill="#7f00ff" stroke="#7f00ff" points="201.36,-52.12 192.06,-57.19 202.49,-59.03 201.36,-52.12"/>
+</g>
+<!-- module~pic_global_definitions&#45;&gt;module~pic_types -->
+<g id="module~~pic_random_dist_real~~UsesGraph_edge11" class="edge">
+<title>module~pic_global_definitions&#45;&gt;module~pic_types</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M227.76,-72.85C219.07,-71.43 210.34,-70 202.21,-68.67"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="202.72,-65.21 192.28,-67.05 201.59,-72.12 202.72,-65.21"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panmodulepic_random_dist_realUsesGraph = svgPanZoom('#modulepic_random_dist_realUsesGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      
+      <br>
+
+
+        <section>
+          <h2>Variables</h2>
+            <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-two_pi"></span>
+              real(kind=dp),
+            </td>
+              <td>private,</td>
+            <td>
+parameter               
+            </td>
+            <td>::</td>
+            <td><strong>TWO_PI</strong></td>
+<td> =</td>
+                <td>6.283185307179586476925286766559_dp</td>
+            <td>
+                <p>2*pi to more digits than <code>real(dp)</code> can hold, so the nearest
+representable value is selected rather than a rounded decimal.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-next_exponential_dp"></span>
+      <h3>public        interface <a href='../interface/next_exponential_dp.html'>next_exponential_dp</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Draw an exponential deviate with the given mean.</p>
+<p>Inverse transform: <code>-mean * log(u)</code> with <code>u</code> uniform in (0, 1]. The
+uniform is taken as <code>1 - next_real_dp(gen)</code> rather than
+<code>next_real_dp(gen)</code> because the latter can return exactly zero, and
+<code>log(0)</code> is minus infinity. Subtracting from one moves the excluded
+endpoint to the other side, where it is harmless.</p>
+<p>A negative <code>mean</code> is not rejected; it simply mirrors the distribution
+about zero, which is occasionally what a caller wants.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/splitmix64_next_exponential_dp.html'>splitmix64_next_exponential_dp</a>(gen, mean) result(r)  
+
+    </h3>
+    
+  <p>Exponential deviate from a SplitMix64 generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~17"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by one draw.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean~4"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean</strong></td>
+            <td>
+<p>Mean of the distribution.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/pcg32_next_exponential_dp.html'>pcg32_next_exponential_dp</a>(gen, mean) result(r)  
+
+    </h3>
+    
+  <p>Exponential deviate from a PCG32 generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~18"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by one draw.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean~5"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean</strong></td>
+            <td>
+<p>Mean of the distribution.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+              <div class="card">
+    <div class="card-header bg-light codesum">
+      <span class="anchor" id="interface-next_normal_dp"></span>
+      <h3>public        interface <a href='../interface/next_normal_dp.html'>next_normal_dp</a> 
+      </h3>
+    </div>
+      <div class="card-body">
+        <p>Draw a normal deviate with mean <code>mu</code> and standard deviation <code>sigma</code>.</p>
+<p>Box-Muller. The transform naturally yields two independent deviates
+per pair of uniforms, and the usual implementation caches the second
+for the next call. This one discards it.</p>
+<p>That halves the throughput and is deliberate. A cache makes the
+generator state depend on whether the call count is odd or even, so
+two runs that draw the same number of normals but interleave them
+differently with other draws diverge. Without it, the generator&rsquo;s
+position is a plain function of how many times it has been asked for
+anything, which is far easier to reason about &ndash; and it keeps this
+function <code>pure</code> in spirit: no hidden state between calls.</p>
+      </div>
+    <ul class="list-group">
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/splitmix64_next_normal_dp.html'>splitmix64_next_normal_dp</a>(gen, mu, sigma) result(r)  
+
+    </h3>
+    
+  <p>Normal deviate from a SplitMix64 generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~19"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by exactly two draws.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mu"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mu</strong></td>
+            <td>
+<p>Mean.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sigma"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sigma</strong></td>
+            <td>
+<p>Standard deviation.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+          </li>
+          <li class="list-group-item">
+                <h3>
+    private  function <a href='../proc/pcg32_next_normal_dp.html'>pcg32_next_normal_dp</a>(gen, mu, sigma) result(r)  
+
+    </h3>
+    
+  <p>Normal deviate from a PCG32 generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~20"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by exactly two draws.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mu~2"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mu</strong></td>
+            <td>
+<p>Mean.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sigma~2"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sigma</strong></td>
+            <td>
+<p>Standard deviation.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+          </li>
+    </ul>
+  </div>
+
+        </section>
+        <br>
+
+
+
+        <section>
+          <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_next_exponential_dp"></span> <h3>private  function <a href='../proc/pcg32_next_exponential_dp.html'>pcg32_next_exponential_dp</a>(gen, mean) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Exponential deviate from a PCG32 generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~18"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by one draw.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean~5"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean</strong></td>
+            <td>
+<p>Mean of the distribution.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-pcg32_next_normal_dp"></span> <h3>private  function <a href='../proc/pcg32_next_normal_dp.html'>pcg32_next_normal_dp</a>(gen, mu, sigma) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Normal deviate from a PCG32 generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~20"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by exactly two draws.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mu~2"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mu</strong></td>
+            <td>
+<p>Mean.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sigma~2"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sigma</strong></td>
+            <td>
+<p>Standard deviation.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-splitmix64_next_exponential_dp"></span> <h3>private  function <a href='../proc/splitmix64_next_exponential_dp.html'>splitmix64_next_exponential_dp</a>(gen, mean) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Exponential deviate from a SplitMix64 generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~17"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by one draw.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean~4"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean</strong></td>
+            <td>
+<p>Mean of the distribution.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-splitmix64_next_normal_dp"></span> <h3>private  function <a href='../proc/splitmix64_next_normal_dp.html'>splitmix64_next_normal_dp</a>(gen, mu, sigma) result(r)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Normal deviate from a SplitMix64 generator.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~19"></span>
+              type(<a href='../type/splitmix64_t.html'>splitmix64_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+<p>Generator, advanced by exactly two draws.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mu"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mu</strong></td>
+            <td>
+<p>Mean.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sigma"></span>
+              real(kind=dp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sigma</strong></td>
+            <td>
+<p>Standard deviation.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=dp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-16 00:47 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

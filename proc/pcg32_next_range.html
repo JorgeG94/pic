@@ -1,0 +1,757 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>pcg32_next_range &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>pcg32_next_range
+      <small>Function</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.1% of total for procedures.">18 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_random_dist.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_random_dist.f90.html'>pic_random_dist.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_random_dist.html'>pic_random_dist</a></li>
+            <li class="breadcrumb-item active" aria-current="page">pcg32_next_range</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../proc/pcg32_next_range.html#variable-span_minus_1~5">span_minus_1</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/pcg32_next_range.html#src">pcg32_next_range</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private  function pcg32_next_range(gen, lo, hi, err) result(r)  
+</h2>
+    
+
+    <p>Uniform integer in <code>[lo, hi]</code> from a pcg32_t generator.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~7"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+                <p>Generator, advanced by the draw.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lo~12"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lo</strong></td>
+            <td>
+                <p>Inclusive lower bound.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hi~12"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hi</strong></td>
+            <td>
+                <p>Inclusive upper bound; must not be below <code>lo</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~56"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                <p>Set to <code>ERROR_VALIDATION</code> when <code>hi &lt; lo</code>.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <h3>Return Value
+        <small>
+          <span class="anchor" id="variable-r~38"></span>
+          integer(kind=default_int)
+        </small>
+      </h3>
+      
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~pcg32_next_range~~CallsGraph Pages: 1 -->
+<svg id="procpcg32_next_rangeCallsGraph" width="641pt" height="180pt"
+ viewBox="0.00 0.00 641.00 179.73" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~pcg32_next_range~~CallsGraph" class="graph" transform="scale(0.89 0.89) rotate(0) translate(4 199)">
+<title>proc~~pcg32_next_range~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-199 720,-199 720,4 -4,4"/>
+<!-- proc~pcg32_next_range -->
+<g id="proc~~pcg32_next_range~~CallsGraph_node1" class="node">
+<title>proc~pcg32_next_range</title>
+<polygon fill="none" stroke="black" points="110,-155 0,-155 0,-131 110,-131 110,-155"/>
+<text text-anchor="middle" x="55" y="-140.6" font-family="Helvetica,sans-Serif" font-size="10.50">pcg32_next_range</text>
+</g>
+<!-- proc~error_set -->
+<g id="proc~~pcg32_next_range~~CallsGraph_node2" class="node">
+<title>proc~error_set</title>
+<g id="a_proc~~pcg32_next_range~~CallsGraph_node2"><a xlink:href="../proc/error_set.html" xlink:title="error_t%error_set">
+<polygon fill="#d9534f" stroke="#d9534f" points="263.5,-195 158.5,-195 158.5,-171 263.5,-171 263.5,-195"/>
+<text text-anchor="middle" x="211" y="-180.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_set</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_next_range&#45;&gt;proc~error_set -->
+<g id="proc~~pcg32_next_range~~CallsGraph_edge1" class="edge">
+<title>proc~pcg32_next_range&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#ff0000" d="M102.21,-155C118.42,-159.21 136.83,-163.99 153.78,-168.4"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="153,-171.81 163.56,-170.94 154.76,-165.04 153,-171.81"/>
+</g>
+<!-- proc~pcg32_uniform_below -->
+<g id="proc~~pcg32_next_range~~CallsGraph_node3" class="node">
+<title>proc~pcg32_uniform_below</title>
+<g id="a_proc~~pcg32_next_range~~CallsGraph_node3"><a xlink:href="../proc/pcg32_uniform_below.html" xlink:title="pcg32_uniform_below">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="276,-84 146,-84 146,-60 276,-60 276,-84"/>
+<text text-anchor="middle" x="211" y="-69.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pcg32_uniform_below</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_next_range&#45;&gt;proc~pcg32_uniform_below -->
+<g id="proc~~pcg32_next_range~~CallsGraph_edge2" class="edge">
+<title>proc~pcg32_next_range&#45;&gt;proc~pcg32_uniform_below</title>
+<path fill="none" stroke="#ff0000" d="M82.12,-130.96C107.57,-119.23 146.42,-101.31 174.63,-88.31"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="176.13,-91.47 183.75,-84.1 173.2,-85.11 176.13,-91.47"/>
+</g>
+<!-- proc~u64_add -->
+<g id="proc~~pcg32_next_range~~CallsGraph_node4" class="node">
+<title>proc~u64_add</title>
+<g id="a_proc~~pcg32_next_range~~CallsGraph_node4"><a xlink:href="../proc/u64_add.html" xlink:title="u64_add">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="701,-167 643,-167 643,-143 701,-143 701,-167"/>
+<text text-anchor="middle" x="672" y="-152.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">u64_add</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_next_range&#45;&gt;proc~u64_add -->
+<g id="proc~~pcg32_next_range~~CallsGraph_edge3" class="edge">
+<title>proc~pcg32_next_range&#45;&gt;proc~u64_add</title>
+<path fill="none" stroke="#ff0000" d="M110.04,-144.05C232.17,-146.44 527.06,-152.19 632.62,-154.25"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="632.74,-157.75 642.81,-154.45 632.88,-150.76 632.74,-157.75"/>
+</g>
+<!-- proc~pcg32_next_u64 -->
+<g id="proc~~pcg32_next_range~~CallsGraph_node5" class="node">
+<title>proc~pcg32_next_u64</title>
+<g id="a_proc~~pcg32_next_range~~CallsGraph_node5"><a xlink:href="../proc/pcg32_next_u64.html" xlink:title="pcg32_t%pcg32_next_u64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="463,-104 312,-104 312,-80 463,-80 463,-104"/>
+<text text-anchor="middle" x="387.5" y="-89.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pcg32_t%pcg32_next_u64</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_uniform_below&#45;&gt;proc~pcg32_next_u64 -->
+<g id="proc~~pcg32_next_range~~CallsGraph_edge4" class="edge">
+<title>proc~pcg32_uniform_below&#45;&gt;proc~pcg32_next_u64</title>
+<path fill="none" stroke="#00ff00" d="M276.48,-79.39C284.79,-80.34 293.39,-81.33 301.95,-82.31"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="301.64,-85.8 311.97,-83.46 302.43,-78.84 301.64,-85.8"/>
+</g>
+<!-- proc~rejection_mask -->
+<g id="proc~~pcg32_next_range~~CallsGraph_node6" class="node">
+<title>proc~rejection_mask</title>
+<g id="a_proc~~pcg32_next_range~~CallsGraph_node6"><a xlink:href="../proc/rejection_mask.html" xlink:title="rejection_mask">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="592,-41 499,-41 499,-17 592,-17 592,-41"/>
+<text text-anchor="middle" x="545.5" y="-26.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">rejection_mask</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_uniform_below&#45;&gt;proc~rejection_mask -->
+<g id="proc~~pcg32_next_range~~CallsGraph_edge5" class="edge">
+<title>proc~pcg32_uniform_below&#45;&gt;proc~rejection_mask</title>
+<path fill="none" stroke="#00ff00" d="M276.11,-63.71C337.71,-55.74 429.84,-43.83 488.55,-36.24"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="489.28,-39.67 498.75,-34.92 488.38,-32.73 489.28,-39.67"/>
+</g>
+<!-- proc~u64_less -->
+<g id="proc~~pcg32_next_range~~CallsGraph_node7" class="node">
+<title>proc~u64_less</title>
+<g id="a_proc~~pcg32_next_range~~CallsGraph_node7"><a xlink:href="../proc/u64_less.html" xlink:title="u64_less">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="416.5,-24 358.5,-24 358.5,0 416.5,0 416.5,-24"/>
+<text text-anchor="middle" x="387.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">u64_less</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_uniform_below&#45;&gt;proc~u64_less -->
+<g id="proc~~pcg32_next_range~~CallsGraph_edge6" class="edge">
+<title>proc~pcg32_uniform_below&#45;&gt;proc~u64_less</title>
+<path fill="none" stroke="#00ff00" d="M247.31,-59.86C276.75,-49.74 318.59,-35.35 348.7,-25"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="350.11,-28.22 358.42,-21.65 347.83,-21.6 350.11,-28.22"/>
+</g>
+<!-- proc~pcg32_step -->
+<g id="proc~~pcg32_next_range~~CallsGraph_node8" class="node">
+<title>proc~pcg32_step</title>
+<g id="a_proc~~pcg32_next_range~~CallsGraph_node8"><a xlink:href="../proc/pcg32_step.html" xlink:title="pcg32_step">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="582,-104 509,-104 509,-80 582,-80 582,-104"/>
+<text text-anchor="middle" x="545.5" y="-89.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pcg32_step</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_next_u64&#45;&gt;proc~pcg32_step -->
+<g id="proc~~pcg32_next_range~~CallsGraph_edge7" class="edge">
+<title>proc~pcg32_next_u64&#45;&gt;proc~pcg32_step</title>
+<path fill="none" stroke="#ff0000" d="M463.3,-92C475.27,-92 487.34,-92 498.38,-92"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="498.62,-95.5 508.62,-92 498.62,-88.5 498.62,-95.5"/>
+</g>
+<!-- proc~u64_shr -->
+<g id="proc~~pcg32_next_range~~CallsGraph_node9" class="node">
+<title>proc~u64_shr</title>
+<g id="a_proc~~pcg32_next_range~~CallsGraph_node9"><a xlink:href="../proc/u64_shr.html" xlink:title="u64_shr">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="699.5,-41 644.5,-41 644.5,-17 699.5,-17 699.5,-41"/>
+<text text-anchor="middle" x="672" y="-26.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">u64_shr</text>
+</a>
+</g>
+</g>
+<!-- proc~rejection_mask&#45;&gt;proc~u64_shr -->
+<g id="proc~~pcg32_next_range~~CallsGraph_edge8" class="edge">
+<title>proc~rejection_mask&#45;&gt;proc~u64_shr</title>
+<path fill="none" stroke="#00ff00" d="M592.15,-29C605.95,-29 620.93,-29 634.08,-29"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="634.18,-32.5 644.18,-29 634.18,-25.5 634.18,-32.5"/>
+</g>
+<!-- proc~pcg32_step&#45;&gt;proc~u64_add -->
+<g id="proc~~pcg32_next_range~~CallsGraph_edge10" class="edge">
+<title>proc~pcg32_step&#45;&gt;proc~u64_add</title>
+<path fill="none" stroke="#ff0000" d="M569.62,-104.08C585.9,-112.55 608.22,-124.08 628,-134 630.9,-135.45 633.91,-136.95 636.93,-138.45"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="635.43,-141.61 645.94,-142.88 638.51,-135.32 635.43,-141.61"/>
+</g>
+<!-- proc~pcg32_step&#45;&gt;proc~u64_shr -->
+<g id="proc~~pcg32_next_range~~CallsGraph_edge12" class="edge">
+<title>proc~pcg32_step&#45;&gt;proc~u64_shr</title>
+<path fill="none" stroke="#ff0000" d="M569.62,-79.92C585.9,-71.45 608.22,-59.92 628,-50 630.9,-48.55 633.91,-47.05 636.93,-45.55"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="638.51,-48.68 645.94,-41.12 635.43,-42.39 638.51,-48.68"/>
+</g>
+<!-- proc~rotate_right32 -->
+<g id="proc~~pcg32_next_range~~CallsGraph_node10" class="node">
+<title>proc~rotate_right32</title>
+<g id="a_proc~~pcg32_next_range~~CallsGraph_node10"><a xlink:href="../proc/rotate_right32.html" xlink:title="rotate_right32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="716,-125 628,-125 628,-101 716,-101 716,-125"/>
+<text text-anchor="middle" x="672" y="-110.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">rotate_right32</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_step&#45;&gt;proc~rotate_right32 -->
+<g id="proc~~pcg32_next_range~~CallsGraph_edge9" class="edge">
+<title>proc~pcg32_step&#45;&gt;proc~rotate_right32</title>
+<path fill="none" stroke="#ff0000" d="M582.18,-98.02C593.29,-99.89 605.8,-102 617.84,-104.03"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="617.36,-107.5 627.81,-105.71 618.53,-100.6 617.36,-107.5"/>
+</g>
+<!-- proc~u64_mul -->
+<g id="proc~~pcg32_next_range~~CallsGraph_node11" class="node">
+<title>proc~u64_mul</title>
+<g id="a_proc~~pcg32_next_range~~CallsGraph_node11"><a xlink:href="../proc/u64_mul.html" xlink:title="u64_mul">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="701,-83 643,-83 643,-59 701,-59 701,-83"/>
+<text text-anchor="middle" x="672" y="-68.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">u64_mul</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_step&#45;&gt;proc~u64_mul -->
+<g id="proc~~pcg32_next_range~~CallsGraph_edge11" class="edge">
+<title>proc~pcg32_step&#45;&gt;proc~u64_mul</title>
+<path fill="none" stroke="#ff0000" d="M582.18,-85.98C597.97,-83.32 616.58,-80.18 632.67,-77.46"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="633.55,-80.87 642.83,-75.75 632.39,-73.96 633.55,-80.87"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocpcg32_next_rangeCallsGraph = svgPanZoom('#procpcg32_next_rangeCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~pcg32_next_range~~CalledByGraph Pages: 1 -->
+<svg id="procpcg32_next_rangeCalledByGraph" width="226pt" height="32pt"
+ viewBox="0.00 0.00 226.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~pcg32_next_range~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~pcg32_next_range~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 222,-28 222,4 -4,4"/>
+<!-- proc~pcg32_next_range -->
+<g id="proc~~pcg32_next_range~~CalledByGraph_node1" class="node">
+<title>proc~pcg32_next_range</title>
+<polygon fill="none" stroke="black" points="218,-24 108,-24 108,0 218,0 218,-24"/>
+<text text-anchor="middle" x="163" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">pcg32_next_range</text>
+</g>
+<!-- interface~next_range -->
+<g id="proc~~pcg32_next_range~~CalledByGraph_node2" class="node">
+<title>interface~next_range</title>
+<g id="a_proc~~pcg32_next_range~~CalledByGraph_node2"><a xlink:href="../interface/next_range.html" xlink:title="next_range">
+<polygon fill="#a7506f" stroke="#a7506f" points="72,-24 0,-24 0,0 72,0 72,-24"/>
+<text text-anchor="middle" x="36" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">next_range</text>
+</a>
+</g>
+</g>
+<!-- interface~next_range&#45;&gt;proc~pcg32_next_range -->
+<g id="proc~~pcg32_next_range~~CalledByGraph_edge1" class="edge">
+<title>interface~next_range&#45;&gt;proc~pcg32_next_range</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M72.15,-12C80.23,-12 89.07,-12 97.95,-12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="97.96,-15.5 107.96,-12 97.96,-8.5 97.96,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    <section>    
+      <h2>Variables</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-span_minus_1~5"></span>
+              integer(kind=int64),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>span_minus_1</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">function </span><span class="n">pcg32_next_range</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span><span class="w"> </span><span class="n">lo</span><span class="p">,</span><span class="w"> </span><span class="n">hi</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="w">      </span><span class="c">!! Uniform integer in `[lo, hi]` from a pcg32_t generator.</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">pcg32_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">gen</span>
+<span class="w">         </span><span class="c">!! Generator, advanced by the draw.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">lo</span>
+<span class="w">         </span><span class="c">!! Inclusive lower bound.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">hi</span>
+<span class="w">         </span><span class="c">!! Inclusive upper bound; must not be below `lo`.</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">error_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">err</span>
+<span class="w">         </span><span class="c">!! Set to `ERROR_VALIDATION` when `hi &lt; lo`.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">r</span>
+
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">span_minus_1</span>
+
+<span class="w">      </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lo</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hi</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">lo</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">err</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            call </span><span class="n">err</span><span class="p">%</span><span class="n">set</span><span class="p">(</span><span class="n">ERROR_VALIDATION</span><span class="p">,</span><span class="w"> </span><span class="s2">"pic_random_dist: next_range requires hi &gt;= lo"</span><span class="p">)</span>
+<span class="w">         </span><span class="k">end if</span>
+<span class="k">         return</span>
+<span class="k">      end if</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">hi</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">lo</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+
+<span class="w">      </span><span class="c">! hi - lo in unsigned 64-bit, which is exact even when the span is wider</span>
+<span class="w">      </span><span class="c">! than the signed range. Negation is spelled as `not(x) + 1` because</span>
+<span class="w">      </span><span class="c">! negating the most negative value directly is signed overflow.</span>
+<span class="w">      </span><span class="n">span_minus_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u64_add</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span><span class="w"> </span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="n">u64_add</span><span class="p">(</span><span class="nb">not</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span><span class="w"> </span><span class="n">int64</span><span class="p">)),</span><span class="w"> </span><span class="mi">1_int64</span><span class="p">))</span>
+<span class="w">      </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">u64_add</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span><span class="w"> </span><span class="n">int64</span><span class="p">),</span><span class="w"> </span><span class="n">pcg32_uniform_below</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span><span class="w"> </span><span class="n">span_minus_1</span><span class="p">)),</span><span class="w"> </span><span class="n">default_int</span><span class="p">)</span>
+<span class="w">   </span><span class="k">end function </span><span class="n">pcg32_next_range</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-16 00:47 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

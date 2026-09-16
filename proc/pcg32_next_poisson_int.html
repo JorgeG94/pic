@@ -1,0 +1,781 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="A set of commonly used programs in Fortran aimed at scientific computing">
+    <meta name="author" content="Jorge Luis Galvez Vallejo" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>pcg32_next_poisson_int &ndash; PIC</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">PIC </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="../page/index.html">About PIC</a></li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>pcg32_next_poisson_int
+      <small>Function</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.1% of total for procedures.">23 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/pic_random_dist.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/pic_random_dist.f90.html'>pic_random_dist.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/pic_random_dist.html'>pic_random_dist</a></li>
+            <li class="breadcrumb-item active" aria-current="page">pcg32_next_poisson_int</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../proc/pcg32_next_poisson_int.html#variable-elapsed~2">elapsed</a>
+            <a class="list-group-item" href="../proc/pcg32_next_poisson_int.html#variable-gap_mean~2">gap_mean</a>
+            <a class="list-group-item" href="../proc/pcg32_next_poisson_int.html#variable-window~2">window</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/pcg32_next_poisson_int.html#src">pcg32_next_poisson_int</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private  function pcg32_next_poisson_int(gen, mean_milli, err) result(r)  
+</h2>
+    
+
+    <p>Poisson count with mean <code>mean_milli/1000</code>, from a pcg32_t generator.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gen~10"></span>
+              type(<a href='../type/pcg32_t.html'>pcg32_t</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gen</strong></td>
+            <td>
+                <p>Generator, advanced once per inter-arrival drawn.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mean_milli~2"></span>
+              integer(kind=default_int),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mean_milli</strong></td>
+            <td>
+                <p>A thousand times the mean, in <code>[0, POISSON_MAX_MEAN_MILLI]</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-err~58"></span>
+              type(<a href='../type/error_t.html'>error_t</a>),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                <p>Set to <code>ERROR_VALIDATION</code> when <code>mean_milli</code> is out of range.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <h3>Return Value
+        <small>
+          <span class="anchor" id="variable-r~41"></span>
+          integer(kind=int32)
+        </small>
+      </h3>
+      
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~pcg32_next_poisson_int~~CallsGraph Pages: 1 -->
+<svg id="procpcg32_next_poisson_intCallsGraph" width="641pt" height="176pt"
+ viewBox="0.00 0.00 641.00 176.01" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph" class="graph" transform="scale(0.82 0.82) rotate(0) translate(4 211)">
+<title>proc~~pcg32_next_poisson_int~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-211 779,-211 779,4 -4,4"/>
+<!-- proc~pcg32_next_poisson_int -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_node1" class="node">
+<title>proc~pcg32_next_poisson_int</title>
+<polygon fill="none" stroke="black" points="138,-187 0,-187 0,-163 138,-163 138,-187"/>
+<text text-anchor="middle" x="69" y="-172.6" font-family="Helvetica,sans-Serif" font-size="10.50">pcg32_next_poisson_int</text>
+</g>
+<!-- proc~error_set -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_node2" class="node">
+<title>proc~error_set</title>
+<g id="a_proc~~pcg32_next_poisson_int~~CallsGraph_node2"><a xlink:href="../proc/error_set.html" xlink:title="error_t%error_set">
+<polygon fill="#d9534f" stroke="#d9534f" points="498,-207 393,-207 393,-183 498,-183 498,-207"/>
+<text text-anchor="middle" x="445.5" y="-192.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">error_t%error_set</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_next_poisson_int&#45;&gt;proc~error_set -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_edge1" class="edge">
+<title>proc~pcg32_next_poisson_int&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#ff0000" d="M138.25,-178.65C208.09,-182.37 315.63,-188.12 382.93,-191.71"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="382.79,-195.21 392.96,-192.25 383.17,-188.22 382.79,-195.21"/>
+</g>
+<!-- proc~pcg32_next_exponential_int -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_node3" class="node">
+<title>proc~pcg32_next_exponential_int</title>
+<g id="a_proc~~pcg32_next_poisson_int~~CallsGraph_node3"><a xlink:href="../proc/pcg32_next_exponential_int.html" xlink:title="pcg32_next_exponential_int">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="334,-167 174,-167 174,-143 334,-143 334,-167"/>
+<text text-anchor="middle" x="254" y="-152.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pcg32_next_exponential_int</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_next_poisson_int&#45;&gt;proc~pcg32_next_exponential_int -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_edge2" class="edge">
+<title>proc~pcg32_next_poisson_int&#45;&gt;proc~pcg32_next_exponential_int</title>
+<path fill="none" stroke="#ff0000" d="M138.14,-167.55C146.47,-166.64 155.07,-165.7 163.65,-164.77"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="164.13,-168.23 173.69,-163.67 163.37,-161.28 164.13,-168.23"/>
+</g>
+<!-- proc~pcg32_next_exponential_int&#45;&gt;proc~error_set -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_edge3" class="edge">
+<title>proc~pcg32_next_exponential_int&#45;&gt;proc~error_set</title>
+<path fill="none" stroke="#00ffff" d="M311.86,-167C334.27,-171.73 360.07,-177.18 382.92,-182"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="382.34,-185.46 392.85,-184.1 383.79,-178.61 382.34,-185.46"/>
+</g>
+<!-- proc~pcg32_next_u64 -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_node4" class="node">
+<title>proc~pcg32_next_u64</title>
+<g id="a_proc~~pcg32_next_poisson_int~~CallsGraph_node4"><a xlink:href="../proc/pcg32_next_u64.html" xlink:title="pcg32_t%pcg32_next_u64">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="521,-89 370,-89 370,-65 521,-65 521,-89"/>
+<text text-anchor="middle" x="445.5" y="-74.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pcg32_t%pcg32_next_u64</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_next_exponential_int&#45;&gt;proc~pcg32_next_u64 -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_edge4" class="edge">
+<title>proc~pcg32_next_exponential_int&#45;&gt;proc~pcg32_next_u64</title>
+<path fill="none" stroke="#00ffff" d="M279.85,-142.99C302.96,-132.01 338.46,-115.6 370,-103 379.06,-99.38 388.85,-95.76 398.26,-92.42"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="399.6,-95.66 407.88,-89.05 397.29,-89.05 399.6,-95.66"/>
+</g>
+<!-- proc~scale_by_mean -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_node5" class="node">
+<title>proc~scale_by_mean</title>
+<g id="a_proc~~pcg32_next_poisson_int~~CallsGraph_node5"><a xlink:href="../proc/scale_by_mean.html" xlink:title="scale_by_mean">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="651,-169 557,-169 557,-145 651,-145 651,-169"/>
+<text text-anchor="middle" x="604" y="-154.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">scale_by_mean</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_next_exponential_int&#45;&gt;proc~scale_by_mean -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_edge5" class="edge">
+<title>proc~pcg32_next_exponential_int&#45;&gt;proc~scale_by_mean</title>
+<path fill="none" stroke="#00ffff" d="M334.4,-155.46C399.12,-155.83 488.93,-156.34 546.51,-156.68"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="546.5,-160.18 556.52,-156.73 546.54,-153.18 546.5,-160.18"/>
+</g>
+<!-- proc~u64_shr -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_node6" class="node">
+<title>proc~u64_shr</title>
+<g id="a_proc~~pcg32_next_poisson_int~~CallsGraph_node6"><a xlink:href="../proc/u64_shr.html" xlink:title="u64_shr">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="758.5,-150 703.5,-150 703.5,-126 758.5,-126 758.5,-150"/>
+<text text-anchor="middle" x="731" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">u64_shr</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_next_exponential_int&#45;&gt;proc~u64_shr -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_edge6" class="edge">
+<title>proc~pcg32_next_exponential_int&#45;&gt;proc~u64_shr</title>
+<path fill="none" stroke="#00ffff" d="M334.1,-148.66C394.99,-144.11 481.26,-138.38 557,-136 598.76,-134.69 609.23,-135.47 651,-136 664.75,-136.17 679.84,-136.52 693.11,-136.87"/>
+<polygon fill="#00ffff" stroke="#00ffff" points="693.22,-140.38 703.31,-137.16 693.41,-133.38 693.22,-140.38"/>
+</g>
+<!-- proc~pcg32_step -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_node7" class="node">
+<title>proc~pcg32_step</title>
+<g id="a_proc~~pcg32_next_poisson_int~~CallsGraph_node7"><a xlink:href="../proc/pcg32_step.html" xlink:title="pcg32_step">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="640.5,-89 567.5,-89 567.5,-65 640.5,-65 640.5,-89"/>
+<text text-anchor="middle" x="604" y="-74.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pcg32_step</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_next_u64&#45;&gt;proc~pcg32_step -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_edge7" class="edge">
+<title>proc~pcg32_next_u64&#45;&gt;proc~pcg32_step</title>
+<path fill="none" stroke="#ff0000" d="M521.08,-77C533.38,-77 545.8,-77 557.12,-77"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="557.17,-80.5 567.17,-77 557.17,-73.5 557.17,-80.5"/>
+</g>
+<!-- proc~scale_by_mean&#45;&gt;proc~u64_shr -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_edge8" class="edge">
+<title>proc~scale_by_mean&#45;&gt;proc~u64_shr</title>
+<path fill="none" stroke="#00ff00" d="M651.19,-149.98C665.02,-147.88 679.99,-145.6 693.14,-143.6"/>
+<polygon fill="#00ff00" stroke="#00ff00" points="693.87,-147.03 703.23,-142.07 692.82,-140.11 693.87,-147.03"/>
+</g>
+<!-- proc~pcg32_step&#45;&gt;proc~u64_shr -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_edge12" class="edge">
+<title>proc~pcg32_step&#45;&gt;proc~u64_shr</title>
+<path fill="none" stroke="#ff0000" d="M629.7,-89.05C648.7,-98.33 675.17,-111.24 696.15,-121.48"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="694.83,-124.73 705.36,-125.97 697.9,-118.44 694.83,-124.73"/>
+</g>
+<!-- proc~rotate_right32 -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_node8" class="node">
+<title>proc~rotate_right32</title>
+<g id="a_proc~~pcg32_next_poisson_int~~CallsGraph_node8"><a xlink:href="../proc/rotate_right32.html" xlink:title="rotate_right32">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="775,-108 687,-108 687,-84 775,-84 775,-108"/>
+<text text-anchor="middle" x="731" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">rotate_right32</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_step&#45;&gt;proc~rotate_right32 -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_edge9" class="edge">
+<title>proc~pcg32_step&#45;&gt;proc~rotate_right32</title>
+<path fill="none" stroke="#ff0000" d="M640.82,-82.44C651.98,-84.14 664.54,-86.05 676.63,-87.89"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="676.22,-91.37 686.63,-89.41 677.27,-84.45 676.22,-91.37"/>
+</g>
+<!-- proc~u64_add -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_node9" class="node">
+<title>proc~u64_add</title>
+<g id="a_proc~~pcg32_next_poisson_int~~CallsGraph_node9"><a xlink:href="../proc/u64_add.html" xlink:title="u64_add">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="760,-66 702,-66 702,-42 760,-42 760,-66"/>
+<text text-anchor="middle" x="731" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">u64_add</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_step&#45;&gt;proc~u64_add -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_edge10" class="edge">
+<title>proc~pcg32_step&#45;&gt;proc~u64_add</title>
+<path fill="none" stroke="#ff0000" d="M640.82,-70.41C656.68,-67.49 675.36,-64.05 691.52,-61.08"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="692.51,-64.46 701.72,-59.2 691.25,-57.57 692.51,-64.46"/>
+</g>
+<!-- proc~u64_mul -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_node10" class="node">
+<title>proc~u64_mul</title>
+<g id="a_proc~~pcg32_next_poisson_int~~CallsGraph_node10"><a xlink:href="../proc/u64_mul.html" xlink:title="u64_mul">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="760,-24 702,-24 702,0 760,0 760,-24"/>
+<text text-anchor="middle" x="731" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">u64_mul</text>
+</a>
+</g>
+</g>
+<!-- proc~pcg32_step&#45;&gt;proc~u64_mul -->
+<g id="proc~~pcg32_next_poisson_int~~CallsGraph_edge11" class="edge">
+<title>proc~pcg32_step&#45;&gt;proc~u64_mul</title>
+<path fill="none" stroke="#ff0000" d="M627.15,-64.82C643.59,-55.85 666.58,-43.46 687,-33 689.88,-31.52 692.89,-30.01 695.91,-28.5"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="697.49,-31.62 704.91,-24.05 694.39,-25.35 697.49,-31.62"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocpcg32_next_poisson_intCallsGraph = svgPanZoom('#procpcg32_next_poisson_intCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~pcg32_next_poisson_int~~CalledByGraph Pages: 1 -->
+<svg id="procpcg32_next_poisson_intCalledByGraph" width="282pt" height="32pt"
+ viewBox="0.00 0.00 282.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~pcg32_next_poisson_int~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~pcg32_next_poisson_int~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 278,-28 278,4 -4,4"/>
+<!-- proc~pcg32_next_poisson_int -->
+<g id="proc~~pcg32_next_poisson_int~~CalledByGraph_node1" class="node">
+<title>proc~pcg32_next_poisson_int</title>
+<polygon fill="none" stroke="black" points="274,-24 136,-24 136,0 274,0 274,-24"/>
+<text text-anchor="middle" x="205" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">pcg32_next_poisson_int</text>
+</g>
+<!-- interface~next_poisson_int -->
+<g id="proc~~pcg32_next_poisson_int~~CalledByGraph_node2" class="node">
+<title>interface~next_poisson_int</title>
+<g id="a_proc~~pcg32_next_poisson_int~~CalledByGraph_node2"><a xlink:href="../interface/next_poisson_int.html" xlink:title="next_poisson_int">
+<polygon fill="#a7506f" stroke="#a7506f" points="100,-24 0,-24 0,0 100,0 100,-24"/>
+<text text-anchor="middle" x="50" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">next_poisson_int</text>
+</a>
+</g>
+</g>
+<!-- interface~next_poisson_int&#45;&gt;proc~pcg32_next_poisson_int -->
+<g id="proc~~pcg32_next_poisson_int~~CalledByGraph_edge1" class="edge">
+<title>interface~next_poisson_int&#45;&gt;proc~pcg32_next_poisson_int</title>
+<path fill="none" stroke="#ff0000" stroke-dasharray="5,2" d="M100.25,-12C108.41,-12 117.05,-12 125.72,-12"/>
+<polygon fill="#ff0000" stroke="#ff0000" points="125.89,-15.5 135.89,-12 125.89,-8.5 125.89,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ Where possible, edges connecting nodes are
+given different colours to make them easier to distinguish in
+large graphs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    <section>    
+      <h2>Variables</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-elapsed~2"></span>
+              integer(kind=int64),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>elapsed</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gap_mean~2"></span>
+              integer(kind=int64),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>gap_mean</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-window~2"></span>
+              integer(kind=int64),
+            </td>
+              <td>private</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>window</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">   </span><span class="k">function </span><span class="n">pcg32_next_poisson_int</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span><span class="w"> </span><span class="n">mean_milli</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="w">      </span><span class="c">!! Poisson count with mean `mean_milli/1000`, from a pcg32_t generator.</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">pcg32_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">gen</span>
+<span class="w">         </span><span class="c">!! Generator, advanced once per inter-arrival drawn.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">mean_milli</span>
+<span class="w">         </span><span class="c">!! A thousand times the mean, in `[0, POISSON_MAX_MEAN_MILLI]`.</span>
+<span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">error_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span><span class="w"> </span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">err</span>
+<span class="w">         </span><span class="c">!! Set to `ERROR_VALIDATION` when `mean_milli` is out of range.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int32</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">r</span>
+
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">gap_mean</span><span class="p">,</span><span class="w"> </span><span class="n">window</span><span class="p">,</span><span class="w"> </span><span class="n">elapsed</span>
+
+<span class="w">      </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_int32</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mean_milli</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0_default_int</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">mean_milli</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">POISSON_MAX_MEAN_MILLI</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">         if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">err</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            call </span><span class="n">err</span><span class="p">%</span><span class="n">set</span><span class="p">(</span><span class="n">ERROR_VALIDATION</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                         </span><span class="s2">"pic_random_dist: next_poisson_int mean_milli out of range"</span><span class="p">)</span>
+<span class="w">         </span><span class="k">end if</span>
+<span class="k">         return</span>
+<span class="k">      end if</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">mean_milli</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0_default_int</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+
+<span class="w">      </span><span class="c">! Mean gap between arrivals, in window ticks: window / (mean_milli/1000).</span>
+<span class="w">      </span><span class="c">! That division truncates, so the gap actually used is a little short of</span>
+<span class="w">      </span><span class="c">! the one asked for, and the count over a fixed window comes out high --</span>
+<span class="w">      </span><span class="c">! by up to 0.048%, worst at mean_milli = 999596.</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">! Fixing the gap and deriving the window from it instead turns that</span>
+<span class="w">      </span><span class="c">! round-off to the sampler's advantage: whatever gap the truncation</span>
+<span class="w">      </span><span class="c">! landed on, the window is the one for which that gap is exactly right.</span>
+<span class="w">      </span><span class="c">! The residual is the truncation of the window itself, under 1e-6</span>
+<span class="w">      </span><span class="c">! relative.</span>
+<span class="w">      </span><span class="n">gap_mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">POISSON_WINDOW</span><span class="o">*</span><span class="mi">1000_int64</span><span class="p">)</span><span class="o">/</span><span class="nb">int</span><span class="p">(</span><span class="n">mean_milli</span><span class="p">,</span><span class="w"> </span><span class="n">int64</span><span class="p">)</span>
+<span class="w">      </span><span class="n">window</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">gap_mean</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">mean_milli</span><span class="p">,</span><span class="w"> </span><span class="n">int64</span><span class="p">))</span><span class="o">/</span><span class="mi">1000_int64</span>
+<span class="w">      </span><span class="n">elapsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0_int64</span>
+<span class="w">      </span><span class="k">do</span>
+<span class="k">         </span><span class="n">elapsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">elapsed</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">pcg32_next_exponential_int</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span><span class="w"> </span><span class="n">gap_mean</span><span class="p">)</span>
+<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">elapsed</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">window</span><span class="p">)</span><span class="w"> </span><span class="k">exit</span>
+<span class="k">         </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1_int32</span>
+<span class="w">      </span><span class="k">end do</span>
+<span class="k">   end function </span><span class="n">pcg32_next_poisson_int</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              PIC
+ was developed by Jorge Luis Galvez Vallejo<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-09-16 00:47 +0000             </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>
