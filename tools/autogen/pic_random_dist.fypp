@@ -1,0 +1,403 @@
+! SPDX-License-Identifier: MIT
+! Copyright (c) 2025 Jorge Luis Galvez Vallejo
+#! ---------------------------------------------------------------------------
+#! Template for src/lib/core/random_dist/pic_random_dist.f90.
+#!
+#! Every routine here is generic over the two generators in pic_rng, which
+#! have no common parent type, so each needs one specific per generator. The
+#! bodies are identical apart from the generator's type name.
+#!
+#! Regenerate with tools/autogen/autogen.sh; do not edit the generated file.
+#! ---------------------------------------------------------------------------
+#:set GENERATORS = [('splitmix64', 'splitmix64_t'), ('pcg32', 'pcg32_t')]
+!! Integer-valued random distributions, reproducible across compilers.
+module pic_random_dist
+   !! Distributions whose output is an integer or a logical, and which are
+   !! therefore bit-identical on every supported compiler.
+   !!
+   !! ### Why a separate module from the real-valued one
+   !!
+   !! A textbook exponential deviate is `-mean * log(u)`. That calls libm,
+   !! and libm is not the same function on every platform: GNU, Intel and
+   !! NVIDIA do not agree to the last bit, and they are not obliged to. Any
+   !! value derived that way is unusable in state that has to be compared
+   !! across runs or across compilers.
+   !!
+   !! Everything in this module is computed with integer arithmetic only --
+   !! no real type appears in any expression that reaches a result -- so a
+   !! given generator and seed produce the same sequence everywhere. The
+   !! tests pin the first outputs of every routine for a fixed seed, and
+   !! those pins are the contract.
+   !!
+   !! The real-valued distributions live in `pic_random_dist_real`. Keeping
+   !! them in a different module means a translation unit that only uses this
+   !! one cannot reach a non-reproducible deviate by accident.
+   !!
+   !! ### Quick start
+   !!
+   !! ```fortran
+   !! use pic_rng, only: splitmix64_t
+   !! use pic_random_dist, only: next_range, next_bernoulli_ppm, &
+   !!                            next_exponential_int
+   !!
+   !! type(splitmix64_t) :: gen
+   !! call gen%seed(20250914_int64)
+   !!
+   !! die = next_range(gen, 1, 6)                  ! inclusive
+   !! stolen = next_bernoulli_ppm(gen, 2500)       ! 0.25% chance
+   !! gap_ms = next_exponential_int(gen, 4000_int64)   ! mean 4 seconds
+   !! ```
+   use pic_types, only: default_int, int32, int64
+   use pic_error, only: error_t, ERROR_VALIDATION
+   use pic_rng, only: splitmix64_t, pcg32_t
+   use pic_uint64, only: u64_add, u64_shr, u64_less
+   implicit none
+   private
+
+   public :: next_range
+   public :: next_bernoulli_ppm
+   public :: next_exponential_int
+   public :: next_poisson_int
+
+   integer(default_int), parameter, public :: PPM_ONE = 1000000_default_int
+      !! Parts per million corresponding to certainty, for
+      !! `next_bernoulli_ppm`.
+
+   integer(int64), parameter, public :: EXPONENTIAL_MAX_MEAN = 2147483647_int64
+      !! Largest `mean` `next_exponential_int` accepts, `huge(int32)` as an
+      !! `int64`. The bound is what makes the final fixed-point multiply
+      !! provably free of signed overflow; see `scale_by_mean`.
+
+   integer(default_int), parameter, public :: POISSON_MAX_MEAN_MILLI = 1000000_default_int
+      !! Largest `mean_milli` `next_poisson_int` accepts, that is a mean of
+      !! 1000 events. The sampler is O(mean), so this is a guard against
+      !! silently getting slow rather than an arithmetic limit.
+
+   integer(default_int), parameter :: EXP_CELL_BITS = 12_default_int
+      !! Number of random bits that select a table cell; 2**12 == 4096.
+   integer(default_int), parameter :: EXP_CELLS = 4096_default_int
+      !! Number of cells in `EXP_TABLE`, and so 2**EXP_CELL_BITS.
+   integer(default_int), parameter :: EXP_TOP_CELL = EXP_CELLS - 1_default_int
+      !! Index of the cell that runs off to infinity; handled by recursion.
+   integer(default_int), parameter :: EXP_MAX_TAIL = 8_default_int
+      !! Most times the tail loop may go round. Each turn needs the 12-bit
+      !! draw to hit exactly one value, so reaching the cap has probability
+      !! 4096**-8, about 3e-29, and bounds the result at 9*ln(4096) means.
+#:include 'pic_exp_table.inc'
+
+   integer(int64), parameter :: EXP_LN_CELLS = EXP_TABLE(EXP_TOP_CELL)
+      !! ln(4096) in Q32.32. Taken from the table rather than written out
+      !! again, because `-ln(1 - 4095/4096)` is exactly `ln(4096)` and a second
+      !! copy of it could drift. Added once per turn around the tail loop.
+   integer(default_int), parameter :: FRAC_BITS = 31_default_int
+      !! Bits used to interpolate within a cell. Thirty-one and not thirty-two
+      !! so that `gap * frac` fits a signed `int64` in a single multiply: the
+      !! widest gap is below 2**32 (asserted by the table generator), and
+      !! (2**32 - 1) * (2**31 - 1) is below huge(int64).
+   integer(int64), parameter :: Q32_MASK = 4294967295_int64
+      !! 2**32 - 1, to take the fractional part of a Q32.32 value.
+   integer(int64), parameter :: Q32_HALF = 2147483648_int64
+      !! 2**31, the Q32.32 representation of 0.5, added before the final shift
+      !! so that the fraction rounds to nearest instead of truncating.
+
+   integer(int64), parameter :: POISSON_WINDOW = 2097152_int64
+      !! 2**21 ticks. The count is the number of exponential inter-arrivals
+      !! that fit in this window. Chosen as the largest power of two with
+      !! `POISSON_WINDOW * 1000` still inside `EXPONENTIAL_MAX_MEAN`, so that
+      !! a mean of one thousandth of an event is still expressible.
+
+   interface next_range
+      !! Draw a uniform integer in the inclusive range `[lo, hi]`.
+      !!
+      !! The span is computed in unsigned 64-bit arithmetic, so the full range
+      !! of `default_int` works: `next_range(gen, -huge(1)-1, huge(1))` spans
+      !! every `int32` value and is still exactly uniform. Rejection sampling
+      !! gives every value in range exactly one preimage per draw, so there is
+      !! no modulo bias.
+      !!
+      !! `hi < lo` is a usage error: it returns `lo` and, if `err` is present,
+      !! sets `ERROR_VALIDATION`. `lo == hi` returns `lo` without consuming a
+      !! draw.
+#:for name, gtype in GENERATORS
+      module procedure ${name}$_next_range
+#:endfor
+   end interface next_range
+
+   interface next_bernoulli_ppm
+      !! Return true with probability `ppm` in a million.
+      !!
+      !! `ppm` is clamped to `[0, PPM_ONE]`, so 0 never fires and 1000000
+      !! always does, and no value in between can be mistyped into an error.
+      !! Parts per million rather than a real probability because this reaches
+      !! simulation state: an incident either happened or it did not, and two
+      !! runs must agree on which.
+#:for name, gtype in GENERATORS
+      module procedure ${name}$_next_bernoulli_ppm
+#:endfor
+   end interface next_bernoulli_ppm
+
+   interface next_exponential_int
+      !! Draw an exponentially distributed integer with the given mean, in
+      !! whatever unit `mean` is expressed in.
+      !!
+      !! Sampling is a table lookup and two integer multiplies. `EXP_TABLE`
+      !! holds the inverse CDF `-ln(1 - k/4096)` in Q32.32 fixed point,
+      !! generated once by `tools/autogen/gen_exp_table.py` with 60-digit
+      !! decimal arithmetic. Twelve random bits choose a cell, thirty-one more
+      !! interpolate linearly inside it, and the result is scaled by `mean`.
+      !!
+      !! ### The tail
+      !!
+      !! The top cell runs to infinity and cannot be interpolated into. It is
+      !! handled with the memorylessness of the exponential instead: if `U` is
+      !! uniform on the top cell then `-ln(1 - U)` is distributed as
+      !! `ln(4096)` plus a fresh exponential, so the sampler adds `ln(4096)`
+      !! and draws again. That is exact, and it costs an extra draw with
+      !! probability 1/4096.
+      !!
+      !! Capping the top entry at a finite value and interpolating into it --
+      !! the obvious alternative -- biases the mean by 0.147%. This scheme
+      !! leaves 0.002%, and all of that residue is linear interpolation inside
+      !! the body cells, not the tail.
+      !!
+      !! `mean` must be in `[0, EXPONENTIAL_MAX_MEAN]`. A mean of zero always
+      !! returns zero without consuming a draw. Out of range returns zero and,
+      !! if `err` is present, sets `ERROR_VALIDATION`.
+#:for name, gtype in GENERATORS
+      module procedure ${name}$_next_exponential_int
+#:endfor
+   end interface next_exponential_int
+
+   interface next_poisson_int
+      !! Draw a Poisson-distributed count with mean `mean_milli/1000`.
+      !!
+      !! The mean is given a thousand times over so that fractional means are
+      !! expressible without a real type: `mean_milli = 2500` means 2.5 events.
+      !!
+      !! Counts the exponential inter-arrivals that fit inside a fixed window,
+      !! which is the defining construction of a Poisson process rather than
+      !! an approximation of one. Cost is O(mean).
+      !!
+      !! `mean_milli` must be in `[0, POISSON_MAX_MEAN_MILLI]`. Zero returns
+      !! zero without consuming a draw. Out of range returns zero and, if `err`
+      !! is present, sets `ERROR_VALIDATION`.
+#:for name, gtype in GENERATORS
+      module procedure ${name}$_next_poisson_int
+#:endfor
+   end interface next_poisson_int
+
+contains
+
+   pure function rejection_mask(span_minus_1) result(mask)
+      !! Smallest `2**k - 1` that covers `span_minus_1` read as unsigned.
+      !!
+      !! Smears the highest set bit down over every bit below it. A
+      !! `span_minus_1` of -1, which as unsigned is 2**64 - 1, gives a mask of
+      !! -1, under which every draw is accepted -- which is right, because
+      !! that span is the whole word.
+      integer(int64), intent(in) :: span_minus_1
+         !! One less than the number of distinct values wanted, unsigned.
+      integer(int64) :: mask
+
+      integer(default_int) :: shift
+
+      mask = span_minus_1
+      shift = 1_default_int
+      do while (shift < 64_default_int)
+         mask = ior(mask, u64_shr(mask, shift))
+         shift = shift*2_default_int
+      end do
+   end function rejection_mask
+
+   pure function scale_by_mean(x_q32, mean) result(r)
+      !! Multiply a Q32.32 value by an integer mean and drop the fraction.
+      !!
+      !! Done in two halves so that nothing overflows. The integer part of
+      !! `x_q32` is at most 9*ln(4096), under 75, so the first product cannot
+      !! exceed 75 * huge(int32). The fractional part is below 2**32 and
+      !! `mean` is at most huge(int32), so the second product is at most
+      !! (2**32 - 1) * (2**31 - 1); adding the rounding term below still
+      !! leaves it under huge(int64), with about 4e9 to spare.
+      !!
+      !! The fraction is rounded to nearest rather than truncated. Truncating
+      !! would lose on average half a unit per draw, which is invisible at a
+      !! mean of 4000 ticks and a 23% error at a mean of 2.
+      !!
+      !! Rounding shrinks that but does not remove it. Discretising an
+      !! exponential to integers leaves `E[round(mean*X)]` at
+      !! `exp(-1/(2*mean)) / (1 - exp(-1/mean))`, which is 4.0% low at a mean
+      !! of 1, 1.0% at 2, 0.46% at 3 and 0.04% at 10. Above about 100 it is
+      !! gone. That is inherent to an integer result, not a defect in the
+      !! scaling, but a caller working in units that small should know the
+      !! mean it gets is not quite the mean it asked for.
+      integer(int64), intent(in) :: x_q32
+         !! Deviate in Q32.32 fixed point.
+      integer(int64), intent(in) :: mean
+         !! Mean, in `[0, EXPONENTIAL_MAX_MEAN]`.
+      integer(int64) :: r
+
+      r = u64_shr(x_q32, 32_default_int)*mean &
+          + u64_shr(iand(x_q32, Q32_MASK)*mean + Q32_HALF, 32_default_int)
+   end function scale_by_mean
+
+#:for name, gtype in GENERATORS
+
+   ! ---- ${gtype}$ --------------------------------------------------------
+
+   function ${name}$_uniform_below(gen, span_minus_1) result(r)
+      !! Uniform unsigned integer in `[0, span_minus_1]`, by rejection.
+      type(${gtype}$), intent(inout) :: gen
+      integer(int64), intent(in) :: span_minus_1
+         !! Inclusive upper bound, read as unsigned.
+      integer(int64) :: r
+
+      integer(int64) :: mask
+
+      if (span_minus_1 == 0_int64) then
+         r = 0_int64
+         return
+      end if
+      mask = rejection_mask(span_minus_1)
+      do
+         r = iand(gen%next_u64(), mask)
+         if (.not. u64_less(span_minus_1, r)) exit
+      end do
+   end function ${name}$_uniform_below
+
+   function ${name}$_next_range(gen, lo, hi, err) result(r)
+      !! Uniform integer in `[lo, hi]` from a ${gtype}$ generator.
+      type(${gtype}$), intent(inout) :: gen
+         !! Generator, advanced by the draw.
+      integer(default_int), intent(in) :: lo
+         !! Inclusive lower bound.
+      integer(default_int), intent(in) :: hi
+         !! Inclusive upper bound; must not be below `lo`.
+      type(error_t), intent(inout), optional :: err
+         !! Set to `ERROR_VALIDATION` when `hi < lo`.
+      integer(default_int) :: r
+
+      integer(int64) :: span_minus_1
+
+      r = lo
+      if (hi < lo) then
+         if (present(err)) then
+            call err%set(ERROR_VALIDATION, "pic_random_dist: next_range requires hi >= lo")
+         end if
+         return
+      end if
+      if (hi == lo) return
+
+      ! hi - lo in unsigned 64-bit, which is exact even when the span is wider
+      ! than the signed range. Negation is spelled as `not(x) + 1` because
+      ! negating the most negative value directly is signed overflow.
+      span_minus_1 = u64_add(int(hi, int64), u64_add(not(int(lo, int64)), 1_int64))
+      r = int(u64_add(int(lo, int64), ${name}$_uniform_below(gen, span_minus_1)), default_int)
+   end function ${name}$_next_range
+
+   function ${name}$_next_bernoulli_ppm(gen, ppm) result(r)
+      !! True with probability `ppm` in a million, from a ${gtype}$ generator.
+      type(${gtype}$), intent(inout) :: gen
+         !! Generator, advanced by the draw unless `ppm` is 0 or `PPM_ONE`.
+      integer(default_int), intent(in) :: ppm
+         !! Probability in parts per million, clamped to `[0, PPM_ONE]`.
+      logical :: r
+
+      integer(default_int) :: clamped
+
+      clamped = max(0_default_int, min(PPM_ONE, ppm))
+      if (clamped == 0_default_int) then
+         r = .false.
+         return
+      end if
+      if (clamped == PPM_ONE) then
+         r = .true.
+         return
+      end if
+      r = ${name}$_uniform_below(gen, int(PPM_ONE, int64) - 1_int64) < int(clamped, int64)
+   end function ${name}$_next_bernoulli_ppm
+
+   function ${name}$_next_exponential_int(gen, mean, err) result(r)
+      !! Exponential integer with the given mean, from a ${gtype}$ generator.
+      type(${gtype}$), intent(inout) :: gen
+         !! Generator, advanced by one draw, or more in the tail.
+      integer(int64), intent(in) :: mean
+         !! Mean of the distribution, in `[0, EXPONENTIAL_MAX_MEAN]`.
+      type(error_t), intent(inout), optional :: err
+         !! Set to `ERROR_VALIDATION` when `mean` is out of range.
+      integer(int64) :: r
+
+      integer(int64) :: word, x_q32, gap
+      integer(default_int) :: cell, frac, turns
+
+      r = 0_int64
+      if (mean < 0_int64 .or. mean > EXPONENTIAL_MAX_MEAN) then
+         if (present(err)) then
+            call err%set(ERROR_VALIDATION, &
+                         "pic_random_dist: next_exponential_int mean out of range")
+         end if
+         return
+      end if
+      if (mean == 0_int64) return
+
+      x_q32 = 0_int64
+      turns = 0_default_int
+      do
+         word = gen%next_u64()
+         cell = int(ibits(word, 0_default_int, EXP_CELL_BITS), default_int)
+         if (cell < EXP_TOP_CELL .or. turns >= EXP_MAX_TAIL) then
+            if (cell >= EXP_TOP_CELL) cell = EXP_TOP_CELL - 1_default_int
+            frac = int(ibits(word, 33_default_int, FRAC_BITS), default_int)
+            gap = EXP_TABLE(cell + 1_default_int) - EXP_TABLE(cell)
+            x_q32 = x_q32 + EXP_TABLE(cell) + u64_shr(gap*int(frac, int64), FRAC_BITS)
+            exit
+         end if
+         x_q32 = x_q32 + EXP_LN_CELLS
+         turns = turns + 1_default_int
+      end do
+      r = scale_by_mean(x_q32, mean)
+   end function ${name}$_next_exponential_int
+
+   function ${name}$_next_poisson_int(gen, mean_milli, err) result(r)
+      !! Poisson count with mean `mean_milli/1000`, from a ${gtype}$ generator.
+      type(${gtype}$), intent(inout) :: gen
+         !! Generator, advanced once per inter-arrival drawn.
+      integer(default_int), intent(in) :: mean_milli
+         !! A thousand times the mean, in `[0, POISSON_MAX_MEAN_MILLI]`.
+      type(error_t), intent(inout), optional :: err
+         !! Set to `ERROR_VALIDATION` when `mean_milli` is out of range.
+      integer(int32) :: r
+
+      integer(int64) :: gap_mean, window, elapsed
+
+      r = 0_int32
+      if (mean_milli < 0_default_int .or. mean_milli > POISSON_MAX_MEAN_MILLI) then
+         if (present(err)) then
+            call err%set(ERROR_VALIDATION, &
+                         "pic_random_dist: next_poisson_int mean_milli out of range")
+         end if
+         return
+      end if
+      if (mean_milli == 0_default_int) return
+
+      ! Mean gap between arrivals, in window ticks: window / (mean_milli/1000).
+      ! That division truncates, so the gap actually used is a little short of
+      ! the one asked for, and the count over a fixed window comes out high --
+      ! by up to 0.048%, worst at mean_milli = 999596.
+      !
+      ! Fixing the gap and deriving the window from it instead turns that
+      ! round-off to the sampler's advantage: whatever gap the truncation
+      ! landed on, the window is the one for which that gap is exactly right.
+      ! The residual is the truncation of the window itself, under 1e-6
+      ! relative.
+      gap_mean = (POISSON_WINDOW*1000_int64)/int(mean_milli, int64)
+      window = (gap_mean*int(mean_milli, int64))/1000_int64
+      elapsed = 0_int64
+      do
+         elapsed = elapsed + ${name}$_next_exponential_int(gen, gap_mean)
+         if (elapsed > window) exit
+         r = r + 1_int32
+      end do
+   end function ${name}$_next_poisson_int
+#:endfor
+
+end module pic_random_dist
