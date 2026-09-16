@@ -6,6 +6,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/) (also mention if you do).
 
 ## [Unreleased]
+
+## [0.9.0] – 2026-09-16
+A minor bump rather than a patch, because 0.8.2 changed something
+consumer-visible and its version number did not say so. Nothing in this
+release breaks anything; the number is here to mark the boundary.
+
+Pre-1.0 semver promises nothing formally (spec §4), but the convention this
+project follows from here is the usual one: `0.MINOR` may break consumers,
+`0.x.PATCH` may not.
+
+### Migration from 0.8.1 or earlier
+
+pic's `.mod` files moved out of the top-level build tree and into pic's own in
+0.8.2 — under FetchContent, from `<top>/modules` to
+`<top>/_deps/pic-build/modules`. A consumer with that path hardcoded fails to
+compile with `Cannot open module file 'pic_types.mod'`.
+
+**Delete the hardcoded path and link the target instead:**
+
+```cmake
+target_link_libraries(mine PRIVATE pic::pic_core)   # installed package
+target_link_libraries(mine PRIVATE pic_core)        # subproject
+```
+
+The module directory now travels with the target, so this keeps working
+wherever pic puts its modules in future. Nothing else is needed — in
+particular, no `target_include_directories` call for pic.
+
 ### Fixed
 - A consumer that links `pic` or `pic_core` as a subproject now gets pic's
   module directory from the target, instead of having to know where pic puts

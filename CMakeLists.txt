@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.28)
 project(
   "PIC"
   LANGUAGES Fortran C
-  VERSION 0.8.2
+  VERSION 0.9.0
   DESCRIPTION "Jorge's cool stuff")
 set(project_name pic)
 
