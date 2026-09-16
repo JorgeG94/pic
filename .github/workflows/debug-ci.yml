@@ -1,0 +1,63 @@
+name: Debug build
+
+# Every other job in this repository builds Release (or Coverage). That is how
+# a Debug build came to be broken for two releases without anybody noticing:
+# `-ffpe-trap=invalid,zero,overflow` turned the two tests that deliberately
+# exercise overflow and NaN into SIGFPE crashes, and no job ever ran them.
+#
+# Debug is the build type a contributor reaches for the first time they have to
+# debug something, so it gets a job. Two compilers rather than the full matrix:
+# the flags this guards are set per compiler family, and GNU and Intel are the
+# two families that set any.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  debug:
+    name: ${{ matrix.toolchain.compiler }} ${{ matrix.toolchain.version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain:
+          - {compiler: gcc, version: 14}
+          - {compiler: intel, version: '2025.0'}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Install Ninja
+        run: pip install --upgrade ninja
+
+      - name: Set up Fortran
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
+
+      - name: Configure
+        run: >
+          cmake -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=Debug
+          -DPIC_ENABLE_TESTING=ON
+
+      - name: Build
+        run: cmake --build build
+
+      # The whole point. A Debug build must run its own test suite.
+      - name: Test
+        run: ctest --test-dir build --output-on-failure

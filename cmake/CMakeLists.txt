@@ -20,13 +20,31 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
         "-Wall -Wextra -Wpedantic -Wsurprising -Waliasing -Wampersand -Wno-array-bounds -Wcharacter-truncation -Wconversion -Wline-truncation -Wintrinsics-std -Wno-tabs -Wunderflow -Wunused-parameter -Wintrinsic-shadow -Wno-align-commons -Wsurprising"
     )
   endif()
-  set(fpe "-ffpe-trap=invalid,zero,overflow")
+  # `zero` only, deliberately.
+  #
+  # `invalid` and `overflow` are both reachable through pic's own public API by
+  # design, not by accident: `parse_real` on a literal too large for real(dp)
+  # needs strtod to raise overflow before it can report ERROR_PARSE, and
+  # `array_hash` canonicalises NaN, which means forming and inspecting one.
+  # Trapping those turned the two tests that cover exactly those contracts into
+  # SIGFPE crashes, so a Debug build of pic could not run its own test suite.
+  #
+  # Division by zero is the one of the three that is essentially always a real
+  # bug in library code, so it stays. Weakening the two tests to keep the other
+  # two traps would be a worse trade: the tests assert behaviour pic promises,
+  # the traps only catch a class of mistake pic has not made.
+  set(fpe "-ffpe-trap=zero")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
   set(standard_compile_flags "-traceback")
-  set(fpe "-check all -fpe0")
+  # `-fpe0` and not `-fpe1`/`-fpe3` would be the analogue of the gfortran line
+  # above, but `-fpe` has no per-exception selection: 0 enables invalid,
+  # divide-by-zero and overflow together. Since two of those three are reachable
+  # by design (see the comment on the GNU branch), the whole flag goes and
+  # `-check all` -- which is the part that catches real bugs -- stays.
+  set(fpe "-check all")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "IntelLLVM")
   set(standard_compile_flags "-axAVX2 -traceback")
-  set(fpe "-check all -fpe0")
+  set(fpe "-check all")
 elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
   set(standard_compile_flags " -traceback")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "LLVMFlang")

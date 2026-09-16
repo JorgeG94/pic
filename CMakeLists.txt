@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.28)
 project(
   "PIC"
   LANGUAGES Fortran C
-  VERSION 0.7.0
+  VERSION 0.8.1
   DESCRIPTION "Jorge's cool stuff")
 set(project_name pic)
 
@@ -159,6 +159,17 @@ install(
   FILES_MATCHING
   PATTERN "*.mod")
 
+# The fypp macro library behind pic_soa, so that a consumer can generate its own
+# container instead of editing pic's source tree, which is what the manual used
+# to tell it to do. picConfig.cmake exports the installed location as
+# PIC_AUTOGEN_DIR for passing to `fypp -I`.
+include(GNUInstallDirs)
+install(
+  DIRECTORY tools/autogen/
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/pic/autogen
+  FILES_MATCHING
+  PATTERN "*.fypp")
+
 install(
   EXPORT picTargets
   FILE picTargets.cmake
@@ -167,10 +178,13 @@ install(
 
 include(CMakePackageConfigHelpers)
 
+set(PIC_AUTOGEN_DIR "${CMAKE_INSTALL_DATADIR}/pic/autogen")
+
 configure_package_config_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/picConfig.cmake.in"
   "${CMAKE_CURRENT_BINARY_DIR}/picConfig.cmake"
-  INSTALL_DESTINATION lib/cmake/pic)
+  INSTALL_DESTINATION lib/cmake/pic
+  PATH_VARS PIC_AUTOGEN_DIR)
 
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/picConfigVersion.cmake"

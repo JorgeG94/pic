@@ -134,7 +134,10 @@ Files under ``tools/autogen/`` ending in ``.fypp`` are the source of truth for:
 - ``src/lib/core/strings/pic_ascii.f90``, ``pic_strings.f90``,
   ``pic_string_type.F90``, ``pic_string_type_constructor.f90``,
   ``pic_strings_to_strings.F90``
-- ``src/lib/core/soa/pic_soa_particle.f90``
+- ``src/lib/core/soa/pic_soa_particle.f90`` (from ``pic_soa_particle.fypp``,
+  which is two lines over the ``pic_soa.fypp`` macro library --- edit that one
+  only to change the generator itself, never to add a container of your own;
+  see :doc:`features`)
 
 To change any of them:
 
