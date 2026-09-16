@@ -67,14 +67,29 @@ if(CMAKE_Fortran_COMPILER_ID MATCHES "GNU")
   # two traps would be a worse trade: the tests assert behaviour pic promises,
   # the traps only catch a class of mistake pic has not made.
   set(fpe "-ffpe-trap=zero")
-elseif(CMAKE_Fortran_COMPILER_ID MATCHES "Intel")
+  # STREQUAL, not MATCHES. ifx reports `IntelLLVM` and ifort reports `Intel`,
+  # and "IntelLLVM" matches the regex "Intel" -- so with MATCHES the ifort arm
+  # swallowed ifx as well, and the IntelLLVM arm below it had not executed once
+  # since it was written. Exact comparison makes the two arms mean what they say
+  # regardless of the order they appear in.
+  #
+  # Both carry `-traceback` and nothing else, which is what ifx has in fact been
+  # built with all along. The `-axAVX2` the unreachable arm asked for is
+  # deliberately NOT reinstated here: switching it on changes generated code for
+  # every ifx consumer of pic, and that belongs in its own change rather than
+  # arriving as a side effect of fixing the dispatch.
+elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "IntelLLVM")
   set(standard_compile_flags "-traceback")
   set(fpe "-check ${pic_intel_checks}")
-elseif(CMAKE_Fortran_COMPILER_ID MATCHES "IntelLLVM")
-  set(standard_compile_flags "-axAVX2 -traceback")
+elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
+  set(standard_compile_flags "-traceback")
   set(fpe "-check ${pic_intel_checks}")
 elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "NVHPC")
   set(standard_compile_flags " -traceback")
+  # Order-dependent, and intentionally so: "Flang" also matches "LLVMFlang", so
+  # the LLVM arm has to come first. Left as MATCHES because AOCC's flang has
+  # reported both spellings across releases and both arms need to keep catching
+  # it; the comment is here so the ordering is not mistaken for arbitrary.
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "LLVMFlang")
   set(standard_compile_flags "")
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "LFortran")

@@ -42,6 +42,12 @@ public names.
   gone for the same reason it is on GNU.
 
 ### Added
+- Intel compiler dispatch that can tell ifx from ifort. The branches used
+  `MATCHES`, which is a regex, and `"IntelLLVM"` matches `"Intel"` — so ifort's
+  arm swallowed ifx too and the `IntelLLVM` arm had never executed since it was
+  written. Both now use `STREQUAL`. The `-axAVX2` that unreachable arm asked
+  for is deliberately not reinstated: ifx has been built without it all along,
+  and switching it on would change generated code for every ifx consumer.
 - A Debug CI job, on GNU and Intel. Every other job builds Release, which is
   how the above went unnoticed across two releases.
 - `tools/autogen/` is installed to `${CMAKE_INSTALL_DATADIR}/pic/autogen`, and
