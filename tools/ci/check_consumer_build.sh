@@ -19,6 +19,20 @@ echo "== pic source:  $PIC_SRC"
 echo "== build dir:   $BUILD"
 
 cmake -S "$HERE" -B "$BUILD" -DPIC_SOURCE_DIR="$PIC_SRC" ${CMAKE_GENERATOR:+-G "$CMAKE_GENERATOR"}
+# Between configure and build, which is the window the bug lives in.
+# Fortran_MODULE_DIRECTORY is not created until build time on some CMake
+# versions, and CMake refuses to generate against an interface include
+# directory that does not exist -- so a consumer on such a version cannot
+# configure at all, while one on a version that pre-creates it never notices.
+# Asserting it here makes the invariant pic relies on explicit rather than
+# leaving it to whichever CMake happens to be installed.
+if [ ! -d "$BUILD/pic/modules" ]; then
+  echo "error: $BUILD/pic/modules does not exist after configure." >&2
+  echo "The BUILD_INTERFACE include pic exports points at it, so a consumer" >&2
+  echo "on a CMake that does not pre-create it cannot generate." >&2
+  exit 1
+fi
+
 cmake --build "$BUILD"
 
 # Running it matters as much as building it: a wrong module path can still

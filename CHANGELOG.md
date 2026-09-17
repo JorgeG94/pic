@@ -6,6 +6,42 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/) (also mention if you do).
 
 ## [Unreleased]
+
+## [0.9.2] – 2026-09-17
+A patch release. Both fixes are build-system problems only a consumer could
+hit, which is why neither showed up in pic's own CI.
+
+### Fixed
+- pic exported `$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/modules>` without ever
+  creating that directory. `Fortran_MODULE_DIRECTORY` is not created until
+  build time on some CMake versions, and CMake refuses to generate against an
+  interface include directory that does not exist, so on those versions a
+  consumer could not configure against pic at all. CMake 3.28 pre-creates it,
+  which is why no job here ever saw it; pic-mpi found it the hard way, through
+  a consumer whose CMake does not. The consumer check now asserts the directory
+  exists *between* configure and build — the window the bug lives in — since
+  every previous assertion ran after the build, where compiling has already
+  created it.
+- Building with LFortran on CMake older than 3.30 failed with a message about
+  the compiler being broken. CMake gained a `Compiler/LFortran-Fortran` module
+  only in 3.30, so before that `project()` cannot identify LFortran at all.
+  A check before `project()` now says what is actually wrong. This is
+  deliberately not a `cmake_minimum_required` bump: 3.30 is one compiler's
+  requirement, not pic's, and every other supported compiler builds pic on the
+  CMake in Ubuntu 24.04 (3.28), RHEL 9 (3.26) and Ubuntu 22.04 (3.22).
+
+### Changed
+- `README.md` and the installation manual both said CMake 3.31+ was required.
+  That was never the real minimum — `cmake_minimum_required` has been 3.28.
+  Corrected in both, with the LFortran caveat above.
+
+
+## [0.9.1] – 2026-09-17
+Tagged and published from `main` before the version files and this changelog
+caught up, so these entries are recorded after the fact. Everything below
+shipped in v0.9.1; `CMakeLists.txt` and `fpm.toml` still read 0.9.0 at the
+time, which is what 0.9.2 corrects.
+
 ### Fixed
 - `term_read` corrupted the heap under LFortran 0.66.0. Its staging buffer was
   `raw(len(buf))` — an automatic array whose extent is a runtime value —
