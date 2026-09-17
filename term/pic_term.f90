@@ -101,6 +101,30 @@ module pic_term
       !! The system call failed.
    integer(c_int), parameter :: STATUS_TIMEOUT = 4_c_int
       !! A timed read expired with nothing to report.
+   integer(default_int), parameter :: READ_CHUNK = 256_default_int
+      !! Bytes `term_read` transfers from C per call, and the fixed extent of
+      !! its staging buffer.
+      !!
+      !! Fixed rather than `len(buf)`, deliberately. The staging array used to
+      !! be `raw(len(buf))` -- automatic, extent known only at run time --
+      !! passed to `c_read`'s explicit-shape `buf(cap)` dummy. LFortran 0.66.0
+      !! mishandles that pairing and corrupts the heap: a program calling
+      !! `term_read` dies with `free(): invalid pointer` or SIGSEGV after a
+      !! single call. gfortran is unaffected, which is how it shipped in
+      !! 0.8.0 -- `pic_term` had no consumer, and no CI job builds the
+      !! terminal layer under LFortran.
+      !!
+      !! Reduced by the reporting consumer to a case with no pic in it: the
+      !! trigger is the runtime extent on the *actual* argument, not the
+      !! intent. An assumed-size `buf(*)` dummy works, and so does a
+      !! fixed-size actual; automatic and allocatable actuals both fail. The
+      !! interface keeps `buf(cap)` -- see the comment on `c_read` for why
+      !! assumed-size is the wrong trade at an interop boundary -- so only the
+      !! actual changes.
+      !!
+      !! 256 is far above anything a terminal delivers in one read: the
+      !! longest escape sequence `pic_ansi` decodes is under ten bytes, and
+      !! `decode_keys` already carries partial sequences across calls.
    integer(c_int), parameter :: STATUS_EOF = 5_c_int
       !! Input reached end of file: the other end of the pipe closed, or the
       !! user pressed the terminal's end-of-file key. Distinct from a timeout,
@@ -318,7 +342,9 @@ contains
       !! The bytes go straight to `pic_ansi`'s `decode_keys`, which is why
       !! this makes no attempt to interpret them.
       character(len=*), intent(out) :: buf
-         !! Destination; at most `len(buf)` bytes are read.
+         !! Destination. At most `min(len(buf), 256)` bytes are read per call;
+         !! a caller with a larger buffer simply reads it over more calls,
+         !! which every input loop here already does.
       integer(default_int), intent(out) :: nread
          !! Bytes actually read; 0 on a timeout and at end of input.
       integer(default_int), intent(in) :: timeout_ms
@@ -331,10 +357,11 @@ contains
          !! `.true.` when the input stream has ended. Supplying it makes end
          !! of input an ordinary result rather than an error.
 
-      character(kind=c_char) :: raw(len(buf))
+      character(kind=c_char) :: raw(READ_CHUNK)
       integer(c_int) :: status, got
       integer(default_int) :: i
       integer(default_int) :: wait_ms
+      integer(default_int) :: chunk
 
       buf = ""
       nread = 0_default_int
@@ -352,7 +379,11 @@ contains
          wait_ms = -1_default_int
       end if
 
-      status = c_read(raw, int(len(buf), c_int), int(wait_ms, c_int), got)
+      ! `len` returns a default integer whatever `default_int` is, so the
+      ! conversion is explicit: under -DPIC_DEFAULT_INT8 the two operands of
+      ! `min` would otherwise disagree about kind.
+      chunk = min(int(len(buf), default_int), READ_CHUNK)
+      status = c_read(raw, int(chunk, c_int), int(wait_ms, c_int), got)
       if (status == STATUS_TIMEOUT) return
       if (status == STATUS_EOF) then
          if (present(at_eof)) then
