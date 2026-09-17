@@ -25,7 +25,7 @@ endif()
 project(
   "PIC"
   LANGUAGES Fortran C
-  VERSION 0.9.0
+  VERSION 0.9.2
   DESCRIPTION "Jorge's cool stuff")
 set(project_name pic)
 
