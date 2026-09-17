@@ -120,6 +120,19 @@ if(PIC_ENABLE_TESTING)
   add_subdirectory(test)
 endif()
 
+# The directory the targets below export has to exist by the time a consumer
+# generates, and `Fortran_MODULE_DIRECTORY` is not created until build time on
+# some CMake versions. Where it is not pre-created, a consumer cannot configure
+# at all:
+#
+# Imported target "pic::pic_core" includes non-existent path
+# ".../_deps/pic-build/modules" in its INTERFACE_INCLUDE_DIRECTORIES.
+#
+# CMake 3.28 pre-creates it, which is why pic's own jobs and its consumer check
+# never saw this -- it cost a sibling project a release to find out. pic-blas
+# and pic-mpi both carry this line for the same reason.
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/modules)
+
 foreach(lib ${all_libs})
   set_target_properties(${lib} PROPERTIES Fortran_MODULE_DIRECTORY
                                           ${PROJECT_BINARY_DIR}/modules)
