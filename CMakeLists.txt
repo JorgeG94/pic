@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.28)
 project(
   "PIC"
   LANGUAGES Fortran C
-  VERSION 0.8.2
+  VERSION 0.9.0
   DESCRIPTION "Jorge's cool stuff")
 set(project_name pic)
 
@@ -123,6 +123,18 @@ endif()
 foreach(lib ${all_libs})
   set_target_properties(${lib} PROPERTIES Fortran_MODULE_DIRECTORY
                                           ${PROJECT_BINARY_DIR}/modules)
+  # Carry that directory to anyone who links the target, so a consumer never has
+  # to know where pic puts its .mod files -- and so moving them is not a
+  # breaking change. 0.8.2 moved them from the top-level build tree into pic's
+  # own, which was right but broke every consumer that had hardcoded the old
+  # spelling, in a patch release.
+  #
+  # BUILD_INTERFACE only. The install side is already covered by the `INCLUDES
+  # DESTINATION include/pic` on the install(TARGETS) call below, which is where
+  # the .mod files actually land; adding a second, different install path here
+  # would export a directory that does not exist.
+  target_include_directories(
+    ${lib} INTERFACE $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/modules>)
 endforeach()
 if(PIC_ENABLE_OMP)
   find_package(
