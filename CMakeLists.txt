@@ -1,5 +1,27 @@
 cmake_minimum_required(VERSION 3.28)
 
+# LFortran is a compiler CMake only learned about in 3.30. Before that there is
+# no Compiler/LFortran-Fortran module at all, so the project() call below cannot
+# identify it and configuring dies complaining that the compiler is broken --
+# which says nothing about the real cause and sends people off to reinstall
+# LFortran. Catch it here with a message that names the actual problem.
+#
+# This is checked rather than folded into cmake_minimum_required because it is a
+# requirement of one compiler, not of pic: every other supported compiler builds
+# pic with the CMake that ships in Ubuntu 24.04 (3.28), RHEL 9 (3.26) and Ubuntu
+# 22.04 (3.22). It has to sit before project() -- after it, the configure has
+# already failed.
+if(CMAKE_VERSION VERSION_LESS 3.30
+   AND (CMAKE_Fortran_COMPILER MATCHES "[Ll][Ff]ortran" OR "$ENV{FC}" MATCHES
+                                                           "[Ll][Ff]ortran"))
+  message(
+    FATAL_ERROR
+      "Building pic with LFortran needs CMake 3.30 or newer; this is "
+      "${CMAKE_VERSION}. CMake does not recognise LFortran as a Fortran "
+      "compiler before 3.30, so configuring fails with an unrelated message. "
+      "Every other compiler pic supports builds it with CMake 3.28.")
+endif()
+
 project(
   "PIC"
   LANGUAGES Fortran C

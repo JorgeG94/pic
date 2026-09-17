@@ -10,12 +10,15 @@ Requirements
    - GNU Fortran (gfortran) 10+
    - Intel Fortran (ifx/ifort) 2024+
    - NVIDIA HPC SDK (nvfortran) 25.1+
-   - LFortran (latest)
+   - LFortran (latest; needs CMake 3.30+, see below)
    - Cray Fortran (crayftn)
    - Classic Flang
 
 - Build tools:
-   - CMake 3.31+ (for CMake builds)
+   - CMake 3.28+ (for CMake builds), or 3.30+ when building with
+     LFortran -- CMake does not recognise LFortran as a Fortran compiler
+     before 3.30, so configuring fails with an unrelated message about
+     the compiler being broken. PIC checks for this and says so.
    - FPM 0.12.0+ (for FPM builds)
 
 - An internet connection (to fetch the ``test-drive`` dependency)
