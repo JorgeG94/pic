@@ -161,3 +161,47 @@ jobs:
           cmake -S . -B build/release -DTESTDRIVE_WITH_XDP=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -G Ninja
           cmake --build build/release
           ctest --test-dir build/release --output-on-failure
+
+  # The terminal layer, under LFortran.
+  #
+  # A separate job rather than a flag on test_cmake, deliberately: this is the
+  # first time LFortran compiles `term/` at all, so if the toolchain cannot do
+  # it the existing coverage stays green and the failure is legible on its own.
+  # `continue-on-error` matches the other LFortran jobs here; flip it off once
+  # this has been stable for a few runs.
+  #
+  # The gap it closes: PIC_ENABLE_TERM is off by default, `term/` lives outside
+  # `src/` so fpm never sees it, and no job here ever turned it on. `pic_term`
+  # shipped in 0.8.0 and was compiled by exactly one compiler until its first
+  # consumer built it with a second and found that `term_read` corrupted the
+  # heap -- an automatic-extent actual argument passed to an explicit-shape
+  # interop dummy, which gfortran accepts and LFortran 0.66.0 miscompiles.
+  test_term:
+    name: ${{ matrix.os }}_${{ matrix.compiler }}_term
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        compiler: [lfortran]
+
+    steps:
+      - name: Setup Fortran
+        uses: gha3mi/setup-fortran-conda@v0.17.1
+        with:
+          compiler: ${{ matrix.compiler }}
+          compiler-version: ${{ env.LFORTRAN_VERSION }}
+          platform: ${{ matrix.os }}
+          extra-packages: "cmake, ninja"
+
+      - name: report toolchain versions
+        run: |
+          lfortran --version
+          cmake --version
+
+      - name: cmake test with the terminal layer on
+        run: |
+          cmake -S . -B build/term -G Ninja -DTESTDRIVE_WITH_XDP=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -DPIC_ENABLE_TESTING=ON -DPIC_ENABLE_TERM=ON
+          cmake --build build/term
+          ctest --test-dir build/term --output-on-failure

@@ -162,11 +162,20 @@ target_link_libraries(${main_lib} ${core_lib} ${libraries_to_link})
 
 # Install Fortran module files (assuming they are in the build directory)
 
-set(exe_name app)
-add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.F90)
-target_include_directories(${exe_name} PRIVATE "${PROJECT_BINARY_DIR}/modules")
-target_link_libraries(${exe_name} PRIVATE ${main_lib} ${libraries_to_link}
-                                          ${external_libraries_to_link})
+# pic's own demo executable, built only when pic is the top-level project.
+#
+# It is pic's banner program and nothing a consumer wants; building it for every
+# FetchContent consumer costs them a compile and a link for a binary they will
+# never run. It is also the first thing built, so when it fails it sends people
+# looking at their own project rather than at pic.
+if(PROJECT_IS_TOP_LEVEL)
+  set(exe_name app)
+  add_executable(${exe_name} ${PROJECT_SOURCE_DIR}/app/main.F90)
+  target_include_directories(${exe_name}
+                             PRIVATE "${PROJECT_BINARY_DIR}/modules")
+  target_link_libraries(${exe_name} PRIVATE ${main_lib} ${libraries_to_link}
+                                            ${external_libraries_to_link})
+endif()
 
 foreach(tgt ${all_libs})
   message(STATUS "${tgt}")
