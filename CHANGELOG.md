@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/) (also mention if you do).
 
 ## [Unreleased]
+### Fixed
+- `term_read` corrupted the heap under LFortran 0.66.0. Its staging buffer was
+  `raw(len(buf))` — an automatic array whose extent is a runtime value —
+  passed to `c_read`'s explicit-shape `buf(cap)` dummy, and LFortran
+  miscompiles that pairing: a program calling `term_read` died with
+  `free(): invalid pointer` or SIGSEGV after a single call. gfortran is
+  unaffected. The buffer is now a fixed 256 bytes and the interface is
+  unchanged, since the reduced case shows the trigger is the runtime extent on
+  the *actual* argument, not the intent or the dummy. A caller with a larger
+  destination now reads it over more calls, which every input loop already
+  does. Reported and reduced by the first external consumer of `pic_term`.
+
+### Added
+- An LFortran CI job that builds the terminal layer. `PIC_ENABLE_TERM` is off
+  by default and `term/` sits outside `src/` so fpm never sees it, which meant
+  `pic_term` had been compiled by exactly one compiler since it shipped in
+  0.8.0 — the above is what that cost.
+
+### Changed
+- pic's demo executable `app` is built only when pic is the top-level project.
+  A consumer pulling pic in through FetchContent was compiling and linking a
+  binary it can never run, and since it builds first, its failures sent people
+  looking at their own project.
+
 
 ## [0.9.0] – 2026-09-16
 A minor bump rather than a patch, because 0.8.2 changed something
