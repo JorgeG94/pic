@@ -131,7 +131,7 @@
       </a>
       <div id="vars-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../proc/soa_write_int64_field.html#variable-empty~5">empty</a>
+            <a class="list-group-item" href="../proc/soa_write_int64_field.html#variable-empty~2">empty</a>
             <a class="list-group-item" href="../proc/soa_write_int64_field.html#variable-nalloc~2">nalloc</a>
         </div>
       </div>
@@ -188,7 +188,7 @@
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-unit~10"></span>
+              <span class="anchor" id="variable-unit~4"></span>
               integer(kind=default_int),
             </td>
 <td>intent(in)</td>
@@ -203,7 +203,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-values~13"></span>
+              <span class="anchor" id="variable-values~11"></span>
               integer(kind=int64),
             </td>
 <td>intent(in),</td>
@@ -218,7 +218,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-n~83"></span>
+              <span class="anchor" id="variable-n~56"></span>
               integer(kind=default_int),
             </td>
 <td>intent(in)</td>
@@ -233,7 +233,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-err~165"></span>
+              <span class="anchor" id="variable-err~110"></span>
               type(<a href='../type/error_t.html'>error_t</a>),
             </td>
 <td>intent(inout)</td>
@@ -1066,7 +1066,7 @@ large graphs.</div>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-empty~5"></span>
+              <span class="anchor" id="variable-empty~2"></span>
               integer(kind=int64),
             </td>
               <td>private</td>
@@ -1074,7 +1074,7 @@ large graphs.</div>
               
             </td>
             <td>::</td>
-            <td><strong>empty</strong>(0)</td>
+            <td><strong>empty</strong>(1)</td>
                 <td></td>
                 <td></td>
             <td>
@@ -1121,7 +1121,12 @@ large graphs.</div>
 <span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span>
 <span class="w">      </span><span class="k">type</span><span class="p">(</span><span class="n">error_t</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">err</span>
 
-<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="c">! Declared with one element and passed as the zero-length section</span>
+<span class="w">      </span><span class="c">! `empty(1:0)` below. A literal `empty(0)` is valid Fortran and was</span>
+<span class="w">      </span><span class="c">! what stood here, but nvfortran warns on every zero-size array</span>
+<span class="w">      </span><span class="c">! declaration (NVFORTRAN-W-0435), which is noise in a consumer's</span>
+<span class="w">      </span><span class="c">! build log. The element itself is never read.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">empty</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="w">      </span><span class="kt">integer</span><span class="p">(</span><span class="n">default_int</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nalloc</span>
 
 <span class="w">      </span><span class="n">nalloc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
@@ -1130,7 +1135,7 @@ large graphs.</div>
 <span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="p">%</span><span class="n">has_error</span><span class="p">())</span><span class="w"> </span><span class="k">return</span>
 
 <span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">nalloc</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">         call </span><span class="n">write_array</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">empty</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="k">         call </span><span class="n">write_array</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">empty</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
 <span class="w">      </span><span class="k">else</span>
 <span class="k">         call </span><span class="n">write_array</span><span class="p">(</span><span class="n">unit</span><span class="p">,</span><span class="w"> </span><span class="n">values</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="p">),</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
 <span class="w">      </span><span class="k">end if</span>
@@ -1158,7 +1163,7 @@ large graphs.</div>
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-10-01 00:04 +0000             </p>
+ on 2026-10-22 00:27 +0000             </p>
           </div>
         </div>
         <br>

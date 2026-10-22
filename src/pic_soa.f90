@@ -590,7 +590,12 @@ contains
       integer(default_int), intent(in) :: n
       type(error_t), intent(inout) :: err
 
-      integer(int32) :: empty(0)
+      ! Declared with one element and passed as the zero-length section
+      ! `empty(1:0)` below. A literal `empty(0)` is valid Fortran and was
+      ! what stood here, but nvfortran warns on every zero-size array
+      ! declaration (NVFORTRAN-W-0435), which is noise in a consumer's
+      ! build log. The element itself is never read.
+      integer(int32) :: empty(1)
       integer(default_int) :: nalloc
 
       nalloc = -1
@@ -599,7 +604,7 @@ contains
       if (err%has_error()) return
 
       if (nalloc < 0) then
-         call write_array(unit, empty, err)
+         call write_array(unit, empty(1:0), err)
       else
          call write_array(unit, values(1:n), err)
       end if
@@ -612,7 +617,12 @@ contains
       integer(default_int), intent(in) :: n
       type(error_t), intent(inout) :: err
 
-      integer(int64) :: empty(0)
+      ! Declared with one element and passed as the zero-length section
+      ! `empty(1:0)` below. A literal `empty(0)` is valid Fortran and was
+      ! what stood here, but nvfortran warns on every zero-size array
+      ! declaration (NVFORTRAN-W-0435), which is noise in a consumer's
+      ! build log. The element itself is never read.
+      integer(int64) :: empty(1)
       integer(default_int) :: nalloc
 
       nalloc = -1
@@ -621,7 +631,7 @@ contains
       if (err%has_error()) return
 
       if (nalloc < 0) then
-         call write_array(unit, empty, err)
+         call write_array(unit, empty(1:0), err)
       else
          call write_array(unit, values(1:n), err)
       end if
@@ -634,7 +644,12 @@ contains
       integer(default_int), intent(in) :: n
       type(error_t), intent(inout) :: err
 
-      real(sp) :: empty(0)
+      ! Declared with one element and passed as the zero-length section
+      ! `empty(1:0)` below. A literal `empty(0)` is valid Fortran and was
+      ! what stood here, but nvfortran warns on every zero-size array
+      ! declaration (NVFORTRAN-W-0435), which is noise in a consumer's
+      ! build log. The element itself is never read.
+      real(sp) :: empty(1)
       integer(default_int) :: nalloc
 
       nalloc = -1
@@ -643,7 +658,7 @@ contains
       if (err%has_error()) return
 
       if (nalloc < 0) then
-         call write_array(unit, empty, err)
+         call write_array(unit, empty(1:0), err)
       else
          call write_array(unit, values(1:n), err)
       end if
@@ -656,7 +671,12 @@ contains
       integer(default_int), intent(in) :: n
       type(error_t), intent(inout) :: err
 
-      real(dp) :: empty(0)
+      ! Declared with one element and passed as the zero-length section
+      ! `empty(1:0)` below. A literal `empty(0)` is valid Fortran and was
+      ! what stood here, but nvfortran warns on every zero-size array
+      ! declaration (NVFORTRAN-W-0435), which is noise in a consumer's
+      ! build log. The element itself is never read.
+      real(dp) :: empty(1)
       integer(default_int) :: nalloc
 
       nalloc = -1
@@ -665,7 +685,7 @@ contains
       if (err%has_error()) return
 
       if (nalloc < 0) then
-         call write_array(unit, empty, err)
+         call write_array(unit, empty(1:0), err)
       else
          call write_array(unit, values(1:n), err)
       end if
