@@ -23,7 +23,7 @@ contains
       type(string_type), allocatable :: knowledge(:)
       integer(int32) :: n, idx
       real(dp) :: r
-      allocate (knowledge(92))
+      allocate (knowledge(101))
 
       knowledge(1) = "The long line! (CS,2023)"
       knowledge(2) = "Maybe I have the Fortran brain-rot in Dijkstra's words (IP,2025)"
@@ -117,6 +117,15 @@ contains
       knowledge(90) = "after midday only dogs drink water (Mexican saying)"
       knowledge(91) = "post hoc ergo propter hoc"
       knowledge(92) = "the scf is running like butter"
+      knowledge(93) = "if they were a taco, they'd be missing salsa"
+      knowledge(94) = "Scottish taco"
+      knowledge(95) = "if I can't code it I do not understand it"
+      knowledge(96) = "signora limoniiiii"
+      knowledge(97) = "heels to the ground, comrade found. Heels to sky, surely a spy (spy knowledge)"
+      knowledge(98) = "when in doubt, restart!"
+      knowledge(99) = "HPC was born when Confucius put together two abacus"
+      knowledge(100) = "seize the means of compute"
+      knowledge(101) = "(after eating half a rack of ribs) I'm not hungry anymore (Jorge, 2026)"
 
       n = size(knowledge)
 
