@@ -81,8 +81,54 @@ jobs:
       - name: fpm versioning
         run: fpm --version
 
+      # macOS gfortran only. The conda toolchain writes the environment's lib
+      # directory into the binary's LC_RPATH twice, and dyld refuses to launch
+      # a Mach-O image with a duplicate rpath:
+      #
+      #   dyld: duplicate LC_RPATH '/Users/runner/miniconda3/envs/fortran/lib'
+      #
+      # The link itself succeeds; every test then dies before its first line
+      # runs -- exit 6 under fpm, "Subprocess aborted" for all 46 suites under
+      # ctest. It appeared between 2026-10-28 (green) and 2026-11-03 with no
+      # commit touching anything it depends on, and it is intermittent: on one
+      # run the fpm job survives and the cmake job dies, on the next the other
+      # way round.
+      #
+      # Two sources each add the path, so drop it from the flags conda exports
+      # and leave the compiler wrapper as the only one. fpm's printed link line
+      # carries no -Wl,-rpath at all, so it is possible the duplicate comes
+      # from inside the wrapper instead and this has no effect -- hence the
+      # rpath dump afterwards, which names the real source either way rather
+      # than leaving the next attempt to guess again. Drop both this and the
+      # dump once upstream is fixed.
       - name: fpm test (release)
-        run: fpm test --compiler ${{ matrix.compiler }} --profile release --verbose
+        run: |
+          if [ "${{ runner.os }}" = "macOS" ] && [ "${{ matrix.compiler }}" = "gfortran" ]; then
+            echo "::group::rpath diagnosis (before)"
+            echo "LDFLAGS=${LDFLAGS:-<unset>}"
+            echo "FFLAGS=${FFLAGS:-<unset>}"
+            echo "FORTRANFLAGS=${FORTRANFLAGS:-<unset>}"
+            gfortran -print-prog-name=collect2 || true
+            echo "::endgroup::"
+            # Strip every -Wl,-rpath,<dir> and -Wl,-rpath -Wl,<dir> pair.
+            LDFLAGS=$(printf '%s' "${LDFLAGS:-}" \
+                      | sed -E 's/-Wl,-rpath,[^[:space:]]+//g; s/-Wl,-rpath[[:space:]]+-Wl,[^[:space:]]+//g; s/[[:space:]]+/ /g')
+            export LDFLAGS
+            echo "LDFLAGS now: ${LDFLAGS:-<empty>}"
+          fi
+          set +e
+          fpm test --compiler ${{ matrix.compiler }} --profile release --verbose
+          rc=$?
+          set -e
+          if [ "${{ runner.os }}" = "macOS" ] && [ "${{ matrix.compiler }}" = "gfortran" ]; then
+            echo "::group::rpath diagnosis (after) -- LC_RPATH entries in every built image"
+            find build -type f -perm -111 -exec sh -c \
+              'file "$1" | grep -q Mach-O || exit 0;
+               echo "== $1";
+               otool -l "$1" | awk "/LC_RPATH/{f=1} f&&/ path /{print \$2; f=0}"' sh {} \;
+            echo "::endgroup::"
+          fi
+          exit $rc
 
   # Run CMake + Ninja build/tests across the same OS/compiler matrix.
   test_cmake:
@@ -116,8 +162,53 @@ jobs:
           platform: ${{ matrix.os }}
           extra-packages: "cmake, ninja"
 
+      # macOS gfortran only. The conda toolchain writes the environment's lib
+      # directory into the binary's LC_RPATH twice, and dyld refuses to launch
+      # a Mach-O image with a duplicate rpath:
+      #
+      #   dyld: duplicate LC_RPATH '/Users/runner/miniconda3/envs/fortran/lib'
+      #
+      # The link itself succeeds; every test then dies before its first line
+      # runs -- exit 6 under fpm, "Subprocess aborted" for all 46 suites under
+      # ctest. It appeared between 2026-10-28 (green) and 2026-11-03 with no
+      # commit touching anything it depends on, and it is intermittent: on one
+      # run the fpm job survives and the cmake job dies, on the next the other
+      # way round.
+      #
+      # Two sources each add the path, so drop it from the flags conda exports
+      # and leave the compiler wrapper as the only one. fpm's printed link line
+      # carries no -Wl,-rpath at all, so it is possible the duplicate comes
+      # from inside the wrapper instead and this has no effect -- hence the
+      # rpath dump afterwards, which names the real source either way rather
+      # than leaving the next attempt to guess again. Drop both this and the
+      # dump once upstream is fixed.
       - name: cmake test (release)
         run: |
-          cmake -S . -B build/release -DTESTDRIVE_WITH_XDP=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -G Ninja
-          cmake --build build/release
-          ctest --test-dir build/release --output-on-failure
+          if [ "${{ runner.os }}" = "macOS" ] && [ "${{ matrix.compiler }}" = "gfortran" ]; then
+            echo "::group::rpath diagnosis (before)"
+            echo "LDFLAGS=${LDFLAGS:-<unset>}"
+            echo "FFLAGS=${FFLAGS:-<unset>}"
+            echo "FORTRANFLAGS=${FORTRANFLAGS:-<unset>}"
+            gfortran -print-prog-name=collect2 || true
+            echo "::endgroup::"
+            # Strip every -Wl,-rpath,<dir> and -Wl,-rpath -Wl,<dir> pair.
+            LDFLAGS=$(printf '%s' "${LDFLAGS:-}" \
+                      | sed -E 's/-Wl,-rpath,[^[:space:]]+//g; s/-Wl,-rpath[[:space:]]+-Wl,[^[:space:]]+//g; s/[[:space:]]+/ /g')
+            export LDFLAGS
+            echo "LDFLAGS now: ${LDFLAGS:-<empty>}"
+          fi
+          set +e
+          cmake -S . -B build/release -DTESTDRIVE_WITH_XDP=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_Fortran_COMPILER=${{ matrix.compiler }} -G Ninja \
+            && cmake --build build/release \
+            && ctest --test-dir build/release --output-on-failure
+          rc=$?
+          set -e
+          if [ "${{ runner.os }}" = "macOS" ] && [ "${{ matrix.compiler }}" = "gfortran" ]; then
+            echo "::group::rpath diagnosis (after) -- LC_RPATH entries in every built image"
+            find build -type f -perm -111 -exec sh -c \
+              'file "$1" | grep -q Mach-O || exit 0;
+               echo "== $1";
+               otool -l "$1" | awk "/LC_RPATH/{f=1} f&&/ path /{print \$2; f=0}"' sh {} \;
+            echo "::endgroup::"
+          fi
+          exit $rc
