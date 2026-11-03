@@ -7,6 +7,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
 
 ## [Unreleased]
 
+## [0.9.5] – 2026-11-03
+A housekeeping release. No library code changes: the two entries below are both
+CI, and both exist because something outside the repository moved.
+
+### Changed
+- The FORD documentation is handed to GitHub Pages as an artifact instead of
+  being committed to the `gh-pages-docs` branch. FORD rewrites every file in
+  the site on every run, and `search/search_database.json` alone is ~7 MB of
+  incompressible JSON, so each deploy committed a complete fresh copy rather
+  than a diff. 138 of them had reached 2,756 MB of blobs across 58,289 objects
+  — against 25 MB for `main`'s own 350-commit history. Since a plain
+  `git clone` fetches every branch, that was landing on everyone who cloned
+  pic: 91 MB, where a `main`-only clone is 6.3 MB. Pages storage is not git, so
+  a deploy no longer touches the repository at all, and the workflow drops
+  `contents: write` along with the push. Deleting `gh-pages-docs` is what
+  recovers the existing 90 MB; it is safe once the repository's Pages source is
+  set to "GitHub Actions" and a deploy has been verified.
+- Fortitude is pinned to 0.9.2 and invoked directly rather than through
+  `gha3mi/setup-fortran-conda`, which installs it with a bare
+  `pip install fortitude-lint` and offers no input to pin. 0.10.1 was released
+  and turned an unchanged tree red: 158 findings on a clean checkout of
+  `main`, where 0.9.2 reports none — 96 `S901` (cyclomatic complexity over
+  10; `pic_sorting_*` tops out at 70), 37 `S271` (unsorted `use`), 23 `S902`
+  (more than five arguments), 2 `S291`. All four are in the `S` set `fpm.toml`
+  already selects, and all four are new or newly enforced in 0.10. Adopting
+  0.10 means deciding which of those rules pic wants, which is its own piece of
+  work; this is a hold, not a decision.
+
+### Added
+- Nine more phrases in `pic_knowledge`, entries 93–101.
+
+### Fixed
+- `CMakeLists.txt` and `fpm.toml` read 0.9.2 while v0.9.3 and v0.9.4 were
+  already tagged — the same drift 0.9.2 corrected for 0.9.1. Both now read
+  0.9.5, and the two missing releases are recorded below.
+
+
+## [0.9.4] – 2026-10-22
+Tagged from `main` before the version files and this changelog caught up, so
+this entry is recorded after the fact. `CMakeLists.txt` and `fpm.toml` read
+0.9.2 at the time.
+
+### Fixed
+- nvfortran warned `NVFORTRAN-W-0435-Array declared with zero size` on four
+  writers in `pic_soa`, which each declared a literal `empty(0)` to pass as an
+  empty array section. A zero-size declaration is valid Fortran and the element
+  is never read, but nvfortran warns on every one of them. The declaration is
+  now `empty(1)` and the call site passes the zero-length section
+  `empty(1:0)`, which is byte-identical on the wire — verified against the
+  same 154-byte stream.
+
+### Added
+- One more phrase in `pic_knowledge`.
+
+
+## [0.9.3] – 2026-10-01
+Tagged from `main` before the version files and this changelog caught up, so
+this entry is recorded after the fact. `CMakeLists.txt` and `fpm.toml` read
+0.9.2 at the time.
+
+### Added
+- Nine phrases in `pic_knowledge`.
+
+
 ## [0.9.2] – 2026-09-17
 A patch release. Both fixes are build-system problems only a consumer could
 hit, which is why neither showed up in pic's own CI.
