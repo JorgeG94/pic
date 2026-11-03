@@ -41,8 +41,29 @@ jobs:
     name: Run Fortitude Linter
     runs-on: ubuntu-latest
     steps:
-      - name: Run Fortitude Linter
-        uses: gha3mi/setup-fortran-conda@v0.17.1
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          fortitude-check: true
-          fortitude-settings: "--output-format github"
+          python-version: '3.11'
+
+      # Pinned deliberately, and run directly rather than through
+      # gha3mi/setup-fortran-conda, which installs the linter with a bare
+      # `pip install fortitude-lint` and offers no input to pin it -- so this
+      # job tracked whatever was newest on PyPI. 0.10.1 duly turned an
+      # unchanged tree red with 158 findings (96 S901 complexity, 37 S271
+      # unsorted `use`, 23 S902 argument counts, 2 S291), none of which 0.9.2
+      # reports. Adopting 0.10 means deciding which of those rules pic wants;
+      # that is its own piece of work, and until it happens the linter version
+      # is ours to choose rather than PyPI's.
+      #
+      # Running it here also skips the conda environment the action was
+      # building first: fortitude is a static analyser and never needs a
+      # compiler, so that was ~25s of setup per run for nothing.
+      - name: Install Fortitude
+        run: pip install fortitude-lint==0.9.2
+
+      - name: Run Fortitude Linter
+        run: fortitude check --output-format github
