@@ -23,7 +23,7 @@ contains
       type(string_type), allocatable :: knowledge(:)
       integer(int32) :: n, idx
       real(dp) :: r
-      allocate (knowledge(102))
+      allocate (knowledge(105))
 
       knowledge(1) = "The long line! (CS,2023)"
       knowledge(2) = "Maybe I have the Fortran brain-rot in Dijkstra's words (IP,2025)"
@@ -127,6 +127,9 @@ contains
       knowledge(100) = "seize the means of compute"
       knowledge(101) = "(after eating half a rack of ribs) I'm not hungry anymore (Jorge, 2026)"
       knowledge(102) = "goats for votes (Albert)"
+      knowledge(103) = "Beauty is in the eye of the beholder, but sometimes the beholder is a jackass"
+      knowledge(104) = "Welcome to the mexascale computing project"
+      knowledge(105) = "toml = time of my life"
 
       n = size(knowledge)
 
