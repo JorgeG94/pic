@@ -263,9 +263,23 @@ if(CMAKE_BUILD_TYPE STREQUAL "Coverage")
     coverage
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
     COMMAND ${CMAKE_COMMAND} -E remove -f coverage.info
-    COMMAND lcov --directory . --capture --output-file coverage.info
-    COMMAND lcov --ignore-errors unused --remove coverage.info '/usr/*'
-            '*/build/*' --output-file coverage_filtered.info
+    # --ignore-errors inconsistent: lcov 2.x treats a mismatch between its
+    # function and line counts as fatal, and gcov 15 emits one for the copy
+    # routines gfortran generates for derived types, e.g.
+    #
+    # lcov: ERROR: (inconsistent) "src/lib/core/ansi/pic_ansi.f90":867:
+    # function '__pic_ansi_MOD___copy_pic_ansi_Frame_t' is not hit but
+    # line 867 is.
+    #
+    # That is an artefact of compiler-generated code in the gcov data, not
+    # something this project can correct, and it failed the whole coverage
+    # job after every test had passed. Both invocations carry the flag: the
+    # capture above is where it was raised, and --remove re-reads the same
+    # data. Older gcov does not report it, so the flag is a no-op there.
+    COMMAND lcov --ignore-errors inconsistent --directory . --capture
+            --output-file coverage.info
+    COMMAND lcov --ignore-errors unused,inconsistent --remove coverage.info
+            '/usr/*' '*/build/*' --output-file coverage_filtered.info
     COMMAND genhtml coverage_filtered.info --output-directory coverage_report
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
     COMMENT "Generating code coverage report")
