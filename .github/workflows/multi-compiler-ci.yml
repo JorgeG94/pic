@@ -27,7 +27,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        # ubuntu-24.04 rather than ubuntu-latest, deliberately. GitHub moved
+        # ubuntu-latest to Ubuntu 26.04, and fortran-lang/setup-fortran carries no
+        # version table for it, so the action fails before installing anything:
+        #
+        #   Error: No latest version defined for gcc on ubuntu-26.04
+        #
+        # An explicit version is no safer when the package predates 26.04: gcc 10
+        # does install there and then dies with "gfortran: fatal error: specs file
+        # malformed", which CMake reports as an unidentifiable compiler. gcc 11-15
+        # are new enough to survive, which is why only part of the matrix went red.
+        #
+        # Drop this back to ubuntu-latest once setup-fortran knows about 26.04.
+        os: [ubuntu-24.04]
         toolchain:
           - {compiler: gcc, version: 10}
           - {compiler: gcc, version: 11}
