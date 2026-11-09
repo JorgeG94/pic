@@ -25,7 +25,12 @@ concurrency:
 jobs:
   debug:
     name: ${{ matrix.toolchain.compiler }} ${{ matrix.toolchain.version }}
-    runs-on: ubuntu-latest
+    # ubuntu-24.04 rather than ubuntu-latest, deliberately: GitHub moved
+    # ubuntu-latest to Ubuntu 26.04 and fortran-lang/setup-fortran has no
+    # version table for it, so the action fails before installing anything
+    # ("Error: No latest version defined for gcc on ubuntu-26.04"). Drop this
+    # back to ubuntu-latest once setup-fortran knows about 26.04.
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
