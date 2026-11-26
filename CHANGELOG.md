@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
 
 ## [Unreleased]
 
-## [0.9.5] – 2026-11-03
-A housekeeping release. No library code changes: the two entries below are both
-CI, and both exist because something outside the repository moved.
+## [0.9.5] – 2026-11-09
+A housekeeping release. No library code changes at all: every entry below is
+either CI or the lore, and every CI entry exists because something outside the
+repository moved — four separate upstream changes in under a week.
 
 ### Changed
 - The FORD documentation is handed to GitHub Pages as an artifact instead of
@@ -34,14 +35,42 @@ CI, and both exist because something outside the repository moved.
   already selects, and all four are new or newly enforced in 0.10. Adopting
   0.10 means deciding which of those rules pic wants, which is its own piece of
   work; this is a hold, not a decision.
+- The jobs that use `fortran-lang/setup-fortran` are pinned to `ubuntu-24.04`
+  rather than `ubuntu-latest`. GitHub moved `ubuntu-latest` to Ubuntu 26.04 and
+  the action carries no version table for it, so it failed before installing
+  anything — `Error: No latest version defined for gcc on ubuntu-26.04` — which
+  took out the Terminal layer's ubuntu job and the intel 2024.1, intel 2025.0,
+  intel-classic 2021.10 and aocc 5.1.0 entries of the compiler matrix, each in
+  about a second with configure and build skipped. An explicit version was no
+  safer where the package predates 26.04: gcc 10 installed and then died with
+  `gfortran: fatal error: specs file malformed`, which CMake reports as an
+  unidentifiable compiler, while gcc 11-15 survived — which is why the matrix
+  looked selectively broken. No test ran in any of them.
+- `lcov` is told to tolerate `inconsistent` function data. lcov 2.x treats a
+  mismatch between its function and line counts as fatal, and gcov 15 reports
+  one for the copy routines gfortran generates for derived types, so the
+  coverage job was discarding a whole report after all 46 tests had passed over
+  an artefact of compiler-generated code.
 
 ### Added
-- Nine more phrases in `pic_knowledge`, entries 93–101.
+- Nine more phrases in `pic_knowledge`, entries 93–101, and eight more at
+  102–109.
 
 ### Fixed
 - `CMakeLists.txt` and `fpm.toml` read 0.9.2 while v0.9.3 and v0.9.4 were
-  already tagged — the same drift 0.9.2 corrected for 0.9.1. Both now read
-  0.9.5, and the two missing releases are recorded below.
+  already tagged — the same drift 0.9.2 corrected for 0.9.1. All three version
+  files now read 0.9.5, and the two missing releases are recorded below.
+
+### Known issues
+- The macOS gfortran jobs intermittently fail to launch any test binary:
+  `dyld: duplicate LC_RPATH '.../envs/fortran/lib'`, which the loader treats as
+  fatal, giving exit 6 under fpm and 46 aborted suites under ctest. The link
+  itself succeeds. This release carries a workaround that strips the rpath from
+  the flags conda exports, but it does **not** reliably help — the duplicate
+  has recurred with it in place — and the cause is not yet identified. A
+  compiler version pin would not address it either: the last green run had a
+  byte-identical gfortran stack. Tracked for a real fix; the workaround stays
+  only because it is inert when it does not apply.
 
 
 ## [0.9.4] – 2026-10-22
