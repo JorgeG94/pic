@@ -23,7 +23,7 @@ contains
       type(string_type), allocatable :: knowledge(:)
       integer(int32) :: n, idx
       real(dp) :: r
-      allocate (knowledge(109))
+      allocate (knowledge(116))
 
       knowledge(1) = "The long line! (CS,2023)"
       knowledge(2) = "Maybe I have the Fortran brain-rot in Dijkstra's words (IP,2025)"
@@ -134,6 +134,13 @@ contains
       knowledge(107) = "DROP THE POOL NOODLES!"
       knowledge(108) = "the cation really doesnt want to exist"
       knowledge(109) = "where ARE MY ELECTRONS"
+      knowledge(110) = "the magic of batch queues is that I can submit many parallel job only at the cost of my sanity"
+      knowledge(111) = "never assume malice, when incompetence will suffice"
+      knowledge(112) = "I know how to solve it, but right now it's just two managers talking to each other..."
+      knowledge(113) = "The Box500!"
+      knowledge(114) = "It's the last session of the day so we have infinite time"
+      knowledge(115) = "Malort is like pumpkin spice flavoured turpentine, whereas bottom shelf tequila is just turpentine"
+      knowledge(116) = "vim wouldn't do this to you"
 
       n = size(knowledge)
 

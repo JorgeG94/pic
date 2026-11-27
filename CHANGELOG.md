@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/) (also men
 
 ## [Unreleased]
 
-## [0.9.5] – 2026-11-09
+## [0.9.5] – 2026-11-26
 A housekeeping release. No library code changes at all: every entry below is
 either CI or the lore, and every CI entry exists because something outside the
 repository moved — four separate upstream changes in under a week.
@@ -53,8 +53,8 @@ repository moved — four separate upstream changes in under a week.
   an artefact of compiler-generated code.
 
 ### Added
-- Nine more phrases in `pic_knowledge`, entries 93–101, and eight more at
-  102–109.
+- Nine more phrases in `pic_knowledge`, entries 93–101, and fifteen more at
+  102–116.
 
 ### Fixed
 - `CMakeLists.txt` and `fpm.toml` read 0.9.2 while v0.9.3 and v0.9.4 were
